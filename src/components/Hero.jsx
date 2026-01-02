@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/hero.css";
+import videoBackground from "../assets/2169879-uhd_3840_2160_30fps.mp4";
 
 export default function Hero() {
   const [searchData, setSearchData] = useState({
@@ -25,7 +26,7 @@ export default function Hero() {
     <section className="hero" id="hero">
       <video
         className="hero-video"
-        src="/2169879-uhd_3840_2160_30fps.mp4"
+        src={videoBackground}
         autoPlay
         muted
         loop
@@ -35,10 +36,10 @@ export default function Hero() {
       <div className="hero-overlay" aria-hidden="true" />
 
       <div className="hero-content">
-        <h1>Descubre el mundo a tu manera</h1>
+        <h1>Descubrí el mundo a tu manera</h1>
         <p className="lead">
           Experiencias únicas, destinos increíbles y momentos que permanecen
-          para siempre. Tu próxima aventura comienza aquí.
+          para siempre. Tu próxima aventura comienza acá.
         </p>
 
         {/* Formulario de Búsqueda Premium */}

@@ -4,17 +4,22 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
 }
 
 .auth-card {
   background: white;
-  border-radius: 1rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  max-width: 440px;
   width: 100%;
-  padding: 2.5rem;
+  padding: 2rem;
   animation: slideUp 0.4s ease-out;
+  transition: all 0.3s ease-out;
+}
+
+.auth-card.fade-out {
+  animation: fadeOut 0.3s ease-out forwards;
 }
 
 @keyframes slideUp {
@@ -28,28 +33,39 @@
   }
 }
 
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
 .auth-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
 }
 
 .auth-header h1 {
   color: #2d3748;
-  font-size: 1.875rem;
+  font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
 .auth-header p {
   color: #718096;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   line-height: 1.5;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .form-group {
@@ -67,10 +83,10 @@
 
 .form-group input,
 .form-group select {
-  padding: 0.75rem 1rem;
+  padding: 0.65rem 0.9rem;
   border: 2px solid #e2e8f0;
-  border-radius: 0.5rem;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
   color: #2d3748;
   transition: all 0.2s ease;
   background: white;
@@ -89,12 +105,12 @@
 
 .btn-primary {
   margin-top: 0.5rem;
-  padding: 0.875rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -111,7 +127,7 @@
 }
 
 .auth-links {
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
   text-align: center;
 }
 
@@ -131,7 +147,7 @@
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 1.5rem 0;
+  margin: 1.25rem 0;
   color: #a0aec0;
 }
 
@@ -150,7 +166,7 @@
 
 .register-prompt {
   color: #4a5568;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
 }
 
 .link-primary {
@@ -166,8 +182,8 @@
 }
 
 .auth-footer {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
   border-top: 1px solid #e2e8f0;
   text-align: center;
 }
@@ -186,40 +202,41 @@
 /* Responsive */
 @media (max-width: 768px) {
   .auth-container {
-    padding: 1.5rem 1rem;
+    padding: 1.25rem 1rem;
   }
 
   .auth-card {
-    padding: 2rem 1.75rem;
+    padding: 1.75rem 1.5rem;
+    max-width: 400px;
   }
 
   .auth-header h1 {
-    font-size: 1.625rem;
+    font-size: 1.375rem;
   }
 
   .form-group input,
   .form-group select {
-    padding: 0.75rem 0.875rem;
-    font-size: 0.9375rem;
+    padding: 0.625rem 0.85rem;
+    font-size: 0.875rem;
   }
 
   .btn-primary {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.9375rem;
+    padding: 0.7rem 1.15rem;
+    font-size: 0.875rem;
   }
 }
 
 @media (max-width: 640px) {
   .auth-card {
-    padding: 1.75rem 1.5rem;
+    padding: 1.5rem 1.35rem;
   }
 
   .auth-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   .auth-header p {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
   }
 
   .form-group label {
@@ -228,13 +245,13 @@
 
   .form-group input,
   .form-group select {
-    padding: 0.675rem 0.875rem;
-    font-size: 0.9375rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.875rem;
   }
 
   .btn-primary {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.9375rem;
+    padding: 0.65rem 1.1rem;
+    font-size: 0.875rem;
   }
 }
 
@@ -244,19 +261,19 @@
   }
 
   .auth-card {
-    padding: 1.5rem 1.25rem;
+    padding: 1.35rem 1.15rem;
   }
 
   .auth-header h1 {
-    font-size: 1.375rem;
+    font-size: 1.15rem;
   }
 
   .auth-header p {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
   }
 
   .auth-form {
-    gap: 1rem;
+    gap: 0.875rem;
   }
 
   .form-group {
@@ -264,26 +281,26 @@
   }
 
   .form-group label {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
   }
 
   .form-group input,
   .form-group select {
-    padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
+    padding: 0.575rem 0.8rem;
+    font-size: 0.8125rem;
   }
 
   .btn-primary {
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.8125rem;
   }
 
   .divider {
-    margin: 1.25rem 0;
+    margin: 1rem 0;
   }
 
   .auth-footer {
-    margin-top: 1.5rem;
-    padding-top: 1.25rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
   }
 }

@@ -18,9 +18,9 @@
 }
 
 .nav-container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -31,7 +31,7 @@
   letter-spacing: -0.02em;
   color: var(--text-primary);
   text-decoration: none;
-  font-size: 1.375rem;
+  font-size: 1.25rem;
   transition: var(--transition-smooth);
   display: flex;
   align-items: center;
@@ -52,10 +52,10 @@
 .nav-links a {
   color: var(--text-secondary);
   text-decoration: none;
-  padding: 0.625rem 1rem;
-  border-radius: 10px;
+  padding: 0.5rem 0.875rem;
+  border-radius: 8px;
   font-weight: 500;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   transition: all var(--transition-smooth);
   position: relative;
 }
@@ -88,7 +88,7 @@
     var(--accent-hover) 100%
   );
   color: #ffffff !important;
-  padding: 0.625rem 1.5rem !important;
+  padding: 0.5rem 1.25rem !important;
   box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
   font-weight: 600;
 }
@@ -110,7 +110,7 @@
 .btn-login {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #ffffff !important;
-  padding: 0.625rem 1.5rem !important;
+  padding: 0.5rem 1.25rem !important;
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
   font-weight: 600;
   margin-left: 0.5rem;
@@ -141,7 +141,7 @@
 }
 
 .hamburger {
-  width: 28px;
+  width: 26px;
   height: 2.5px;
   background: var(--text-primary);
   position: relative;
@@ -162,11 +162,11 @@
 }
 
 .hamburger::before {
-  top: -8px;
+  top: -7px;
 }
 
 .hamburger::after {
-  top: 8px;
+  top: 7px;
 }
 
 .hamburger.open {
@@ -201,11 +201,11 @@
 /* Responsive Premium */
 @media (max-width: 1024px) {
   .nav-container {
-    padding: 0.875rem 1.5rem;
+    padding: 0.75rem 1.5rem;
   }
 
   .brand {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
   }
 
   .nav-links {
@@ -213,7 +213,7 @@
   }
 
   .nav-links a {
-    padding: 0.5rem 0.625rem;
+    padding: 0.5rem 0.75rem;
     font-size: 0.8125rem;
   }
 
@@ -226,11 +226,11 @@
 
 @media (max-width: 880px) {
   .nav-container {
-    padding: 0.875rem 1.25rem;
+    padding: 0.75rem 1.25rem;
   }
 
   .brand {
-    font-size: 1.125rem;
+    font-size: 1.0625rem;
   }
 
   .nav-toggle {
@@ -245,12 +245,12 @@
     background: rgba(10, 25, 41, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 0.875rem;
-    border-radius: 14px;
+    padding: 0.75rem;
+    border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     display: none;
-    min-width: 180px;
+    min-width: 170px;
   }
 
   .nav-links.open {
