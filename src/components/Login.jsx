@@ -32,7 +32,7 @@ export default function Login() {
 
     // Buscar usuario en los ejemplos basado en el email
     let currentUser = null;
-    
+
     if (formData.email === exampleUsers.independiente.email) {
       currentUser = exampleUsers.independiente;
     } else if (formData.email === exampleUsers.agencia.email) {
