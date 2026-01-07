@@ -29,8 +29,28 @@ export default function Navbar() {
         >
           <a href="#paquetes">Paquetes</a>
           <a href="#alojamiento">Alojamiento</a>
-          <a href="#vuelos">Vuelos</a>
-          <a href="#transporte">Transporte</a>
+          <div className="nav-dropdown">
+            <a href="#transporte" className="dropdown-toggle">
+              Traslados
+            </a>
+            <div className="dropdown-menu">
+              <a href="#autos">Autos</a>
+              <a href="#pasajes">Pasajes</a>
+              <a href="#transfer">Transfer</a>
+            </div>
+          </div>
+          <div className="nav-dropdown">
+            <a href="#actividades" className="dropdown-toggle">
+              Actividades
+            </a>
+            <div className="dropdown-menu">
+              <a href="#autos">Circuitos</a>
+              <a href="#pasajes">Excursiones</a>
+              <a href="#transfer">Salidas grupales</a>
+            </div>
+          </div>
+          <a href="#cruceros">Cruceros</a>
+          <a href="#cupos">Cupos</a>
           <a href="#seguros">Seguros</a>
           <a href="#ofertas" className="cta">
             Ofertas

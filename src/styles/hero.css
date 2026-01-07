@@ -190,7 +190,7 @@
 .search-field input:focus,
 .search-field select:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+  box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.12);
 }
 
 .search-field input:hover,
@@ -226,7 +226,7 @@
   font-family: inherit;
   cursor: pointer;
   transition: all var(--transition-smooth);
-  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);
+  box-shadow: 0 6px 20px rgba(91, 155, 213, 0.3);
   letter-spacing: 0.01em;
   min-height: 46px;
   grid-column: span 3;
@@ -234,7 +234,7 @@
 
 .search-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(255, 107, 53, 0.45);
+  box-shadow: 0 12px 32px rgba(91, 155, 213, 0.35);
 }
 
 .search-btn:active {

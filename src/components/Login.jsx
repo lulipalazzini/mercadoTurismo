@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DevHelper from "./DevHelper";
+import { exampleUsers } from "../data/exampleUsers";
 import "../styles/auth.css";
 
 export default function Login() {
@@ -29,8 +30,29 @@ export default function Login() {
     // Aquí irá la lógica de autenticación real
     console.log("Login attempt:", formData);
 
-    // Por ahora, redirigir directamente al dashboard
-    // En producción, validar credenciales primero
+    // Buscar usuario en los ejemplos basado en el email
+    let currentUser = null;
+    
+    if (formData.email === exampleUsers.independiente.email) {
+      currentUser = exampleUsers.independiente;
+    } else if (formData.email === exampleUsers.agencia.email) {
+      currentUser = exampleUsers.agencia;
+    } else if (formData.email === exampleUsers.operadorAgencia.email) {
+      currentUser = exampleUsers.operadorAgencia;
+    } else {
+      // Usuario por defecto si no coincide
+      currentUser = {
+        firstName: "Usuario",
+        lastName: "Demo",
+        operatorType: "independiente",
+        email: formData.email,
+      };
+    }
+
+    // Guardar usuario en localStorage
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+    // Redirigir al dashboard
     navigate("/dashboard");
   };
 

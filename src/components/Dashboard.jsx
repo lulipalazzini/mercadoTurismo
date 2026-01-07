@@ -28,8 +28,33 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
+  // Obtener información del usuario del localStorage
+  const user = JSON.parse(localStorage.getItem("currentUser")) || {
+    firstName: "Usuario",
+    lastName: "",
+    operatorType: "independiente",
+  };
+
+  // Determinar el nombre completo y rol a mostrar
+  const getUserDisplayName = () => {
+    if (user.operatorType === "agencia") {
+      return user.agencyName || "Agencia";
+    }
+    return `${user.firstName} ${user.lastName}`.trim() || "Usuario";
+  };
+
+  const getUserRole = () => {
+    const roles = {
+      independiente: "Operador Independiente",
+      agencia: "Agencia",
+      "operador-agencia": "Operador de Agencia",
+    };
+    return roles[user.operatorType] || "Operador";
+  };
+
   const handleLogout = () => {
-    // Aquí irá la lógica de logout
+    // Limpiar el localStorage
+    localStorage.removeItem("currentUser");
     navigate("/");
   };
 
@@ -56,10 +81,8 @@ export default function Dashboard() {
       <aside className={`dashboard-sidebar ${sidebarOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <div className="sidebar-brand">
-            <h2>
-              <FaHome className="brand-icon" /> MercadoTurismo
-            </h2>
-            <span className="sidebar-subtitle">Panel Mayorista</span>
+            <span className="brand-full">MercadoTurismo</span>
+            <span className="brand-short">MT</span>
           </div>
           <button
             className="sidebar-toggle"
@@ -167,8 +190,13 @@ export default function Dashboard() {
           </div>
           <div className="header-right">
             <div className="user-menu">
-              <div className="user-avatar">OP</div>
-              <span className="user-name">Operador</span>
+              <div className="user-avatar">
+                {getUserDisplayName().substring(0, 2).toUpperCase()}
+              </div>
+              <div className="user-info">
+                <span className="user-name">{getUserDisplayName()}</span>
+                <span className="user-role">{getUserRole()}</span>
+              </div>
             </div>
           </div>
         </header>
