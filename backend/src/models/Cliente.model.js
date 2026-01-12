@@ -1,0 +1,55 @@
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/database.js";
+
+const Cliente = sequelize.define(
+  "Cliente",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isEmail: true,
+        notEmpty: true,
+      },
+      set(value) {
+        this.setDataValue("email", value.toLowerCase().trim());
+      },
+    },
+    telefono: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    direccion: {
+      type: DataTypes.STRING,
+    },
+    dni: {
+      type: DataTypes.STRING,
+    },
+    fechaNacimiento: {
+      type: DataTypes.DATE,
+    },
+    nacionalidad: {
+      type: DataTypes.STRING,
+    },
+    notas: {
+      type: DataTypes.TEXT,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export default Cliente;

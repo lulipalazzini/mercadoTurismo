@@ -27,31 +27,31 @@ export default function Navbar() {
           id="primary-navigation"
           className={`nav-links ${open ? "open" : ""}`}
         >
-          <a href="#paquetes">Paquetes</a>
-          <a href="#alojamiento">Alojamiento</a>
+          <Link to="/paquetes">Paquetes</Link>
+          <Link to="/alojamientos">Alojamiento</Link>
           <div className="nav-dropdown">
-            <a href="#transporte" className="dropdown-toggle">
+            <span className="dropdown-toggle">
               Traslados
-            </a>
+            </span>
             <div className="dropdown-menu">
-              <a href="#autos">Autos</a>
-              <a href="#pasajes">Pasajes</a>
-              <a href="#transfer">Transfer</a>
+              <Link to="/autos">Autos</Link>
+              <Link to="/pasajes">Pasajes</Link>
+              <Link to="/transfers">Transfer</Link>
             </div>
           </div>
           <div className="nav-dropdown">
-            <a href="#actividades" className="dropdown-toggle">
+            <span className="dropdown-toggle">
               Actividades
-            </a>
+            </span>
             <div className="dropdown-menu">
-              <a href="#autos">Circuitos</a>
-              <a href="#pasajes">Excursiones</a>
-              <a href="#transfer">Salidas grupales</a>
+              <Link to="/circuitos">Circuitos</Link>
+              <Link to="/excursiones">Excursiones</Link>
+              <Link to="/salidas-grupales">Salidas grupales</Link>
             </div>
           </div>
-          <a href="#cruceros">Cruceros</a>
-          <a href="#cupos">Cupos</a>
-          <a href="#seguros">Seguros</a>
+          <Link to="/cruceros">Cruceros</Link>
+          <Link to="/cupos">Cupos</Link>
+          <Link to="/seguros">Seguros</Link>
           <a href="#ofertas" className="cta">
             Ofertas
           </a>
