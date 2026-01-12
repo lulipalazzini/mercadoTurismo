@@ -11,27 +11,27 @@ const Cupo = sequelize.define(
     },
     tipoServicio: {
       type: DataTypes.ENUM(
-        'paquete',
-        'alojamiento',
-        'excursion',
-        'circuito',
-        'salida_grupal',
-        'crucero',
-        'pasaje',
-        'otro'
+        "paquete",
+        "alojamiento",
+        "excursion",
+        "circuito",
+        "salida_grupal",
+        "crucero",
+        "pasaje",
+        "otro"
       ),
       allowNull: false,
-      comment: 'Tipo de servicio al que pertenece el cupo',
+      comment: "Tipo de servicio al que pertenece el cupo",
     },
     servicioId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      comment: 'ID del servicio relacionado',
+      comment: "ID del servicio relacionado",
     },
     fecha: {
       type: DataTypes.DATE,
       allowNull: false,
-      comment: 'Fecha específica del cupo',
+      comment: "Fecha específica del cupo",
     },
     cupoTotal: {
       type: DataTypes.INTEGER,
@@ -39,7 +39,7 @@ const Cupo = sequelize.define(
       validate: {
         min: 0,
       },
-      comment: 'Cupo total disponible',
+      comment: "Cupo total disponible",
     },
     cupoReservado: {
       type: DataTypes.INTEGER,
@@ -48,7 +48,7 @@ const Cupo = sequelize.define(
       validate: {
         min: 0,
       },
-      comment: 'Cupo ya reservado',
+      comment: "Cupo ya reservado",
     },
     cupoDisponible: {
       type: DataTypes.INTEGER,
@@ -56,19 +56,19 @@ const Cupo = sequelize.define(
       validate: {
         min: 0,
       },
-      comment: 'Cupo disponible (total - reservado)',
+      comment: "Cupo disponible (total - reservado)",
     },
     precioAjustado: {
       type: DataTypes.DECIMAL(10, 2),
-      comment: 'Precio específico para esta fecha (opcional)',
+      comment: "Precio específico para esta fecha (opcional)",
     },
     estado: {
-      type: DataTypes.ENUM('disponible', 'limitado', 'agotado', 'bloqueado'),
-      defaultValue: 'disponible',
+      type: DataTypes.ENUM("disponible", "limitado", "agotado", "bloqueado"),
+      defaultValue: "disponible",
     },
     notas: {
       type: DataTypes.TEXT,
-      comment: 'Observaciones o notas adicionales',
+      comment: "Observaciones o notas adicionales",
     },
   },
   {
@@ -76,7 +76,7 @@ const Cupo = sequelize.define(
     timestamps: true,
     indexes: [
       {
-        fields: ['tipoServicio', 'servicioId', 'fecha'],
+        fields: ["tipoServicio", "servicioId", "fecha"],
         unique: true,
       },
     ],
@@ -86,14 +86,14 @@ const Cupo = sequelize.define(
 // Hook para calcular cupo disponible automáticamente
 Cupo.beforeSave((cupo) => {
   cupo.cupoDisponible = cupo.cupoTotal - cupo.cupoReservado;
-  
+
   // Actualizar estado según disponibilidad
   if (cupo.cupoDisponible === 0) {
-    cupo.estado = 'agotado';
+    cupo.estado = "agotado";
   } else if (cupo.cupoDisponible <= cupo.cupoTotal * 0.2) {
-    cupo.estado = 'limitado';
-  } else if (cupo.estado !== 'bloqueado') {
-    cupo.estado = 'disponible';
+    cupo.estado = "limitado";
+  } else if (cupo.estado !== "bloqueado") {
+    cupo.estado = "disponible";
   }
 });
 

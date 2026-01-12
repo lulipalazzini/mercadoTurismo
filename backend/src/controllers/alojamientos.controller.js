@@ -31,7 +31,9 @@ export const getAlojamiento = async (req, res) => {
 export const createAlojamiento = async (req, res) => {
   try {
     const alojamiento = await Alojamiento.create(req.body);
-    res.status(201).json({ message: "Alojamiento creado exitosamente", alojamiento });
+    res
+      .status(201)
+      .json({ message: "Alojamiento creado exitosamente", alojamiento });
   } catch (error) {
     res
       .status(500)
@@ -50,7 +52,10 @@ export const updateAlojamiento = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error al actualizar alojamiento", error: error.message });
+      .json({
+        message: "Error al actualizar alojamiento",
+        error: error.message,
+      });
   }
 };
 

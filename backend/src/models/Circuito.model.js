@@ -24,7 +24,7 @@ const Circuito = sequelize.define(
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
-      comment: 'Array de ciudades/países del circuito',
+      comment: "Array de ciudades/países del circuito",
     },
     duracion: {
       type: DataTypes.INTEGER,
@@ -32,7 +32,7 @@ const Circuito = sequelize.define(
       validate: {
         min: 1,
       },
-      comment: 'Duración en días',
+      comment: "Duración en días",
     },
     precio: {
       type: DataTypes.DECIMAL(10, 2),
@@ -44,17 +44,17 @@ const Circuito = sequelize.define(
     incluye: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Lista de servicios incluidos',
+      comment: "Lista de servicios incluidos",
     },
     noIncluye: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Lista de servicios no incluidos',
+      comment: "Lista de servicios no incluidos",
     },
     itinerario: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Detalle día a día del circuito',
+      comment: "Detalle día a día del circuito",
     },
     fechaInicio: {
       type: DataTypes.DATE,
@@ -77,8 +77,8 @@ const Circuito = sequelize.define(
       },
     },
     nivelDificultad: {
-      type: DataTypes.ENUM('facil', 'moderado', 'dificil'),
-      defaultValue: 'moderado',
+      type: DataTypes.ENUM("facil", "moderado", "dificil"),
+      defaultValue: "moderado",
     },
     imagenes: {
       type: DataTypes.JSON,

@@ -10,9 +10,9 @@ const Pasaje = sequelize.define(
       autoIncrement: true,
     },
     tipo: {
-      type: DataTypes.ENUM('aereo', 'terrestre', 'maritimo'),
+      type: DataTypes.ENUM("aereo", "terrestre", "maritimo"),
       allowNull: false,
-      defaultValue: 'aereo',
+      defaultValue: "aereo",
     },
     origen: {
       type: DataTypes.STRING,
@@ -43,8 +43,8 @@ const Pasaje = sequelize.define(
       type: DataTypes.TIME,
     },
     clase: {
-      type: DataTypes.ENUM('economica', 'ejecutiva', 'primera'),
-      defaultValue: 'economica',
+      type: DataTypes.ENUM("economica", "ejecutiva", "primera"),
+      defaultValue: "economica",
     },
     precio: {
       type: DataTypes.DECIMAL(10, 2),

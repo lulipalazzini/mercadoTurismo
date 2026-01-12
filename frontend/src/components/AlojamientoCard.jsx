@@ -70,7 +70,9 @@ export default function AlojamientoCard({ alojamiento }) {
               </span>
             ))}
             {servicios.length > 3 && (
-              <span className="servicio-item more">+{servicios.length - 3}</span>
+              <span className="servicio-item more">
+                +{servicios.length - 3}
+              </span>
             )}
           </div>
         )}

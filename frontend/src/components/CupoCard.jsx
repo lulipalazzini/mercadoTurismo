@@ -23,7 +23,10 @@ export default function CupoCard({ item }) {
     });
   };
 
-  const porcentajeDisponible = ((cuposDisponibles / cuposMaximos) * 100).toFixed(0);
+  const porcentajeDisponible = (
+    (cuposDisponibles / cuposMaximos) *
+    100
+  ).toFixed(0);
 
   return (
     <div className="service-card">
@@ -51,12 +54,17 @@ export default function CupoCard({ item }) {
           </div>
           <div className="info-item">
             <span className="info-label">Cupos</span>
-            <span className="info-value">{cuposDisponibles}/{cuposMaximos}</span>
+            <span className="info-value">
+              {cuposDisponibles}/{cuposMaximos}
+            </span>
           </div>
         </div>
 
         <div className="cupo-bar">
-          <div className="cupo-bar-fill" style={{ width: `${porcentajeDisponible}%` }}></div>
+          <div
+            className="cupo-bar-fill"
+            style={{ width: `${porcentajeDisponible}%` }}
+          ></div>
         </div>
 
         {requisitos && requisitos.length > 0 && (

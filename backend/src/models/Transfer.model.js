@@ -10,9 +10,14 @@ const Transfer = sequelize.define(
       autoIncrement: true,
     },
     tipo: {
-      type: DataTypes.ENUM('aeropuerto-hotel', 'hotel-aeropuerto', 'interhotel', 'punto-a-punto'),
+      type: DataTypes.ENUM(
+        "aeropuerto-hotel",
+        "hotel-aeropuerto",
+        "interhotel",
+        "punto-a-punto"
+      ),
       allowNull: false,
-      defaultValue: 'aeropuerto-hotel',
+      defaultValue: "aeropuerto-hotel",
     },
     origen: {
       type: DataTypes.STRING,
@@ -23,9 +28,9 @@ const Transfer = sequelize.define(
       allowNull: false,
     },
     vehiculo: {
-      type: DataTypes.ENUM('sedan', 'van', 'minibus', 'bus'),
+      type: DataTypes.ENUM("sedan", "van", "minibus", "bus"),
       allowNull: false,
-      defaultValue: 'sedan',
+      defaultValue: "sedan",
     },
     capacidadPasajeros: {
       type: DataTypes.INTEGER,
@@ -44,7 +49,7 @@ const Transfer = sequelize.define(
     },
     duracionEstimada: {
       type: DataTypes.INTEGER,
-      comment: 'Duración en minutos',
+      comment: "Duración en minutos",
     },
     servicioCompartido: {
       type: DataTypes.BOOLEAN,

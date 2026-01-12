@@ -10,7 +10,10 @@ export const getSalidasGrupales = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error al obtener salidas grupales", error: error.message });
+      .json({
+        message: "Error al obtener salidas grupales",
+        error: error.message,
+      });
   }
 };
 
@@ -24,7 +27,10 @@ export const getSalidaGrupal = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error al obtener salida grupal", error: error.message });
+      .json({
+        message: "Error al obtener salida grupal",
+        error: error.message,
+      });
   }
 };
 
@@ -34,7 +40,9 @@ export const createSalidaGrupal = async (req, res) => {
       ...req.body,
       cuposDisponibles: req.body.cuposMaximos,
     });
-    res.status(201).json({ message: "Salida grupal creada exitosamente", salida });
+    res
+      .status(201)
+      .json({ message: "Salida grupal creada exitosamente", salida });
   } catch (error) {
     res
       .status(500)
@@ -53,7 +61,10 @@ export const updateSalidaGrupal = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error al actualizar salida grupal", error: error.message });
+      .json({
+        message: "Error al actualizar salida grupal",
+        error: error.message,
+      });
   }
 };
 
@@ -68,6 +79,9 @@ export const deleteSalidaGrupal = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error al eliminar salida grupal", error: error.message });
+      .json({
+        message: "Error al eliminar salida grupal",
+        error: error.message,
+      });
   }
 };

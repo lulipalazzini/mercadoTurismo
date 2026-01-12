@@ -19,12 +19,12 @@ const Crucero = sequelize.define(
     naviera: {
       type: DataTypes.STRING,
       allowNull: false,
-      comment: 'Nombre de la compañía naviera',
+      comment: "Nombre de la compañía naviera",
     },
     barco: {
       type: DataTypes.STRING,
       allowNull: false,
-      comment: 'Nombre del barco',
+      comment: "Nombre del barco",
     },
     descripcion: {
       type: DataTypes.TEXT,
@@ -34,12 +34,12 @@ const Crucero = sequelize.define(
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
-      comment: 'Puertos y destinos del crucero',
+      comment: "Puertos y destinos del crucero",
     },
     duracion: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      comment: 'Duración en noches',
+      comment: "Duración en noches",
       validate: {
         min: 1,
       },
@@ -66,12 +66,12 @@ const Crucero = sequelize.define(
       validate: {
         min: 0,
       },
-      comment: 'Precio mínimo según categoría de cabina',
+      comment: "Precio mínimo según categoría de cabina",
     },
     tiposCabina: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Array con tipos y precios de cabinas',
+      comment: "Array con tipos y precios de cabinas",
     },
     incluye: {
       type: DataTypes.JSON,
@@ -84,7 +84,7 @@ const Crucero = sequelize.define(
     serviciosABordo: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Restaurantes, piscinas, gimnasio, etc.',
+      comment: "Restaurantes, piscinas, gimnasio, etc.",
     },
     capacidadTotal: {
       type: DataTypes.INTEGER,

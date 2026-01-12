@@ -28,8 +28,14 @@ export default function PasajeCard({ item }) {
     <div className="service-card">
       <div className="card-header">
         <span className="tipo-badge">{tipo}</span>
-        <h3 className="card-title">{origen} → {destino}</h3>
-        {aerolinea && <p className="empresa">{aerolinea} {numeroVuelo && `• ${numeroVuelo}`}</p>}
+        <h3 className="card-title">
+          {origen} → {destino}
+        </h3>
+        {aerolinea && (
+          <p className="empresa">
+            {aerolinea} {numeroVuelo && `• ${numeroVuelo}`}
+          </p>
+        )}
       </div>
 
       <div className="card-content">

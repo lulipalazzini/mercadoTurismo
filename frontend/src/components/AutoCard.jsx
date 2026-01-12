@@ -27,7 +27,9 @@ export default function AutoCard({ item }) {
       )}
 
       <div className="card-header">
-        <h3 className="card-title">{marca} {modelo}</h3>
+        <h3 className="card-title">
+          {marca} {modelo}
+        </h3>
         <p className="empresa">📍 {ubicacion}</p>
       </div>
 

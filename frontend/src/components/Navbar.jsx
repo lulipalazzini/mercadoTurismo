@@ -30,9 +30,7 @@ export default function Navbar() {
           <Link to="/paquetes">Paquetes</Link>
           <Link to="/alojamientos">Alojamiento</Link>
           <div className="nav-dropdown">
-            <span className="dropdown-toggle">
-              Traslados
-            </span>
+            <span className="dropdown-toggle">Traslados</span>
             <div className="dropdown-menu">
               <Link to="/autos">Autos</Link>
               <Link to="/pasajes">Pasajes</Link>
@@ -40,9 +38,7 @@ export default function Navbar() {
             </div>
           </div>
           <div className="nav-dropdown">
-            <span className="dropdown-toggle">
-              Actividades
-            </span>
+            <span className="dropdown-toggle">Actividades</span>
             <div className="dropdown-menu">
               <Link to="/circuitos">Circuitos</Link>
               <Link to="/excursiones">Excursiones</Link>

@@ -35,7 +35,7 @@ const SalidaGrupal = sequelize.define(
     duracion: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      comment: 'Duración en días',
+      comment: "Duración en días",
       validate: {
         min: 1,
       },
@@ -50,17 +50,17 @@ const SalidaGrupal = sequelize.define(
     incluye: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Servicios incluidos',
+      comment: "Servicios incluidos",
     },
     noIncluye: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Servicios no incluidos',
+      comment: "Servicios no incluidos",
     },
     itinerario: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Detalle día a día',
+      comment: "Detalle día a día",
     },
     cupoMinimo: {
       type: DataTypes.INTEGER,
@@ -68,7 +68,7 @@ const SalidaGrupal = sequelize.define(
       validate: {
         min: 1,
       },
-      comment: 'Cupo mínimo para confirmar salida',
+      comment: "Cupo mínimo para confirmar salida",
     },
     cupoMaximo: {
       type: DataTypes.INTEGER,
@@ -85,12 +85,12 @@ const SalidaGrupal = sequelize.define(
       },
     },
     estado: {
-      type: DataTypes.ENUM('disponible', 'confirmada', 'completa', 'cancelada'),
-      defaultValue: 'disponible',
+      type: DataTypes.ENUM("disponible", "confirmada", "completa", "cancelada"),
+      defaultValue: "disponible",
     },
     acompañante: {
       type: DataTypes.STRING,
-      comment: 'Nombre del guía o coordinador',
+      comment: "Nombre del guía o coordinador",
     },
     requisitos: {
       type: DataTypes.JSON,

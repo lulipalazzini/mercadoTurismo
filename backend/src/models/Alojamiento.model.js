@@ -17,9 +17,16 @@ const Alojamiento = sequelize.define(
       },
     },
     tipo: {
-      type: DataTypes.ENUM('hotel', 'hostel', 'apartamento', 'resort', 'cabaña', 'otro'),
+      type: DataTypes.ENUM(
+        "hotel",
+        "hostel",
+        "apartamento",
+        "resort",
+        "cabaña",
+        "otro"
+      ),
       allowNull: false,
-      defaultValue: 'hotel',
+      defaultValue: "hotel",
     },
     ubicacion: {
       type: DataTypes.STRING,

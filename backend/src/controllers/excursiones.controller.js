@@ -31,7 +31,9 @@ export const getExcursion = async (req, res) => {
 export const createExcursion = async (req, res) => {
   try {
     const excursion = await Excursion.create(req.body);
-    res.status(201).json({ message: "Excursion creada exitosamente", excursion });
+    res
+      .status(201)
+      .json({ message: "Excursion creada exitosamente", excursion });
   } catch (error) {
     res
       .status(500)

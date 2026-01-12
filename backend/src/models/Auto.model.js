@@ -18,9 +18,16 @@ const Auto = sequelize.define(
       allowNull: false,
     },
     categoria: {
-      type: DataTypes.ENUM('economico', 'compacto', 'sedan', 'suv', 'lujo', 'van'),
+      type: DataTypes.ENUM(
+        "economico",
+        "compacto",
+        "sedan",
+        "suv",
+        "lujo",
+        "van"
+      ),
       allowNull: false,
-      defaultValue: 'economico',
+      defaultValue: "economico",
     },
     año: {
       type: DataTypes.INTEGER,
@@ -38,14 +45,14 @@ const Auto = sequelize.define(
       },
     },
     transmision: {
-      type: DataTypes.ENUM('manual', 'automatico'),
+      type: DataTypes.ENUM("manual", "automatico"),
       allowNull: false,
-      defaultValue: 'manual',
+      defaultValue: "manual",
     },
     combustible: {
-      type: DataTypes.ENUM('gasolina', 'diesel', 'electrico', 'hibrido'),
+      type: DataTypes.ENUM("gasolina", "diesel", "electrico", "hibrido"),
       allowNull: false,
-      defaultValue: 'gasolina',
+      defaultValue: "gasolina",
     },
     precioDia: {
       type: DataTypes.DECIMAL(10, 2),

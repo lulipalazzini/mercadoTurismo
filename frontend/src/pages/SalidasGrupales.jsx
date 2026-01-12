@@ -13,7 +13,9 @@ export default function SalidasGrupales() {
 
   const fetchSalidas = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/salidas-grupales");
+      const response = await fetch(
+        "http://localhost:3001/api/salidas-grupales"
+      );
       if (!response.ok) {
         throw new Error("Error al cargar las salidas grupales");
       }

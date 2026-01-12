@@ -25,14 +25,21 @@ const Excursion = sequelize.define(
       allowNull: false,
     },
     tipo: {
-      type: DataTypes.ENUM('cultural', 'aventura', 'naturaleza', 'gastronomica', 'deportiva', 'otra'),
+      type: DataTypes.ENUM(
+        "cultural",
+        "aventura",
+        "naturaleza",
+        "gastronomica",
+        "deportiva",
+        "otra"
+      ),
       allowNull: false,
-      defaultValue: 'cultural',
+      defaultValue: "cultural",
     },
     duracion: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      comment: 'Duración en horas',
+      comment: "Duración en horas",
       validate: {
         min: 1,
       },
@@ -54,7 +61,7 @@ const Excursion = sequelize.define(
     },
     horario: {
       type: DataTypes.STRING,
-      comment: 'Ej: 9:00 AM - 5:00 PM',
+      comment: "Ej: 9:00 AM - 5:00 PM",
     },
     puntoEncuentro: {
       type: DataTypes.STRING,
@@ -78,12 +85,12 @@ const Excursion = sequelize.define(
       defaultValue: 0,
     },
     nivelDificultad: {
-      type: DataTypes.ENUM('facil', 'moderado', 'dificil'),
-      defaultValue: 'facil',
+      type: DataTypes.ENUM("facil", "moderado", "dificil"),
+      defaultValue: "facil",
     },
     idiomas: {
       type: DataTypes.JSON,
-      defaultValue: ['español'],
+      defaultValue: ["español"],
     },
     imagenes: {
       type: DataTypes.JSON,

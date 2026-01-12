@@ -38,7 +38,9 @@ export default function CruceroCard({ item }) {
 
       <div className="card-header">
         <h3 className="card-title">{nombre}</h3>
-        <p className="empresa">{naviera} • {barco}</p>
+        <p className="empresa">
+          {naviera} • {barco}
+        </p>
       </div>
 
       <div className="card-content">
@@ -69,7 +71,10 @@ export default function CruceroCard({ item }) {
           <div className="destinos">
             <span className="destinos-icon">⚓</span>
             <span className="destinos-text">
-              {itinerario.slice(0, 3).map(p => p.puerto || p).join(" • ")}
+              {itinerario
+                .slice(0, 3)
+                .map((p) => p.puerto || p)
+                .join(" • ")}
               {itinerario.length > 3 && ` +${itinerario.length - 3}`}
             </span>
           </div>

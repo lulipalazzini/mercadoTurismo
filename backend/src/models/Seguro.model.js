@@ -19,19 +19,19 @@ const Seguro = sequelize.define(
     aseguradora: {
       type: DataTypes.STRING,
       allowNull: false,
-      comment: 'Nombre de la compañía aseguradora',
+      comment: "Nombre de la compañía aseguradora",
     },
     tipo: {
       type: DataTypes.ENUM(
-        'viaje',
-        'medico',
-        'cancelacion',
-        'equipaje',
-        'asistencia',
-        'integral'
+        "viaje",
+        "medico",
+        "cancelacion",
+        "equipaje",
+        "asistencia",
+        "integral"
       ),
       allowNull: false,
-      defaultValue: 'viaje',
+      defaultValue: "viaje",
     },
     descripcion: {
       type: DataTypes.TEXT,
@@ -41,12 +41,12 @@ const Seguro = sequelize.define(
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
-      comment: 'Lista de coberturas incluidas',
+      comment: "Lista de coberturas incluidas",
     },
     montoCobertura: {
       type: DataTypes.DECIMAL(12, 2),
       allowNull: false,
-      comment: 'Monto máximo de cobertura',
+      comment: "Monto máximo de cobertura",
     },
     precio: {
       type: DataTypes.DECIMAL(10, 2),
@@ -54,12 +54,12 @@ const Seguro = sequelize.define(
       validate: {
         min: 0,
       },
-      comment: 'Precio del seguro',
+      comment: "Precio del seguro",
     },
     duracionMaxima: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      comment: 'Duración máxima en días',
+      comment: "Duración máxima en días",
       validate: {
         min: 1,
       },
@@ -75,25 +75,25 @@ const Seguro = sequelize.define(
     destinosIncluidos: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Países o regiones cubiertas',
+      comment: "Países o regiones cubiertas",
     },
     exclusiones: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Situaciones no cubiertas',
+      comment: "Situaciones no cubiertas",
     },
     requisitos: {
       type: DataTypes.JSON,
       defaultValue: [],
-      comment: 'Documentos o condiciones requeridas',
+      comment: "Documentos o condiciones requeridas",
     },
     contactoEmergencia: {
       type: DataTypes.STRING,
-      comment: 'Teléfono de asistencia 24/7',
+      comment: "Teléfono de asistencia 24/7",
     },
     poliza: {
       type: DataTypes.STRING,
-      comment: 'Número o referencia de póliza',
+      comment: "Número o referencia de póliza",
     },
     activo: {
       type: DataTypes.BOOLEAN,

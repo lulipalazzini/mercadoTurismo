@@ -18,7 +18,9 @@ export default function TransferCard({ item }) {
     <div className="service-card">
       <div className="card-header">
         <span className="tipo-badge">{tipo}</span>
-        <h3 className="card-title">{origen} → {destino}</h3>
+        <h3 className="card-title">
+          {origen} → {destino}
+        </h3>
         <p className="empresa">{tipoVehiculo}</p>
       </div>
 

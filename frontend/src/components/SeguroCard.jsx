@@ -34,7 +34,9 @@ export default function SeguroCard({ item }) {
         <div className="info-grid">
           <div className="info-item">
             <span className="info-label">Cobertura</span>
-            <span className="info-value">${montoCobertura?.toLocaleString()}</span>
+            <span className="info-value">
+              ${montoCobertura?.toLocaleString()}
+            </span>
           </div>
           <div className="info-item">
             <span className="info-label">Duración máx.</span>
@@ -42,7 +44,9 @@ export default function SeguroCard({ item }) {
           </div>
           <div className="info-item">
             <span className="info-label">Edad</span>
-            <span className="info-value">{edadMinima}-{edadMaxima} años</span>
+            <span className="info-value">
+              {edadMinima}-{edadMaxima} años
+            </span>
           </div>
         </div>
 
@@ -63,7 +67,8 @@ export default function SeguroCard({ item }) {
             <span className="destinos-icon">🌍</span>
             <span className="destinos-text">
               {destinosIncluidos.slice(0, 2).join(", ")}
-              {destinosIncluidos.length > 2 && ` +${destinosIncluidos.length - 2}`}
+              {destinosIncluidos.length > 2 &&
+                ` +${destinosIncluidos.length - 2}`}
             </span>
           </div>
         )}
