@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/card.css";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 export default function ExcursionCard({ item }) {
   const {
@@ -19,13 +20,15 @@ export default function ExcursionCard({ item }) {
       {imagenes && imagenes.length > 0 && (
         <div className="card-image">
           <img src={imagenes[0]} alt={nombre} />
-          <span className="tipo-badge">{nivelDificultad}</span>
         </div>
       )}
 
       <div className="card-header">
-        <h3 className="card-title">{nombre}</h3>
-        <p className="empresa">📍 {ubicacion}</p>
+        <div className="card-header-content">
+          <h3 className="card-title">{nombre}</h3>
+          <p className="empresa"><FaMapMarkerAlt /> {ubicacion}</p>
+        </div>
+        <span className="tipo-badge">{nivelDificultad}</span>
       </div>
 
       <div className="card-content">

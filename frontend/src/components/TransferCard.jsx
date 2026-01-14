@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/card.css";
+import { FaArrowRight } from "react-icons/fa";
 
 export default function TransferCard({ item }) {
   const {
@@ -17,11 +18,13 @@ export default function TransferCard({ item }) {
   return (
     <div className="service-card">
       <div className="card-header">
+        <div className="card-header-content">
+          <h3 className="card-title">
+            {origen} <FaArrowRight /> {destino}
+          </h3>
+          <p className="empresa">{tipoVehiculo}</p>
+        </div>
         <span className="tipo-badge">{tipo}</span>
-        <h3 className="card-title">
-          {origen} → {destino}
-        </h3>
-        <p className="empresa">{tipoVehiculo}</p>
       </div>
 
       <div className="card-content">

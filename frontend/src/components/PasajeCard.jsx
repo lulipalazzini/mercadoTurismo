@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/card.css";
+import { FaArrowRight } from "react-icons/fa";
 
 export default function PasajeCard({ item }) {
   const {
@@ -27,15 +28,17 @@ export default function PasajeCard({ item }) {
   return (
     <div className="service-card">
       <div className="card-header">
+        <div className="card-header-content">
+          <h3 className="card-title">
+            {origen} <FaArrowRight /> {destino}
+          </h3>
+          {aerolinea && (
+            <p className="empresa">
+              {aerolinea} {numeroVuelo && `• ${numeroVuelo}`}
+            </p>
+          )}
+        </div>
         <span className="tipo-badge">{tipo}</span>
-        <h3 className="card-title">
-          {origen} → {destino}
-        </h3>
-        {aerolinea && (
-          <p className="empresa">
-            {aerolinea} {numeroVuelo && `• ${numeroVuelo}`}
-          </p>
-        )}
       </div>
 
       <div className="card-content">

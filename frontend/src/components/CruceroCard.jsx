@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/card.css";
+import { FaShip } from "react-icons/fa";
 
 export default function CruceroCard({ item }) {
   const {
@@ -32,15 +33,17 @@ export default function CruceroCard({ item }) {
       {imagenes && imagenes.length > 0 && (
         <div className="card-image">
           <img src={imagenes[0]} alt={nombre} />
-          <span className="tipo-badge tipo-crucero">{duracion} noches</span>
         </div>
       )}
 
       <div className="card-header">
-        <h3 className="card-title">{nombre}</h3>
-        <p className="empresa">
-          {naviera} • {barco}
-        </p>
+        <div className="card-header-content">
+          <h3 className="card-title">{nombre}</h3>
+          <p className="empresa">
+            <FaShip /> {naviera} • {barco}
+          </p>
+        </div>
+        <span className="tipo-badge tipo-crucero">{duracion}N</span>
       </div>
 
       <div className="card-content">

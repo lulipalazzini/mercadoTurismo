@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/card.css";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 export default function PaqueteCard({ item }) {
   const {
@@ -32,8 +33,11 @@ export default function PaqueteCard({ item }) {
       )}
 
       <div className="card-header">
-        <h3 className="card-title">{nombre}</h3>
-        <p className="destino">📍 {destino}</p>
+        <div className="card-header-content">
+          <h3 className="card-title">{nombre}</h3>
+          <p className="destino"><FaMapMarkerAlt /> {destino}</p>
+        </div>
+        <span className="tipo-badge">{duracion}D</span>
       </div>
 
       <div className="card-content">

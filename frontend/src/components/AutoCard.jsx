@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/card.css";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 export default function AutoCard({ item }) {
   const {
@@ -22,15 +23,17 @@ export default function AutoCard({ item }) {
       {imagenes && imagenes.length > 0 && (
         <div className="card-image">
           <img src={imagenes[0]} alt={`${marca} ${modelo}`} />
-          <span className="tipo-badge tipo-auto">{categoria}</span>
         </div>
       )}
 
       <div className="card-header">
-        <h3 className="card-title">
-          {marca} {modelo}
-        </h3>
-        <p className="empresa">📍 {ubicacion}</p>
+        <div className="card-header-content">
+          <h3 className="card-title">
+            {marca} {modelo}
+          </h3>
+          <p className="empresa"><FaMapMarkerAlt /> {ubicacion}</p>
+        </div>
+        <span className="tipo-badge tipo-auto">{categoria}</span>
       </div>
 
       <div className="card-content">

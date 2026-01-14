@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/card.css";
+import { FaGlobe } from "react-icons/fa";
 
 export default function CircuitoCard({ item }) {
   const {
@@ -28,15 +29,17 @@ export default function CircuitoCard({ item }) {
       {imagenes && imagenes.length > 0 && (
         <div className="card-image">
           <img src={imagenes[0]} alt={nombre} />
-          <span className="tipo-badge">{nivelDificultad}</span>
         </div>
       )}
 
       <div className="card-header">
-        <h3 className="card-title">{nombre}</h3>
-        {destinos && destinos.length > 0 && (
-          <p className="empresa">🌍 {destinos.slice(0, 3).join(" • ")}</p>
-        )}
+        <div className="card-header-content">
+          <h3 className="card-title">{nombre}</h3>
+          {destinos && destinos.length > 0 && (
+            <p className="empresa"><FaGlobe /> {destinos.slice(0, 3).join(" • ")}</p>
+          )}
+        </div>
+        <span className="tipo-badge">{nivelDificultad}</span>
       </div>
 
       <div className="card-content">

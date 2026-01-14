@@ -13,7 +13,7 @@ export default function Cupos() {
 
   const fetchCupos = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/cupos");
+      const response = await fetch("http://localhost:3001/api/cupos");
       if (!response.ok) {
         throw new Error("Error al cargar los cupos");
       }

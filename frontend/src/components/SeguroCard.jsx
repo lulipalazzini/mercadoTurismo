@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/card.css";
+import { FaGlobe } from "react-icons/fa";
 
 export default function SeguroCard({ item }) {
   const {
@@ -19,9 +20,11 @@ export default function SeguroCard({ item }) {
   return (
     <div className="service-card">
       <div className="card-header">
+        <div className="card-header-content">
+          <h3 className="card-title">{nombre}</h3>
+          <p className="aseguradora">{aseguradora}</p>
+        </div>
         <span className="tipo-badge tipo-seguro">{tipo}</span>
-        <h3 className="card-title">{nombre}</h3>
-        <p className="aseguradora">{aseguradora}</p>
       </div>
 
       <div className="card-content">
@@ -64,7 +67,7 @@ export default function SeguroCard({ item }) {
 
         {destinosIncluidos && destinosIncluidos.length > 0 && (
           <div className="destinos">
-            <span className="destinos-icon">🌍</span>
+            <span className="destinos-icon"><FaGlobe /></span>
             <span className="destinos-text">
               {destinosIncluidos.slice(0, 2).join(", ")}
               {destinosIncluidos.length > 2 &&

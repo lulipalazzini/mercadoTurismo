@@ -76,6 +76,7 @@ const Cupo = sequelize.define(
     timestamps: true,
     indexes: [
       {
+        name: "cupos_servicio_fecha",
         fields: ["tipoServicio", "servicioId", "fecha"],
         unique: true,
       },

@@ -1,18 +1,18 @@
 import React from "react";
 import "../styles/card.css";
+import { FaCalendarAlt } from "react-icons/fa";
 
 export default function CupoCard({ item }) {
   const {
-    nombre,
-    descripcion,
-    tipo,
-    destino,
-    fechaInicio,
-    fechaFin,
-    precio,
-    cuposDisponibles,
-    cuposMaximos,
-    requisitos,
+    tipoServicio,
+    servicioId,
+    fecha,
+    cupoTotal,
+    cupoReservado,
+    cupoDisponible,
+    precioAjustado,
+    estado,
+    notas,
   } = item;
 
   const formatDate = (date) => {
@@ -23,69 +23,93 @@ export default function CupoCard({ item }) {
     });
   };
 
-  const porcentajeDisponible = (
-    (cuposDisponibles / cuposMaximos) *
-    100
-  ).toFixed(0);
+  const porcentajeDisponible = ((cupoDisponible / cupoTotal) * 100).toFixed(0);
+  
+  const getEstadoColor = () => {
+    switch (estado) {
+      case "disponible":
+        return "success";
+      case "limitado":
+        return "warning";
+      case "agotado":
+        return "danger";
+      case "bloqueado":
+        return "info";
+      default:
+        return "default";
+    }
+  };
+
+  const getTipoLabel = (tipo) => {
+    const labels = {
+      paquete: "Paquete",
+      alojamiento: "Alojamiento",
+      excursion: "Excursión",
+      circuito: "Circuito",
+      salida_grupal: "Salida Grupal",
+      crucero: "Crucero",
+      pasaje: "Pasaje",
+      otro: "Otro",
+    };
+    return labels[tipo] || tipo;
+  };
 
   return (
     <div className="service-card">
       <div className="card-header">
-        <span className="tipo-badge">{tipo}</span>
-        <h3 className="card-title">{nombre}</h3>
-        <p className="empresa">📍 {destino}</p>
+        <div className="card-header-content">
+          <h3 className="card-title">
+            {getTipoLabel(tipoServicio)} #{servicioId}
+          </h3>
+          <p className="empresa"><FaCalendarAlt /> {formatDate(fecha)}</p>
+        </div>
+        <span className="tipo-badge">{getTipoLabel(tipoServicio)}</span>
       </div>
 
       <div className="card-content">
-        <p className="descripcion">
-          {descripcion?.length > 120
-            ? `${descripcion.substring(0, 120)}...`
-            : descripcion}
-        </p>
+        {notas && (
+          <p className="descripcion">
+            {notas.length > 120 ? `${notas.substring(0, 120)}...` : notas}
+          </p>
+        )}
 
         <div className="info-grid">
           <div className="info-item">
-            <span className="info-label">Inicio</span>
-            <span className="info-value">{formatDate(fechaInicio)}</span>
+            <span className="info-label">Total</span>
+            <span className="info-value">{cupoTotal}</span>
           </div>
           <div className="info-item">
-            <span className="info-label">Fin</span>
-            <span className="info-value">{formatDate(fechaFin)}</span>
+            <span className="info-label">Reservado</span>
+            <span className="info-value">{cupoReservado}</span>
           </div>
           <div className="info-item">
-            <span className="info-label">Cupos</span>
-            <span className="info-value">
-              {cuposDisponibles}/{cuposMaximos}
-            </span>
+            <span className="info-label">Disponible</span>
+            <span className="info-value">{cupoDisponible}</span>
           </div>
         </div>
 
         <div className="cupo-bar">
           <div
-            className="cupo-bar-fill"
+            className={`cupo-bar-fill ${getEstadoColor()}`}
             style={{ width: `${porcentajeDisponible}%` }}
           ></div>
         </div>
 
-        {requisitos && requisitos.length > 0 && (
-          <div className="features">
-            <p className="features-label">Requisitos:</p>
-            <ul className="features-list">
-              {requisitos.slice(0, 3).map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
+        <div className="card-footer">
+          <div className="price">
+            {precioAjustado && (
+              <>
+                <span className="price-label">Precio:</span>
+                <span className="price-value">
+                  ${precioAjustado.toLocaleString()}
+                </span>
+              </>
+            )}
           </div>
-        )}
-      </div>
-
-      <div className="card-footer">
-        <div className="precio-info">
-          <span className="precio">${precio}</span>
+          <span className={`status-badge ${getEstadoColor()}`}>
+            {estado.charAt(0).toUpperCase() + estado.slice(1)}
+          </span>
         </div>
-        <button className="btn-primary" disabled={cuposDisponibles === 0}>
-          {cuposDisponibles > 0 ? "Reservar cupo" : "Sin cupos"}
-        </button>
       </div>
     </div>
   );

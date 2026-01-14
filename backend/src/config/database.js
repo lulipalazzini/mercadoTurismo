@@ -12,7 +12,10 @@ const connectDB = async () => {
     console.log("✅ SQLite conectado exitosamente");
 
     // Sincronizar modelos con la base de datos
-    await sequelize.sync({ alter: true });
+    // Usar alter solo en desarrollo, en producción usar migraciones
+    if (process.env.NODE_ENV !== "production") {
+      await sequelize.sync();
+    }
     console.log("✅ Modelos sincronizados");
   } catch (error) {
     console.error(`❌ Error de conexión: ${error.message}`);

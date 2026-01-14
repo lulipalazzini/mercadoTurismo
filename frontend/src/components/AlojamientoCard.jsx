@@ -1,4 +1,5 @@
 import React from "react";
+import { FaMapMarkerAlt, FaStar } from "react-icons/fa";
 
 export default function AlojamientoCard({ alojamiento }) {
   const {
@@ -19,7 +20,7 @@ export default function AlojamientoCard({ alojamiento }) {
       <div className="estrellas">
         {[...Array(estrellas || 0)].map((_, i) => (
           <span key={i} className="estrella">
-            ★
+            <FaStar />
           </span>
         ))}
       </div>
@@ -42,15 +43,17 @@ export default function AlojamientoCard({ alojamiento }) {
         <span className="tipo-badge">{tipo}</span>
       </div>
 
-      <div className="card-content">
-        <div className="card-header">
+      <div className="card-header">
+        <div className="card-header-content">
           <h3 className="card-title">{nombre}</h3>
         </div>
+      </div>
 
+      <div className="card-content">
         {estrellas && renderEstrellas()}
 
         <div className="ubicacion-info">
-          <span className="location-icon">📍</span>
+          <span className="location-icon"><FaMapMarkerAlt /></span>
           <span className="ubicacion">{ubicacion}</span>
         </div>
 

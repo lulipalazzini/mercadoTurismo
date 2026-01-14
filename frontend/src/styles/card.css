@@ -1,112 +1,175 @@
 /* Card Base Styles */
 .service-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   height: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+.service-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .service-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.15);
+}
+
+.service-card:hover::before {
+  opacity: 1;
 }
 
 .card-header {
-  border-bottom: 1px solid #f0f0f0;
+  padding: 24px 24px 16px;
+  background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.card-header-content {
+  flex: 1;
 }
 
 .card-title {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: #1a202c;
   line-height: 1.3;
+  margin: 0;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .tipo-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: capitalize;
-  margin-bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  align-self: flex-start;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.service-card:hover .tipo-badge {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .tipo-seguro {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
 }
 
 .tipo-auto {
-  background: #fff3e0;
-  color: #f57c00;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
 }
 
 .tipo-crucero {
-  background: #e8f5e9;
-  color: #388e3c;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.tipo-badge:not([class*="tipo-"]) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
 }
 
 .aseguradora,
 .empresa {
   font-size: 0.9rem;
-  color: #666;
-  margin: 4px 0 0 0;
+  color: #718096;
+  margin: 6px 0 0 0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .card-content {
-  padding: 20px;
+  padding: 24px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .descripcion {
-  font-size: 0.9rem;
-  color: #555;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  color: #4a5568;
+  line-height: 1.6;
   margin: 0;
+  font-weight: 400;
 }
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 16px;
+  background: #f7fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .info-label {
-  font-size: 0.75rem;
-  color: #999;
+  font-size: 0.7rem;
+  color: #a0aec0;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  font-weight: 700;
 }
 
 .info-value {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2d3748;
+  letter-spacing: -0.01em;
 }
 
 .features {
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .features-label {
   font-size: 0.85rem;
-  font-weight: 600;
-  color: #555;
-  margin: 0 0 8px 0;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .features-list {
@@ -115,46 +178,52 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .features-list li {
-  font-size: 0.85rem;
-  color: #666;
-  padding-left: 20px;
+  font-size: 0.9rem;
+  color: #4a5568;
+  padding-left: 24px;
   position: relative;
+  line-height: 1.5;
 }
 
 .features-list li::before {
   content: "✓";
   position: absolute;
   left: 0;
-  color: #4caf50;
+  color: #48bb78;
   font-weight: bold;
+  font-size: 1.1rem;
 }
 
 .destinos {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px;
-  background: #f8f9fa;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .destinos-icon {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 
 .destinos-text {
-  font-size: 0.85rem;
-  color: #555;
+  font-size: 0.9rem;
+  color: #4a5568;
+  font-weight: 500;
 }
 
 .card-footer {
-  border-top: 1px solid #f0f0f0;
+  padding: 20px 24px;
+  background: #fafbfc;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   gap: 16px;
   margin-top: auto;
@@ -162,130 +231,290 @@
 
 .precio-info {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.precio-label {
-  font-size: 0.85rem;
-  color: #666;
+.precio-label,
+.price-label {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.precio {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #667eea;
+.precio,
+.price-value {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
 }
 
 .precio-unit {
-  font-size: 0.85rem;
-  color: #666;
+  font-size: 0.8rem;
+  color: #718096;
+  font-weight: 500;
+}
+
+.price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .btn-primary {
-  padding: 10px 24px;
+  padding: 12px 28px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.45);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
 }
 
 .btn-primary:disabled {
-  background: #ccc;
+  background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
   cursor: not-allowed;
   opacity: 0.6;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-primary:disabled::before {
+  display: none;
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(-1px) scale(0.98);
+  transition: all 0.1s ease;
 }
 
 .disponibilidad-badge {
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .disponibilidad-badge.disponible {
-  background: #d4edda;
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
   color: #155724;
+  border: 1px solid #b1dfbb;
 }
 
 .disponibilidad-badge.no-disponible {
-  background: #f8d7da;
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
   color: #721c24;
+  border: 1px solid #f1b0b7;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-badge.success {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+}
+
+.status-badge.warning {
+  background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+  color: white;
+}
+
+.status-badge.danger {
+  background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+  color: white;
+}
+
+.status-badge.info {
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  color: white;
 }
 
 /* Cupo Bar */
 .cupo-bar {
   width: 100%;
-  height: 8px;
-  background: #f0f0f0;
-  border-radius: 4px;
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 10px;
   overflow: hidden;
-  margin: 12px 0;
+  margin: 4px 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .cupo-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4caf50 0%, #8bc34a 100%);
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.cupo-bar-fill.success {
+  background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+}
+
+.cupo-bar-fill.warning {
+  background: linear-gradient(90deg, #f6ad55 0%, #ed8936 100%);
+}
+
+.cupo-bar-fill.danger {
+  background: linear-gradient(90deg, #fc8181 0%, #f56565 100%);
+}
+
+.cupo-bar-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .card-image {
   position: relative;
   width: 100%;
-  height: 220px;
+  height: 240px;
   overflow: hidden;
-  background: #f0f0f0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .service-card:hover .card-image img {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .info-time {
   font-size: 0.75rem;
-  color: #999;
+  color: #a0aec0;
   margin-top: 2px;
+  font-weight: 500;
 }
 
 .destino {
   font-size: 0.9rem;
-  color: #666;
-  margin: 4px 0 0 0;
+  color: #718096;
+  margin: 6px 0 0 0;
+  font-weight: 500;
+}
+
+/* Grid Layout */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
+  padding: 32px 0;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .card-title {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 
-  .precio {
-    font-size: 1.5rem;
+  .precio,
+  .price-value {
+    font-size: 1.6rem;
   }
 
   .card-footer {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
   }
 
   .btn-primary {
     width: 100%;
+    padding: 14px 28px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .card-header {
+    padding: 20px 20px 12px;
+  }
+
+  .card-content {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .card-footer {
+    padding: 16px 20px;
   }
 }
