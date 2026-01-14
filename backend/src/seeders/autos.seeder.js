@@ -166,7 +166,12 @@ const autosData = [
     disponible: true,
     ubicacion: "Mar del Plata",
     descripcion: "SUV versátil para todo tipo de viajes",
-    caracteristicas: ["aire_acondicionado", "bluetooth", "gps", "camara_retroceso"],
+    caracteristicas: [
+      "aire_acondicionado",
+      "bluetooth",
+      "gps",
+      "camara_retroceso",
+    ],
   },
   {
     marca: "Citroën",

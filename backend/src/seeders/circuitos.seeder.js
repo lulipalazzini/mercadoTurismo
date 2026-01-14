@@ -100,7 +100,8 @@ const circuitosData = [
   },
   {
     nombre: "Circuito Litoral Argentino",
-    descripcion: "Descubre las maravillas del litoral: Iguazú, Iberá y Misiones",
+    descripcion:
+      "Descubre las maravillas del litoral: Iguazú, Iberá y Misiones",
     destinos: ["Puerto Iguazú", "Esteros del Iberá", "Posadas", "San Ignacio"],
     duracion: 10,
     precio: 165000,
@@ -304,7 +305,12 @@ const circuitosData = [
   {
     nombre: "Circuito Tucumán Colonial",
     descripcion: "Historia y naturaleza en la cuna de la independencia",
-    destinos: ["San Miguel de Tucumán", "Tafí del Valle", "Cafayate", "Quilmes"],
+    destinos: [
+      "San Miguel de Tucumán",
+      "Tafí del Valle",
+      "Cafayate",
+      "Quilmes",
+    ],
     duracion: 6,
     precio: 78000,
     incluye: [
@@ -389,12 +395,7 @@ const circuitosData = [
   {
     nombre: "Circuito Entre Ríos Termal",
     descripcion: "Relax y naturaleza en las termas de Entre Ríos",
-    destinos: [
-      "Colón",
-      "Concepción del Uruguay",
-      "Federación",
-      "Chajarí",
-    ],
+    destinos: ["Colón", "Concepción del Uruguay", "Federación", "Chajarí"],
     duracion: 6,
     precio: 68000,
     incluye: ["hotel_termal", "desayuno", "acceso_termas", "traslados"],
@@ -415,12 +416,7 @@ const circuitosData = [
   {
     nombre: "Circuito Costa Atlántica",
     descripcion: "Recorre las mejores playas de la costa argentina",
-    destinos: [
-      "Mar del Plata",
-      "Villa Gesell",
-      "Pinamar",
-      "Mar de las Pampas",
-    ],
+    destinos: ["Mar del Plata", "Villa Gesell", "Pinamar", "Mar de las Pampas"],
     duracion: 7,
     precio: 92000,
     incluye: ["hotel", "desayuno", "traslados"],

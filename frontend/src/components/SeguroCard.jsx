@@ -67,7 +67,9 @@ export default function SeguroCard({ item }) {
 
         {destinosIncluidos && destinosIncluidos.length > 0 && (
           <div className="destinos">
-            <span className="destinos-icon"><FaGlobe /></span>
+            <span className="destinos-icon">
+              <FaGlobe />
+            </span>
             <span className="destinos-text">
               {destinosIncluidos.slice(0, 2).join(", ")}
               {destinosIncluidos.length > 2 &&

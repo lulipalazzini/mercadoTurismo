@@ -62,7 +62,8 @@ const excursionesData = [
   },
   {
     nombre: "Safari Fotográfico Ibera",
-    descripcion: "Safari en 4x4 por los Esteros del Iberá observando fauna autóctona",
+    descripcion:
+      "Safari en 4x4 por los Esteros del Iberá observando fauna autóctona",
     destino: "Esteros del Iberá",
     tipo: "naturaleza",
     duracion: 5,
@@ -76,7 +77,8 @@ const excursionesData = [
   },
   {
     nombre: "Rafting Río Mendoza",
-    descripcion: "Rafting nivel III-IV en el Río Mendoza con guías profesionales",
+    descripcion:
+      "Rafting nivel III-IV en el Río Mendoza con guías profesionales",
     destino: "Mendoza",
     tipo: "deportiva",
     duracion: 4,
@@ -193,8 +195,7 @@ const excursionesData = [
   },
   {
     nombre: "Gran Aventura Iguazú",
-    descripcion:
-      "Navegación extrema hasta la base de las Cataratas del Iguazú",
+    descripcion: "Navegación extrema hasta la base de las Cataratas del Iguazú",
     destino: "Puerto Iguazú",
     tipo: "aventura",
     duracion: 3,

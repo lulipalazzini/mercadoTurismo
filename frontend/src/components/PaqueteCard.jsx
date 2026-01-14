@@ -35,7 +35,9 @@ export default function PaqueteCard({ item }) {
       <div className="card-header">
         <div className="card-header-content">
           <h3 className="card-title">{nombre}</h3>
-          <p className="destino"><FaMapMarkerAlt /> {destino}</p>
+          <p className="destino">
+            <FaMapMarkerAlt /> {destino}
+          </p>
         </div>
         <span className="tipo-badge">{duracion}D</span>
       </div>

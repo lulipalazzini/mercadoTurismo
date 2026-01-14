@@ -53,7 +53,9 @@ export default function AlojamientoCard({ alojamiento }) {
         {estrellas && renderEstrellas()}
 
         <div className="ubicacion-info">
-          <span className="location-icon"><FaMapMarkerAlt /></span>
+          <span className="location-icon">
+            <FaMapMarkerAlt />
+          </span>
           <span className="ubicacion">{ubicacion}</span>
         </div>
 

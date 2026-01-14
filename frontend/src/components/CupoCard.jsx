@@ -24,7 +24,7 @@ export default function CupoCard({ item }) {
   };
 
   const porcentajeDisponible = ((cupoDisponible / cupoTotal) * 100).toFixed(0);
-  
+
   const getEstadoColor = () => {
     switch (estado) {
       case "disponible":
@@ -61,7 +61,9 @@ export default function CupoCard({ item }) {
           <h3 className="card-title">
             {getTipoLabel(tipoServicio)} #{servicioId}
           </h3>
-          <p className="empresa"><FaCalendarAlt /> {formatDate(fecha)}</p>
+          <p className="empresa">
+            <FaCalendarAlt /> {formatDate(fecha)}
+          </p>
         </div>
         <span className="tipo-badge">{getTipoLabel(tipoServicio)}</span>
       </div>

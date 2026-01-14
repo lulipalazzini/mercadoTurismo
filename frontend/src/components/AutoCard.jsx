@@ -31,7 +31,9 @@ export default function AutoCard({ item }) {
           <h3 className="card-title">
             {marca} {modelo}
           </h3>
-          <p className="empresa"><FaMapMarkerAlt /> {ubicacion}</p>
+          <p className="empresa">
+            <FaMapMarkerAlt /> {ubicacion}
+          </p>
         </div>
         <span className="tipo-badge tipo-auto">{categoria}</span>
       </div>

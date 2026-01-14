@@ -4,7 +4,7 @@ import Cupo from "../models/Cupo.model.js";
 const fixCuposTable = async () => {
   try {
     console.log("🔧 Arreglando tabla de cupos...");
-    
+
     // Conectar a la base de datos
     await sequelize.authenticate();
     console.log("✅ Conexión establecida");

@@ -36,7 +36,9 @@ export default function SalidaGrupalCard({ item }) {
         <div className="card-header-content">
           <h3 className="card-title">{nombre}</h3>
           {destinos && destinos.length > 0 && (
-            <p className="empresa"><FaGlobe /> {destinos.slice(0, 2).join(" • ")}</p>
+            <p className="empresa">
+              <FaGlobe /> {destinos.slice(0, 2).join(" • ")}
+            </p>
           )}
         </div>
         <span className="tipo-badge">GRUPAL</span>

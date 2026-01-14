@@ -7,7 +7,8 @@ const alojamientosData = [
     ubicacion: "Buenos Aires, Argentina",
     direccion: "San Martín 1225, CABA",
     estrellas: 5,
-    descripcion: "Hotel de lujo en el corazón de Buenos Aires con vistas al río",
+    descripcion:
+      "Hotel de lujo en el corazón de Buenos Aires con vistas al río",
     precioNoche: 25000,
     servicios: ["wifi", "piscina", "gimnasio", "spa", "restaurant"],
     capacidad: 200,
@@ -201,13 +202,13 @@ export const seedAlojamientos = async () => {
         insertados++;
       } catch (error) {
         // Ignorar errores de duplicados y continuar con el siguiente
-        if (error.name === 'SequelizeUniqueConstraintError') {
+        if (error.name === "SequelizeUniqueConstraintError") {
           continue;
         }
         throw error;
       }
     }
-    
+
     console.log(`✅ Alojamientos creados exitosamente (${insertados} nuevos)`);
   } catch (error) {
     console.error("❌ Error al crear alojamientos:", error.message);

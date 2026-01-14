@@ -64,7 +64,8 @@ const salidasGrupalesData = [
   },
   {
     nombre: "Salida Grupal Iguazú Aventura",
-    descripcion: "Aventura juvenil a las Cataratas del Iguazú con actividades extremas",
+    descripcion:
+      "Aventura juvenil a las Cataratas del Iguazú con actividades extremas",
     destino: "Puerto Iguazú",
     fechaSalida: new Date("2026-06-10"),
     fechaRegreso: new Date("2026-06-14"),
@@ -93,7 +94,8 @@ const salidasGrupalesData = [
   },
   {
     nombre: "Salida Grupal Egresados Bariloche",
-    descripcion: "Viaje de egresados clásico a Bariloche con todas las actividades",
+    descripcion:
+      "Viaje de egresados clásico a Bariloche con todas las actividades",
     destino: "San Carlos de Bariloche",
     fechaSalida: new Date("2026-09-20"),
     fechaRegreso: new Date("2026-09-27"),
@@ -210,7 +212,8 @@ const salidasGrupalesData = [
   },
   {
     nombre: "Salida Grupal Córdoba Joven",
-    descripcion: "Viaje juvenil a las sierras de Córdoba con actividades recreativas",
+    descripcion:
+      "Viaje juvenil a las sierras de Córdoba con actividades recreativas",
     destino: "Villa Carlos Paz",
     fechaSalida: new Date("2026-02-10"),
     fechaRegreso: new Date("2026-02-15"),
@@ -295,12 +298,15 @@ const salidasGrupalesData = [
     fechaRegreso: new Date("2026-02-23"),
     duracion: 2,
     precio: 38000,
-    incluye: ["hotel", "desayuno", "traslados", "entrada_carnaval", "cena_show"],
-    noIncluye: ["almuerzo", "bebidas"],
-    itinerario: [
-      "Día 1: Viaje, llegada y carnaval",
-      "Día 2: Regreso",
+    incluye: [
+      "hotel",
+      "desayuno",
+      "traslados",
+      "entrada_carnaval",
+      "cena_show",
     ],
+    noIncluye: ["almuerzo", "bebidas"],
+    itinerario: ["Día 1: Viaje, llegada y carnaval", "Día 2: Regreso"],
     cupoMinimo: 20,
     cupoMaximo: 40,
     cupoDisponible: 40,

@@ -26,7 +26,9 @@ export default function ExcursionCard({ item }) {
       <div className="card-header">
         <div className="card-header-content">
           <h3 className="card-title">{nombre}</h3>
-          <p className="empresa"><FaMapMarkerAlt /> {ubicacion}</p>
+          <p className="empresa">
+            <FaMapMarkerAlt /> {ubicacion}
+          </p>
         </div>
         <span className="tipo-badge">{nivelDificultad}</span>
       </div>
