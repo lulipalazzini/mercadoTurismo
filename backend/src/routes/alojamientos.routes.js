@@ -13,9 +13,9 @@ const router = express.Router();
 router.get("/", getAlojamientos);
 router.get("/:id", getAlojamiento);
 
-// Solo admin puede crear, actualizar y eliminar
-router.post("/", verifyToken, isAdmin, createAlojamiento);
-router.put("/:id", verifyToken, isAdmin, updateAlojamiento);
-router.delete("/:id", verifyToken, isAdmin, deleteAlojamiento);
+// Rutas protegidas - requieren autenticación
+router.post("/", verifyToken, createAlojamiento);
+router.put("/:id", verifyToken, updateAlojamiento);
+router.delete("/:id", verifyToken, deleteAlojamiento);
 
 export default router;

@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/card.css";
 import { FaShip } from "react-icons/fa";
+import { trackCardClick } from "../services/clickStats.service";
 
 export default function CruceroCard({ item }) {
   const {
@@ -28,8 +29,12 @@ export default function CruceroCard({ item }) {
     });
   };
 
+  const handleCardClick = () => {
+    trackCardClick("crucero").catch(console.error);
+  };
+
   return (
-    <div className="service-card">
+    <div className="service-card" onClick={handleCardClick}>
       {imagenes && imagenes.length > 0 && (
         <div className="card-image">
           <img src={imagenes[0]} alt={nombre} />

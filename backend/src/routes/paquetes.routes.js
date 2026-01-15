@@ -13,9 +13,9 @@ const router = express.Router();
 router.get("/", getPaquetes);
 router.get("/:id", getPaquete);
 
-// Solo admin puede crear, actualizar y eliminar
-router.post("/", verifyToken, isAdmin, createPaquete);
-router.put("/:id", verifyToken, isAdmin, updatePaquete);
-router.delete("/:id", verifyToken, isAdmin, deletePaquete);
+// Usuarios autenticados pueden crear, actualizar y eliminar
+router.post("/", verifyToken, createPaquete);
+router.put("/:id", verifyToken, updatePaquete);
+router.delete("/:id", verifyToken, deletePaquete);
 
 export default router;

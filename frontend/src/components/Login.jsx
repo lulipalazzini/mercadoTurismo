@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import DevHelper from "./DevHelper";
-import { exampleUsers } from "../data/exampleUsers";
+import { login } from "../services/auth.service";
 import "../styles/auth.css";
 
 export default function Login() {
@@ -9,6 +8,9 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -16,54 +18,69 @@ export default function Login() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Limpiar errores al modificar campos
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: "" });
+    }
+    if (errorMessage) {
+      setErrorMessage("");
+    }
   };
 
-  const handleFillForm = (email, password) => {
-    setFormData({
-      email: email,
-      password: password,
-    });
-  };
+  const validate = () => {
+    const newErrors = {};
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Aquí irá la lógica de autenticación real
-    console.log("Login attempt:", formData);
-
-    // Buscar usuario en los ejemplos basado en el email
-    let currentUser = null;
-
-    if (formData.email === exampleUsers.independiente.email) {
-      currentUser = exampleUsers.independiente;
-    } else if (formData.email === exampleUsers.agencia.email) {
-      currentUser = exampleUsers.agencia;
-    } else if (formData.email === exampleUsers.operadorAgencia.email) {
-      currentUser = exampleUsers.operadorAgencia;
-    } else {
-      // Usuario por defecto si no coincide
-      currentUser = {
-        firstName: "Usuario",
-        lastName: "Demo",
-        operatorType: "independiente",
-        email: formData.email,
-      };
+    if (!formData.email.trim()) {
+      newErrors.email = "El email es requerido";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email inválido";
     }
 
-    // Guardar usuario en localStorage
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    if (!formData.password) {
+      newErrors.password = "La contraseña es requerida";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "La contraseña debe tener al menos 6 caracteres";
+    }
 
-    // Redirigir al dashboard
-    navigate("/dashboard");
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage("");
+
+    if (!validate()) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await login(formData.email, formData.password);
+      
+      // Redirigir al dashboard
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error en login:", error);
+      setErrorMessage(error.message || "Error al iniciar sesión");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="auth-container">
-      <DevHelper onFillForm={handleFillForm} />
       <div className="auth-card">
         <div className="auth-header">
           <h1>Acceso Mayorista</h1>
-          <p>Operadores independientes, agencias y operadores de agencias</p>
+          <p>Inicia sesión para acceder al panel</p>
         </div>
+
+        {errorMessage && (
+          <div className="alert alert-error">
+            {errorMessage}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -74,10 +91,14 @@ export default function Login() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required
+              className={errors.email ? "error" : ""}
               placeholder="tu@email.com"
               autoComplete="email"
+              disabled={loading}
             />
+            {errors.email && (
+              <span className="error-message">{errors.email}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -88,14 +109,18 @@ export default function Login() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              required
+              className={errors.password ? "error" : ""}
               placeholder="••••••••"
               autoComplete="current-password"
+              disabled={loading}
             />
+            {errors.password && (
+              <span className="error-message">{errors.password}</span>
+            )}
           </div>
 
-          <button type="submit" className="btn-primary">
-            Ingresar
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? "Iniciando sesión..." : "Ingresar"}
           </button>
         </form>
 

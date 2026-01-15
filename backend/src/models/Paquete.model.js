@@ -71,10 +71,31 @@ const Paquete = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    createdBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
   {
     timestamps: true,
+    paranoid: true, // Habilita soft delete automático
   }
 );
+
+// Definir asociaciones después de crear el modelo
+Paquete.associate = (models) => {
+  Paquete.belongsTo(models.User, {
+    foreignKey: 'createdBy',
+    as: 'creator'
+  });
+};
 
 export default Paquete;

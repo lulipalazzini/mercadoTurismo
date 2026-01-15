@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import connectDB from "./config/database.js";
 
 // Importar rutas
@@ -19,6 +21,8 @@ import pasajesRoutes from "./routes/pasajes.routes.js";
 import salidasGrupalesRoutes from "./routes/salidasGrupales.routes.js";
 import segurosRoutes from "./routes/seguros.routes.js";
 import transfersRoutes from "./routes/transfers.routes.js";
+import clickStatsRoutes from "./routes/clickStats.routes.js";
+import usersRoutes from "./routes/users.routes.js";
 
 dotenv.config();
 
@@ -28,7 +32,20 @@ const PORT = process.env.PORT || 3001;
 // Conectar a la base de datos
 connectDB();
 
-// Middlewares
+// Middlewares de seguridad
+app.use(helmet()); // Protección de headers HTTP
+
+// Rate limiting: Previene ataques de fuerza bruta y DDoS
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // Máximo 100 peticiones por IP cada 15 minutos
+  message: "Demasiadas peticiones desde esta IP, por favor intenta más tarde.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
+
+// Middlewares básicos
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,6 +66,8 @@ app.use("/api/pasajes", pasajesRoutes);
 app.use("/api/salidas-grupales", salidasGrupalesRoutes);
 app.use("/api/seguros", segurosRoutes);
 app.use("/api/transfers", transfersRoutes);
+app.use("/api/stats", clickStatsRoutes);
+app.use("/api/users", usersRoutes);
 
 // Ruta de prueba
 app.get("/", (req, res) => {

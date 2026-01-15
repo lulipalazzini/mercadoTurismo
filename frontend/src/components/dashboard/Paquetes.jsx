@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaPlus,
   FaSearch,
@@ -12,71 +12,79 @@ import {
   FaClipboardList,
   FaEllipsisV,
   FaCheckCircle,
+  FaEdit,
+  FaTrash,
 } from "react-icons/fa";
+import { getPaquetes, deletePaquete } from "../../services/paquetes.service";
+import PaqueteFormModal from "./PaqueteFormModal";
+import PaqueteEditModal from "./PaqueteEditModal";
+import ConfirmModal from "../common/ConfirmModal";
+import AlertModal from "../common/AlertModal";
 
 export default function Paquetes() {
-  const [paquetes] = useState([
-    {
-      id: 1,
-      nombre: "Mendoza Premium 5 días",
-      destino: "Mendoza",
-      duracion: "5 días / 4 noches",
-      categoria: "Premium",
-      precio: 112500,
-      comision: 10,
-      incluye: ["Hotel 4★", "Desayuno", "Traslados", "2 Excursiones"],
-      disponible: true,
-      stock: 15,
-    },
-    {
-      id: 2,
-      nombre: "Bariloche Ski Week",
-      destino: "Bariloche",
-      duracion: "7 días / 6 noches",
-      categoria: "Premium",
-      precio: 190000,
-      comision: 10,
-      incluye: ["Hotel 5★", "Media Pensión", "Pase Ski", "Clases"],
-      disponible: true,
-      stock: 8,
-    },
-    {
-      id: 3,
-      nombre: "Cataratas del Iguazú",
-      destino: "Misiones",
-      duracion: "4 días / 3 noches",
-      categoria: "Estándar",
-      precio: 106667,
-      comision: 10,
-      incluye: ["Hotel 3★", "Desayuno", "Entrada Parque", "Guía"],
-      disponible: true,
-      stock: 20,
-    },
-    {
-      id: 4,
-      nombre: "Buenos Aires Cultural",
-      destino: "Buenos Aires",
-      duracion: "3 días / 2 noches",
-      categoria: "Estándar",
-      precio: 140000,
-      comision: 10,
-      incluye: ["Hotel Boutique", "Desayuno", "City Tour", "Show Tango"],
-      disponible: true,
-      stock: 12,
-    },
-    {
-      id: 5,
-      nombre: "Salta y Jujuy Mágico",
-      destino: "Salta",
-      duracion: "6 días / 5 noches",
-      categoria: "Premium",
-      precio: 145000,
-      comision: 12,
-      incluye: ["Hotel 4★", "Desayuno", "Excursiones", "Traslados"],
-      disponible: true,
-      stock: 10,
-    },
-  ]);
+  const [paquetes, setPaquetes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [destinoFilter, setDestinoFilter] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedPaquete, setSelectedPaquete] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [paqueteToDelete, setPaqueteToDelete] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
+  useEffect(() => {
+    loadPaquetes();
+  }, []);
+
+  const loadPaquetes = async () => {
+    try {
+      setLoading(true);
+      const data = await getPaquetes();
+      setPaquetes(data);
+      setError(null);
+    } catch (err) {
+      setError("Error al cargar los paquetes");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePaqueteCreated = () => {
+    loadPaquetes(); // Recargar la lista después de crear
+  };
+
+  const handleEditClick = (paquete) => {
+    setSelectedPaquete(paquete);
+    setIsEditModalOpen(true);
+  };
+
+  const handlePaqueteUpdated = () => {
+    loadPaquetes(); // Recargar la lista después de editar
+  };
+
+  const handleDeleteClick = (paquete) => {
+    setPaqueteToDelete(paquete);
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!paqueteToDelete) return;
+
+    try {
+      await deletePaquete(paqueteToDelete.id);
+      loadPaquetes(); // Recargar la lista después de eliminar
+    } catch (error) {
+      console.error("Error al eliminar paquete:", error);
+      setAlertMessage("Error al eliminar el paquete. Por favor intenta nuevamente.");
+      setShowAlert(true);
+    } finally {
+      setPaqueteToDelete(null);
+    }
+  };
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("es-AR", {
@@ -89,29 +97,86 @@ export default function Paquetes() {
     return categoria === "Premium" ? "category-premium" : "category-standard";
   };
 
+  // Obtener destinos únicos para el filtro
+  const destinos = [...new Set(paquetes.map((p) => p.destino))].sort();
+
+  // Filtrar paquetes
+  const paquetesFiltrados = paquetes.filter((paquete) => {
+    const matchSearch = paquete.nombre
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchDestino = !destinoFilter || paquete.destino === destinoFilter;
+    return matchSearch && matchDestino;
+  });
+
+  if (loading) {
+    return (
+      <div className="section-container">
+        <div style={{ textAlign: "center", padding: "3rem" }}>
+          <div
+            className="spinner"
+            style={{
+              margin: "0 auto 1rem",
+              border: "4px solid #e2e8f0",
+              borderTop: "4px solid #4a5568",
+              borderRadius: "50%",
+              width: "40px",
+              height: "40px",
+              animation: "spin 1s linear infinite",
+            }}
+          ></div>
+          <p style={{ color: "#718096" }}>Cargando paquetes...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="section-container">
+        <div className="alert alert-danger" style={{ margin: "2rem" }}>
+          {error}
+          <button
+            onClick={loadPaquetes}
+            className="btn-secondary"
+            style={{ marginTop: "1rem" }}
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
+    <>
     <div className="section-container">
       {/* Toolbar */}
       <div className="section-toolbar">
-        <button className="btn-primary">
+        <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
           <FaPlus /> Nuevo Paquete
         </button>
         <div className="toolbar-actions">
           <div className="search-box-crm">
             <FaSearch className="search-icon" />
-            <input type="text" placeholder="Buscar paquetes..." />
+            <input
+              type="text"
+              placeholder="Buscar paquetes..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-          <select className="filter-select">
-            <option>Todos los destinos</option>
-            <option>Mendoza</option>
-            <option>Bariloche</option>
-            <option>Buenos Aires</option>
-            <option>Salta</option>
-          </select>
-          <select className="filter-select">
-            <option>Todas las categorías</option>
-            <option>Premium</option>
-            <option>Estándar</option>
+          <select
+            className="filter-select"
+            value={destinoFilter}
+            onChange={(e) => setDestinoFilter(e.target.value)}
+          >
+            <option value="">Todos los destinos</option>
+            {destinos.map((destino) => (
+              <option key={destino} value={destino}>
+                {destino}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -123,8 +188,8 @@ export default function Paquetes() {
             <FaBullseye />
           </div>
           <div className="stat-content">
-            <h3>{paquetes.length}</h3>
-            <p>Paquetes Activos</p>
+            <h3>{paquetesFiltrados.length}</h3>
+            <p>Paquetes {searchTerm || destinoFilter ? "Filtrados" : "Activos"}</p>
           </div>
         </div>
         <div className="stat-card">
@@ -132,7 +197,9 @@ export default function Paquetes() {
             <FaStar />
           </div>
           <div className="stat-content">
-            <h3>{paquetes.filter((p) => p.categoria === "Premium").length}</h3>
+            <h3>
+              {paquetes.filter((p) => p.categoria === "Premium").length}
+            </h3>
             <p>Premium</p>
           </div>
         </div>
@@ -141,7 +208,7 @@ export default function Paquetes() {
             <FaMapMarkerAlt />
           </div>
           <div className="stat-content">
-            <h3>{new Set(paquetes.map((p) => p.destino)).size}</h3>
+            <h3>{destinos.length}</h3>
             <p>Destinos</p>
           </div>
         </div>
@@ -150,15 +217,28 @@ export default function Paquetes() {
             <FaDollarSign />
           </div>
           <div className="stat-content">
-            <h3>10-12%</h3>
+            <h3>
+              {paquetes.length > 0
+                ? Math.round(
+                    paquetes.reduce((sum, p) => sum + (p.comision || 10), 0) /
+                      paquetes.length
+                  )
+                : 0}
+              %
+            </h3>
             <p>Comisión Promedio</p>
           </div>
         </div>
       </div>
 
       {/* Cards Grid */}
-      <div className="packages-grid">
-        {paquetes.map((paquete) => (
+      {paquetesFiltrados.length === 0 ? (
+        <div className="alert alert-info" style={{ margin: "2rem" }}>
+          <p>No se encontraron paquetes con los filtros aplicados</p>
+        </div>
+      ) : (
+        <div className="packages-grid">
+          {paquetesFiltrados.map((paquete) => (
           <div key={paquete.id} className="package-card">
             <div className="package-header">
               <div className="package-category">
@@ -167,17 +247,31 @@ export default function Paquetes() {
                     paquete.categoria
                   )}`}
                 >
-                  {paquete.categoria}
+                  {paquete.categoria || "Estándar"}
                 </span>
-                {paquete.disponible && (
+                {paquete.disponible !== false && (
                   <span className="available-badge">
                     <FaCheckCircle /> Disponible
                   </span>
                 )}
               </div>
-              <button className="btn-icon">
-                <FaEllipsisV />
-              </button>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <button 
+                  className="btn-icon" 
+                  onClick={() => handleEditClick(paquete)}
+                  title="Editar paquete"
+                >
+                  <FaEdit />
+                </button>
+                <button 
+                  className="btn-icon" 
+                  onClick={() => handleDeleteClick(paquete)}
+                  title="Eliminar paquete"
+                  style={{ color: "#e53e3e" }}
+                >
+                  <FaTrash />
+                </button>
+              </div>
             </div>
 
             <div className="package-body">
@@ -193,26 +287,35 @@ export default function Paquetes() {
                   <span className="info-icon">
                     <FaCalendarAlt />
                   </span>
-                  <span>{paquete.duracion}</span>
+                  <span>{paquete.duracion} días</span>
                 </div>
                 <div className="info-item">
                   <span className="info-icon">
                     <FaBox />
                   </span>
-                  <span>{paquete.stock} disponibles</span>
+                  <span>
+                    {paquete.cupoDisponible || paquete.stock || 0} disponibles
+                  </span>
                 </div>
               </div>
 
-              <div className="package-includes">
-                <strong>Incluye:</strong>
-                <div className="includes-tags">
-                  {paquete.incluye.map((item, index) => (
-                    <span key={index} className="include-tag">
-                      {item}
-                    </span>
-                  ))}
+              {paquete.incluye && paquete.incluye.length > 0 && (
+                <div className="package-includes">
+                  <strong>Incluye:</strong>
+                  <div className="includes-tags">
+                    {paquete.incluye.slice(0, 4).map((item, index) => (
+                      <span key={index} className="include-tag">
+                        {item}
+                      </span>
+                    ))}
+                    {paquete.incluye.length > 4 && (
+                      <span className="include-tag">
+                        +{paquete.incluye.length - 4} más
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="package-pricing">
                 <div className="price-main">
@@ -221,13 +324,18 @@ export default function Paquetes() {
                     {formatCurrency(paquete.precio)}
                   </span>
                 </div>
-                <div className="price-commission">
-                  <span className="commission-label">Tu comisión:</span>
-                  <span className="commission-amount">
-                    {paquete.comision}% (
-                    {formatCurrency((paquete.precio * paquete.comision) / 100)})
-                  </span>
-                </div>
+                {paquete.comision && (
+                  <div className="price-commission">
+                    <span className="commission-label">Tu comisión:</span>
+                    <span className="commission-amount">
+                      {paquete.comision}% (
+                      {formatCurrency(
+                        (paquete.precio * paquete.comision) / 100
+                      )}
+                      )
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -242,6 +350,42 @@ export default function Paquetes() {
           </div>
         ))}
       </div>
+      )}
     </div>
+
+    <PaqueteFormModal
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      onSuccess={handlePaqueteCreated}
+    />
+
+    <PaqueteEditModal
+      isOpen={isEditModalOpen}
+      onClose={() => setIsEditModalOpen(false)}
+      onSuccess={handlePaqueteUpdated}
+      paquete={selectedPaquete}
+    />
+
+    <ConfirmModal
+      isOpen={showConfirm}
+      onClose={() => {
+        setShowConfirm(false);
+        setPaqueteToDelete(null);
+      }}
+      onConfirm={confirmDelete}
+      title="Confirmar eliminación"
+      message={`¿Estás seguro de eliminar el paquete "${paqueteToDelete?.nombre}"? Esta acción no se puede deshacer.`}
+      confirmText="Eliminar"
+      cancelText="Cancelar"
+      danger={true}
+    />
+
+    <AlertModal
+      isOpen={showAlert}
+      onClose={() => setShowAlert(false)}
+      message={alertMessage}
+      type="error"
+    />
+    </>
   );
 }

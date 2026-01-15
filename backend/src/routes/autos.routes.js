@@ -13,9 +13,9 @@ const router = express.Router();
 router.get("/", getAutos);
 router.get("/:id", getAuto);
 
-// Solo admin puede crear, actualizar y eliminar
-router.post("/", verifyToken, isAdmin, createAuto);
-router.put("/:id", verifyToken, isAdmin, updateAuto);
-router.delete("/:id", verifyToken, isAdmin, deleteAuto);
+// Rutas protegidas - requieren autenticación
+router.post("/", verifyToken, createAuto);
+router.put("/:id", verifyToken, updateAuto);
+router.delete("/:id", verifyToken, deleteAuto);
 
 export default router;

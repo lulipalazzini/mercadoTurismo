@@ -13,9 +13,9 @@ const router = express.Router();
 router.get("/", getTransfers);
 router.get("/:id", getTransfer);
 
-// Solo admin puede crear, actualizar y eliminar
-router.post("/", verifyToken, isAdmin, createTransfer);
-router.put("/:id", verifyToken, isAdmin, updateTransfer);
-router.delete("/:id", verifyToken, isAdmin, deleteTransfer);
+// Rutas protegidas - requieren autenticación
+router.post("/", verifyToken, createTransfer);
+router.put("/:id", verifyToken, updateTransfer);
+router.delete("/:id", verifyToken, deleteTransfer);
 
 export default router;

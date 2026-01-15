@@ -1,8 +1,11 @@
 import Paquete from "../models/Paquete.model.js";
+import User from "../models/User.model.js";
 
 export const getPaquetes = async (req, res) => {
   try {
-    const paquetes = await Paquete.findAll({ order: [["createdAt", "DESC"]] });
+    const paquetes = await Paquete.findAll({ 
+      order: [["createdAt", "DESC"]]
+    });
     res.json(paquetes);
   } catch (error) {
     res
@@ -30,6 +33,7 @@ export const createPaquete = async (req, res) => {
     const paquete = await Paquete.create({
       ...req.body,
       cupoDisponible: req.body.cupoMaximo,
+      createdBy: req.user.id, // Guardar quién creó el paquete
     });
     res.status(201).json({ message: "Paquete creado exitosamente", paquete });
   } catch (error) {

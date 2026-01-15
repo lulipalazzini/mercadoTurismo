@@ -15,12 +15,29 @@ import {
   FaQuestionCircle,
   FaChevronLeft,
   FaChevronRight,
+  FaCar,
+  FaRoute,
+  FaShip,
+  FaHiking,
+  FaPlane,
+  FaMapMarkedAlt,
+  FaBus,
 } from "react-icons/fa";
 import Reservas from "./dashboard/Reservas";
 import Paquetes from "./dashboard/Paquetes";
 import Clientes from "./dashboard/Clientes";
 import Reportes from "./dashboard/Reportes";
 import Facturacion from "./dashboard/Facturacion";
+import Alojamientos from "./dashboard/Alojamientos";
+import Autos from "./dashboard/Autos";
+import Circuitos from "./dashboard/Circuitos";
+import Cruceros from "./dashboard/Cruceros";
+import Excursiones from "./dashboard/Excursiones";
+import Pasajes from "./dashboard/Pasajes";
+import SalidasGrupales from "./dashboard/SalidasGrupales";
+import Transfers from "./dashboard/Transfers";
+import Ajustes from "./dashboard/Ajustes";
+import Usuarios from "./dashboard/Usuarios";
 import "../styles/dashboard.css";
 
 export default function Dashboard() {
@@ -30,32 +47,50 @@ export default function Dashboard() {
 
   // Obtener información del usuario del localStorage
   const user = JSON.parse(localStorage.getItem("currentUser")) || {
-    firstName: "Usuario",
-    lastName: "",
-    operatorType: "independiente",
+    nombre: "Usuario",
+    email: "",
+    role: "user",
   };
 
   // Determinar el nombre completo y rol a mostrar
   const getUserDisplayName = () => {
-    if (user.operatorType === "agencia") {
-      return user.agencyName || "Agencia";
-    }
-    return `${user.firstName} ${user.lastName}`.trim() || "Usuario";
+    return user.nombre || "Usuario";
   };
 
   const getUserRole = () => {
     const roles = {
-      independiente: "Operador Independiente",
-      agencia: "Agencia",
-      "operador-agencia": "Operador de Agencia",
+      admin: "Administrador",
+      user: "Operador",
     };
-    return roles[user.operatorType] || "Operador";
+    return roles[user.role] || "Operador";
   };
 
   const handleLogout = () => {
     // Limpiar el localStorage
     localStorage.removeItem("currentUser");
-    navigate("/");
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  const getSectionTitle = () => {
+    const titles = {
+      reservas: "Reservas",
+      paquetes: "Paquetes",
+      alojamientos: "Alojamientos",
+      autos: "Autos",
+      circuitos: "Circuitos",
+      cruceros: "Cruceros",
+      excursiones: "Excursiones",
+      pasajes: "Pasajes",
+      "salidas-grupales": "Salidas Grupales",
+      transfers: "Transfers",
+      clientes: "Clientes",
+      reportes: "Reportes",
+      facturacion: "Facturación",
+      ajustes: "Ajustes",
+      usuarios: "Usuarios",
+    };
+    return titles[activeSection] || "Dashboard";
   };
 
   const renderContent = () => {
@@ -64,12 +99,32 @@ export default function Dashboard() {
         return <Reservas />;
       case "paquetes":
         return <Paquetes />;
+      case "alojamientos":
+        return <Alojamientos />;
+      case "autos":
+        return <Autos />;
+      case "circuitos":
+        return <Circuitos />;
+      case "cruceros":
+        return <Cruceros />;
+      case "excursiones":
+        return <Excursiones />;
+      case "pasajes":
+        return <Pasajes />;
+      case "salidas-grupales":
+        return <SalidasGrupales />;
+      case "transfers":
+        return <Transfers />;
       case "clientes":
         return <Clientes />;
       case "reportes":
         return <Reportes />;
       case "facturacion":
         return <Facturacion />;
+      case "ajustes":
+        return <Ajustes />;
+      case "usuarios":
+        return <Usuarios />;
       default:
         return <Reservas />;
     }
@@ -131,6 +186,98 @@ export default function Dashboard() {
           </div>
 
           <div className="nav-section">
+            <h3>Productos y Servicios</h3>
+            <button
+              className={`nav-item ${
+                activeSection === "alojamientos" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("alojamientos")}
+            >
+              <span className="nav-icon">
+                <FaHotel />
+              </span>
+              <span className="nav-label">Alojamientos</span>
+            </button>
+            <button
+              className={`nav-item ${
+                activeSection === "autos" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("autos")}
+            >
+              <span className="nav-icon">
+                <FaCar />
+              </span>
+              <span className="nav-label">Autos</span>
+            </button>
+            <button
+              className={`nav-item ${
+                activeSection === "circuitos" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("circuitos")}
+            >
+              <span className="nav-icon">
+                <FaRoute />
+              </span>
+              <span className="nav-label">Circuitos</span>
+            </button>
+            <button
+              className={`nav-item ${
+                activeSection === "cruceros" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("cruceros")}
+            >
+              <span className="nav-icon">
+                <FaShip />
+              </span>
+              <span className="nav-label">Cruceros</span>
+            </button>
+            <button
+              className={`nav-item ${
+                activeSection === "excursiones" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("excursiones")}
+            >
+              <span className="nav-icon">
+                <FaHiking />
+              </span>
+              <span className="nav-label">Excursiones</span>
+            </button>
+            <button
+              className={`nav-item ${
+                activeSection === "pasajes" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("pasajes")}
+            >
+              <span className="nav-icon">
+                <FaPlane />
+              </span>
+              <span className="nav-label">Pasajes</span>
+            </button>
+            <button
+              className={`nav-item ${
+                activeSection === "salidas-grupales" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("salidas-grupales")}
+            >
+              <span className="nav-icon">
+                <FaMapMarkedAlt />
+              </span>
+              <span className="nav-label">Salidas Grupales</span>
+            </button>
+            <button
+              className={`nav-item ${
+                activeSection === "transfers" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("transfers")}
+            >
+              <span className="nav-icon">
+                <FaBus />
+              </span>
+              <span className="nav-label">Transfers</span>
+            </button>
+          </div>
+
+          <div className="nav-section">
             <h3>Gestión</h3>
             <button
               className={`nav-item ${
@@ -158,7 +305,25 @@ export default function Dashboard() {
 
           <div className="nav-section">
             <h3>Configuración</h3>
-            <button className="nav-item">
+            {user.role === "admin" && (
+              <button
+                className={`nav-item ${
+                  activeSection === "usuarios" ? "active" : ""
+                }`}
+                onClick={() => setActiveSection("usuarios")}
+              >
+                <span className="nav-icon">
+                  <FaUsers />
+                </span>
+                <span className="nav-label">Usuarios</span>
+              </button>
+            )}
+            <button
+              className={`nav-item ${
+                activeSection === "ajustes" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("ajustes")}
+            >
               <span className="nav-icon">
                 <FaCog />
               </span>
@@ -184,9 +349,7 @@ export default function Dashboard() {
             >
               <FaBars />
             </button>
-            <h1>
-              {activeSection.charAt(0).toUpperCase() + activeSection.slice(1)}
-            </h1>
+            <h1>{getSectionTitle()}</h1>
           </div>
           <div className="header-right">
             <div className="user-menu">

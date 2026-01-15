@@ -24,6 +24,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line, Doughnut } from "react-chartjs-2";
+import ClickStatsPanel from "../ClickStatsPanel";
 
 // Registrar componentes de Chart.js
 ChartJS.register(
@@ -452,6 +453,9 @@ export default function Reportes() {
           </table>
         </div>
       </div>
+
+      {/* Estadísticas de Clicks */}
+      <ClickStatsPanel />
     </div>
   );
 }

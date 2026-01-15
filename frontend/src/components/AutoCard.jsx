@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/card.css";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { trackCardClick } from "../services/clickStats.service";
 
 export default function AutoCard({ item }) {
   const {
@@ -18,8 +19,12 @@ export default function AutoCard({ item }) {
     disponible,
   } = item;
 
+  const handleCardClick = () => {
+    trackCardClick("auto").catch(console.error);
+  };
+
   return (
-    <div className="service-card">
+    <div className="service-card" onClick={handleCardClick}>
       {imagenes && imagenes.length > 0 && (
         <div className="card-image">
           <img src={imagenes[0]} alt={`${marca} ${modelo}`} />

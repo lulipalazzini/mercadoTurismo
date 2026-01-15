@@ -12,6 +12,7 @@ import { seedCruceros } from "./cruceros.seeder.js";
 import { seedCircuitos } from "./circuitos.seeder.js";
 import { seedSalidasGrupales } from "./salidasGrupales.seeder.js";
 import { seedCupos } from "./cupos.seeder.js";
+import seedClickStats from "./clickStats.seeder.js";
 
 /**
  * Ejecuta todos los seeders en orden
@@ -39,6 +40,7 @@ export const runAllSeeders = async () => {
     await seedCircuitos();
     await seedSalidasGrupales();
     await seedCupos();
+    await seedClickStats();
 
     console.log("\n✨ Todos los seeders se ejecutaron exitosamente\n");
   } catch (error) {

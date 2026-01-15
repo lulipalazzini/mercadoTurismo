@@ -11,20 +11,29 @@ const usersData = [
     direccion: "Av. Corrientes 1234, CABA",
   },
   {
-    nombre: "Juan García",
-    email: "juan.garcia@email.com",
-    password: "user123",
-    role: "user",
+    nombre: "Viajes Premier SA",
+    email: "agencia@viajespremier.com",
+    password: "agencia123",
+    role: "agencia",
     telefono: "+54 11 5555-6666",
     direccion: "Av. Santa Fe 2345, CABA",
   },
   {
-    nombre: "María López",
-    email: "maria.lopez@email.com",
-    password: "user123",
-    role: "user",
+    nombre: "Juan García",
+    email: "juan.garcia@email.com",
+    password: "operador123",
+    role: "operador_agencia",
     telefono: "+54 11 6666-7777",
     direccion: "Av. Rivadavia 3456, CABA",
+    agenciaId: 2,
+  },
+  {
+    nombre: "María López",
+    email: "maria.lopez@email.com",
+    password: "operador123",
+    role: "operador_independiente",
+    telefono: "+54 11 7777-8888",
+    direccion: "Av. Callao 4567, CABA",
   },
 ];
 
@@ -36,15 +45,8 @@ export const seedUsers = async () => {
       return;
     }
 
-    // Hash passwords before inserting
-    const usersWithHashedPasswords = await Promise.all(
-      usersData.map(async (user) => {
-        const hashedPassword = await bcrypt.hash(user.password, 10);
-        return { ...user, password: hashedPassword };
-      })
-    );
-
-    await User.bulkCreate(usersWithHashedPasswords);
+    // No hasheamos aquí porque el modelo User tiene un hook beforeCreate que lo hace automáticamente
+    await User.bulkCreate(usersData, { individualHooks: true });
     console.log("✅ Usuarios creados exitosamente");
   } catch (error) {
     console.error("❌ Error al crear usuarios:", error.message);

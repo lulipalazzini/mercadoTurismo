@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/card.css";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { trackCardClick } from "../services/clickStats.service";
 
 export default function PaqueteCard({ item }) {
   const {
@@ -24,8 +25,13 @@ export default function PaqueteCard({ item }) {
     });
   };
 
+  const handleCardClick = () => {
+    // Trackear click en segundo plano (no bloquea la UI)
+    trackCardClick("paquete").catch(console.error);
+  };
+
   return (
-    <div className="service-card">
+    <div className="service-card" onClick={handleCardClick}>
       {imagen && (
         <div className="card-image">
           <img src={imagen} alt={nombre} />

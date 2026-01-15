@@ -25,8 +25,12 @@ export default function PasajeCard({ item }) {
     });
   };
 
+  const handleCardClick = () => {
+    trackCardClick("pasaje").catch(console.error);
+  };
+
   return (
-    <div className="service-card">
+    <div className="service-card" onClick={handleCardClick}>
       <div className="card-header">
         <div className="card-header-content">
           <h3 className="card-title">
