@@ -3,8 +3,8 @@ import User from "../models/User.model.js";
 
 export const getPaquetes = async (req, res) => {
   try {
-    const paquetes = await Paquete.findAll({ 
-      order: [["createdAt", "DESC"]]
+    const paquetes = await Paquete.findAll({
+      order: [["createdAt", "DESC"]],
     });
     res.json(paquetes);
   } catch (error) {

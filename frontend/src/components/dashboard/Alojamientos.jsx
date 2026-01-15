@@ -125,186 +125,187 @@ export default function Alojamientos() {
 
   return (
     <>
-    <div className="section-container">
-      {/* Toolbar */}
-      <div className="section-toolbar">
-        <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
-          <FaPlus /> Nuevo Alojamiento
-        </button>
-        <div className="toolbar-actions">
-          <div className="search-box-crm">
-            <FaSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Buscar alojamientos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+      <div className="section-container">
+        {/* Toolbar */}
+        <div className="section-toolbar">
+          <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
+            <FaPlus /> Nuevo Alojamiento
+          </button>
+          <div className="toolbar-actions">
+            <div className="search-box-crm">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Buscar alojamientos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#e3f2fd" }}>
-            <FaHotel />
+        {/* Stats Cards */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#e3f2fd" }}>
+              <FaHotel />
+            </div>
+            <div className="stat-content">
+              <h3>{filteredItems.length}</h3>
+              <p>Alojamientos {searchTerm ? "Filtrados" : "Activos"}</p>
+            </div>
           </div>
-          <div className="stat-content">
-            <h3>{filteredItems.length}</h3>
-            <p>Alojamientos {searchTerm ? "Filtrados" : "Activos"}</p>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#f3e5f5" }}>
+              <FaStar />
+            </div>
+            <div className="stat-content">
+              <h3>{items.filter((a) => a.estrellas >= 4).length}</h3>
+              <p>4+ Estrellas</p>
+            </div>
           </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#f3e5f5" }}>
-            <FaStar />
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#fff3e0" }}>
+              <FaMapMarkerAlt />
+            </div>
+            <div className="stat-content">
+              <h3>{[...new Set(items.map((a) => a.ubicacion))].length}</h3>
+              <p>Ubicaciones</p>
+            </div>
           </div>
-          <div className="stat-content">
-            <h3>
-              {items.filter((a) => a.estrellas >= 4).length}
-            </h3>
-            <p>4+ Estrellas</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#fff3e0" }}>
-            <FaMapMarkerAlt />
-          </div>
-          <div className="stat-content">
-            <h3>{[...new Set(items.map((a) => a.ubicacion))].length}</h3>
-            <p>Ubicaciones</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#e8f5e9" }}>
-            <FaDollarSign />
-          </div>
-          <div className="stat-content">
-            <h3>
-              {items.length > 0
-                ? formatCurrency(
-                    Math.round(
-                      items.reduce((sum, a) => sum + Number(a.precioNoche || 0), 0) /
-                        items.length
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#e8f5e9" }}>
+              <FaDollarSign />
+            </div>
+            <div className="stat-content">
+              <h3>
+                {items.length > 0
+                  ? formatCurrency(
+                      Math.round(
+                        items.reduce(
+                          (sum, a) => sum + Number(a.precioNoche || 0),
+                          0
+                        ) / items.length
+                      )
                     )
-                  )
-                : "$0"}
-            </h3>
-            <p>Precio Promedio</p>
+                  : "$0"}
+              </h3>
+              <p>Precio Promedio</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Cards Grid */}
-      {filteredItems.length === 0 ? (
-        <div className="alert alert-info" style={{ margin: "2rem" }}>
-          <p>No se encontraron alojamientos con los filtros aplicados</p>
-        </div>
-      ) : (
-        <div className="packages-grid">
-          {filteredItems.map((item) => (
-            <div key={item.id} className="package-card">
-              <div className="package-header">
-                <div className="package-category">
-                  <span className="category-badge category-standard">
-                    {item.tipo}
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleEditClick(item)}
-                    title="Editar alojamiento"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleDeleteClick(item)}
-                    title="Eliminar alojamiento"
-                    style={{ color: "#e53e3e" }}
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
-              </div>
-
-              <div className="package-body">
-                <h3 className="package-title">{item.nombre}</h3>
-                <div className="package-info">
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaMapMarkerAlt />
+        {/* Cards Grid */}
+        {filteredItems.length === 0 ? (
+          <div className="alert alert-info" style={{ margin: "2rem" }}>
+            <p>No se encontraron alojamientos con los filtros aplicados</p>
+          </div>
+        ) : (
+          <div className="packages-grid">
+            {filteredItems.map((item) => (
+              <div key={item.id} className="package-card">
+                <div className="package-header">
+                  <div className="package-category">
+                    <span className="category-badge category-standard">
+                      {item.tipo}
                     </span>
-                    <span>{item.ubicacion}</span>
                   </div>
-                  {item.estrellas && (
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleEditClick(item)}
+                      title="Editar alojamiento"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleDeleteClick(item)}
+                      title="Eliminar alojamiento"
+                      style={{ color: "#e53e3e" }}
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="package-body">
+                  <h3 className="package-title">{item.nombre}</h3>
+                  <div className="package-info">
                     <div className="info-item">
                       <span className="info-icon">
-                        <FaStar />
+                        <FaMapMarkerAlt />
                       </span>
-                      <span>{item.estrellas} estrellas</span>
+                      <span>{item.ubicacion}</span>
                     </div>
+                    {item.estrellas && (
+                      <div className="info-item">
+                        <span className="info-icon">
+                          <FaStar />
+                        </span>
+                        <span>{item.estrellas} estrellas</span>
+                      </div>
+                    )}
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaDollarSign />
+                      </span>
+                      <span>{formatCurrency(item.precioNoche)}/noche</span>
+                    </div>
+                  </div>
+
+                  {item.descripcion && (
+                    <p className="package-description">
+                      {item.descripcion.length > 100
+                        ? `${item.descripcion.substring(0, 100)}...`
+                        : item.descripcion}
+                    </p>
                   )}
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaDollarSign />
+                </div>
+
+                <div className="package-footer">
+                  <div className="package-price">
+                    <span className="price-label">Dirección</span>
+                    <span className="price-value">
+                      {item.direccion || "N/A"}
                     </span>
-                    <span>{formatCurrency(item.precioNoche)}/noche</span>
                   </div>
                 </div>
-
-                {item.descripcion && (
-                  <p className="package-description">
-                    {item.descripcion.length > 100
-                      ? `${item.descripcion.substring(0, 100)}...`
-                      : item.descripcion}
-                  </p>
-                )}
               </div>
+            ))}
+          </div>
+        )}
+      </div>
 
-              <div className="package-footer">
-                <div className="package-price">
-                  <span className="price-label">Dirección</span>
-                  <span className="price-value">{item.direccion || "N/A"}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <AlojamientoFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={loadItems}
+      />
 
-    </div>
+      <AlojamientoEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={loadItems}
+        alojamiento={selectedItem}
+      />
 
-    <AlojamientoFormModal
-      isOpen={isModalOpen}
-      onClose={() => setIsModalOpen(false)}
-      onSuccess={loadItems}
-    />
+      <ConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Eliminar Alojamiento"
+        message={`¿Estás seguro de que deseas eliminar "${itemToDelete?.nombre}"?`}
+        isDanger={true}
+      />
 
-    <AlojamientoEditModal
-      isOpen={isEditModalOpen}
-      onClose={() => setIsEditModalOpen(false)}
-      onSuccess={loadItems}
-      alojamiento={selectedItem}
-    />
-
-    <ConfirmModal
-      isOpen={showConfirm}
-      onClose={() => setShowConfirm(false)}
-      onConfirm={confirmDelete}
-      title="Eliminar Alojamiento"
-      message={`¿Estás seguro de que deseas eliminar "${itemToDelete?.nombre}"?`}
-      isDanger={true}
-    />
-
-    <AlertModal
-      isOpen={showAlert}
-      onClose={() => setShowAlert(false)}
-      title="Error"
-      message={alertMessage}
-      type="error"
-    />
+      <AlertModal
+        isOpen={showAlert}
+        onClose={() => setShowAlert(false)}
+        title="Error"
+        message={alertMessage}
+        type="error"
+      />
     </>
   );
 }

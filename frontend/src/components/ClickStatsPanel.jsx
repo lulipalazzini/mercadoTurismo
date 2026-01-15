@@ -9,7 +9,7 @@ export default function ClickStatsPanel() {
 
   useEffect(() => {
     loadStats();
-    
+
     // Actualizar cada 30 segundos
     const interval = setInterval(loadStats, 30000);
     return () => clearInterval(interval);
@@ -72,15 +72,18 @@ export default function ClickStatsPanel() {
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "3rem" }}>
-        <div className="spinner" style={{ 
-          margin: "0 auto 1rem",
-          border: "4px solid #e2e8f0",
-          borderTop: "4px solid #4a5568",
-          borderRadius: "50%",
-          width: "40px",
-          height: "40px",
-          animation: "spin 1s linear infinite"
-        }}></div>
+        <div
+          className="spinner"
+          style={{
+            margin: "0 auto 1rem",
+            border: "4px solid #e2e8f0",
+            borderTop: "4px solid #4a5568",
+            borderRadius: "50%",
+            width: "40px",
+            height: "40px",
+            animation: "spin 1s linear infinite",
+          }}
+        ></div>
         <p style={{ color: "#718096" }}>Cargando estadísticas...</p>
       </div>
     );
@@ -90,7 +93,11 @@ export default function ClickStatsPanel() {
     return (
       <div className="alert alert-warning" style={{ margin: "1rem 0" }}>
         <p>{error}</p>
-        <button onClick={loadStats} className="btn-secondary" style={{ marginTop: "0.5rem" }}>
+        <button
+          onClick={loadStats}
+          className="btn-secondary"
+          style={{ marginTop: "0.5rem" }}
+        >
           Reintentar
         </button>
       </div>
@@ -117,11 +124,16 @@ export default function ClickStatsPanel() {
             Análisis de clicks por tipo de servicio
           </p>
         </div>
-        <button 
-          onClick={loadStats} 
+        <button
+          onClick={loadStats}
           className="btn-secondary"
           title="Actualizar"
-          style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "20px" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            marginBottom: "20px",
+          }}
         >
           <FaSync /> Actualizar
         </button>
@@ -156,7 +168,9 @@ export default function ClickStatsPanel() {
             </span>
           </div>
           <div className="stat-content">
-            <h3>{stats.stats[0] ? getCardTypeLabel(stats.stats[0].cardType) : "-"}</h3>
+            <h3>
+              {stats.stats[0] ? getCardTypeLabel(stats.stats[0].cardType) : "-"}
+            </h3>
             <p>Más Popular</p>
           </div>
         </div>
@@ -201,7 +215,13 @@ export default function ClickStatsPanel() {
                       </div>
                     </td>
                     <td>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                        }}
+                      >
                         <span style={{ fontSize: "1.25rem" }}>
                           {getCardTypeIcon(stat.cardType)}
                         </span>
@@ -245,7 +265,14 @@ export default function ClickStatsPanel() {
             </table>
           </div>
         </div>
-        <div className="card-footer" style={{ textAlign: "center", color: "#a0aec0", fontSize: "0.875rem" }}>
+        <div
+          className="card-footer"
+          style={{
+            textAlign: "center",
+            color: "#a0aec0",
+            fontSize: "0.875rem",
+          }}
+        >
           Última actualización: {new Date().toLocaleString("es-ES")}
         </div>
       </div>

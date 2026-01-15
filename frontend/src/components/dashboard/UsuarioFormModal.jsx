@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { FaTimes, FaUser, FaEnvelope, FaLock, FaShieldAlt, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
+import {
+  FaTimes,
+  FaUser,
+  FaEnvelope,
+  FaLock,
+  FaShieldAlt,
+  FaPhone,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
 import { createUser } from "../../services/users.service";
 import AlertModal from "../common/AlertModal";
 
@@ -28,7 +36,11 @@ export default function UsuarioFormModal({ isOpen, onClose, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.nombre.trim() || !formData.email.trim() || !formData.password.trim()) {
+    if (
+      !formData.nombre.trim() ||
+      !formData.email.trim() ||
+      !formData.password.trim()
+    ) {
       setAlertData({
         type: "error",
         message: "Por favor completa todos los campos obligatorios",
@@ -151,8 +163,12 @@ export default function UsuarioFormModal({ isOpen, onClose, onSuccess }) {
                     onChange={handleChange}
                     required
                   >
-                    <option value="operador_independiente">Operador Independiente</option>
-                    <option value="operador_agencia">Operador de Agencia</option>
+                    <option value="operador_independiente">
+                      Operador Independiente
+                    </option>
+                    <option value="operador_agencia">
+                      Operador de Agencia
+                    </option>
                     <option value="agencia">Agencia</option>
                     <option value="admin">Administrador</option>
                   </select>

@@ -9,35 +9,42 @@ Se ha integrado correctamente un sistema de tracking de clicks para analizar qu�
 ### Backend
 
 #### 1. **Modelo de Datos** ([ClickStats.model.js](backend/src/models/ClickStats.model.js))
+
 - Tabla `click_stats` con Sequelize
 - Campos: `id`, `cardType`, `clicks`, `createdAt`, `updatedAt`
 - 10 tipos de cards: alojamiento, auto, circuito, crucero, excursion, paquete, pasaje, salidaGrupal, seguro, transfer
 
 #### 2. **Controlador** ([clickStats.controller.js](backend/src/controllers/clickStats.controller.js))
+
 - `incrementClickCount`: Incrementa contador de un tipo de card
 - `getAllStats`: Obtiene todas las estadísticas ordenadas por clicks
 - `getStatByType`: Obtiene estadísticas de un tipo específico
 
 #### 3. **Rutas** ([clickStats.routes.js](backend/src/routes/clickStats.routes.js))
+
 - `POST /api/stats/increment` - Incrementar contador (rate limited)
 - `GET /api/stats` - Ver todas las estadísticas
 - `GET /api/stats/:cardType` - Ver estadísticas por tipo
 
 #### 4. **Seeder** ([clickStats.seeder.js](backend/src/seeders/clickStats.seeder.js))
+
 - Inicializa automáticamente todos los tipos de cards con clicks en 0
 
 ## 🔒 Seguridad Implementada
 
 ### 1. **Helmet**
+
 - Protección de headers HTTP
 - Previene ataques XSS, clickjacking, MIME sniffing
 
 ### 2. **Rate Limiting**
+
 - **Global**: 100 peticiones por IP cada 15 minutos
 - **Clicks**: 10 clicks por IP cada 10 minutos
 - Previene ataques de DDoS y spam
 
 ### 3. **Header Personalizado**
+
 - `x-sec-origin: mercado-turismo-app`
 - Valida que las peticiones vengan de tu frontend
 - Frena bots simples
@@ -45,9 +52,11 @@ Se ha integrado correctamente un sistema de tracking de clicks para analizar qu�
 ## 📡 Endpoints API
 
 ### POST /api/stats/increment
+
 Incrementa el contador de clicks para un tipo de card.
 
 **Request:**
+
 ```json
 {
   "cardType": "paquete"
@@ -55,12 +64,14 @@ Incrementa el contador de clicks para un tipo de card.
 ```
 
 **Headers requeridos:**
+
 ```
 Content-Type: application/json
 x-sec-origin: mercado-turismo-app
 ```
 
 **Response exitoso:**
+
 ```json
 {
   "success": true,
@@ -70,6 +81,7 @@ x-sec-origin: mercado-turismo-app
 ```
 
 **Validaciones:**
+
 - Header `x-sec-origin` debe ser correcto
 - `cardType` debe ser válido
 - Rate limit: máximo 10 clics cada 10 minutos por IP
@@ -77,9 +89,11 @@ x-sec-origin: mercado-turismo-app
 ---
 
 ### GET /api/stats
+
 Obtiene todas las estadísticas ordenadas por cantidad de clicks.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -107,11 +121,13 @@ Obtiene todas las estadísticas ordenadas por cantidad de clicks.
 ---
 
 ### GET /api/stats/:cardType
+
 Obtiene estadísticas de un tipo específico de card.
 
 **Ejemplo:** `GET /api/stats/paquete`
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -174,7 +190,7 @@ export default function PaqueteCard({ item }) {
   const handleCardClick = async () => {
     // Trackear el click (no bloquea la UI)
     trackCardClick("paquete").catch(console.error);
-    
+
     // Continuar con tu lógica normal
     // navigate(`/paquetes/${item.id}`);
   };
@@ -217,16 +233,16 @@ export default function ClickStatsPanel() {
       <p className="total-clicks">
         Total de clicks: <strong>{stats.totalClicks.toLocaleString()}</strong>
       </p>
-      
+
       <div className="stats-list">
         {stats.stats.map((stat) => (
           <div key={stat.cardType} className="stat-item">
             <span className="card-type">{stat.cardType}</span>
             <span className="click-count">{stat.clicks}</span>
-            <div 
+            <div
               className="progress-bar"
-              style={{ 
-                width: `${(stat.clicks / stats.totalClicks) * 100}%` 
+              style={{
+                width: `${(stat.clicks / stats.totalClicks) * 100}%`,
               }}
             />
           </div>
@@ -241,16 +257,16 @@ export default function ClickStatsPanel() {
 
 ```javascript
 const VALID_CARD_TYPES = [
-  "alojamiento",    // AlojamientoCard
-  "auto",           // AutoCard
-  "circuito",       // CircuitoCard
-  "crucero",        // CruceroCard
-  "excursion",      // ExcursionCard
-  "paquete",        // PaqueteCard
-  "pasaje",         // PasajeCard
-  "salidaGrupal",   // SalidaGrupalCard
-  "seguro",         // SeguroCard
-  "transfer"        // TransferCard
+  "alojamiento", // AlojamientoCard
+  "auto", // AutoCard
+  "circuito", // CircuitoCard
+  "crucero", // CruceroCard
+  "excursion", // ExcursionCard
+  "paquete", // PaqueteCard
+  "pasaje", // PasajeCard
+  "salidaGrupal", // SalidaGrupalCard
+  "seguro", // SeguroCard
+  "transfer", // TransferCard
 ];
 ```
 
@@ -259,17 +275,20 @@ const VALID_CARD_TYPES = [
 ### 1. El servidor ya está corriendo con las rutas configuradas
 
 ### 2. Inicializar la tabla de estadísticas:
+
 ```bash
 cd backend
 npm run seed
 ```
 
 ### 3. Integrar tracking en tus cards del frontend:
+
 - Crea el servicio `clickStats.service.js`
 - Importa y usa `trackCardClick()` en cada componente de card
 - El tracking se hace en segundo plano, no afecta la UX
 
 ### 4. (Opcional) Crear panel de admin para visualizar stats
+
 - Usa `getClickStats()` para obtener los datos
 - Muestra en un dashboard con gráficos
 
@@ -280,7 +299,7 @@ npm run seed
 ✅ **Modular** - Sigue tu estructura de proyecto (MVC)  
 ✅ **No invasivo** - El tracking no bloquea la experiencia del usuario  
 ✅ **Escalable** - Fácil de extender para más tipos de cards  
-✅ **Analytics real** - Datos persistentes en tu base de datos  
+✅ **Analytics real** - Datos persistentes en tu base de datos
 
 ## 🔍 Monitoreo
 
@@ -292,6 +311,7 @@ sqlite3 backend/database.sqlite "SELECT * FROM click_stats ORDER BY clicks DESC;
 ```
 
 O usar la API:
+
 ```bash
 curl http://localhost:3001/api/stats
 ```

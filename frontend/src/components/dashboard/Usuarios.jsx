@@ -183,7 +183,9 @@ export default function Usuarios() {
               <option value="admin">Administrador</option>
               <option value="agencia">Agencia</option>
               <option value="operador_agencia">Operador de Agencia</option>
-              <option value="operador_independiente">Operador Independiente</option>
+              <option value="operador_independiente">
+                Operador Independiente
+              </option>
             </select>
           </div>
         </div>
@@ -196,7 +198,9 @@ export default function Usuarios() {
             </div>
             <div className="stat-content">
               <h3>{filteredUsers.length}</h3>
-              <p>Usuarios {searchTerm || roleFilter ? "Filtrados" : "Totales"}</p>
+              <p>
+                Usuarios {searchTerm || roleFilter ? "Filtrados" : "Totales"}
+              </p>
             </div>
           </div>
           <div className="stat-card">
@@ -213,7 +217,9 @@ export default function Usuarios() {
               <FaBuilding />
             </div>
             <div className="stat-content">
-              <h3>{(users || []).filter((u) => u.role === "agencia").length}</h3>
+              <h3>
+                {(users || []).filter((u) => u.role === "agencia").length}
+              </h3>
               <p>Agencias</p>
             </div>
           </div>
@@ -223,11 +229,13 @@ export default function Usuarios() {
             </div>
             <div className="stat-content">
               <h3>
-                {(users || []).filter(
-                  (u) =>
-                    u.role === "operador_agencia" ||
-                    u.role === "operador_independiente"
-                ).length}
+                {
+                  (users || []).filter(
+                    (u) =>
+                      u.role === "operador_agencia" ||
+                      u.role === "operador_independiente"
+                  ).length
+                }
               </h3>
               <p>Operadores</p>
             </div>

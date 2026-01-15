@@ -2,7 +2,16 @@ import React from "react";
 import { FaTimes, FaExclamationTriangle } from "react-icons/fa";
 import "../../styles/modal.css";
 
-export default function ConfirmModal({ isOpen, onClose, onConfirm, title, message, confirmText = "Confirmar", cancelText = "Cancelar", danger = false }) {
+export default function ConfirmModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  message,
+  confirmText = "Confirmar",
+  cancelText = "Cancelar",
+  danger = false,
+}) {
   if (!isOpen) return null;
 
   const handleConfirm = () => {
@@ -21,12 +30,16 @@ export default function ConfirmModal({ isOpen, onClose, onConfirm, title, messag
         </div>
 
         <div className="modal-body">
-          <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}>
-            <div style={{ 
-              fontSize: "2rem", 
-              color: danger ? "#e53e3e" : "#f59e0b",
-              flexShrink: 0
-            }}>
+          <div
+            style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}
+          >
+            <div
+              style={{
+                fontSize: "2rem",
+                color: danger ? "#e53e3e" : "#f59e0b",
+                flexShrink: 0,
+              }}
+            >
               <FaExclamationTriangle />
             </div>
             <p style={{ margin: 0, color: "#2d3748", fontSize: "0.9375rem" }}>
@@ -36,11 +49,7 @@ export default function ConfirmModal({ isOpen, onClose, onConfirm, title, messag
         </div>
 
         <div className="modal-footer">
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={onClose}
-          >
+          <button type="button" className="btn-secondary" onClick={onClose}>
             {cancelText}
           </button>
           <button

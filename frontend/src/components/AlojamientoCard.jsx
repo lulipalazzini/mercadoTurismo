@@ -31,7 +31,7 @@ export default function AlojamientoCard({ alojamiento }) {
   const handleVerDetalles = () => {
     // Trackear click en segundo plano
     trackCardClick("alojamiento").catch(console.error);
-    
+
     // Por ahora solo navega, después implementaremos la página de detalle
     window.location.href = `/alojamientos/${id}`;
   };

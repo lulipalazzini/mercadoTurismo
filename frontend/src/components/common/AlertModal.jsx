@@ -1,8 +1,19 @@
 import React from "react";
-import { FaTimes, FaExclamationCircle, FaCheckCircle, FaInfoCircle } from "react-icons/fa";
+import {
+  FaTimes,
+  FaExclamationCircle,
+  FaCheckCircle,
+  FaInfoCircle,
+} from "react-icons/fa";
 import "../../styles/modal.css";
 
-export default function AlertModal({ isOpen, onClose, title, message, type = "error" }) {
+export default function AlertModal({
+  isOpen,
+  onClose,
+  title,
+  message,
+  type = "error",
+}) {
   if (!isOpen) return null;
 
   const getIcon = () => {
@@ -41,10 +52,10 @@ export default function AlertModal({ isOpen, onClose, title, message, type = "er
         </div>
 
         <div className="modal-body">
-          <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}>
-            <div style={{ fontSize: "2rem", flexShrink: 0 }}>
-              {getIcon()}
-            </div>
+          <div
+            style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}
+          >
+            <div style={{ fontSize: "2rem", flexShrink: 0 }}>{getIcon()}</div>
             <p style={{ margin: 0, color: "#2d3748", fontSize: "0.9375rem" }}>
               {message}
             </p>
@@ -52,11 +63,7 @@ export default function AlertModal({ isOpen, onClose, title, message, type = "er
         </div>
 
         <div className="modal-footer">
-          <button
-            type="button"
-            className="btn-primary"
-            onClick={onClose}
-          >
+          <button type="button" className="btn-primary" onClick={onClose}>
             Aceptar
           </button>
         </div>

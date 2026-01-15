@@ -42,21 +42,21 @@ export const fetchWithAuth = async (url, options = {}) => {
 // Métodos HTTP helper
 export const api = {
   get: (url, options = {}) => fetchWithAuth(url, { method: "GET", ...options }),
-  
+
   post: (url, data, options = {}) =>
     fetchWithAuth(url, {
       method: "POST",
       body: JSON.stringify(data),
       ...options,
     }),
-  
+
   put: (url, data, options = {}) =>
     fetchWithAuth(url, {
       method: "PUT",
       body: JSON.stringify(data),
       ...options,
     }),
-  
+
   delete: (url, options = {}) =>
     fetchWithAuth(url, { method: "DELETE", ...options }),
 };

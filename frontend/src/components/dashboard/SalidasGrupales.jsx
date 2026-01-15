@@ -90,9 +90,14 @@ export default function SalidasGrupales() {
 
   // Calcular estadísticas
   const today = new Date();
-  const proximasSalidas = items.filter(s => new Date(s.fechaSalida) > today).length;
-  const destinosUnicos = [...new Set(items.map(s => s.destino))].length;
-  const cuposDisponibles = items.reduce((sum, s) => sum + (Number(s.cuposDisponibles) || 0), 0);
+  const proximasSalidas = items.filter(
+    (s) => new Date(s.fechaSalida) > today
+  ).length;
+  const destinosUnicos = [...new Set(items.map((s) => s.destino))].length;
+  const cuposDisponibles = items.reduce(
+    (sum, s) => sum + (Number(s.cuposDisponibles) || 0),
+    0
+  );
 
   if (loading) {
     return (
@@ -135,177 +140,176 @@ export default function SalidasGrupales() {
 
   return (
     <>
-    <div className="section-container">
-      {/* Toolbar */}
-      <div className="section-toolbar">
-        <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
-          <FaPlus /> Nueva Salida Grupal
-        </button>
-        <div className="toolbar-actions">
-          <div className="search-box-crm">
-            <FaSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Buscar salidas grupales..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#e3f2fd" }}>
-            <FaUsers />
-          </div>
-          <div className="stat-content">
-            <h3>{filteredItems.length}</h3>
-            <p>Salidas {searchTerm ? "Filtradas" : "Activas"}</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#f3e5f5" }}>
-            <FaCalendarAlt />
-          </div>
-          <div className="stat-content">
-            <h3>{proximasSalidas}</h3>
-            <p>Próximas Salidas</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#fff3e0" }}>
-            <FaMapMarkerAlt />
-          </div>
-          <div className="stat-content">
-            <h3>{destinosUnicos}</h3>
-            <p>Destinos Únicos</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#e8f5e9" }}>
-            <FaUsers />
-          </div>
-          <div className="stat-content">
-            <h3>{cuposDisponibles}</h3>
-            <p>Cupos Disponibles</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Cards Grid */}
-      {filteredItems.length === 0 ? (
-        <div className="alert alert-info" style={{ margin: "2rem" }}>
-          <p>No se encontraron salidas grupales con los filtros aplicados</p>
-        </div>
-      ) : (
-        <div className="packages-grid">
-          {filteredItems.map((item) => (
-            <div key={item.id} className="package-card">
-              <div className="package-header">
-                <div className="package-category">
-                  <span className="category-badge category-standard">
-                    Salida Grupal
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleEditClick(item)}
-                    title="Editar salida grupal"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleDeleteClick(item)}
-                    title="Eliminar salida grupal"
-                    style={{ color: "#e53e3e" }}
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
-              </div>
-
-              <div className="package-body">
-                <h3 className="package-title">{item.nombre}</h3>
-                <div className="package-info">
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaMapMarkerAlt />
-                    </span>
-                    <span>{item.destino}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaCalendarAlt />
-                    </span>
-                    <span>
-                      {formatDate(item.fechaSalida)} - {item.duracion} días
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaDollarSign />
-                    </span>
-                    <span>{formatCurrency(item.precio)}</span>
-                  </div>
-                </div>
-
-                {item.descripcion && (
-                  <p className="package-description">
-                    {item.descripcion.length > 100
-                      ? `${item.descripcion.substring(0, 100)}...`
-                      : item.descripcion}
-                  </p>
-                )}
-              </div>
-
-              <div className="package-footer">
-                <div className="package-price">
-                  <span className="price-label">Regreso</span>
-                  <span className="price-value">
-                    {formatDate(item.fechaRegreso)}
-                  </span>
-                </div>
-              </div>
+      <div className="section-container">
+        {/* Toolbar */}
+        <div className="section-toolbar">
+          <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
+            <FaPlus /> Nueva Salida Grupal
+          </button>
+          <div className="toolbar-actions">
+            <div className="search-box-crm">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Buscar salidas grupales..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
-          ))}
+          </div>
         </div>
-      )}
 
-    </div>
+        {/* Stats Cards */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#e3f2fd" }}>
+              <FaUsers />
+            </div>
+            <div className="stat-content">
+              <h3>{filteredItems.length}</h3>
+              <p>Salidas {searchTerm ? "Filtradas" : "Activas"}</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#f3e5f5" }}>
+              <FaCalendarAlt />
+            </div>
+            <div className="stat-content">
+              <h3>{proximasSalidas}</h3>
+              <p>Próximas Salidas</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#fff3e0" }}>
+              <FaMapMarkerAlt />
+            </div>
+            <div className="stat-content">
+              <h3>{destinosUnicos}</h3>
+              <p>Destinos Únicos</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#e8f5e9" }}>
+              <FaUsers />
+            </div>
+            <div className="stat-content">
+              <h3>{cuposDisponibles}</h3>
+              <p>Cupos Disponibles</p>
+            </div>
+          </div>
+        </div>
 
-    <SalidaGrupalFormModal
-      isOpen={isModalOpen}
-      onClose={() => setIsModalOpen(false)}
-      onSuccess={loadItems}
-    />
+        {/* Cards Grid */}
+        {filteredItems.length === 0 ? (
+          <div className="alert alert-info" style={{ margin: "2rem" }}>
+            <p>No se encontraron salidas grupales con los filtros aplicados</p>
+          </div>
+        ) : (
+          <div className="packages-grid">
+            {filteredItems.map((item) => (
+              <div key={item.id} className="package-card">
+                <div className="package-header">
+                  <div className="package-category">
+                    <span className="category-badge category-standard">
+                      Salida Grupal
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleEditClick(item)}
+                      title="Editar salida grupal"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleDeleteClick(item)}
+                      title="Eliminar salida grupal"
+                      style={{ color: "#e53e3e" }}
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </div>
 
-    <SalidaGrupalEditModal
-      isOpen={isEditModalOpen}
-      onClose={() => setIsEditModalOpen(false)}
-      onSuccess={loadItems}
-      salidaGrupal={selectedItem}
-    />
+                <div className="package-body">
+                  <h3 className="package-title">{item.nombre}</h3>
+                  <div className="package-info">
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaMapMarkerAlt />
+                      </span>
+                      <span>{item.destino}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaCalendarAlt />
+                      </span>
+                      <span>
+                        {formatDate(item.fechaSalida)} - {item.duracion} días
+                      </span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaDollarSign />
+                      </span>
+                      <span>{formatCurrency(item.precio)}</span>
+                    </div>
+                  </div>
 
-    <ConfirmModal
-      isOpen={showConfirm}
-      onClose={() => setShowConfirm(false)}
-      onConfirm={confirmDelete}
-      title="Eliminar Salida Grupal"
-      message={`¿Estás seguro de que deseas eliminar "${itemToDelete?.nombre}"?`}
-      isDanger={true}
-    />
+                  {item.descripcion && (
+                    <p className="package-description">
+                      {item.descripcion.length > 100
+                        ? `${item.descripcion.substring(0, 100)}...`
+                        : item.descripcion}
+                    </p>
+                  )}
+                </div>
 
-    <AlertModal
-      isOpen={showAlert}
-      onClose={() => setShowAlert(false)}
-      title="Error"
-      message={alertMessage}
-      type="error"
-    />
+                <div className="package-footer">
+                  <div className="package-price">
+                    <span className="price-label">Regreso</span>
+                    <span className="price-value">
+                      {formatDate(item.fechaRegreso)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <SalidaGrupalFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={loadItems}
+      />
+
+      <SalidaGrupalEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={loadItems}
+        salidaGrupal={selectedItem}
+      />
+
+      <ConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Eliminar Salida Grupal"
+        message={`¿Estás seguro de que deseas eliminar "${itemToDelete?.nombre}"?`}
+        isDanger={true}
+      />
+
+      <AlertModal
+        isOpen={showAlert}
+        onClose={() => setShowAlert(false)}
+        title="Error"
+        message={alertMessage}
+        type="error"
+      />
     </>
   );
 }

@@ -9,7 +9,9 @@ export const getUsers = async (req, res) => {
     res.json(users);
   } catch (error) {
     console.error("Error al obtener usuarios:", error);
-    res.status(500).json({ message: "Error al obtener usuarios", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al obtener usuarios", error: error.message });
   }
 };
 
@@ -27,20 +29,27 @@ export const getUserById = async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error("Error al obtener usuario:", error);
-    res.status(500).json({ message: "Error al obtener usuario", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al obtener usuario", error: error.message });
   }
 };
 
 export const createUser = async (req, res) => {
   try {
-    const { nombre, email, password, role, telefono, direccion, agenciaId } = req.body;
+    const { nombre, email, password, role, telefono, direccion, agenciaId } =
+      req.body;
 
     if (!nombre || !email || !password) {
-      return res.status(400).json({ message: "Nombre, email y contraseña son requeridos" });
+      return res
+        .status(400)
+        .json({ message: "Nombre, email y contraseña son requeridos" });
     }
 
     if (password.length < 6) {
-      return res.status(400).json({ message: "La contraseña debe tener al menos 6 caracteres" });
+      return res
+        .status(400)
+        .json({ message: "La contraseña debe tener al menos 6 caracteres" });
     }
 
     const existingUser = await User.findOne({ where: { email } });
@@ -67,7 +76,9 @@ export const createUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error al crear usuario:", error);
-    res.status(500).json({ message: "Error al crear usuario", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al crear usuario", error: error.message });
   }
 };
 
@@ -84,7 +95,9 @@ export const updateUser = async (req, res) => {
     if (email && email !== user.email) {
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser && existingUser.id !== user.id) {
-        return res.status(400).json({ message: "El email ya está en uso por otro usuario" });
+        return res
+          .status(400)
+          .json({ message: "El email ya está en uso por otro usuario" });
       }
     }
 
@@ -106,7 +119,9 @@ export const updateUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error al actualizar usuario:", error);
-    res.status(500).json({ message: "Error al actualizar usuario", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al actualizar usuario", error: error.message });
   }
 };
 
@@ -116,7 +131,9 @@ export const deleteUser = async (req, res) => {
 
     // No permitir que un usuario se elimine a sí mismo
     if (req.user.id === parseInt(id)) {
-      return res.status(400).json({ message: "No puedes eliminar tu propia cuenta" });
+      return res
+        .status(400)
+        .json({ message: "No puedes eliminar tu propia cuenta" });
     }
 
     const user = await User.findByPk(id);
@@ -129,6 +146,8 @@ export const deleteUser = async (req, res) => {
     res.json({ message: "Usuario eliminado exitosamente" });
   } catch (error) {
     console.error("Error al eliminar usuario:", error);
-    res.status(500).json({ message: "Error al eliminar usuario", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al eliminar usuario", error: error.message });
   }
 };

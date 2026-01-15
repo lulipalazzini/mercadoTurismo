@@ -14,12 +14,12 @@ async function updatePaquetesTable() {
     // Sincronizar modelos con la base de datos
     // alter: true actualiza la tabla sin borrar datos
     await Paquete.sync({ alter: true });
-    
+
     console.log("✅ Tabla Paquetes actualizada exitosamente");
     console.log("📋 Nuevos campos agregados:");
     console.log("   - createdBy: INTEGER (referencia a Users)");
     console.log("   - deletedAt: DATE (para soft delete)");
-    
+
     // Cerrar conexión
     await sequelize.close();
     console.log("✨ Proceso completado");

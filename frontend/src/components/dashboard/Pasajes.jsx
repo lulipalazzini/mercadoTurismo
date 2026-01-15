@@ -90,11 +90,15 @@ export default function Pasajes() {
   );
 
   // Calcular estadísticas
-  const aereos = items.filter(p => p.tipo === 'Aéreo').length;
-  const destinosUnicos = [...new Set(items.map(p => p.destino))].length;
-  const precioPromedio = items.length > 0
-    ? Math.round(items.reduce((sum, p) => sum + Number(p.precio || 0), 0) / items.length)
-    : 0;
+  const aereos = items.filter((p) => p.tipo === "Aéreo").length;
+  const destinosUnicos = [...new Set(items.map((p) => p.destino))].length;
+  const precioPromedio =
+    items.length > 0
+      ? Math.round(
+          items.reduce((sum, p) => sum + Number(p.precio || 0), 0) /
+            items.length
+        )
+      : 0;
 
   if (loading) {
     return (
@@ -137,174 +141,173 @@ export default function Pasajes() {
 
   return (
     <>
-    <div className="section-container">
-      {/* Toolbar */}
-      <div className="section-toolbar">
-        <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
-          <FaPlus /> Nuevo Pasaje
-        </button>
-        <div className="toolbar-actions">
-          <div className="search-box-crm">
-            <FaSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Buscar pasajes..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+      <div className="section-container">
+        {/* Toolbar */}
+        <div className="section-toolbar">
+          <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
+            <FaPlus /> Nuevo Pasaje
+          </button>
+          <div className="toolbar-actions">
+            <div className="search-box-crm">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Buscar pasajes..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#e3f2fd" }}>
-            <FaPlane />
+        {/* Stats Cards */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#e3f2fd" }}>
+              <FaPlane />
+            </div>
+            <div className="stat-content">
+              <h3>{filteredItems.length}</h3>
+              <p>Pasajes {searchTerm ? "Filtrados" : "Activos"}</p>
+            </div>
           </div>
-          <div className="stat-content">
-            <h3>{filteredItems.length}</h3>
-            <p>Pasajes {searchTerm ? "Filtrados" : "Activos"}</p>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#f3e5f5" }}>
+              <FaPlane />
+            </div>
+            <div className="stat-content">
+              <h3>{aereos}</h3>
+              <p>Pasajes Aéreos</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#fff3e0" }}>
+              <FaMapMarkerAlt />
+            </div>
+            <div className="stat-content">
+              <h3>{destinosUnicos}</h3>
+              <p>Destinos Únicos</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#e8f5e9" }}>
+              <FaDollarSign />
+            </div>
+            <div className="stat-content">
+              <h3>{formatCurrency(precioPromedio)}</h3>
+              <p>Precio Promedio</p>
+            </div>
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#f3e5f5" }}>
-            <FaPlane />
-          </div>
-          <div className="stat-content">
-            <h3>{aereos}</h3>
-            <p>Pasajes Aéreos</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#fff3e0" }}>
-            <FaMapMarkerAlt />
-          </div>
-          <div className="stat-content">
-            <h3>{destinosUnicos}</h3>
-            <p>Destinos Únicos</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#e8f5e9" }}>
-            <FaDollarSign />
-          </div>
-          <div className="stat-content">
-            <h3>{formatCurrency(precioPromedio)}</h3>
-            <p>Precio Promedio</p>
-          </div>
-        </div>
-      </div>
 
-      {/* Cards Grid */}
-      {filteredItems.length === 0 ? (
-        <div className="alert alert-info" style={{ margin: "2rem" }}>
-          <p>No se encontraron pasajes con los filtros aplicados</p>
-        </div>
-      ) : (
-        <div className="packages-grid">
-          {filteredItems.map((item) => (
-            <div key={item.id} className="package-card">
-              <div className="package-header">
-                <div className="package-category">
-                  <span className="category-badge category-standard">
-                    {item.tipo}
-                  </span>
+        {/* Cards Grid */}
+        {filteredItems.length === 0 ? (
+          <div className="alert alert-info" style={{ margin: "2rem" }}>
+            <p>No se encontraron pasajes con los filtros aplicados</p>
+          </div>
+        ) : (
+          <div className="packages-grid">
+            {filteredItems.map((item) => (
+              <div key={item.id} className="package-card">
+                <div className="package-header">
+                  <div className="package-category">
+                    <span className="category-badge category-standard">
+                      {item.tipo}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleEditClick(item)}
+                      title="Editar pasaje"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleDeleteClick(item)}
+                      title="Eliminar pasaje"
+                      style={{ color: "#e53e3e" }}
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
                 </div>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleEditClick(item)}
-                    title="Editar pasaje"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleDeleteClick(item)}
-                    title="Eliminar pasaje"
-                    style={{ color: "#e53e3e" }}
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
-              </div>
 
-              <div className="package-body">
-                <h3 className="package-title">
-                  {item.origen} → {item.destino}
-                </h3>
-                <div className="package-info">
-                  {item.aerolinea && (
+                <div className="package-body">
+                  <h3 className="package-title">
+                    {item.origen} → {item.destino}
+                  </h3>
+                  <div className="package-info">
+                    {item.aerolinea && (
+                      <div className="info-item">
+                        <span className="info-icon">
+                          <FaPlane />
+                        </span>
+                        <span>
+                          {item.aerolinea}
+                          {item.numeroVuelo ? ` ${item.numeroVuelo}` : ""}
+                        </span>
+                      </div>
+                    )}
                     <div className="info-item">
                       <span className="info-icon">
-                        <FaPlane />
+                        <FaCalendarAlt />
                       </span>
-                      <span>
-                        {item.aerolinea}
-                        {item.numeroVuelo ? ` ${item.numeroVuelo}` : ""}
-                      </span>
+                      <span>{formatDate(item.fechaSalida)}</span>
                     </div>
-                  )}
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaCalendarAlt />
-                    </span>
-                    <span>{formatDate(item.fechaSalida)}</span>
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaDollarSign />
+                      </span>
+                      <span>{formatCurrency(item.precio)}</span>
+                    </div>
                   </div>
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaDollarSign />
+                </div>
+
+                <div className="package-footer">
+                  <div className="package-price">
+                    <span className="price-label">Clase</span>
+                    <span className="price-value">
+                      {item.clase || "Económica"}
                     </span>
-                    <span>{formatCurrency(item.precio)}</span>
                   </div>
                 </div>
               </div>
+            ))}
+          </div>
+        )}
+      </div>
 
-              <div className="package-footer">
-                <div className="package-price">
-                  <span className="price-label">Clase</span>
-                  <span className="price-value">
-                    {item.clase || "Económica"}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <PasajeFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={loadItems}
+      />
 
-    </div>
+      <PasajeEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={loadItems}
+        pasaje={selectedItem}
+      />
 
-    <PasajeFormModal
-      isOpen={isModalOpen}
-      onClose={() => setIsModalOpen(false)}
-      onSuccess={loadItems}
-    />
+      <ConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Eliminar Pasaje"
+        message={`¿Estás seguro de que deseas eliminar el pasaje "${itemToDelete?.origen} → ${itemToDelete?.destino}"?`}
+        isDanger={true}
+      />
 
-    <PasajeEditModal
-      isOpen={isEditModalOpen}
-      onClose={() => setIsEditModalOpen(false)}
-      onSuccess={loadItems}
-      pasaje={selectedItem}
-    />
-
-    <ConfirmModal
-      isOpen={showConfirm}
-      onClose={() => setShowConfirm(false)}
-      onConfirm={confirmDelete}
-      title="Eliminar Pasaje"
-      message={`¿Estás seguro de que deseas eliminar el pasaje "${itemToDelete?.origen} → ${itemToDelete?.destino}"?`}
-      isDanger={true}
-    />
-
-    <AlertModal
-      isOpen={showAlert}
-      onClose={() => setShowAlert(false)}
-      title="Error"
-      message={alertMessage}
-      type="error"
-    />
+      <AlertModal
+        isOpen={showAlert}
+        onClose={() => setShowAlert(false)}
+        title="Error"
+        message={alertMessage}
+        type="error"
+      />
     </>
   );
 }

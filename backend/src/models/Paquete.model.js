@@ -75,9 +75,9 @@ const Paquete = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Users',
-        key: 'id'
-      }
+        model: "Users",
+        key: "id",
+      },
     },
     deletedAt: {
       type: DataTypes.DATE,
@@ -93,8 +93,8 @@ const Paquete = sequelize.define(
 // Definir asociaciones después de crear el modelo
 Paquete.associate = (models) => {
   Paquete.belongsTo(models.User, {
-    foreignKey: 'createdBy',
-    as: 'creator'
+    foreignKey: "createdBy",
+    as: "creator",
   });
 };
 

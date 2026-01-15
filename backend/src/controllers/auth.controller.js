@@ -7,14 +7,14 @@ export const register = async (req, res) => {
 
     // Validaciones
     if (!nombre || !email || !password) {
-      return res.status(400).json({ 
-        message: "Nombre, email y contraseña son requeridos" 
+      return res.status(400).json({
+        message: "Nombre, email y contraseña son requeridos",
       });
     }
 
     if (password.length < 6) {
-      return res.status(400).json({ 
-        message: "La contraseña debe tener al menos 6 caracteres" 
+      return res.status(400).json({
+        message: "La contraseña debe tener al menos 6 caracteres",
       });
     }
 
@@ -25,13 +25,13 @@ export const register = async (req, res) => {
     }
 
     // Crear nuevo usuario
-    const user = await User.create({ 
-      nombre, 
-      email, 
-      password, 
-      role: role || 'user',
+    const user = await User.create({
+      nombre,
+      email,
+      password,
+      role: role || "user",
       telefono,
-      direccion
+      direccion,
     });
 
     // Generar token
@@ -53,10 +53,10 @@ export const register = async (req, res) => {
     });
   } catch (error) {
     console.error("Error en register:", error);
-    if (error.name === 'SequelizeValidationError') {
-      return res.status(400).json({ 
-        message: "Error de validación", 
-        errors: error.errors.map(e => e.message)
+    if (error.name === "SequelizeValidationError") {
+      return res.status(400).json({
+        message: "Error de validación",
+        errors: error.errors.map((e) => e.message),
       });
     }
     res
@@ -71,8 +71,8 @@ export const login = async (req, res) => {
 
     // Validaciones
     if (!email || !password) {
-      return res.status(400).json({ 
-        message: "Email y contraseña son requeridos" 
+      return res.status(400).json({
+        message: "Email y contraseña son requeridos",
       });
     }
 
@@ -132,9 +132,9 @@ export const updateUser = async (req, res) => {
     const { nombre, email, currentPassword, newPassword } = req.body;
 
     // Verificar que el usuario solo pueda actualizar su propia información
-    if (req.user.id !== parseInt(id) && req.user.role !== 'admin') {
-      return res.status(403).json({ 
-        message: "No tienes permiso para actualizar este usuario" 
+    if (req.user.id !== parseInt(id) && req.user.role !== "admin") {
+      return res.status(403).json({
+        message: "No tienes permiso para actualizar este usuario",
       });
     }
 
@@ -148,12 +148,14 @@ export const updateUser = async (req, res) => {
       // Verificar contraseña actual
       const isMatch = await user.comparePassword(currentPassword);
       if (!isMatch) {
-        return res.status(401).json({ message: "Contraseña actual incorrecta" });
+        return res
+          .status(401)
+          .json({ message: "Contraseña actual incorrecta" });
       }
 
       if (newPassword.length < 6) {
-        return res.status(400).json({ 
-          message: "La nueva contraseña debe tener al menos 6 caracteres" 
+        return res.status(400).json({
+          message: "La nueva contraseña debe tener al menos 6 caracteres",
         });
       }
 
@@ -164,12 +166,12 @@ export const updateUser = async (req, res) => {
     if (nombre) user.nombre = nombre;
     if (email) {
       // Verificar que el email no esté en uso por otro usuario
-      const existingUser = await User.findOne({ 
+      const existingUser = await User.findOne({
         where: { email },
       });
       if (existingUser && existingUser.id !== user.id) {
-        return res.status(400).json({ 
-          message: "El email ya está en uso por otro usuario" 
+        return res.status(400).json({
+          message: "El email ya está en uso por otro usuario",
         });
       }
       user.email = email;
@@ -188,9 +190,9 @@ export const updateUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error en updateUser:", error);
-    res.status(500).json({ 
-      message: "Error al actualizar usuario", 
-      error: error.message 
+    res.status(500).json({
+      message: "Error al actualizar usuario",
+      error: error.message,
     });
   }
 };

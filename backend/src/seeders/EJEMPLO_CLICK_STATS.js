@@ -1,6 +1,6 @@
 /**
  * EJEMPLO DE USO DEL SISTEMA DE CONTADOR DE CLICKS
- * 
+ *
  * Este archivo muestra cómo integrar el tracking de clicks en tus componentes de cards
  */
 

@@ -84,9 +84,12 @@ export default function Transfers() {
   );
 
   // Calcular estadísticas
-  const tiposUnicos = [...new Set(items.map(t => t.tipo))].length;
-  const vehiculosUnicos = [...new Set(items.map(t => t.vehiculo))].length;
-  const capacidadTotal = items.reduce((sum, t) => sum + Number(t.capacidadPasajeros || 0), 0);
+  const tiposUnicos = [...new Set(items.map((t) => t.tipo))].length;
+  const vehiculosUnicos = [...new Set(items.map((t) => t.vehiculo))].length;
+  const capacidadTotal = items.reduce(
+    (sum, t) => sum + Number(t.capacidadPasajeros || 0),
+    0
+  );
 
   if (loading) {
     return (
@@ -129,177 +132,178 @@ export default function Transfers() {
 
   return (
     <>
-    <div className="section-container">
-      {/* Toolbar */}
-      <div className="section-toolbar">
-        <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
-          <FaPlus /> Nuevo Transfer
-        </button>
-        <div className="toolbar-actions">
-          <div className="search-box-crm">
-            <FaSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Buscar transfers..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#e3f2fd" }}>
-            <FaBus />
-          </div>
-          <div className="stat-content">
-            <h3>{filteredItems.length}</h3>
-            <p>Transfers {searchTerm ? "Filtrados" : "Activos"}</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#f3e5f5" }}>
-            <FaBus />
-          </div>
-          <div className="stat-content">
-            <h3>{tiposUnicos}</h3>
-            <p>Tipos de Transfer</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#fff3e0" }}>
-            <FaBus />
-          </div>
-          <div className="stat-content">
-            <h3>{vehiculosUnicos}</h3>
-            <p>Vehículos Disponibles</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#e8f5e9" }}>
-            <FaUsers />
-          </div>
-          <div className="stat-content">
-            <h3>{capacidadTotal}</h3>
-            <p>Capacidad Total</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Cards Grid */}
-      {filteredItems.length === 0 ? (
-        <div className="alert alert-info" style={{ margin: "2rem" }}>
-          <p>No se encontraron transfers con los filtros aplicados</p>
-        </div>
-      ) : (
-        <div className="packages-grid">
-          {filteredItems.map((item) => (
-            <div key={item.id} className="package-card">
-              <div className="package-header">
-                <div className="package-category">
-                  <span className="category-badge category-standard">
-                    {item.tipo}
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleEditClick(item)}
-                    title="Editar transfer"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleDeleteClick(item)}
-                    title="Eliminar transfer"
-                    style={{ color: "#e53e3e" }}
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
-              </div>
-
-              <div className="package-body">
-                <h3 className="package-title">
-                  {item.origen} → {item.destino}
-                </h3>
-                <div className="package-info">
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaBus />
-                    </span>
-                    <span>Vehículo: {item.vehiculo}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaUsers />
-                    </span>
-                    <span>{item.capacidadPasajeros} pasajeros</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaDollarSign />
-                    </span>
-                    <span>{formatCurrency(item.precio)}</span>
-                  </div>
-                </div>
-
-                {item.descripcion && (
-                  <p className="package-description">
-                    {item.descripcion.length > 100
-                      ? `${item.descripcion.substring(0, 100)}...`
-                      : item.descripcion}
-                  </p>
-                )}
-              </div>
-
-              <div className="package-footer">
-                <div className="package-price">
-                  <span className="price-label">Duración</span>
-                  <span className="price-value">
-                    {item.duracionEstimada ? `${item.duracionEstimada} min` : "N/A"}
-                  </span>
-                </div>
-              </div>
+      <div className="section-container">
+        {/* Toolbar */}
+        <div className="section-toolbar">
+          <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
+            <FaPlus /> Nuevo Transfer
+          </button>
+          <div className="toolbar-actions">
+            <div className="search-box-crm">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Buscar transfers..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
-          ))}
+          </div>
         </div>
-      )}
 
-    </div>
+        {/* Stats Cards */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#e3f2fd" }}>
+              <FaBus />
+            </div>
+            <div className="stat-content">
+              <h3>{filteredItems.length}</h3>
+              <p>Transfers {searchTerm ? "Filtrados" : "Activos"}</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#f3e5f5" }}>
+              <FaBus />
+            </div>
+            <div className="stat-content">
+              <h3>{tiposUnicos}</h3>
+              <p>Tipos de Transfer</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#fff3e0" }}>
+              <FaBus />
+            </div>
+            <div className="stat-content">
+              <h3>{vehiculosUnicos}</h3>
+              <p>Vehículos Disponibles</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#e8f5e9" }}>
+              <FaUsers />
+            </div>
+            <div className="stat-content">
+              <h3>{capacidadTotal}</h3>
+              <p>Capacidad Total</p>
+            </div>
+          </div>
+        </div>
 
-    <TransferFormModal
-      isOpen={isModalOpen}
-      onClose={() => setIsModalOpen(false)}
-      onSuccess={loadItems}
-    />
+        {/* Cards Grid */}
+        {filteredItems.length === 0 ? (
+          <div className="alert alert-info" style={{ margin: "2rem" }}>
+            <p>No se encontraron transfers con los filtros aplicados</p>
+          </div>
+        ) : (
+          <div className="packages-grid">
+            {filteredItems.map((item) => (
+              <div key={item.id} className="package-card">
+                <div className="package-header">
+                  <div className="package-category">
+                    <span className="category-badge category-standard">
+                      {item.tipo}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleEditClick(item)}
+                      title="Editar transfer"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleDeleteClick(item)}
+                      title="Eliminar transfer"
+                      style={{ color: "#e53e3e" }}
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </div>
 
-    <TransferEditModal
-      isOpen={isEditModalOpen}
-      onClose={() => setIsEditModalOpen(false)}
-      onSuccess={loadItems}
-      transfer={selectedItem}
-    />
+                <div className="package-body">
+                  <h3 className="package-title">
+                    {item.origen} → {item.destino}
+                  </h3>
+                  <div className="package-info">
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaBus />
+                      </span>
+                      <span>Vehículo: {item.vehiculo}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaUsers />
+                      </span>
+                      <span>{item.capacidadPasajeros} pasajeros</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaDollarSign />
+                      </span>
+                      <span>{formatCurrency(item.precio)}</span>
+                    </div>
+                  </div>
 
-    <ConfirmModal
-      isOpen={showConfirm}
-      onClose={() => setShowConfirm(false)}
-      onConfirm={confirmDelete}
-      title="Eliminar Transfer"
-      message={`¿Estás seguro de que deseas eliminar el transfer "${itemToDelete?.origen} → ${itemToDelete?.destino}"?`}
-      isDanger={true}
-    />
+                  {item.descripcion && (
+                    <p className="package-description">
+                      {item.descripcion.length > 100
+                        ? `${item.descripcion.substring(0, 100)}...`
+                        : item.descripcion}
+                    </p>
+                  )}
+                </div>
 
-    <AlertModal
-      isOpen={showAlert}
-      onClose={() => setShowAlert(false)}
-      title="Error"
-      message={alertMessage}
-      type="error"
-    />
+                <div className="package-footer">
+                  <div className="package-price">
+                    <span className="price-label">Duración</span>
+                    <span className="price-value">
+                      {item.duracionEstimada
+                        ? `${item.duracionEstimada} min`
+                        : "N/A"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <TransferFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={loadItems}
+      />
+
+      <TransferEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={loadItems}
+        transfer={selectedItem}
+      />
+
+      <ConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Eliminar Transfer"
+        message={`¿Estás seguro de que deseas eliminar el transfer "${itemToDelete?.origen} → ${itemToDelete?.destino}"?`}
+        isDanger={true}
+      />
+
+      <AlertModal
+        isOpen={showAlert}
+        onClose={() => setShowAlert(false)}
+        title="Error"
+        message={alertMessage}
+        type="error"
+      />
     </>
   );
 }

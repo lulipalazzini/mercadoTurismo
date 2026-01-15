@@ -37,7 +37,7 @@ export const trackCardClick = async (cardType) => {
 export const getClickStats = async () => {
   try {
     const response = await api.get("/stats");
-    
+
     if (!response.ok) {
       console.warn("No se pudieron obtener las estadísticas");
       return null;
@@ -59,7 +59,7 @@ export const getClickStats = async () => {
 export const getStatByType = async (cardType) => {
   try {
     const response = await api.get(`/stats/${cardType}`);
-    
+
     if (!response.ok) {
       console.warn(`No se pudieron obtener las estadísticas de ${cardType}`);
       return null;

@@ -125,177 +125,179 @@ export default function Autos() {
 
   return (
     <>
-    <div className="section-container">
-      {/* Toolbar */}
-      <div className="section-toolbar">
-        <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
-          <FaPlus /> Nuevo Auto
-        </button>
-        <div className="toolbar-actions">
-          <div className="search-box-crm">
-            <FaSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Buscar autos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#e3f2fd" }}>
-            <FaCar />
-          </div>
-          <div className="stat-content">
-            <h3>{filteredItems.length}</h3>
-            <p>Autos {searchTerm ? "Filtrados" : "Activos"}</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#f3e5f5" }}>
-            <FaCogs />
-          </div>
-          <div className="stat-content">
-            <h3>
-              {items.filter((a) => a.transmision === "automática").length}
-            </h3>
-            <p>Automáticos</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#fff3e0" }}>
-            <FaUsers />
-          </div>
-          <div className="stat-content">
-            <h3>{items.filter((a) => a.capacidadPasajeros >= 5).length}</h3>
-            <p>5+ Pasajeros</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: "#e8f5e9" }}>
-            <FaDollarSign />
-          </div>
-          <div className="stat-content">
-            <h3>
-              {items.length > 0
-                ? formatCurrency(
-                    Math.round(
-                      items.reduce((sum, a) => sum + Number(a.precio || 0), 0) /
-                        items.length
-                    )
-                  )
-                : "$0"}
-            </h3>
-            <p>Precio Promedio</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Cards Grid */}
-      {filteredItems.length === 0 ? (
-        <div className="alert alert-info" style={{ margin: "2rem" }}>
-          <p>No se encontraron autos con los filtros aplicados</p>
-        </div>
-      ) : (
-        <div className="packages-grid">
-          {filteredItems.map((item) => (
-            <div key={item.id} className="package-card">
-              <div className="package-header">
-                <div className="package-category">
-                  <span className="category-badge category-standard">
-                    {item.categoria}
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleEditClick(item)}
-                    title="Editar auto"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="btn-icon"
-                    onClick={() => handleDeleteClick(item)}
-                    title="Eliminar auto"
-                    style={{ color: "#e53e3e" }}
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
-              </div>
-
-              <div className="package-body">
-                <h3 className="package-title">
-                  {item.marca} {item.modelo}
-                </h3>
-                <div className="package-info">
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaUsers />
-                    </span>
-                    <span>{item.capacidadPasajeros} pasajeros</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaCogs />
-                    </span>
-                    <span>{item.transmision}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-icon">
-                      <FaDollarSign />
-                    </span>
-                    <span>{formatCurrency(item.precio)}/día</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="package-footer">
-                <div className="package-price">
-                  <span className="price-label">Año</span>
-                  <span className="price-value">{item.año || "N/A"}</span>
-                </div>
-              </div>
+      <div className="section-container">
+        {/* Toolbar */}
+        <div className="section-toolbar">
+          <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
+            <FaPlus /> Nuevo Auto
+          </button>
+          <div className="toolbar-actions">
+            <div className="search-box-crm">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Buscar autos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
-          ))}
+          </div>
         </div>
-      )}
-    </div>
 
-    <AutoFormModal
-      isOpen={isModalOpen}
-      onClose={() => setIsModalOpen(false)}
-      onSuccess={loadItems}
-    />
+        {/* Stats Cards */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#e3f2fd" }}>
+              <FaCar />
+            </div>
+            <div className="stat-content">
+              <h3>{filteredItems.length}</h3>
+              <p>Autos {searchTerm ? "Filtrados" : "Activos"}</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#f3e5f5" }}>
+              <FaCogs />
+            </div>
+            <div className="stat-content">
+              <h3>
+                {items.filter((a) => a.transmision === "automática").length}
+              </h3>
+              <p>Automáticos</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#fff3e0" }}>
+              <FaUsers />
+            </div>
+            <div className="stat-content">
+              <h3>{items.filter((a) => a.capacidadPasajeros >= 5).length}</h3>
+              <p>5+ Pasajeros</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: "#e8f5e9" }}>
+              <FaDollarSign />
+            </div>
+            <div className="stat-content">
+              <h3>
+                {items.length > 0
+                  ? formatCurrency(
+                      Math.round(
+                        items.reduce(
+                          (sum, a) => sum + Number(a.precio || 0),
+                          0
+                        ) / items.length
+                      )
+                    )
+                  : "$0"}
+              </h3>
+              <p>Precio Promedio</p>
+            </div>
+          </div>
+        </div>
 
-    <AutoEditModal
-      isOpen={isEditModalOpen}
-      onClose={() => setIsEditModalOpen(false)}
-      onSuccess={loadItems}
-      auto={selectedItem}
-    />
+        {/* Cards Grid */}
+        {filteredItems.length === 0 ? (
+          <div className="alert alert-info" style={{ margin: "2rem" }}>
+            <p>No se encontraron autos con los filtros aplicados</p>
+          </div>
+        ) : (
+          <div className="packages-grid">
+            {filteredItems.map((item) => (
+              <div key={item.id} className="package-card">
+                <div className="package-header">
+                  <div className="package-category">
+                    <span className="category-badge category-standard">
+                      {item.categoria}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleEditClick(item)}
+                      title="Editar auto"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="btn-icon"
+                      onClick={() => handleDeleteClick(item)}
+                      title="Eliminar auto"
+                      style={{ color: "#e53e3e" }}
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </div>
 
-    <ConfirmModal
-      isOpen={showConfirm}
-      onClose={() => setShowConfirm(false)}
-      onConfirm={confirmDelete}
-      title="Eliminar Auto"
-      message={`¿Estás seguro de que deseas eliminar "${itemToDelete?.marca} ${itemToDelete?.modelo}"?`}
-      isDanger={true}
-    />
+                <div className="package-body">
+                  <h3 className="package-title">
+                    {item.marca} {item.modelo}
+                  </h3>
+                  <div className="package-info">
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaUsers />
+                      </span>
+                      <span>{item.capacidadPasajeros} pasajeros</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaCogs />
+                      </span>
+                      <span>{item.transmision}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-icon">
+                        <FaDollarSign />
+                      </span>
+                      <span>{formatCurrency(item.precio)}/día</span>
+                    </div>
+                  </div>
+                </div>
 
-    <AlertModal
-      isOpen={showAlert}
-      onClose={() => setShowAlert(false)}
-      title="Error"
-      message={alertMessage}
-      type="error"
-    />
+                <div className="package-footer">
+                  <div className="package-price">
+                    <span className="price-label">Año</span>
+                    <span className="price-value">{item.año || "N/A"}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <AutoFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={loadItems}
+      />
+
+      <AutoEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={loadItems}
+        auto={selectedItem}
+      />
+
+      <ConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Eliminar Auto"
+        message={`¿Estás seguro de que deseas eliminar "${itemToDelete?.marca} ${itemToDelete?.modelo}"?`}
+        isDanger={true}
+      />
+
+      <AlertModal
+        isOpen={showAlert}
+        onClose={() => setShowAlert(false)}
+        title="Error"
+        message={alertMessage}
+        type="error"
+      />
     </>
   );
 }

@@ -9,12 +9,14 @@ Se ha integrado exitosamente el sistema de tracking de clicks en todo el fronten
 ## 📦 Archivos Creados
 
 ### Backend
+
 - ✅ `backend/src/models/ClickStats.model.js` - Modelo Sequelize
 - ✅ `backend/src/controllers/clickStats.controller.js` - Lógica de negocio
 - ✅ `backend/src/routes/clickStats.routes.js` - Rutas API con rate limiting
 - ✅ `backend/src/seeders/clickStats.seeder.js` - Inicializador de datos
 
 ### Frontend
+
 - ✅ `frontend/src/services/clickStats.service.js` - Servicio API
 - ✅ `frontend/src/components/ClickStatsPanel.jsx` - Panel de visualización
 - ✅ `frontend/src/styles/clickStats.css` - Estilos del panel
@@ -24,6 +26,7 @@ Se ha integrado exitosamente el sistema de tracking de clicks en todo el fronten
 ## 🎯 Componentes con Tracking Integrado
 
 ### Cards Actualizadas (6/10)
+
 1. ✅ **PaqueteCard** - Trackea "paquete"
 2. ✅ **AlojamientoCard** - Trackea "alojamiento"
 3. ✅ **AutoCard** - Trackea "auto"
@@ -33,11 +36,12 @@ Se ha integrado exitosamente el sistema de tracking de clicks en todo el fronten
 7. ✅ **PasajeCard** - Trackea "pasaje"
 
 ### Pendientes de Implementar
+
 - ⏳ **CupoCard** - Trackear "salidaGrupal"
 - ⏳ **SeguroCard** - Trackear "seguro"
 - ⏳ **TransferCard** - Trackear "transfer"
 
-*Nota: Las cards pendientes siguen el mismo patrón de implementación.*
+_Nota: Las cards pendientes siguen el mismo patrón de implementación._
 
 ---
 
@@ -58,6 +62,7 @@ Se ha integrado exitosamente el sistema de tracking de clicks en todo el fronten
 ### 2. El Tracking Funciona Automáticamente
 
 Cada vez que un usuario hace click en una card, se registra automáticamente:
+
 - ✅ No interrumpe la experiencia del usuario
 - ✅ Se ejecuta en segundo plano
 - ✅ No afecta la velocidad de navegación
@@ -66,6 +71,7 @@ Cada vez que un usuario hace click en una card, se registra automáticamente:
 ### 3. Actualización en Tiempo Real
 
 El panel de estadísticas se actualiza:
+
 - Automáticamente cada 30 segundos
 - Manualmente con el botón 🔄
 - Al cambiar de sección y volver
@@ -88,7 +94,7 @@ const handleCardClick = () => {
 // 3. Agregar onClick al contenedor
 <div className="service-card" onClick={handleCardClick}>
   {/* contenido de la card */}
-</div>
+</div>;
 ```
 
 ### Tipos de Cards Válidos
@@ -104,8 +110,8 @@ const handleCardClick = () => {
   "pasaje",
   "salidaGrupal",
   "seguro",
-  "transfer"
-]
+  "transfer",
+];
 ```
 
 ---
@@ -113,16 +119,19 @@ const handleCardClick = () => {
 ## 🔐 Seguridad Implementada
 
 ### Rate Limiting
+
 - **Global**: 100 peticiones por IP cada 15 minutos
 - **Clicks**: 10 clicks por IP cada 10 minutos
 - Previene spam y abuso
 
 ### Headers de Seguridad
+
 - **x-sec-origin**: `mercado-turismo-app`
 - Valida que las peticiones vengan del frontend legítimo
 - Rechaza bots y peticiones no autorizadas
 
 ### Helmet
+
 - Protección de headers HTTP
 - Previene XSS, clickjacking, MIME sniffing
 - Implementa CSP y otras políticas de seguridad
@@ -132,9 +141,11 @@ const handleCardClick = () => {
 ## 📊 Endpoints API
 
 ### POST /api/stats/increment
+
 Incrementa el contador de clicks.
 
 **Request:**
+
 ```json
 {
   "cardType": "paquete"
@@ -142,12 +153,14 @@ Incrementa el contador de clicks.
 ```
 
 **Headers:**
+
 ```
 Content-Type: application/json
 x-sec-origin: mercado-turismo-app
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -159,9 +172,11 @@ x-sec-origin: mercado-turismo-app
 ---
 
 ### GET /api/stats
+
 Obtiene todas las estadísticas.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -181,11 +196,13 @@ Obtiene todas las estadísticas.
 ---
 
 ### GET /api/stats/:cardType
+
 Obtiene estadísticas de un tipo específico.
 
 **Ejemplo:** `GET /api/stats/paquete`
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -199,6 +216,7 @@ Obtiene estadísticas de un tipo específico.
 ## 🎨 Diseño del Panel
 
 ### Características Visuales
+
 - 🎨 Gradiente moderno (púrpura → violeta)
 - 📊 Barras de progreso animadas
 - 🔢 Ranking numerado
@@ -209,6 +227,7 @@ Obtiene estadísticas de un tipo específico.
 - ✨ Transiciones suaves
 
 ### Emojis por Categoría
+
 - 🏨 Alojamientos
 - 🚗 Autos
 - 🗺️ Circuitos
@@ -227,18 +246,21 @@ Obtiene estadísticas de un tipo específico.
 ### Probar el Sistema
 
 1. **Iniciar el backend:**
+
    ```bash
    cd backend
    npm run dev
    ```
 
 2. **Iniciar el frontend:**
+
    ```bash
    cd frontend
    npm run dev
    ```
 
 3. **Hacer clicks en diferentes cards**
+
    - Navega por la página principal
    - Haz click en varios tipos de cards
    - Ve al Dashboard > Estadísticas
@@ -254,16 +276,19 @@ Obtiene estadísticas de un tipo específico.
 ### Mejoras Sugeridas
 
 1. **Gráficos Más Avanzados**
+
    - Integrar Chart.js o Recharts
    - Gráficos de línea para tendencias
    - Comparaciones por período
 
 2. **Filtros Temporales**
+
    - Ver estadísticas por día/semana/mes
    - Comparar períodos
    - Exportar reportes
 
 3. **Datos Adicionales**
+
    - Trackear tiempo de permanencia
    - Device type (móvil/desktop)
    - Hora del día con más actividad
@@ -279,22 +304,26 @@ Obtiene estadísticas de un tipo específico.
 ## 🐛 Troubleshooting
 
 ### El tracking no funciona
+
 - ✅ Verifica que el backend esté corriendo
 - ✅ Revisa la consola del navegador
 - ✅ Confirma que el header `x-sec-origin` sea correcto
 - ✅ Verifica que no estés bloqueado por rate limit
 
 ### El panel no muestra datos
+
 - ✅ Ejecuta los seeders: `npm run seed`
 - ✅ Verifica la conexión a la base de datos
 - ✅ Revisa la consola del frontend
 - ✅ Prueba hacer algunos clicks primero
 
 ### Error 403 Forbidden
+
 - El header de seguridad no es correcto
 - Verifica el servicio `clickStats.service.js`
 
 ### Error 429 Too Many Requests
+
 - Esperaste el período de cooldown (10 minutos)
 - Es el comportamiento esperado para prevenir spam
 
@@ -303,6 +332,7 @@ Obtiene estadísticas de un tipo específico.
 ## ✨ Resumen de Implementación
 
 ### Backend
+
 - ✅ Modelo Sequelize con timestamps
 - ✅ Controlador con 3 funciones
 - ✅ Rutas con rate limiting específico
@@ -310,6 +340,7 @@ Obtiene estadísticas de un tipo específico.
 - ✅ Integrado en servidor principal
 
 ### Frontend
+
 - ✅ Servicio con 3 funciones
 - ✅ 7 cards con tracking integrado
 - ✅ Panel de visualización con diseño moderno
@@ -317,6 +348,7 @@ Obtiene estadísticas de un tipo específico.
 - ✅ Actualización automática
 
 ### Seguridad
+
 - ✅ Helmet para headers HTTP
 - ✅ Rate limiting global y específico
 - ✅ Header personalizado de validación

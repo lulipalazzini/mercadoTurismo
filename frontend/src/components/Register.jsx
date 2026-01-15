@@ -76,7 +76,7 @@ export default function Register() {
 
     try {
       setLoading(true);
-      
+
       const userData = {
         nombre: formData.nombre,
         email: formData.email,
@@ -106,9 +106,7 @@ export default function Register() {
         </div>
 
         {errorMessage && (
-          <div className="alert alert-error">
-            {errorMessage}
-          </div>
+          <div className="alert alert-error">{errorMessage}</div>
         )}
 
         <form onSubmit={handleSubmit} className="auth-form">

@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { FaTimes, FaUser, FaEnvelope, FaShieldAlt, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
+import {
+  FaTimes,
+  FaUser,
+  FaEnvelope,
+  FaShieldAlt,
+  FaPhone,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
 import { updateUserById } from "../../services/users.service";
 import AlertModal from "../common/AlertModal";
 
-export default function UsuarioEditModal({ isOpen, onClose, onSuccess, usuario }) {
+export default function UsuarioEditModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  usuario,
+}) {
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
@@ -64,7 +76,8 @@ export default function UsuarioEditModal({ isOpen, onClose, onSuccess, usuario }
       console.error("Error al actualizar usuario:", error);
       setAlertData({
         type: "error",
-        message: error.response?.data?.message || "Error al actualizar el usuario",
+        message:
+          error.response?.data?.message || "Error al actualizar el usuario",
       });
       setShowAlert(true);
     } finally {
@@ -130,8 +143,12 @@ export default function UsuarioEditModal({ isOpen, onClose, onSuccess, usuario }
                     onChange={handleChange}
                     required
                   >
-                    <option value="operador_independiente">Operador Independiente</option>
-                    <option value="operador_agencia">Operador de Agencia</option>
+                    <option value="operador_independiente">
+                      Operador Independiente
+                    </option>
+                    <option value="operador_agencia">
+                      Operador de Agencia
+                    </option>
                     <option value="agencia">Agencia</option>
                     <option value="admin">Administrador</option>
                   </select>

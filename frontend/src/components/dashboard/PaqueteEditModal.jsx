@@ -4,7 +4,12 @@ import { updatePaquete } from "../../services/paquetes.service";
 import AlertModal from "../common/AlertModal";
 import "../../styles/modal.css";
 
-export default function PaqueteEditModal({ isOpen, onClose, onSuccess, paquete }) {
+export default function PaqueteEditModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  paquete,
+}) {
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
@@ -34,8 +39,10 @@ export default function PaqueteEditModal({ isOpen, onClose, onSuccess, paquete }
         duracion: paquete.duracion || "",
         precio: paquete.precio || "",
         cupoMaximo: paquete.cupoMaximo || "",
-        fechaInicio: paquete.fechaInicio ? paquete.fechaInicio.split('T')[0] : "",
-        fechaFin: paquete.fechaFin ? paquete.fechaFin.split('T')[0] : "",
+        fechaInicio: paquete.fechaInicio
+          ? paquete.fechaInicio.split("T")[0]
+          : "",
+        fechaFin: paquete.fechaFin ? paquete.fechaFin.split("T")[0] : "",
         imagen: paquete.imagen || "",
       });
       setIncluye(paquete.incluye || []);
@@ -139,7 +146,9 @@ export default function PaqueteEditModal({ isOpen, onClose, onSuccess, paquete }
       onClose();
     } catch (error) {
       console.error("Error al actualizar paquete:", error);
-      setAlertMessage("Error al actualizar el paquete. Por favor intenta nuevamente.");
+      setAlertMessage(
+        "Error al actualizar el paquete. Por favor intenta nuevamente."
+      );
       setShowAlert(true);
     } finally {
       setSubmitting(false);
@@ -193,7 +202,9 @@ export default function PaqueteEditModal({ isOpen, onClose, onSuccess, paquete }
                   id="descripcion"
                   name="descripcion"
                   rows="4"
-                  className={`form-control ${errors.descripcion ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.descripcion ? "error" : ""
+                  }`}
                   value={formData.descripcion}
                   onChange={handleChange}
                 />
@@ -287,7 +298,9 @@ export default function PaqueteEditModal({ isOpen, onClose, onSuccess, paquete }
                   type="date"
                   id="fechaInicio"
                   name="fechaInicio"
-                  className={`form-control ${errors.fechaInicio ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.fechaInicio ? "error" : ""
+                  }`}
                   value={formData.fechaInicio}
                   onChange={handleChange}
                 />

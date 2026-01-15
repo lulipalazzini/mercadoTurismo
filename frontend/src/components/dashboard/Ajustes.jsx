@@ -57,7 +57,7 @@ export default function Ajustes() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.nombre.trim() || !formData.email.trim()) {
       setAlertData({
         type: "error",
@@ -70,12 +70,12 @@ export default function Ajustes() {
     try {
       setLoading(true);
       const response = await updateUser(user.id, formData);
-      
+
       // Actualizar localStorage con los nuevos datos
       const updatedUser = { ...user, ...formData };
       localStorage.setItem("currentUser", JSON.stringify(updatedUser));
       setUser(updatedUser);
-      
+
       setAlertData({
         type: "success",
         message: "Información actualizada correctamente",
@@ -86,7 +86,8 @@ export default function Ajustes() {
       console.error("Error al actualizar:", error);
       setAlertData({
         type: "error",
-        message: error.response?.data?.message || "Error al actualizar la información",
+        message:
+          error.response?.data?.message || "Error al actualizar la información",
       });
       setShowAlert(true);
     } finally {
@@ -97,7 +98,11 @@ export default function Ajustes() {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
 
-    if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+    if (
+      !passwordData.currentPassword ||
+      !passwordData.newPassword ||
+      !passwordData.confirmPassword
+    ) {
       setAlertData({
         type: "error",
         message: "Por favor completa todos los campos",
@@ -130,7 +135,7 @@ export default function Ajustes() {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       });
-      
+
       setAlertData({
         type: "success",
         message: "Contraseña actualizada correctamente",
@@ -146,7 +151,8 @@ export default function Ajustes() {
       console.error("Error al cambiar contraseña:", error);
       setAlertData({
         type: "error",
-        message: error.response?.data?.message || "Error al cambiar la contraseña",
+        message:
+          error.response?.data?.message || "Error al cambiar la contraseña",
       });
       setShowAlert(true);
     } finally {
@@ -178,26 +184,53 @@ export default function Ajustes() {
     <>
       <div className="section-container">
         {/* Header */}
-        <div className="section-toolbar" style={{ borderBottom: "1px solid #e1e4e8", paddingBottom: "1rem" }}>
+        <div
+          className="section-toolbar"
+          style={{ borderBottom: "1px solid #e1e4e8", paddingBottom: "1rem" }}
+        >
           <div>
-            <h2 style={{ fontSize: "1.5rem", fontWeight: "700", color: "#2d3748", margin: 0 }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "700",
+                color: "#2d3748",
+                margin: 0,
+              }}
+            >
               <FaUserCircle style={{ marginRight: "0.5rem" }} />
               Configuración de Cuenta
             </h2>
-            <p style={{ color: "#718096", fontSize: "0.875rem", marginTop: "0.25rem" }}>
+            <p
+              style={{
+                color: "#718096",
+                fontSize: "0.875rem",
+                marginTop: "0.25rem",
+              }}
+            >
               Administra tu información personal y preferencias
             </p>
           </div>
         </div>
 
         {/* User Info Cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem", marginTop: "2rem" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "1.5rem",
+            marginTop: "2rem",
+          }}
+        >
           {/* Profile Card */}
           <div className="package-card" style={{ height: "fit-content" }}>
             <div className="package-header">
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
                 <FaUser style={{ color: "#667eea" }} />
-                <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: "600" }}>Información Personal</h3>
+                <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: "600" }}>
+                  Información Personal
+                </h3>
               </div>
               {!isEditing && (
                 <button
@@ -213,9 +246,23 @@ export default function Ajustes() {
             <div className="package-body">
               {isEditing ? (
                 <form onSubmit={handleSubmit}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1rem",
+                    }}
+                  >
                     <div>
-                      <label style={{ display: "block", fontSize: "0.875rem", fontWeight: "500", color: "#4a5568", marginBottom: "0.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          fontSize: "0.875rem",
+                          fontWeight: "500",
+                          color: "#4a5568",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
                         <FaUser style={{ marginRight: "0.5rem" }} />
                         Nombre completo
                       </label>
@@ -225,13 +272,26 @@ export default function Ajustes() {
                         value={formData.nombre}
                         onChange={handleChange}
                         className="form-input"
-                        style={{ width: "100%", padding: "0.625rem", border: "1px solid #e2e8f0", borderRadius: "0.375rem" }}
+                        style={{
+                          width: "100%",
+                          padding: "0.625rem",
+                          border: "1px solid #e2e8f0",
+                          borderRadius: "0.375rem",
+                        }}
                         required
                       />
                     </div>
 
                     <div>
-                      <label style={{ display: "block", fontSize: "0.875rem", fontWeight: "500", color: "#4a5568", marginBottom: "0.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          fontSize: "0.875rem",
+                          fontWeight: "500",
+                          color: "#4a5568",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
                         <FaEnvelope style={{ marginRight: "0.5rem" }} />
                         Email
                       </label>
@@ -241,19 +301,31 @@ export default function Ajustes() {
                         value={formData.email}
                         onChange={handleChange}
                         className="form-input"
-                        style={{ width: "100%", padding: "0.625rem", border: "1px solid #e2e8f0", borderRadius: "0.375rem" }}
+                        style={{
+                          width: "100%",
+                          padding: "0.625rem",
+                          border: "1px solid #e2e8f0",
+                          borderRadius: "0.375rem",
+                        }}
                         required
                       />
                     </div>
 
-                    <div style={{ display: "flex", gap: "0.75rem", marginTop: "0.5rem" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "0.75rem",
+                        marginTop: "0.5rem",
+                      }}
+                    >
                       <button
                         type="submit"
                         disabled={loading}
-                        style={{ 
+                        style={{
                           flex: 1,
                           padding: "0.625rem 1rem",
-                          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                          background:
+                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                           color: "white",
                           border: "none",
                           borderRadius: "0.375rem",
@@ -265,10 +337,16 @@ export default function Ajustes() {
                           alignItems: "center",
                           justifyContent: "center",
                           gap: "0.5rem",
-                          transition: "all 0.2s ease"
+                          transition: "all 0.2s ease",
                         }}
-                        onMouseEnter={(e) => !loading && (e.target.style.transform = "translateY(-1px)")}
-                        onMouseLeave={(e) => !loading && (e.target.style.transform = "translateY(0)")}
+                        onMouseEnter={(e) =>
+                          !loading &&
+                          (e.target.style.transform = "translateY(-1px)")
+                        }
+                        onMouseLeave={(e) =>
+                          !loading &&
+                          (e.target.style.transform = "translateY(0)")
+                        }
                       >
                         <FaSave /> {loading ? "Guardando..." : "Guardar"}
                       </button>
@@ -282,7 +360,12 @@ export default function Ajustes() {
                             email: user.email || "",
                           });
                         }}
-                        style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}
+                        style={{
+                          flex: 1,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
                       >
                         Cancelar
                       </button>
@@ -290,33 +373,75 @@ export default function Ajustes() {
                   </div>
                 </form>
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                  }}
+                >
                   <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", color: "#718096", marginBottom: "0.25rem" }}>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: "0.75rem",
+                        color: "#718096",
+                        marginBottom: "0.25rem",
+                      }}
+                    >
                       NOMBRE
                     </label>
-                    <p style={{ margin: 0, fontSize: "0.9375rem", fontWeight: "500", color: "#2d3748" }}>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "0.9375rem",
+                        fontWeight: "500",
+                        color: "#2d3748",
+                      }}
+                    >
                       {user.nombre || "No especificado"}
                     </p>
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", color: "#718096", marginBottom: "0.25rem" }}>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: "0.75rem",
+                        color: "#718096",
+                        marginBottom: "0.25rem",
+                      }}
+                    >
                       EMAIL
                     </label>
-                    <p style={{ margin: 0, fontSize: "0.9375rem", fontWeight: "500", color: "#2d3748" }}>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "0.9375rem",
+                        fontWeight: "500",
+                        color: "#2d3748",
+                      }}
+                    >
                       {user.email || "No especificado"}
                     </p>
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", color: "#718096", marginBottom: "0.25rem" }}>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: "0.75rem",
+                        color: "#718096",
+                        marginBottom: "0.25rem",
+                      }}
+                    >
                       ROL
                     </label>
                     <span
                       className="category-badge"
                       style={{
-                        background: user.role === "admin" ? "#e3f2fd" : "#f3e5f5",
+                        background:
+                          user.role === "admin" ? "#e3f2fd" : "#f3e5f5",
                         color: user.role === "admin" ? "#0d47a1" : "#6a1b9a",
                         display: "inline-block",
                       }}
@@ -333,24 +458,36 @@ export default function Ajustes() {
           {/* Password Card */}
           <div className="package-card" style={{ height: "fit-content" }}>
             <div className="package-header">
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
                 <FaLock style={{ color: "#667eea" }} />
-                <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: "600" }}>Seguridad</h3>
+                <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: "600" }}>
+                  Seguridad
+                </h3>
               </div>
             </div>
 
             <div className="package-body">
               {!isChangingPassword ? (
                 <div>
-                  <p style={{ fontSize: "0.875rem", color: "#718096", marginBottom: "1rem" }}>
-                    Mantén tu cuenta segura actualizando tu contraseña periódicamente.
+                  <p
+                    style={{
+                      fontSize: "0.875rem",
+                      color: "#718096",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    Mantén tu cuenta segura actualizando tu contraseña
+                    periódicamente.
                   </p>
                   <button
                     onClick={() => setIsChangingPassword(true)}
-                    style={{ 
+                    style={{
                       width: "100%",
                       padding: "0.625rem 1rem",
-                      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      background:
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                       color: "white",
                       border: "none",
                       borderRadius: "0.375rem",
@@ -361,19 +498,37 @@ export default function Ajustes() {
                       alignItems: "center",
                       justifyContent: "center",
                       gap: "0.5rem",
-                      transition: "all 0.2s ease"
+                      transition: "all 0.2s ease",
                     }}
-                    onMouseEnter={(e) => e.target.style.transform = "translateY(-1px)"}
-                    onMouseLeave={(e) => e.target.style.transform = "translateY(0)"}
+                    onMouseEnter={(e) =>
+                      (e.target.style.transform = "translateY(-1px)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.target.style.transform = "translateY(0)")
+                    }
                   >
                     <FaLock /> Cambiar Contraseña
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handlePasswordSubmit}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1rem",
+                    }}
+                  >
                     <div>
-                      <label style={{ display: "block", fontSize: "0.875rem", fontWeight: "500", color: "#4a5568", marginBottom: "0.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          fontSize: "0.875rem",
+                          fontWeight: "500",
+                          color: "#4a5568",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
                         Contraseña actual
                       </label>
                       <input
@@ -382,13 +537,26 @@ export default function Ajustes() {
                         value={passwordData.currentPassword}
                         onChange={handlePasswordChange}
                         className="form-input"
-                        style={{ width: "100%", padding: "0.625rem", border: "1px solid #e2e8f0", borderRadius: "0.375rem" }}
+                        style={{
+                          width: "100%",
+                          padding: "0.625rem",
+                          border: "1px solid #e2e8f0",
+                          borderRadius: "0.375rem",
+                        }}
                         required
                       />
                     </div>
 
                     <div>
-                      <label style={{ display: "block", fontSize: "0.875rem", fontWeight: "500", color: "#4a5568", marginBottom: "0.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          fontSize: "0.875rem",
+                          fontWeight: "500",
+                          color: "#4a5568",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
                         Nueva contraseña
                       </label>
                       <input
@@ -397,14 +565,27 @@ export default function Ajustes() {
                         value={passwordData.newPassword}
                         onChange={handlePasswordChange}
                         className="form-input"
-                        style={{ width: "100%", padding: "0.625rem", border: "1px solid #e2e8f0", borderRadius: "0.375rem" }}
+                        style={{
+                          width: "100%",
+                          padding: "0.625rem",
+                          border: "1px solid #e2e8f0",
+                          borderRadius: "0.375rem",
+                        }}
                         required
                         minLength={6}
                       />
                     </div>
 
                     <div>
-                      <label style={{ display: "block", fontSize: "0.875rem", fontWeight: "500", color: "#4a5568", marginBottom: "0.5rem" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          fontSize: "0.875rem",
+                          fontWeight: "500",
+                          color: "#4a5568",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
                         Confirmar contraseña
                       </label>
                       <input
@@ -413,19 +594,31 @@ export default function Ajustes() {
                         value={passwordData.confirmPassword}
                         onChange={handlePasswordChange}
                         className="form-input"
-                        style={{ width: "100%", padding: "0.625rem", border: "1px solid #e2e8f0", borderRadius: "0.375rem" }}
+                        style={{
+                          width: "100%",
+                          padding: "0.625rem",
+                          border: "1px solid #e2e8f0",
+                          borderRadius: "0.375rem",
+                        }}
                         required
                       />
                     </div>
 
-                    <div style={{ display: "flex", gap: "0.75rem", marginTop: "0.5rem" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "0.75rem",
+                        marginTop: "0.5rem",
+                      }}
+                    >
                       <button
                         type="submit"
                         disabled={loading}
-                        style={{ 
+                        style={{
                           flex: 1,
                           padding: "0.625rem 1rem",
-                          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                          background:
+                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                           color: "white",
                           border: "none",
                           borderRadius: "0.375rem",
@@ -437,10 +630,16 @@ export default function Ajustes() {
                           alignItems: "center",
                           justifyContent: "center",
                           gap: "0.5rem",
-                          transition: "all 0.2s ease"
+                          transition: "all 0.2s ease",
                         }}
-                        onMouseEnter={(e) => !loading && (e.target.style.transform = "translateY(-1px)")}
-                        onMouseLeave={(e) => !loading && (e.target.style.transform = "translateY(0)")}
+                        onMouseEnter={(e) =>
+                          !loading &&
+                          (e.target.style.transform = "translateY(-1px)")
+                        }
+                        onMouseLeave={(e) =>
+                          !loading &&
+                          (e.target.style.transform = "translateY(0)")
+                        }
                       >
                         <FaSave /> {loading ? "Guardando..." : "Cambiar"}
                       </button>
@@ -455,7 +654,12 @@ export default function Ajustes() {
                             confirmPassword: "",
                           });
                         }}
-                        style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}
+                        style={{
+                          flex: 1,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
                       >
                         Cancelar
                       </button>

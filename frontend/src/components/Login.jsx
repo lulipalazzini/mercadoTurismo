@@ -57,7 +57,7 @@ export default function Login() {
     try {
       setLoading(true);
       await login(formData.email, formData.password);
-      
+
       // Redirigir al dashboard
       navigate("/dashboard");
     } catch (error) {
@@ -77,9 +77,7 @@ export default function Login() {
         </div>
 
         {errorMessage && (
-          <div className="alert alert-error">
-            {errorMessage}
-          </div>
+          <div className="alert alert-error">{errorMessage}</div>
         )}
 
         <form onSubmit={handleSubmit} className="auth-form">
