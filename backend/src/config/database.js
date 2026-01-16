@@ -12,9 +12,9 @@ const connectDB = async () => {
     console.log("✅ SQLite conectado exitosamente");
 
     // Sincronizar modelos con la base de datos
-    // Usar alter solo en desarrollo, en producción usar migraciones
+    // Usar alter en desarrollo para actualizar la estructura sin perder datos
     if (process.env.NODE_ENV !== "production") {
-      await sequelize.sync();
+      await sequelize.sync({ alter: true });
     }
     console.log("✅ Modelos sincronizados");
   } catch (error) {

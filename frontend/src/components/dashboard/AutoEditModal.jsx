@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateAuto } from "../../services/autos.service";
 import AlertModal from "../common/AlertModal";
+import "../../styles/modal.css";
 
 export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
   const [formData, setFormData] = useState({
@@ -15,8 +16,10 @@ export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
     descripcion: "",
   });
 
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertData, setAlertData] = useState({ type: "", message: "" });
+  const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
     if (auto) {
@@ -39,91 +42,108 @@ export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
       ...prev,
       [name]: value,
     }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.marca.trim()) {
+      newErrors.marca = "La marca es requerida";
+    }
+
+    if (!formData.modelo.trim()) {
+      newErrors.modelo = "El modelo es requerido";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.marca.trim()) {
-      setAlertData({ type: "error", message: "La marca es requerida" });
-      setShowAlert(true);
-      return;
-    }
-
-    if (!formData.modelo.trim()) {
-      setAlertData({ type: "error", message: "El modelo es requerido" });
-      setShowAlert(true);
+    if (!validate()) {
       return;
     }
 
     try {
+      setSubmitting(true);
       await updateAuto(auto.id, formData);
-      setAlertData({
-        type: "success",
-        message: "Auto actualizado exitosamente",
-      });
-      setShowAlert(true);
 
-      setTimeout(() => {
-        onSuccess();
-        onClose();
-      }, 1500);
+      onSuccess && onSuccess();
+      onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertData({
-        type: "error",
-        message: "Error al actualizar el auto",
-      });
+      setAlertMessage("Error al actualizar el auto. Por favor intenta nuevamente.");
       setShowAlert(true);
+    } finally {
+      setSubmitting(false);
     }
+  };
+
+  const handleClose = () => {
+    setErrors({});
+    onClose();
   };
 
   if (!isOpen || !auto) return null;
 
   return (
-    <>
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-header">
-            <h2>Editar Auto</h2>
-            <button className="modal-close" onClick={onClose}>
-              <FaTimes />
-            </button>
-          </div>
+    <div className="modal-overlay" onClick={handleClose}>
+      <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Editar Auto</h2>
+          <button className="btn-close" onClick={handleClose}>
+            <FaTimes />
+          </button>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-row">
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body">
+            <div className="form-grid">
               <div className="form-group">
-                <label>Marca *</label>
+                <label htmlFor="marca">
+                  Marca <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="marca"
                   name="marca"
+                  className={`form-control ${errors.marca ? "error" : ""}`}
                   value={formData.marca}
                   onChange={handleChange}
-                  required
                 />
+                {errors.marca && <span className="error-message">{errors.marca}</span>}
               </div>
 
               <div className="form-group">
-                <label>Modelo *</label>
+                <label htmlFor="modelo">
+                  Modelo <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="modelo"
                   name="modelo"
+                  className={`form-control ${errors.modelo ? "error" : ""}`}
                   value={formData.modelo}
                   onChange={handleChange}
-                  required
                 />
+                {errors.modelo && <span className="error-message">{errors.modelo}</span>}
               </div>
-            </div>
 
-            <div className="form-row">
               <div className="form-group">
-                <label>Categoría *</label>
+                <label htmlFor="categoria">
+                  Categoría <span className="required">*</span>
+                </label>
                 <select
+                  id="categoria"
                   name="categoria"
+                  className="form-control"
                   value={formData.categoria}
                   onChange={handleChange}
-                  required
                 >
                   <option value="economico">Económico</option>
                   <option value="compacto">Compacto</option>
@@ -135,88 +155,103 @@ export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
               </div>
 
               <div className="form-group">
-                <label>Transmisión *</label>
+                <label htmlFor="transmision">
+                  Transmisión <span className="required">*</span>
+                </label>
                 <select
+                  id="transmision"
                   name="transmision"
+                  className="form-control"
                   value={formData.transmision}
                   onChange={handleChange}
-                  required
                 >
                   <option value="manual">Manual</option>
                   <option value="automatico">Automático</option>
                 </select>
               </div>
-            </div>
 
-            <div className="form-row">
               <div className="form-group">
-                <label>Año *</label>
+                <label htmlFor="año">
+                  Año <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="año"
                   name="año"
+                  className="form-control"
                   value={formData.año}
                   onChange={handleChange}
                   min="1990"
                   max={new Date().getFullYear() + 1}
-                  required
                 />
               </div>
 
               <div className="form-group">
-                <label>Capacidad de Pasajeros *</label>
+                <label htmlFor="capacidadPasajeros">
+                  Capacidad de Pasajeros <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="capacidadPasajeros"
                   name="capacidadPasajeros"
+                  className="form-control"
                   value={formData.capacidadPasajeros}
                   onChange={handleChange}
                   min="1"
                   max="12"
-                  required
                 />
               </div>
 
               <div className="form-group">
-                <label>Precio por Día</label>
+                <label htmlFor="precio">Precio por Día (ARS)</label>
                 <input
                   type="number"
+                  id="precio"
                   name="precio"
+                  className="form-control"
                   value={formData.precio}
                   onChange={handleChange}
                   min="0"
                   step="0.01"
                 />
               </div>
-            </div>
 
-            <div className="form-group">
-              <label>Descripción</label>
-              <textarea
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleChange}
-                rows="3"
-              />
+              <div className="form-group full-width">
+                <label htmlFor="descripcion">Descripción</label>
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  rows="3"
+                  className="form-control"
+                  value={formData.descripcion}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
+          </div>
 
-            <div className="modal-footer">
-              <button type="button" className="btn-secondary" onClick={onClose}>
-                Cancelar
-              </button>
-              <button type="submit" className="btn-primary">
-                Guardar Cambios
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={handleClose}
+              disabled={submitting}
+            >
+              Cancelar
+            </button>
+            <button type="submit" className="btn-primary" disabled={submitting}>
+              {submitting ? "Guardando..." : "Guardar Cambios"}
+            </button>
+          </div>
+        </form>
       </div>
 
       <AlertModal
         isOpen={showAlert}
         onClose={() => setShowAlert(false)}
-        title={alertData.type === "success" ? "Éxito" : "Error"}
-        message={alertData.message}
-        type={alertData.type}
+        message={alertMessage}
+        type="error"
       />
-    </>
+    </div>
   );
 }

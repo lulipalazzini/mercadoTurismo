@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { createExcursion } from "../../services/excursiones.service";
 import AlertModal from "../common/AlertModal";
+import "../../styles/modal.css";
 
 export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -13,8 +14,10 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
     precio: "",
   });
 
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertData, setAlertData] = useState({ type: "", message: "" });
+  const [alertMessage, setAlertMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,30 +25,40 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
       ...prev,
       [name]: value,
     }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.nombre.trim()) {
+      newErrors.nombre = "El nombre es requerido";
+    }
+
+    if (!formData.destino.trim()) {
+      newErrors.destino = "El destino es requerido";
+    }
+
+    if (!formData.descripcion.trim()) {
+      newErrors.descripcion = "La descripción es requerida";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.nombre.trim()) {
-      setAlertData({ type: "error", message: "El nombre es requerido" });
-      setShowAlert(true);
-      return;
-    }
-
-    if (!formData.destino.trim()) {
-      setAlertData({ type: "error", message: "El destino es requerido" });
-      setShowAlert(true);
+    if (!validate()) {
       return;
     }
 
     try {
+      setSubmitting(true);
       await createExcursion(formData);
-      setAlertData({
-        type: "success",
-        message: "Excursión creada exitosamente",
-      });
-      setShowAlert(true);
 
       setFormData({
         nombre: "",
@@ -55,67 +68,96 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
         duracion: "",
         precio: "",
       });
+      setErrors({});
 
-      setTimeout(() => {
-        onSuccess();
-        onClose();
-      }, 1500);
+      onSuccess && onSuccess();
+      onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertData({
-        type: "error",
-        message: "Error al crear la excursión",
-      });
+      setAlertMessage("Error al crear la excursión. Por favor intenta nuevamente.");
       setShowAlert(true);
+    } finally {
+      setSubmitting(false);
     }
+  };
+
+  const handleClose = () => {
+    setFormData({
+      nombre: "",
+      descripcion: "",
+      destino: "",
+      tipo: "cultural",
+      duracion: "",
+      precio: "",
+    });
+    setErrors({});
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-header">
-            <h2>Nueva Excursión</h2>
-            <button className="modal-close" onClick={onClose}>
-              <FaTimes />
-            </button>
-          </div>
+    <div className="modal-overlay" onClick={handleClose}>
+      <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Nueva Excursión</h2>
+          <button className="btn-close" onClick={handleClose}>
+            <FaTimes />
+          </button>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Nombre *</label>
-              <input
-                type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                placeholder="Nombre de la excursión"
-                required
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Destino *</label>
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body">
+            <div className="form-grid">
+              {/* Nombre */}
+              <div className="form-group full-width">
+                <label htmlFor="nombre">
+                  Nombre de la Excursión <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="nombre"
+                  name="nombre"
+                  className={`form-control ${errors.nombre ? "error" : ""}`}
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  placeholder="Nombre de la excursión"
+                />
+                {errors.nombre && (
+                  <span className="error-message">{errors.nombre}</span>
+                )}
+              </div>
+
+              {/* Destino */}
+              <div className="form-group">
+                <label htmlFor="destino">
+                  Destino <span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="destino"
                   name="destino"
+                  className={`form-control ${errors.destino ? "error" : ""}`}
                   value={formData.destino}
                   onChange={handleChange}
                   placeholder="Ciudad o lugar"
-                  required
                 />
+                {errors.destino && (
+                  <span className="error-message">{errors.destino}</span>
+                )}
               </div>
 
+              {/* Tipo */}
               <div className="form-group">
-                <label>Tipo *</label>
+                <label htmlFor="tipo">
+                  Tipo <span className="required">*</span>
+                </label>
                 <select
+                  id="tipo"
                   name="tipo"
+                  className="form-control"
                   value={formData.tipo}
                   onChange={handleChange}
-                  required
                 >
                   <option value="cultural">Cultural</option>
                   <option value="aventura">Aventura</option>
@@ -125,68 +167,85 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
                   <option value="otra">Otra</option>
                 </select>
               </div>
-            </div>
 
-            <div className="form-row">
+              {/* Duración */}
               <div className="form-group">
-                <label>Duración (horas) *</label>
+                <label htmlFor="duracion">
+                  Duración (horas) <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="duracion"
                   name="duracion"
-                  value={formData.duracion}
-                  onChange={handleChange}
                   min="0.5"
                   step="0.5"
-                  required
+                  className="form-control"
+                  value={formData.duracion}
+                  onChange={handleChange}
                 />
               </div>
 
+              {/* Precio */}
               <div className="form-group">
-                <label>Precio *</label>
+                <label htmlFor="precio">
+                  Precio (ARS) <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="precio"
                   name="precio"
+                  min="0"
+                  step="0.01"
+                  className="form-control"
                   value={formData.precio}
                   onChange={handleChange}
                   placeholder="Precio"
-                  min="0"
-                  step="0.01"
-                  required
                 />
               </div>
-            </div>
 
-            <div className="form-group">
-              <label>Descripción *</label>
-              <textarea
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleChange}
-                placeholder="Descripción de la excursión"
-                rows="4"
-                required
-              />
+              {/* Descripción */}
+              <div className="form-group full-width">
+                <label htmlFor="descripcion">
+                  Descripción <span className="required">*</span>
+                </label>
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  rows="4"
+                  className={`form-control ${errors.descripcion ? "error" : ""}`}
+                  value={formData.descripcion}
+                  onChange={handleChange}
+                  placeholder="Descripción de la excursión"
+                />
+                {errors.descripcion && (
+                  <span className="error-message">{errors.descripcion}</span>
+                )}
+              </div>
             </div>
+          </div>
 
-            <div className="modal-footer">
-              <button type="button" className="btn-secondary" onClick={onClose}>
-                Cancelar
-              </button>
-              <button type="submit" className="btn-primary">
-                Crear Excursión
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={handleClose}
+              disabled={submitting}
+            >
+              Cancelar
+            </button>
+            <button type="submit" className="btn-primary" disabled={submitting}>
+              {submitting ? "Creando..." : "Crear Excursión"}
+            </button>
+          </div>
+        </form>
       </div>
 
       <AlertModal
         isOpen={showAlert}
         onClose={() => setShowAlert(false)}
-        title={alertData.type === "success" ? "Éxito" : "Error"}
-        message={alertData.message}
-        type={alertData.type}
+        message={alertMessage}
+        type="error"
       />
-    </>
+    </div>
   );
 }

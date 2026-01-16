@@ -13,12 +13,14 @@ export default function Cupos() {
 
   const fetchCupos = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/cupos");
+      const response = await fetch("http://localhost:3001/api/cupos-mercado");
       if (!response.ok) {
         throw new Error("Error al cargar los cupos");
       }
       const data = await response.json();
-      setCupos(data);
+      // Filtrar solo los cupos disponibles para mostrar en el frontend minorista
+      const cuposDisponibles = data.filter(cupo => cupo.estado === "disponible");
+      setCupos(cuposDisponibles);
     } catch (err) {
       setError(err.message);
     } finally {

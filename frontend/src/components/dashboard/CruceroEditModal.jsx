@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateCrucero } from "../../services/cruceros.service";
 import AlertModal from "../common/AlertModal";
+import "../../styles/modal.css";
 
 export default function CruceroEditModal({
   isOpen,
@@ -20,8 +21,10 @@ export default function CruceroEditModal({
     precio: "",
   });
 
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertData, setAlertData] = useState({ type: "", message: "" });
+  const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
     if (crucero) {
@@ -48,17 +51,28 @@ export default function CruceroEditModal({
       ...prev,
       [name]: value,
     }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.nombre.trim()) newErrors.nombre = "El nombre es requerido";
+    if (!formData.naviera.trim()) newErrors.naviera = "La naviera es requerida";
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const newErrors = validate();
 
-    if (!formData.nombre.trim()) {
-      setAlertData({ type: "error", message: "El nombre es requerido" });
-      setShowAlert(true);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
+    setSubmitting(true);
     try {
       const dataToSend = {
         ...formData,
@@ -69,154 +83,190 @@ export default function CruceroEditModal({
       };
 
       await updateCrucero(crucero.id, dataToSend);
-      setAlertData({
-        type: "success",
-        message: "Crucero actualizado exitosamente",
-      });
-      setShowAlert(true);
-
-      setTimeout(() => {
-        onSuccess();
-        onClose();
-      }, 1500);
+      onSuccess();
+      handleClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertData({
-        type: "error",
-        message: "Error al actualizar el crucero",
-      });
+      setAlertMessage("Error al actualizar el crucero");
       setShowAlert(true);
+    } finally {
+      setSubmitting(false);
     }
+  };
+
+  const handleClose = () => {
+    setFormData({
+      nombre: "",
+      naviera: "",
+      barco: "",
+      descripcion: "",
+      itinerario: "",
+      duracion: "",
+      fechaSalida: "",
+      precio: "",
+    });
+    setErrors({});
+    setSubmitting(false);
+    onClose();
   };
 
   if (!isOpen || !crucero) return null;
 
   return (
-    <>
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-header">
-            <h2>Editar Crucero</h2>
-            <button className="modal-close" onClick={onClose}>
-              <FaTimes />
-            </button>
-          </div>
+    <div className="modal-overlay" onClick={handleClose}>
+      <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Editar Crucero</h2>
+          <button className="btn-close" onClick={handleClose}>
+            <FaTimes />
+          </button>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Nombre *</label>
-              <input
-                type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-row">
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body">
+            <div className="form-grid">
               <div className="form-group">
-                <label>Naviera *</label>
+                <label htmlFor="nombre">
+                  Nombre <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="nombre"
+                  name="nombre"
+                  className={`form-control ${errors.nombre ? "error" : ""}`}
+                  value={formData.nombre}
+                  onChange={handleChange}
+                />
+                {errors.nombre && <span className="error-message">{errors.nombre}</span>}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="naviera">
+                  Naviera <span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="naviera"
                   name="naviera"
+                  className={`form-control ${errors.naviera ? "error" : ""}`}
                   value={formData.naviera}
                   onChange={handleChange}
-                  required
                 />
+                {errors.naviera && <span className="error-message">{errors.naviera}</span>}
               </div>
 
               <div className="form-group">
-                <label>Barco *</label>
+                <label htmlFor="barco">
+                  Barco <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="barco"
                   name="barco"
+                  className="form-control"
                   value={formData.barco}
                   onChange={handleChange}
-                  required
                 />
               </div>
-            </div>
 
-            <div className="form-group">
-              <label>Descripción *</label>
-              <textarea
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleChange}
-                rows="3"
-                required
-              />
-            </div>
+              <div className="form-group full-width">
+                <label htmlFor="descripcion">
+                  Descripción <span className="required">*</span>
+                </label>
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  rows="3"
+                  className="form-control"
+                  value={formData.descripcion}
+                  onChange={handleChange}
+                />
+              </div>
 
-            <div className="form-group">
-              <label>Itinerario * (puertos separados por comas)</label>
-              <input
-                type="text"
-                name="itinerario"
-                value={formData.itinerario}
-                onChange={handleChange}
-                required
-              />
-            </div>
+              <div className="form-group full-width">
+                <label htmlFor="itinerario">
+                  Itinerario <span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="itinerario"
+                  name="itinerario"
+                  className="form-control"
+                  value={formData.itinerario}
+                  onChange={handleChange}
+                  placeholder="Miami, Cozumel, Gran Caimán, Jamaica"
+                />
+              </div>
 
-            <div className="form-row">
               <div className="form-group">
-                <label>Duración (noches) *</label>
+                <label htmlFor="duracion">
+                  Duración (noches) <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="duracion"
                   name="duracion"
+                  className="form-control"
                   value={formData.duracion}
                   onChange={handleChange}
                   min="1"
-                  required
                 />
               </div>
 
               <div className="form-group">
-                <label>Fecha de Salida *</label>
+                <label htmlFor="fechaSalida">
+                  Fecha de Salida <span className="required">*</span>
+                </label>
                 <input
                   type="date"
+                  id="fechaSalida"
                   name="fechaSalida"
+                  className="form-control"
                   value={formData.fechaSalida}
                   onChange={handleChange}
-                  required
                 />
               </div>
 
               <div className="form-group">
-                <label>Precio *</label>
+                <label htmlFor="precio">
+                  Precio (ARS) <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="precio"
                   name="precio"
+                  className="form-control"
                   value={formData.precio}
                   onChange={handleChange}
                   min="0"
                   step="0.01"
-                  required
                 />
               </div>
             </div>
+          </div>
 
-            <div className="modal-footer">
-              <button type="button" className="btn-secondary" onClick={onClose}>
-                Cancelar
-              </button>
-              <button type="submit" className="btn-primary">
-                Guardar Cambios
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={handleClose}
+              disabled={submitting}
+            >
+              Cancelar
+            </button>
+            <button type="submit" className="btn-primary" disabled={submitting}>
+              {submitting ? "Guardando..." : "Guardar Cambios"}
+            </button>
+          </div>
+        </form>
       </div>
 
       <AlertModal
         isOpen={showAlert}
         onClose={() => setShowAlert(false)}
-        title={alertData.type === "success" ? "Éxito" : "Error"}
-        message={alertData.message}
-        type={alertData.type}
+        message={alertMessage}
+        type="error"
       />
-    </>
+    </div>
   );
 }

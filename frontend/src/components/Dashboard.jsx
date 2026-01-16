@@ -22,6 +22,7 @@ import {
   FaPlane,
   FaMapMarkedAlt,
   FaBus,
+  FaStore,
 } from "react-icons/fa";
 import Reservas from "./dashboard/Reservas";
 import Paquetes from "./dashboard/Paquetes";
@@ -36,6 +37,7 @@ import Excursiones from "./dashboard/Excursiones";
 import Pasajes from "./dashboard/Pasajes";
 import SalidasGrupales from "./dashboard/SalidasGrupales";
 import Transfers from "./dashboard/Transfers";
+import MercadoCupos from "./dashboard/MercadoCupos";
 import Ajustes from "./dashboard/Ajustes";
 import Usuarios from "./dashboard/Usuarios";
 import "../styles/dashboard.css";
@@ -84,6 +86,7 @@ export default function Dashboard() {
       pasajes: "Pasajes",
       "salidas-grupales": "Salidas Grupales",
       transfers: "Transfers",
+      "mercado-cupos": "Mercado de Cupos",
       clientes: "Clientes",
       reportes: "Reportes",
       facturacion: "Facturación",
@@ -115,6 +118,8 @@ export default function Dashboard() {
         return <SalidasGrupales />;
       case "transfers":
         return <Transfers />;
+      case "mercado-cupos":
+        return <MercadoCupos />;
       case "clientes":
         return <Clientes />;
       case "reportes":
@@ -274,6 +279,21 @@ export default function Dashboard() {
                 <FaBus />
               </span>
               <span className="nav-label">Transfers</span>
+            </button>
+          </div>
+
+          <div className="nav-section">
+            <h3>Mercado</h3>
+            <button
+              className={`nav-item ${
+                activeSection === "mercado-cupos" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("mercado-cupos")}
+            >
+              <span className="nav-icon">
+                <FaStore />
+              </span>
+              <span className="nav-label">Mercado de Cupos</span>
             </button>
           </div>
 

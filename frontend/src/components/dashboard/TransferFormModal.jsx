@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { createTransfer } from "../../services/transfers.service";
 import AlertModal from "../common/AlertModal";
+import "../../styles/modal.css";
 
 export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -14,8 +15,10 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
     duracionEstimada: "",
   });
 
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertData, setAlertData] = useState({ type: "", message: "" });
+  const [alertMessage, setAlertMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,27 +26,36 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
       ...prev,
       [name]: value,
     }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.origen.trim()) {
+      newErrors.origen = "El origen es requerido";
+    }
+
+    if (!formData.destino.trim()) {
+      newErrors.destino = "El destino es requerido";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.origen.trim() || !formData.destino.trim()) {
-      setAlertData({
-        type: "error",
-        message: "Origen y destino son requeridos",
-      });
-      setShowAlert(true);
+    if (!validate()) {
       return;
     }
 
     try {
+      setSubmitting(true);
       await createTransfer(formData);
-      setAlertData({
-        type: "success",
-        message: "Transfer creado exitosamente",
-      });
-      setShowAlert(true);
 
       setFormData({
         tipo: "aeropuerto-hotel",
@@ -54,43 +66,59 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
         precio: "",
         duracionEstimada: "",
       });
+      setErrors({});
 
-      setTimeout(() => {
-        onSuccess();
-        onClose();
-      }, 1500);
+      onSuccess && onSuccess();
+      onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertData({
-        type: "error",
-        message: "Error al crear el transfer",
-      });
+      setAlertMessage("Error al crear el transfer. Por favor intenta nuevamente.");
       setShowAlert(true);
+    } finally {
+      setSubmitting(false);
     }
+  };
+
+  const handleClose = () => {
+    setFormData({
+      tipo: "aeropuerto-hotel",
+      origen: "",
+      destino: "",
+      vehiculo: "sedan",
+      capacidadPasajeros: 4,
+      precio: "",
+      duracionEstimada: "",
+    });
+    setErrors({});
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-header">
-            <h2>Nuevo Transfer</h2>
-            <button className="modal-close" onClick={onClose}>
-              <FaTimes />
-            </button>
-          </div>
+    <div className="modal-overlay" onClick={handleClose}>
+      <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Nuevo Transfer</h2>
+          <button className="btn-close" onClick={handleClose}>
+            <FaTimes />
+          </button>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-row">
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body">
+            <div className="form-grid">
+              {/* Tipo */}
               <div className="form-group">
-                <label>Tipo *</label>
+                <label htmlFor="tipo">
+                  Tipo <span className="required">*</span>
+                </label>
                 <select
+                  id="tipo"
                   name="tipo"
+                  className="form-control"
                   value={formData.tipo}
                   onChange={handleChange}
-                  required
                 >
                   <option value="aeropuerto-hotel">Aeropuerto → Hotel</option>
                   <option value="hotel-aeropuerto">Hotel → Aeropuerto</option>
@@ -99,13 +127,17 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
                 </select>
               </div>
 
+              {/* Vehículo */}
               <div className="form-group">
-                <label>Vehículo *</label>
+                <label htmlFor="vehiculo">
+                  Vehículo <span className="required">*</span>
+                </label>
                 <select
+                  id="vehiculo"
                   name="vehiculo"
+                  className="form-control"
                   value={formData.vehiculo}
                   onChange={handleChange}
-                  required
                 >
                   <option value="sedan">Sedan</option>
                   <option value="van">Van</option>
@@ -113,53 +145,72 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
                   <option value="bus">Bus</option>
                 </select>
               </div>
-            </div>
 
-            <div className="form-row">
+              {/* Origen */}
               <div className="form-group">
-                <label>Origen *</label>
+                <label htmlFor="origen">
+                  Origen <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="origen"
                   name="origen"
+                  className={`form-control ${errors.origen ? "error" : ""}`}
                   value={formData.origen}
                   onChange={handleChange}
                   placeholder="Punto de origen"
-                  required
                 />
+                {errors.origen && (
+                  <span className="error-message">{errors.origen}</span>
+                )}
               </div>
 
+              {/* Destino */}
               <div className="form-group">
-                <label>Destino *</label>
+                <label htmlFor="destino">
+                  Destino <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="destino"
                   name="destino"
+                  className={`form-control ${errors.destino ? "error" : ""}`}
                   value={formData.destino}
                   onChange={handleChange}
                   placeholder="Punto de destino"
-                  required
                 />
+                {errors.destino && (
+                  <span className="error-message">{errors.destino}</span>
+                )}
               </div>
-            </div>
 
-            <div className="form-row">
+              {/* Capacidad de Pasajeros */}
               <div className="form-group">
-                <label>Capacidad de Pasajeros *</label>
+                <label htmlFor="capacidadPasajeros">
+                  Capacidad de Pasajeros <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="capacidadPasajeros"
                   name="capacidadPasajeros"
+                  className="form-control"
                   value={formData.capacidadPasajeros}
                   onChange={handleChange}
                   min="1"
                   max="50"
-                  required
                 />
               </div>
 
+              {/* Duración Estimada */}
               <div className="form-group">
-                <label>Duración Estimada (minutos)</label>
+                <label htmlFor="duracionEstimada">
+                  Duración Estimada (minutos)
+                </label>
                 <input
                   type="number"
+                  id="duracionEstimada"
                   name="duracionEstimada"
+                  className="form-control"
                   value={formData.duracionEstimada}
                   onChange={handleChange}
                   min="1"
@@ -167,40 +218,48 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
                 />
               </div>
 
+              {/* Precio */}
               <div className="form-group">
-                <label>Precio *</label>
+                <label htmlFor="precio">
+                  Precio (ARS) <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="precio"
                   name="precio"
+                  min="0"
+                  step="0.01"
+                  className="form-control"
                   value={formData.precio}
                   onChange={handleChange}
                   placeholder="Precio"
-                  min="0"
-                  step="0.01"
-                  required
                 />
               </div>
             </div>
+          </div>
 
-            <div className="modal-footer">
-              <button type="button" className="btn-secondary" onClick={onClose}>
-                Cancelar
-              </button>
-              <button type="submit" className="btn-primary">
-                Crear Transfer
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={handleClose}
+              disabled={submitting}
+            >
+              Cancelar
+            </button>
+            <button type="submit" className="btn-primary" disabled={submitting}>
+              {submitting ? "Creando..." : "Crear Transfer"}
+            </button>
+          </div>
+        </form>
       </div>
 
       <AlertModal
         isOpen={showAlert}
         onClose={() => setShowAlert(false)}
-        title={alertData.type === "success" ? "Éxito" : "Error"}
-        message={alertData.message}
-        type={alertData.type}
+        message={alertMessage}
+        type="error"
       />
-    </>
+    </div>
   );
 }

@@ -11,7 +11,7 @@ import { seedSeguros } from "./seguros.seeder.js";
 import { seedCruceros } from "./cruceros.seeder.js";
 import { seedCircuitos } from "./circuitos.seeder.js";
 import { seedSalidasGrupales } from "./salidasGrupales.seeder.js";
-import { seedCupos } from "./cupos.seeder.js";
+import { seedCuposMercado } from "./cuposMercado.seeder.js";
 import seedClickStats from "./clickStats.seeder.js";
 
 /**
@@ -39,7 +39,7 @@ export const runAllSeeders = async () => {
     await seedCruceros();
     await seedCircuitos();
     await seedSalidasGrupales();
-    await seedCupos();
+    await seedCuposMercado();
     await seedClickStats();
 
     console.log("\n✨ Todos los seeders se ejecutaron exitosamente\n");

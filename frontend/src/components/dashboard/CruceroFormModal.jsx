@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaPlus, FaTrash } from "react-icons/fa";
 import { createCrucero } from "../../services/cruceros.service";
 import AlertModal from "../common/AlertModal";
+import "../../styles/modal.css";
 
 export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -9,14 +10,18 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
     naviera: "",
     barco: "",
     descripcion: "",
-    itinerario: "",
     duracion: "",
     fechaSalida: "",
     precio: "",
   });
 
+  const [itinerario, setItinerario] = useState([]);
+  const [nuevoItinerario, setNuevoItinerario] = useState("");
+
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertData, setAlertData] = useState({ type: "", message: "" });
+  const [alertMessage, setAlertMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,198 +29,298 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
       ...prev,
       [name]: value,
     }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleAddItinerario = () => {
+    if (nuevoItinerario.trim()) {
+      setItinerario([...itinerario, nuevoItinerario.trim()]);
+      setNuevoItinerario("");
+    }
+  };
+
+  const handleRemoveItinerario = (index) => {
+    setItinerario(itinerario.filter((_, i) => i !== index));
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.nombre.trim()) {
+      newErrors.nombre = "El nombre es requerido";
+    }
+
+    if (!formData.naviera.trim()) {
+      newErrors.naviera = "La naviera es requerida";
+    }
+
+    if (!formData.barco.trim()) {
+      newErrors.barco = "El barco es requerido";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.nombre.trim()) {
-      setAlertData({ type: "error", message: "El nombre es requerido" });
-      setShowAlert(true);
-      return;
-    }
-
-    if (!formData.naviera.trim()) {
-      setAlertData({ type: "error", message: "La naviera es requerida" });
-      setShowAlert(true);
+    if (!validate()) {
       return;
     }
 
     try {
+      setSubmitting(true);
+
       const dataToSend = {
         ...formData,
-        itinerario: formData.itinerario
-          .split(",")
-          .map((i) => i.trim())
-          .filter((i) => i),
+        itinerario: itinerario,
       };
 
       await createCrucero(dataToSend);
-      setAlertData({
-        type: "success",
-        message: "Crucero creado exitosamente",
-      });
-      setShowAlert(true);
 
       setFormData({
         nombre: "",
         naviera: "",
         barco: "",
         descripcion: "",
-        itinerario: "",
         duracion: "",
         fechaSalida: "",
         precio: "",
       });
+      setItinerario([]);
+      setErrors({});
 
-      setTimeout(() => {
-        onSuccess();
-        onClose();
-      }, 1500);
+      onSuccess && onSuccess();
+      onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertData({
-        type: "error",
-        message: "Error al crear el crucero",
-      });
+      setAlertMessage("Error al crear el crucero. Por favor intenta nuevamente.");
       setShowAlert(true);
+    } finally {
+      setSubmitting(false);
     }
+  };
+
+  const handleClose = () => {
+    setFormData({
+      nombre: "",
+      naviera: "",
+      barco: "",
+      descripcion: "",
+      duracion: "",
+      fechaSalida: "",
+      precio: "",
+    });
+    setItinerario([]);
+    setErrors({});
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-header">
-            <h2>Nuevo Crucero</h2>
-            <button className="modal-close" onClick={onClose}>
-              <FaTimes />
-            </button>
-          </div>
+    <div className="modal-overlay" onClick={handleClose}>
+      <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Nuevo Crucero</h2>
+          <button className="btn-close" onClick={handleClose}>
+            <FaTimes />
+          </button>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Nombre *</label>
-              <input
-                type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                placeholder="Nombre del crucero"
-                required
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Naviera *</label>
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body">
+            <div className="form-grid">
+              {/* Nombre */}
+              <div className="form-group full-width">
+                <label htmlFor="nombre">
+                  Nombre del Crucero <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="nombre"
+                  name="nombre"
+                  className={`form-control ${errors.nombre ? "error" : ""}`}
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  placeholder="Nombre del crucero"
+                />
+                {errors.nombre && (
+                  <span className="error-message">{errors.nombre}</span>
+                )}
+              </div>
+
+              {/* Naviera */}
+              <div className="form-group">
+                <label htmlFor="naviera">
+                  Naviera <span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="naviera"
                   name="naviera"
+                  className={`form-control ${errors.naviera ? "error" : ""}`}
                   value={formData.naviera}
                   onChange={handleChange}
                   placeholder="Ej: Royal Caribbean"
-                  required
                 />
+                {errors.naviera && (
+                  <span className="error-message">{errors.naviera}</span>
+                )}
               </div>
 
+              {/* Barco */}
               <div className="form-group">
-                <label>Barco *</label>
+                <label htmlFor="barco">
+                  Barco <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="barco"
                   name="barco"
+                  className={`form-control ${errors.barco ? "error" : ""}`}
                   value={formData.barco}
                   onChange={handleChange}
                   placeholder="Nombre del barco"
-                  required
+                />
+                {errors.barco && (
+                  <span className="error-message">{errors.barco}</span>
+                )}
+              </div>
+
+              {/* Descripción */}
+              <div className="form-group full-width">
+                <label htmlFor="descripcion">
+                  Descripción <span className="required">*</span>
+                </label>
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  rows="3"
+                  className="form-control"
+                  value={formData.descripcion}
+                  onChange={handleChange}
+                  placeholder="Descripción del crucero"
                 />
               </div>
-            </div>
 
-            <div className="form-group">
-              <label>Descripción *</label>
-              <textarea
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleChange}
-                placeholder="Descripción del crucero"
-                rows="3"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Itinerario * (puertos separados por comas)</label>
-              <input
-                type="text"
-                name="itinerario"
-                value={formData.itinerario}
-                onChange={handleChange}
-                placeholder="Ej: Miami, Cozumel, Grand Cayman"
-                required
-              />
-            </div>
-
-            <div className="form-row">
+              {/* Duración */}
               <div className="form-group">
-                <label>Duración (noches) *</label>
+                <label htmlFor="duracion">
+                  Duración (noches) <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="duracion"
                   name="duracion"
+                  min="1"
+                  className="form-control"
                   value={formData.duracion}
                   onChange={handleChange}
-                  min="1"
-                  required
                 />
               </div>
 
+              {/* Fecha de Salida */}
               <div className="form-group">
-                <label>Fecha de Salida *</label>
+                <label htmlFor="fechaSalida">
+                  Fecha de Salida <span className="required">*</span>
+                </label>
                 <input
                   type="date"
+                  id="fechaSalida"
                   name="fechaSalida"
+                  className="form-control"
                   value={formData.fechaSalida}
                   onChange={handleChange}
-                  required
                 />
               </div>
 
+              {/* Precio */}
               <div className="form-group">
-                <label>Precio *</label>
+                <label htmlFor="precio">
+                  Precio (ARS) <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="precio"
                   name="precio"
+                  min="0"
+                  step="0.01"
+                  className="form-control"
                   value={formData.precio}
                   onChange={handleChange}
                   placeholder="Precio"
-                  min="0"
-                  step="0.01"
-                  required
                 />
               </div>
-            </div>
 
-            <div className="modal-footer">
-              <button type="button" className="btn-secondary" onClick={onClose}>
-                Cancelar
-              </button>
-              <button type="submit" className="btn-primary">
-                Crear Crucero
-              </button>
+              {/* Itinerario (Array) */}
+              <div className="form-group full-width">
+                <label>Itinerario (puertos)</label>
+                <div className="array-input">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Ej: Miami, Cozumel, Grand Cayman..."
+                    value={nuevoItinerario}
+                    onChange={(e) => setNuevoItinerario(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddItinerario();
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={handleAddItinerario}
+                  >
+                    <FaPlus /> Agregar
+                  </button>
+                </div>
+                <div className="items-list">
+                  {itinerario.map((item, index) => (
+                    <div key={index} className="item-chip">
+                      <span>{item}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveItinerario(index)}
+                        className="btn-remove"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </form>
-        </div>
+          </div>
+
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={handleClose}
+              disabled={submitting}
+            >
+              Cancelar
+            </button>
+            <button type="submit" className="btn-primary" disabled={submitting}>
+              {submitting ? "Creando..." : "Crear Crucero"}
+            </button>
+          </div>
+        </form>
       </div>
 
       <AlertModal
         isOpen={showAlert}
         onClose={() => setShowAlert(false)}
-        title={alertData.type === "success" ? "Éxito" : "Error"}
-        message={alertData.message}
-        type={alertData.type}
+        message={alertMessage}
+        type="error"
       />
-    </>
+    </div>
   );
 }

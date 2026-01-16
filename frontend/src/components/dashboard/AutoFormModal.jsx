@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { createAuto } from "../../services/autos.service";
 import AlertModal from "../common/AlertModal";
+import "../../styles/modal.css";
 
 export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -15,8 +16,10 @@ export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
     descripcion: "",
   });
 
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertData, setAlertData] = useState({ type: "", message: "" });
+  const [alertMessage, setAlertMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,30 +27,36 @@ export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
       ...prev,
       [name]: value,
     }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.marca.trim()) {
+      newErrors.marca = "La marca es requerida";
+    }
+
+    if (!formData.modelo.trim()) {
+      newErrors.modelo = "El modelo es requerido";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.marca.trim()) {
-      setAlertData({ type: "error", message: "La marca es requerida" });
-      setShowAlert(true);
-      return;
-    }
-
-    if (!formData.modelo.trim()) {
-      setAlertData({ type: "error", message: "El modelo es requerido" });
-      setShowAlert(true);
+    if (!validate()) {
       return;
     }
 
     try {
+      setSubmitting(true);
       await createAuto(formData);
-      setAlertData({
-        type: "success",
-        message: "Auto creado exitosamente",
-      });
-      setShowAlert(true);
 
       setFormData({
         marca: "",
@@ -59,69 +68,98 @@ export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
         precio: "",
         descripcion: "",
       });
+      setErrors({});
 
-      setTimeout(() => {
-        onSuccess();
-        onClose();
-      }, 1500);
+      onSuccess && onSuccess();
+      onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertData({
-        type: "error",
-        message: "Error al crear el auto",
-      });
+      setAlertMessage("Error al crear el auto. Por favor intenta nuevamente.");
       setShowAlert(true);
+    } finally {
+      setSubmitting(false);
     }
+  };
+
+  const handleClose = () => {
+    setFormData({
+      marca: "",
+      modelo: "",
+      categoria: "economico",
+      año: new Date().getFullYear(),
+      capacidadPasajeros: 4,
+      transmision: "automatico",
+      precio: "",
+      descripcion: "",
+    });
+    setErrors({});
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-header">
-            <h2>Nuevo Auto</h2>
-            <button className="modal-close" onClick={onClose}>
-              <FaTimes />
-            </button>
-          </div>
+    <div className="modal-overlay" onClick={handleClose}>
+      <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Nuevo Auto</h2>
+          <button className="btn-close" onClick={handleClose}>
+            <FaTimes />
+          </button>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-row">
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body">
+            <div className="form-grid">
+              {/* Marca */}
               <div className="form-group">
-                <label>Marca *</label>
+                <label htmlFor="marca">
+                  Marca <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="marca"
                   name="marca"
+                  className={`form-control ${errors.marca ? "error" : ""}`}
                   value={formData.marca}
                   onChange={handleChange}
                   placeholder="Ej: Toyota"
-                  required
                 />
+                {errors.marca && (
+                  <span className="error-message">{errors.marca}</span>
+                )}
               </div>
 
+              {/* Modelo */}
               <div className="form-group">
-                <label>Modelo *</label>
+                <label htmlFor="modelo">
+                  Modelo <span className="required">*</span>
+                </label>
                 <input
                   type="text"
+                  id="modelo"
                   name="modelo"
+                  className={`form-control ${errors.modelo ? "error" : ""}`}
                   value={formData.modelo}
                   onChange={handleChange}
                   placeholder="Ej: Corolla"
-                  required
                 />
+                {errors.modelo && (
+                  <span className="error-message">{errors.modelo}</span>
+                )}
               </div>
-            </div>
 
-            <div className="form-row">
+              {/* Categoría */}
               <div className="form-group">
-                <label>Categoría *</label>
+                <label htmlFor="categoria">
+                  Categoría <span className="required">*</span>
+                </label>
                 <select
+                  id="categoria"
                   name="categoria"
+                  className="form-control"
                   value={formData.categoria}
                   onChange={handleChange}
-                  required
                 >
                   <option value="economico">Económico</option>
                   <option value="compacto">Compacto</option>
@@ -132,52 +170,65 @@ export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
                 </select>
               </div>
 
+              {/* Transmisión */}
               <div className="form-group">
-                <label>Transmisión *</label>
+                <label htmlFor="transmision">
+                  Transmisión <span className="required">*</span>
+                </label>
                 <select
+                  id="transmision"
                   name="transmision"
+                  className="form-control"
                   value={formData.transmision}
                   onChange={handleChange}
-                  required
                 >
                   <option value="manual">Manual</option>
                   <option value="automatico">Automático</option>
                 </select>
               </div>
-            </div>
 
-            <div className="form-row">
+              {/* Año */}
               <div className="form-group">
-                <label>Año *</label>
+                <label htmlFor="año">
+                  Año <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="año"
                   name="año"
+                  className="form-control"
                   value={formData.año}
                   onChange={handleChange}
                   min="1990"
                   max={new Date().getFullYear() + 1}
-                  required
                 />
               </div>
 
+              {/* Capacidad de Pasajeros */}
               <div className="form-group">
-                <label>Capacidad de Pasajeros *</label>
+                <label htmlFor="capacidadPasajeros">
+                  Capacidad de Pasajeros <span className="required">*</span>
+                </label>
                 <input
                   type="number"
+                  id="capacidadPasajeros"
                   name="capacidadPasajeros"
+                  className="form-control"
                   value={formData.capacidadPasajeros}
                   onChange={handleChange}
                   min="1"
                   max="12"
-                  required
                 />
               </div>
 
+              {/* Precio */}
               <div className="form-group">
-                <label>Precio por Día</label>
+                <label htmlFor="precio">Precio por Día (ARS)</label>
                 <input
                   type="number"
+                  id="precio"
                   name="precio"
+                  className="form-control"
                   value={formData.precio}
                   onChange={handleChange}
                   placeholder="Precio"
@@ -185,38 +236,45 @@ export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
                   step="0.01"
                 />
               </div>
-            </div>
 
-            <div className="form-group">
-              <label>Descripción</label>
-              <textarea
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleChange}
-                placeholder="Descripción del auto"
-                rows="3"
-              />
+              {/* Descripción */}
+              <div className="form-group full-width">
+                <label htmlFor="descripcion">Descripción</label>
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  rows="3"
+                  className="form-control"
+                  value={formData.descripcion}
+                  onChange={handleChange}
+                  placeholder="Descripción del auto"
+                />
+              </div>
             </div>
+          </div>
 
-            <div className="modal-footer">
-              <button type="button" className="btn-secondary" onClick={onClose}>
-                Cancelar
-              </button>
-              <button type="submit" className="btn-primary">
-                Crear Auto
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={handleClose}
+              disabled={submitting}
+            >
+              Cancelar
+            </button>
+            <button type="submit" className="btn-primary" disabled={submitting}>
+              {submitting ? "Creando..." : "Crear Auto"}
+            </button>
+          </div>
+        </form>
       </div>
 
       <AlertModal
         isOpen={showAlert}
         onClose={() => setShowAlert(false)}
-        title={alertData.type === "success" ? "Éxito" : "Error"}
-        message={alertData.message}
-        type={alertData.type}
+        message={alertMessage}
+        type="error"
       />
-    </>
+    </div>
   );
 }

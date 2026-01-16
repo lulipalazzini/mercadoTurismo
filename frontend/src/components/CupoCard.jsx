@@ -3,19 +3,20 @@ import "../styles/card.css";
 import { FaCalendarAlt } from "react-icons/fa";
 
 export default function CupoCard({ item }) {
+  if (!item) return null;
+
   const {
-    tipoServicio,
-    servicioId,
-    fecha,
-    cupoTotal,
-    cupoReservado,
-    cupoDisponible,
-    precioAjustado,
+    tipoProducto,
+    descripcion,
+    cantidad,
+    precioMinorista,
+    fechaVencimiento,
     estado,
-    notas,
+    observaciones,
   } = item;
 
   const formatDate = (date) => {
+    if (!date) return "N/A";
     return new Date(date).toLocaleDateString("es-ES", {
       day: "2-digit",
       month: "short",
@@ -23,90 +24,65 @@ export default function CupoCard({ item }) {
     });
   };
 
-  const porcentajeDisponible = ((cupoDisponible / cupoTotal) * 100).toFixed(0);
+  const formatCurrency = (amount) => {
+    if (!amount) return "$0";
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+    }).format(amount);
+  };
 
   const getEstadoColor = () => {
     switch (estado) {
       case "disponible":
         return "success";
-      case "limitado":
-        return "warning";
-      case "agotado":
+      case "vendido":
         return "danger";
-      case "bloqueado":
-        return "info";
+      case "vencido":
+        return "warning";
       default:
         return "default";
     }
-  };
-
-  const getTipoLabel = (tipo) => {
-    const labels = {
-      paquete: "Paquete",
-      alojamiento: "Alojamiento",
-      excursion: "Excursión",
-      circuito: "Circuito",
-      salida_grupal: "Salida Grupal",
-      crucero: "Crucero",
-      pasaje: "Pasaje",
-      otro: "Otro",
-    };
-    return labels[tipo] || tipo;
   };
 
   return (
     <div className="service-card">
       <div className="card-header">
         <div className="card-header-content">
-          <h3 className="card-title">
-            {getTipoLabel(tipoServicio)} #{servicioId}
-          </h3>
+          <h3 className="card-title">{tipoProducto}</h3>
           <p className="empresa">
-            <FaCalendarAlt /> {formatDate(fecha)}
+            <FaCalendarAlt /> Válido hasta: {formatDate(fechaVencimiento)}
           </p>
         </div>
-        <span className="tipo-badge">{getTipoLabel(tipoServicio)}</span>
+        <span className="tipo-badge">{tipoProducto}</span>
       </div>
 
       <div className="card-content">
-        {notas && (
-          <p className="descripcion">
-            {notas.length > 120 ? `${notas.substring(0, 120)}...` : notas}
-          </p>
-        )}
+        <p className="descripcion">
+          {descripcion && descripcion.length > 120 ? `${descripcion.substring(0, 120)}...` : descripcion || "Sin descripción"}
+        </p>
 
         <div className="info-grid">
           <div className="info-item">
-            <span className="info-label">Total</span>
-            <span className="info-value">{cupoTotal}</span>
+            <span className="info-label">Disponibles</span>
+            <span className="info-value">{cantidad}</span>
           </div>
           <div className="info-item">
-            <span className="info-label">Reservado</span>
-            <span className="info-value">{cupoReservado}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Disponible</span>
-            <span className="info-value">{cupoDisponible}</span>
+            <span className="info-label">Precio</span>
+            <span className="info-value">{formatCurrency(precioMinorista)}</span>
           </div>
         </div>
 
-        <div className="cupo-bar">
-          <div
-            className={`cupo-bar-fill ${getEstadoColor()}`}
-            style={{ width: `${porcentajeDisponible}%` }}
-          ></div>
-        </div>
+        {observaciones && (
+          <div className="cupo-observaciones">
+            <p className="observaciones-text">{observaciones}</p>
+          </div>
+        )}
 
         <div className="card-footer">
           <div className="price">
-            {precioAjustado && (
-              <>
-                <span className="price-label">Precio:</span>
-                <span className="price-value">
-                  ${precioAjustado.toLocaleString()}
-                </span>
-              </>
-            )}
+            <span className="price-label">Precio por unidad:</span>
+            <span className="price-value">{formatCurrency(precioMinorista)}</span>
           </div>
           <span className={`status-badge ${getEstadoColor()}`}>
             {estado.charAt(0).toUpperCase() + estado.slice(1)}
