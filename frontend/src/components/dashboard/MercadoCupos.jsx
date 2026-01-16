@@ -84,9 +84,21 @@ export default function MercadoCupos() {
 
   const getEstadoBadge = (estado) => {
     const badges = {
-      disponible: { class: "badge-success", icon: <FaCheckCircle />, text: "Disponible" },
-      vendido: { class: "badge-secondary", icon: <FaShoppingCart />, text: "Vendido" },
-      vencido: { class: "badge-danger", icon: <FaExclamationTriangle />, text: "Vencido" },
+      disponible: {
+        class: "badge-success",
+        icon: <FaCheckCircle />,
+        text: "Disponible",
+      },
+      vendido: {
+        class: "badge-secondary",
+        icon: <FaShoppingCart />,
+        text: "Vendido",
+      },
+      vencido: {
+        class: "badge-danger",
+        icon: <FaExclamationTriangle />,
+        text: "Vencido",
+      },
     };
     return badges[estado] || badges.disponible;
   };
@@ -104,7 +116,9 @@ export default function MercadoCupos() {
     return matchSearch && matchCategoria && matchEstado;
   });
 
-  const categorias = [...new Set(cupos.map((c) => c.tipoProducto))].filter(Boolean);
+  const categorias = [...new Set(cupos.map((c) => c.tipoProducto))].filter(
+    Boolean
+  );
 
   if (loading) {
     return (
@@ -266,12 +280,16 @@ export default function MercadoCupos() {
                     </div>
 
                     {daysRemaining !== null && (
-                      <div className={`detail-item ${isUrgente ? "urgente" : ""}`}>
+                      <div
+                        className={`detail-item ${isUrgente ? "urgente" : ""}`}
+                      >
                         <FaClock />
                         <span>
                           <strong>Vence en:</strong>{" "}
                           {daysRemaining > 0
-                            ? `${daysRemaining} día${daysRemaining !== 1 ? "s" : ""}`
+                            ? `${daysRemaining} día${
+                                daysRemaining !== 1 ? "s" : ""
+                              }`
                             : "Vencido"}
                         </span>
                       </div>

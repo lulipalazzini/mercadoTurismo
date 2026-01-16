@@ -158,7 +158,9 @@ export default function TransferEditModal({
                   value={formData.origen}
                   onChange={handleChange}
                 />
-                {errors.origen && <span className="error-message">{errors.origen}</span>}
+                {errors.origen && (
+                  <span className="error-message">{errors.origen}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -173,7 +175,9 @@ export default function TransferEditModal({
                   value={formData.destino}
                   onChange={handleChange}
                 />
-                {errors.destino && <span className="error-message">{errors.destino}</span>}
+                {errors.destino && (
+                  <span className="error-message">{errors.destino}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -193,7 +197,9 @@ export default function TransferEditModal({
               </div>
 
               <div className="form-group">
-                <label htmlFor="duracionEstimada">Duración Estimada (minutos)</label>
+                <label htmlFor="duracionEstimada">
+                  Duración Estimada (minutos)
+                </label>
                 <input
                   type="number"
                   id="duracionEstimada"

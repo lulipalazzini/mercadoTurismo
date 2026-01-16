@@ -76,7 +76,9 @@ export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
       onClose();
     } catch (error) {
       console.error("Error al crear alojamiento:", error);
-      setAlertMessage("Error al crear el alojamiento. Por favor intenta nuevamente.");
+      setAlertMessage(
+        "Error al crear el alojamiento. Por favor intenta nuevamente."
+      );
       setShowAlert(true);
     } finally {
       setSubmitting(false);
@@ -198,7 +200,9 @@ export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
                   type="number"
                   id="precioNoche"
                   name="precioNoche"
-                  className={`form-control ${errors.precioNoche ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.precioNoche ? "error" : ""
+                  }`}
                   value={formData.precioNoche}
                   onChange={handleChange}
                   placeholder="Precio"

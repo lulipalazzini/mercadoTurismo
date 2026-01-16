@@ -19,7 +19,9 @@ export default function Cupos() {
       }
       const data = await response.json();
       // Filtrar solo los cupos disponibles para mostrar en el frontend minorista
-      const cuposDisponibles = data.filter(cupo => cupo.estado === "disponible");
+      const cuposDisponibles = data.filter(
+        (cupo) => cupo.estado === "disponible"
+      );
       setCupos(cuposDisponibles);
     } catch (err) {
       setError(err.message);

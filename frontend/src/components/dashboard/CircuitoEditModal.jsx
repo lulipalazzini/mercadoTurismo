@@ -59,7 +59,8 @@ export default function CircuitoEditModal({
   const validate = () => {
     const newErrors = {};
     if (!formData.nombre.trim()) newErrors.nombre = "El nombre es requerido";
-    if (!formData.descripcion.trim()) newErrors.descripcion = "La descripción es requerida";
+    if (!formData.descripcion.trim())
+      newErrors.descripcion = "La descripción es requerida";
     return newErrors;
   };
 
@@ -144,7 +145,9 @@ export default function CircuitoEditModal({
                   value={formData.nombre}
                   onChange={handleChange}
                 />
-                {errors.nombre && <span className="error-message">{errors.nombre}</span>}
+                {errors.nombre && (
+                  <span className="error-message">{errors.nombre}</span>
+                )}
               </div>
 
               <div className="form-group full-width">
@@ -155,11 +158,15 @@ export default function CircuitoEditModal({
                   id="descripcion"
                   name="descripcion"
                   rows="3"
-                  className={`form-control ${errors.descripcion ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.descripcion ? "error" : ""
+                  }`}
                   value={formData.descripcion}
                   onChange={handleChange}
                 />
-                {errors.descripcion && <span className="error-message">{errors.descripcion}</span>}
+                {errors.descripcion && (
+                  <span className="error-message">{errors.descripcion}</span>
+                )}
               </div>
 
               <div className="form-group full-width">

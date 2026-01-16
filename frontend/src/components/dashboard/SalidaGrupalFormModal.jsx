@@ -97,7 +97,9 @@ export default function SalidaGrupalFormModal({ isOpen, onClose, onSuccess }) {
       onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertMessage("Error al crear la salida grupal. Por favor intenta nuevamente.");
+      setAlertMessage(
+        "Error al crear la salida grupal. Por favor intenta nuevamente."
+      );
       setShowAlert(true);
     } finally {
       setSubmitting(false);
@@ -197,7 +199,9 @@ export default function SalidaGrupalFormModal({ isOpen, onClose, onSuccess }) {
                   id="descripcion"
                   name="descripcion"
                   rows="3"
-                  className={`form-control ${errors.descripcion ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.descripcion ? "error" : ""
+                  }`}
                   value={formData.descripcion}
                   onChange={handleChange}
                   placeholder="Descripción de la salida grupal"

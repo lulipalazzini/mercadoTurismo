@@ -137,7 +137,9 @@ export default function CruceroEditModal({
                   value={formData.nombre}
                   onChange={handleChange}
                 />
-                {errors.nombre && <span className="error-message">{errors.nombre}</span>}
+                {errors.nombre && (
+                  <span className="error-message">{errors.nombre}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -152,7 +154,9 @@ export default function CruceroEditModal({
                   value={formData.naviera}
                   onChange={handleChange}
                 />
-                {errors.naviera && <span className="error-message">{errors.naviera}</span>}
+                {errors.naviera && (
+                  <span className="error-message">{errors.naviera}</span>
+                )}
               </div>
 
               <div className="form-group">

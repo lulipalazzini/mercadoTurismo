@@ -74,7 +74,9 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
       onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertMessage("Error al crear la excursión. Por favor intenta nuevamente.");
+      setAlertMessage(
+        "Error al crear la excursión. Por favor intenta nuevamente."
+      );
       setShowAlert(true);
     } finally {
       setSubmitting(false);
@@ -212,7 +214,9 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
                   id="descripcion"
                   name="descripcion"
                   rows="4"
-                  className={`form-control ${errors.descripcion ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.descripcion ? "error" : ""
+                  }`}
                   value={formData.descripcion}
                   onChange={handleChange}
                   placeholder="Descripción de la excursión"

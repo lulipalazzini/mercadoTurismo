@@ -200,8 +200,8 @@ export default function ComprarCupoModal({ isOpen, onClose, onSuccess, cupo }) {
             <div className="info-box">
               <p>
                 <strong>Importante:</strong> Al confirmar la compra, el cupo
-                será asignado a tu cuenta. Asegúrate de tener saldo suficiente
-                y de poder utilizar el cupo antes de su vencimiento.
+                será asignado a tu cuenta. Asegúrate de tener saldo suficiente y
+                de poder utilizar el cupo antes de su vencimiento.
               </p>
             </div>
           </div>

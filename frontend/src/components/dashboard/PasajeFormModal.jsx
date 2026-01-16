@@ -80,7 +80,9 @@ export default function PasajeFormModal({ isOpen, onClose, onSuccess }) {
       onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertMessage("Error al crear el pasaje. Por favor intenta nuevamente.");
+      setAlertMessage(
+        "Error al crear el pasaje. Por favor intenta nuevamente."
+      );
       setShowAlert(true);
     } finally {
       setSubmitting(false);

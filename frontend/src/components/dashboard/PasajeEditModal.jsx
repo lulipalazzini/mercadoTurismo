@@ -170,7 +170,9 @@ export default function PasajeEditModal({
                   value={formData.origen}
                   onChange={handleChange}
                 />
-                {errors.origen && <span className="error-message">{errors.origen}</span>}
+                {errors.origen && (
+                  <span className="error-message">{errors.origen}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -185,7 +187,9 @@ export default function PasajeEditModal({
                   value={formData.destino}
                   onChange={handleChange}
                 />
-                {errors.destino && <span className="error-message">{errors.destino}</span>}
+                {errors.destino && (
+                  <span className="error-message">{errors.destino}</span>
+                )}
               </div>
 
               {formData.tipo === "aereo" && (

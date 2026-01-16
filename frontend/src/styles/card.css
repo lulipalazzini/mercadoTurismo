@@ -539,11 +539,11 @@
   .service-card .card-title {
     font-size: 1.15rem;
   }
-  
+
   .service-card .info-grid {
     grid-template-columns: 1fr 1fr;
   }
-  
+
   .service-card .price-value {
     font-size: 1.5rem;
   }

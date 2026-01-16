@@ -25,3 +25,9 @@ dist-ssr
 *.mp4
 *.mov
 *.avi
+
+# Windows reserved names
+nul
+con
+prn
+aux

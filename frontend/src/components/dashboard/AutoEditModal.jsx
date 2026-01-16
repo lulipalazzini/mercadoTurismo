@@ -77,7 +77,9 @@ export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
       onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertMessage("Error al actualizar el auto. Por favor intenta nuevamente.");
+      setAlertMessage(
+        "Error al actualizar el auto. Por favor intenta nuevamente."
+      );
       setShowAlert(true);
     } finally {
       setSubmitting(false);
@@ -116,7 +118,9 @@ export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
                   value={formData.marca}
                   onChange={handleChange}
                 />
-                {errors.marca && <span className="error-message">{errors.marca}</span>}
+                {errors.marca && (
+                  <span className="error-message">{errors.marca}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -131,7 +135,9 @@ export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
                   value={formData.modelo}
                   onChange={handleChange}
                 />
-                {errors.modelo && <span className="error-message">{errors.modelo}</span>}
+                {errors.modelo && (
+                  <span className="error-message">{errors.modelo}</span>
+                )}
               </div>
 
               <div className="form-group">

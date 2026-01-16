@@ -72,7 +72,9 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
       onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertMessage("Error al crear el transfer. Por favor intenta nuevamente.");
+      setAlertMessage(
+        "Error al crear el transfer. Por favor intenta nuevamente."
+      );
       setShowAlert(true);
     } finally {
       setSubmitting(false);

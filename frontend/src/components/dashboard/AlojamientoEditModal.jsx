@@ -84,7 +84,9 @@ export default function AlojamientoEditModal({
       onClose();
     } catch (error) {
       console.error("Error al actualizar alojamiento:", error);
-      setAlertMessage("Error al actualizar el alojamiento. Por favor intenta nuevamente.");
+      setAlertMessage(
+        "Error al actualizar el alojamiento. Por favor intenta nuevamente."
+      );
       setShowAlert(true);
     } finally {
       setSubmitting(false);
@@ -195,7 +197,9 @@ export default function AlojamientoEditModal({
                   type="number"
                   id="precioNoche"
                   name="precioNoche"
-                  className={`form-control ${errors.precioNoche ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.precioNoche ? "error" : ""
+                  }`}
                   value={formData.precioNoche}
                   onChange={handleChange}
                   min="0"

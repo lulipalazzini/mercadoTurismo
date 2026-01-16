@@ -119,7 +119,9 @@ export default function ExcursionEditModal({
                   value={formData.nombre}
                   onChange={handleChange}
                 />
-                {errors.nombre && <span className="error-message">{errors.nombre}</span>}
+                {errors.nombre && (
+                  <span className="error-message">{errors.nombre}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -134,7 +136,9 @@ export default function ExcursionEditModal({
                   value={formData.destino}
                   onChange={handleChange}
                 />
-                {errors.destino && <span className="error-message">{errors.destino}</span>}
+                {errors.destino && (
+                  <span className="error-message">{errors.destino}</span>
+                )}
               </div>
 
               <div className="form-group">

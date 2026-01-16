@@ -43,9 +43,14 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
       newErrors.precioMayorista = "El precio mayorista debe ser mayor a 0";
     if (!formData.precioMinorista || formData.precioMinorista <= 0)
       newErrors.precioMinorista = "El precio minorista debe ser mayor a 0";
-    if (formData.precioMinorista && formData.precioMayorista && 
-        parseFloat(formData.precioMinorista) <= parseFloat(formData.precioMayorista))
-      newErrors.precioMinorista = "El precio minorista debe ser mayor al mayorista";
+    if (
+      formData.precioMinorista &&
+      formData.precioMayorista &&
+      parseFloat(formData.precioMinorista) <=
+        parseFloat(formData.precioMayorista)
+    )
+      newErrors.precioMinorista =
+        "El precio minorista debe ser mayor al mayorista";
     if (!formData.fechaVencimiento)
       newErrors.fechaVencimiento = "La fecha de vencimiento es requerida";
 
@@ -55,8 +60,7 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
       today.setHours(0, 0, 0, 0);
       const vencimiento = new Date(formData.fechaVencimiento);
       if (vencimiento < today) {
-        newErrors.fechaVencimiento =
-          "La fecha de vencimiento debe ser futura";
+        newErrors.fechaVencimiento = "La fecha de vencimiento debe ser futura";
       }
     }
 
@@ -133,7 +137,9 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                 <select
                   id="tipoProducto"
                   name="tipoProducto"
-                  className={`form-control ${errors.tipoProducto ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.tipoProducto ? "error" : ""
+                  }`}
                   value={formData.tipoProducto}
                   onChange={handleChange}
                 >
@@ -180,7 +186,9 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                   id="descripcion"
                   name="descripcion"
                   rows="3"
-                  className={`form-control ${errors.descripcion ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.descripcion ? "error" : ""
+                  }`}
                   value={formData.descripcion}
                   onChange={handleChange}
                   placeholder="Ej: Hotel 4 estrellas en Bariloche, habitación doble con desayuno incluido"
@@ -198,7 +206,9 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                   type="number"
                   id="precioMayorista"
                   name="precioMayorista"
-                  className={`form-control ${errors.precioMayorista ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.precioMayorista ? "error" : ""
+                  }`}
                   value={formData.precioMayorista}
                   onChange={handleChange}
                   min="0"
@@ -206,9 +216,13 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                   placeholder="0.00"
                 />
                 {errors.precioMayorista && (
-                  <span className="error-message">{errors.precioMayorista}</span>
+                  <span className="error-message">
+                    {errors.precioMayorista}
+                  </span>
                 )}
-                <small className="form-hint">Precio para operadores mayoristas</small>
+                <small className="form-hint">
+                  Precio para operadores mayoristas
+                </small>
               </div>
 
               <div className="form-group">
@@ -219,7 +233,9 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                   type="number"
                   id="precioMinorista"
                   name="precioMinorista"
-                  className={`form-control ${errors.precioMinorista ? "error" : ""}`}
+                  className={`form-control ${
+                    errors.precioMinorista ? "error" : ""
+                  }`}
                   value={formData.precioMinorista}
                   onChange={handleChange}
                   min="0"
@@ -227,9 +243,13 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                   placeholder="0.00"
                 />
                 {errors.precioMinorista && (
-                  <span className="error-message">{errors.precioMinorista}</span>
+                  <span className="error-message">
+                    {errors.precioMinorista}
+                  </span>
                 )}
-                <small className="form-hint">Precio para venta al público</small>
+                <small className="form-hint">
+                  Precio para venta al público
+                </small>
               </div>
 
               <div className="form-group">
@@ -248,7 +268,9 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                   min={new Date().toISOString().split("T")[0]}
                 />
                 {errors.fechaVencimiento && (
-                  <span className="error-message">{errors.fechaVencimiento}</span>
+                  <span className="error-message">
+                    {errors.fechaVencimiento}
+                  </span>
                 )}
               </div>
 

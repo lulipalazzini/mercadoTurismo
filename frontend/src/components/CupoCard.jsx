@@ -59,7 +59,9 @@ export default function CupoCard({ item }) {
 
       <div className="card-content">
         <p className="descripcion">
-          {descripcion && descripcion.length > 120 ? `${descripcion.substring(0, 120)}...` : descripcion || "Sin descripción"}
+          {descripcion && descripcion.length > 120
+            ? `${descripcion.substring(0, 120)}...`
+            : descripcion || "Sin descripción"}
         </p>
 
         <div className="info-grid">
@@ -69,7 +71,9 @@ export default function CupoCard({ item }) {
           </div>
           <div className="info-item">
             <span className="info-label">Precio</span>
-            <span className="info-value">{formatCurrency(precioMinorista)}</span>
+            <span className="info-value">
+              {formatCurrency(precioMinorista)}
+            </span>
           </div>
         </div>
 
@@ -82,7 +86,9 @@ export default function CupoCard({ item }) {
         <div className="card-footer">
           <div className="price">
             <span className="price-label">Precio por unidad:</span>
-            <span className="price-value">{formatCurrency(precioMinorista)}</span>
+            <span className="price-value">
+              {formatCurrency(precioMinorista)}
+            </span>
           </div>
           <span className={`status-badge ${getEstadoColor()}`}>
             {estado.charAt(0).toUpperCase() + estado.slice(1)}
