@@ -209,7 +209,7 @@ export const seedAlojamientos = async () => {
     const count = await Alojamiento.count();
     if (count >= 15) {
       console.log(
-        "⏭️  Alojamientos ya existen en la base de datos. Saltando..."
+        "⏭️  Alojamientos ya existen en la base de datos. Saltando...",
       );
       return;
     }

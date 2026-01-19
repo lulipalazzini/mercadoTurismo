@@ -31,7 +31,7 @@ const Excursion = sequelize.define(
         "naturaleza",
         "gastronomica",
         "deportiva",
-        "otra"
+        "otra",
       ),
       allowNull: false,
       defaultValue: "cultural",
@@ -100,8 +100,8 @@ const Excursion = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Users',
-        key: 'id'
+        model: "Users",
+        key: "id",
       },
       comment: "ID del vendedor que publicó esta excursión",
     },
@@ -113,7 +113,7 @@ const Excursion = sequelize.define(
   {
     tableName: "excursiones",
     timestamps: true,
-  }
+  },
 );
 
 import User from "./User.model.js";

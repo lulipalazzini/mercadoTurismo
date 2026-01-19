@@ -40,7 +40,7 @@ export default function CircuitoCard({ item }) {
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp('circuito', item);
+    abrirWhatsApp("circuito", item);
   };
 
   return (
@@ -121,8 +121,8 @@ export default function CircuitoCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           onClick={handleReservar}
           disabled={cupoDisponible === 0}
         >

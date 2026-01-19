@@ -41,7 +41,7 @@ export default function PaqueteCard({ item }) {
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp('paquete', item);
+    abrirWhatsApp("paquete", item);
   };
 
   return (
@@ -121,15 +121,15 @@ export default function PaqueteCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           onClick={handleReservar}
           disabled={cupoDisponible === 0}
         >
           {cupoDisponible > 0 ? "Reservar" : "Sin cupos"}
         </button>
       </div>
-      
+
       {showModal && (
         <ServiceDetailModal
           item={item}

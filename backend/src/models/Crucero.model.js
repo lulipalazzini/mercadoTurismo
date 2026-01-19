@@ -105,8 +105,8 @@ const Crucero = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Users',
-        key: 'id'
+        model: "Users",
+        key: "id",
       },
       comment: "ID del vendedor que publicó este crucero",
     },
@@ -118,7 +118,7 @@ const Crucero = sequelize.define(
   {
     tableName: "cruceros",
     timestamps: true,
-  }
+  },
 );
 
 import User from "./User.model.js";

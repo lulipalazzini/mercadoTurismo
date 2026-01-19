@@ -33,7 +33,7 @@ export default function SeguroCard({ item }) {
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp('seguro', item);
+    abrirWhatsApp("seguro", item);
   };
 
   return (
@@ -122,7 +122,9 @@ export default function SeguroCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button className="btn-primary" onClick={handleReservar}>Reservar</button>
+        <button className="btn-primary" onClick={handleReservar}>
+          Reservar
+        </button>
       </div>
 
       {showModal && (

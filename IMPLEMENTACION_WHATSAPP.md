@@ -20,34 +20,39 @@ Todos los servicios minoristas ahora tienen un **botón "Reservar"** que abre Wh
 ### 🚀 ¿CÓMO CONFIGURAR TU NÚMERO DE WHATSAPP?
 
 #### **1️⃣ Abre el archivo:**
+
 ```
 frontend/src/utils/whatsapp.js
 ```
 
 #### **2️⃣ Busca esta línea (línea 6):**
+
 ```javascript
 const WHATSAPP_NUMBER = "5491112345678";
 ```
 
 #### **3️⃣ Reemplaza con tu número:**
+
 ```javascript
 const WHATSAPP_NUMBER = "TU_NUMERO_AQUI";
 ```
 
 #### **📱 Formato del número:**
+
 ```
 [Código País][Código Área][Número]
 SIN espacios, guiones, paréntesis ni el signo +
 ```
 
 #### **Ejemplos:**
-| País | Tu número | Formato correcto |
-|------|-----------|------------------|
-| 🇦🇷 Argentina | +54 9 11 1234-5678 | `5491112345678` |
-| 🇪🇸 España | +34 612 345 678 | `34612345678` |
-| 🇲🇽 México | +52 55 1234 5678 | `525512345678` |
-| 🇨🇴 Colombia | +57 300 123 4567 | `573001234567` |
-| 🇺🇸 USA | +1 (555) 123-4567 | `15551234567` |
+
+| País         | Tu número          | Formato correcto |
+| ------------ | ------------------ | ---------------- |
+| 🇦🇷 Argentina | +54 9 11 1234-5678 | `5491112345678`  |
+| 🇪🇸 España    | +34 612 345 678    | `34612345678`    |
+| 🇲🇽 México    | +52 55 1234 5678   | `525512345678`   |
+| 🇨🇴 Colombia  | +57 300 123 4567   | `573001234567`   |
+| 🇺🇸 USA       | +1 (555) 123-4567  | `15551234567`    |
 
 ---
 

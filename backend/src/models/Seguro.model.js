@@ -28,7 +28,7 @@ const Seguro = sequelize.define(
         "cancelacion",
         "equipaje",
         "asistencia",
-        "integral"
+        "integral",
       ),
       allowNull: false,
       defaultValue: "viaje",
@@ -99,8 +99,8 @@ const Seguro = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Users',
-        key: 'id'
+        model: "Users",
+        key: "id",
       },
       comment: "ID del vendedor que publicó este seguro",
     },
@@ -112,7 +112,7 @@ const Seguro = sequelize.define(
   {
     tableName: "seguros",
     timestamps: true,
-  }
+  },
 );
 
 import User from "./User.model.js";

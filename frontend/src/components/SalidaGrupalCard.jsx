@@ -40,7 +40,7 @@ export default function SalidaGrupalCard({ item }) {
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp('salida-grupal', item);
+    abrirWhatsApp("salida-grupal", item);
   };
 
   return (
@@ -125,8 +125,8 @@ export default function SalidaGrupalCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           onClick={handleReservar}
           disabled={cupoDisponible === 0}
         >

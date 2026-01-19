@@ -71,8 +71,8 @@ const Paquete = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Users',
-        key: 'id'
+        model: "Users",
+        key: "id",
       },
       comment: "ID del vendedor que publicó este paquete",
     },
@@ -96,7 +96,7 @@ const Paquete = sequelize.define(
   {
     timestamps: true,
     paranoid: true, // Habilita soft delete automático
-  }
+  },
 );
 
 // Definir asociaciones después de crear el modelo

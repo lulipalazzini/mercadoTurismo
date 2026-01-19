@@ -48,7 +48,12 @@ function DashboardContent() {
   const [activeSection, setActiveSection] = useState("reservas");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
-  const { showAdminModal, handleAdminVerified, closeAdminModal, requestAdminAccess } = useAdminAuth();
+  const {
+    showAdminModal,
+    handleAdminVerified,
+    closeAdminModal,
+    requestAdminAccess,
+  } = useAdminAuth();
 
   // Obtener información del usuario del localStorage
   const user = JSON.parse(localStorage.getItem("currentUser")) || {

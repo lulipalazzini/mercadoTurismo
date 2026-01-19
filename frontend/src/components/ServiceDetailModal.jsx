@@ -1,6 +1,20 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { FaTimes, FaWhatsapp, FaStar, FaMapMarkerAlt, FaCalendarAlt, FaUsers, FaClock, FaPlane, FaCar, FaShip, FaShieldAlt, FaHotel, FaRoute } from "react-icons/fa";
+import {
+  FaTimes,
+  FaWhatsapp,
+  FaStar,
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+  FaUsers,
+  FaClock,
+  FaPlane,
+  FaCar,
+  FaShip,
+  FaShieldAlt,
+  FaHotel,
+  FaRoute,
+} from "react-icons/fa";
 import { abrirWhatsApp } from "../utils/whatsapp";
 import "../styles/serviceDetailModal.css";
 
@@ -46,7 +60,7 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
   const prevImage = () => {
     if (item.imagenes && item.imagenes.length > 0) {
       setCurrentImageIndex((prev) =>
-        prev === 0 ? item.imagenes.length - 1 : prev - 1
+        prev === 0 ? item.imagenes.length - 1 : prev - 1,
       );
     }
   };
@@ -76,25 +90,28 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
 
   const renderServices = (services) => {
     if (!services) return null;
-    
+
     // Si es un array, convertir a lista con viñetas
     if (Array.isArray(services)) {
       return (
         <ul className="services-list">
           {services.map((service, idx) => (
-            <li key={idx}>{service.replace(/_/g, ' ')}</li>
+            <li key={idx}>{service.replace(/_/g, " ")}</li>
           ))}
         </ul>
       );
     }
-    
+
     // Si es string, mostrar como está
     return <p className="section-text">{services}</p>;
   };
 
   const modalContent = (
     <div className="service-detail-overlay" onClick={onClose}>
-      <div className="service-detail-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="service-detail-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button className="modal-close-btn" onClick={onClose}>
           ×
         </button>
@@ -148,8 +165,12 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
             <div className="header-icon">{getIcon()}</div>
             <div className="header-text">
               <h2 className="modal-title">{item.nombre || item.modelo}</h2>
-              {item.tipo && <span className="service-type-badge">{item.tipo}</span>}
-              {item.marca && <span className="service-type-badge">{item.marca}</span>}
+              {item.tipo && (
+                <span className="service-type-badge">{item.tipo}</span>
+              )}
+              {item.marca && (
+                <span className="service-type-badge">{item.marca}</span>
+              )}
             </div>
           </div>
 
@@ -162,8 +183,14 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
             {tipo === "alojamiento" && (
               <>
                 {renderField("Ubicación", item.ubicacion, <FaMapMarkerAlt />)}
-                {renderField("Habitaciones disponibles", item.habitacionesDisponibles)}
-                {renderField("Precio por noche", formatCurrency(item.precioNoche))}
+                {renderField(
+                  "Habitaciones disponibles",
+                  item.habitacionesDisponibles,
+                )}
+                {renderField(
+                  "Precio por noche",
+                  formatCurrency(item.precioNoche),
+                )}
               </>
             )}
 
@@ -172,7 +199,11 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
               <>
                 {renderField("Destino", item.destino, <FaMapMarkerAlt />)}
                 {renderField("Duración", `${item.duracion} días`)}
-                {renderField("Salida", new Date(item.fechaSalida).toLocaleDateString(), <FaCalendarAlt />)}
+                {renderField(
+                  "Salida",
+                  new Date(item.fechaSalida).toLocaleDateString(),
+                  <FaCalendarAlt />,
+                )}
                 {renderField("Precio", formatCurrency(item.precio))}
               </>
             )}
@@ -182,7 +213,11 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
               <>
                 {renderField("Modelo", item.modelo, <FaCar />)}
                 {renderField("Año", item.anio)}
-                {renderField("Capacidad", `${item.capacidad} personas`, <FaUsers />)}
+                {renderField(
+                  "Capacidad",
+                  `${item.capacidad} personas`,
+                  <FaUsers />,
+                )}
                 {renderField("Ubicación", item.ubicacion, <FaMapMarkerAlt />)}
                 {renderField("Precio por día", formatCurrency(item.precioDia))}
               </>
@@ -194,7 +229,11 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
                 {renderField("Origen", item.origen, <FaPlane />)}
                 {renderField("Destino", item.destino, <FaPlane />)}
                 {renderField("Aerolínea", item.aerolinea)}
-                {renderField("Fecha", new Date(item.fecha).toLocaleDateString(), <FaCalendarAlt />)}
+                {renderField(
+                  "Fecha",
+                  new Date(item.fecha).toLocaleDateString(),
+                  <FaCalendarAlt />,
+                )}
                 {renderField("Asientos disponibles", item.asientosDisponibles)}
                 {renderField("Precio", formatCurrency(item.precio))}
               </>
@@ -206,7 +245,11 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
                 {renderField("Origen", item.origen, <FaMapMarkerAlt />)}
                 {renderField("Destino", item.destino, <FaMapMarkerAlt />)}
                 {renderField("Tipo de vehículo", item.tipoVehiculo, <FaCar />)}
-                {renderField("Capacidad", `${item.capacidad} personas`, <FaUsers />)}
+                {renderField(
+                  "Capacidad",
+                  `${item.capacidad} personas`,
+                  <FaUsers />,
+                )}
                 {renderField("Precio", formatCurrency(item.precio))}
               </>
             )}
@@ -216,7 +259,11 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
               <>
                 {renderField("Destinos", item.destinos, <FaRoute />)}
                 {renderField("Duración", `${item.duracion} días`, <FaClock />)}
-                {renderField("Salida", new Date(item.fechaSalida).toLocaleDateString(), <FaCalendarAlt />)}
+                {renderField(
+                  "Salida",
+                  new Date(item.fechaSalida).toLocaleDateString(),
+                  <FaCalendarAlt />,
+                )}
                 {renderField("Precio", formatCurrency(item.precio))}
               </>
             )}
@@ -235,8 +282,16 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
               <>
                 {renderField("Destino", item.destino, <FaMapMarkerAlt />)}
                 {renderField("Duración", `${item.duracion} días`, <FaClock />)}
-                {renderField("Salida", new Date(item.fechaSalida).toLocaleDateString(), <FaCalendarAlt />)}
-                {renderField("Cupos disponibles", item.cuposDisponibles, <FaUsers />)}
+                {renderField(
+                  "Salida",
+                  new Date(item.fechaSalida).toLocaleDateString(),
+                  <FaCalendarAlt />,
+                )}
+                {renderField(
+                  "Cupos disponibles",
+                  item.cuposDisponibles,
+                  <FaUsers />,
+                )}
                 {renderField("Precio", formatCurrency(item.precio))}
               </>
             )}
@@ -246,8 +301,16 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
               <>
                 {renderField("Naviera", item.naviera, <FaShip />)}
                 {renderField("Itinerario", item.itinerario, <FaRoute />)}
-                {renderField("Duración", `${item.duracion} noches`, <FaClock />)}
-                {renderField("Salida", new Date(item.fechaSalida).toLocaleDateString(), <FaCalendarAlt />)}
+                {renderField(
+                  "Duración",
+                  `${item.duracion} noches`,
+                  <FaClock />,
+                )}
+                {renderField(
+                  "Salida",
+                  new Date(item.fechaSalida).toLocaleDateString(),
+                  <FaCalendarAlt />,
+                )}
                 {renderField("Precio", formatCurrency(item.precio))}
               </>
             )}
@@ -304,8 +367,5 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
     </div>
   );
 
-  return ReactDOM.createPortal(
-    modalContent,
-    document.body
-  );
+  return ReactDOM.createPortal(modalContent, document.body);
 }

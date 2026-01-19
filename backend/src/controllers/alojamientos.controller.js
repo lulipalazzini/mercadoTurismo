@@ -58,12 +58,10 @@ export const updateAlojamiento = async (req, res) => {
     await alojamiento.update(req.body);
     res.json({ message: "Alojamiento actualizado exitosamente", alojamiento });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error al actualizar alojamiento",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Error al actualizar alojamiento",
+      error: error.message,
+    });
   }
 };
 

@@ -31,7 +31,7 @@ export default function TransferCard({ item }) {
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp('transfer', item);
+    abrirWhatsApp("transfer", item);
   };
 
   return (
@@ -93,8 +93,8 @@ export default function TransferCard({ item }) {
         <div className="precio-info">
           <span className="precio">${precio}</span>
         </div>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           onClick={handleReservar}
           disabled={!disponible}
         >

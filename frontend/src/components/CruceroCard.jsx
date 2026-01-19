@@ -44,7 +44,7 @@ export default function CruceroCard({ item }) {
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp('crucero', item);
+    abrirWhatsApp("crucero", item);
   };
 
   return (
@@ -138,8 +138,8 @@ export default function CruceroCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precioDesde}</span>
         </div>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           onClick={handleReservar}
           disabled={cabinasDisponibles === 0}
         >

@@ -24,7 +24,7 @@ const Auto = sequelize.define(
         "sedan",
         "suv",
         "lujo",
-        "van"
+        "van",
       ),
       allowNull: false,
       defaultValue: "economico",
@@ -80,8 +80,8 @@ const Auto = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Users',
-        key: 'id'
+        model: "Users",
+        key: "id",
       },
       comment: "ID del vendedor que publicó este auto",
     },
@@ -93,7 +93,7 @@ const Auto = sequelize.define(
   {
     tableName: "autos",
     timestamps: true,
-  }
+  },
 );
 
 import User from "./User.model.js";

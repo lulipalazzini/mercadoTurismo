@@ -427,7 +427,7 @@ export default function Ajustes() {
                         const updatedUser = { ...user, fotoPerfil: null };
                         localStorage.setItem(
                           "currentUser",
-                          JSON.stringify(updatedUser)
+                          JSON.stringify(updatedUser),
                         );
                         setUser(updatedUser);
                         setPhotoPreview(null);

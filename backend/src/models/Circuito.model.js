@@ -88,8 +88,8 @@ const Circuito = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Users',
-        key: 'id'
+        model: "Users",
+        key: "id",
       },
       comment: "ID del vendedor que publicó este circuito",
     },
@@ -101,7 +101,7 @@ const Circuito = sequelize.define(
   {
     tableName: "circuitos",
     timestamps: true,
-  }
+  },
 );
 
 import User from "./User.model.js";

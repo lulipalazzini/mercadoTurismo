@@ -7,7 +7,7 @@ import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function AlojamientoCard({ alojamiento }) {
   const [showModal, setShowModal] = useState(false);
-  
+
   const {
     id,
     nombre,
@@ -45,95 +45,97 @@ export default function AlojamientoCard({ alojamiento }) {
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp('alojamiento', alojamiento);
+    abrirWhatsApp("alojamiento", alojamiento);
   };
 
   return (
     <>
       <div className="alojamiento-card" onClick={handleVerDetalles}>
-      <div className="card-image">
-        {imagenes && imagenes.length > 0 ? (
-          <img src={imagenes[0]} alt={nombre} />
-        ) : (
-          <div className="placeholder-image">Sin imagen</div>
-        )}
-        <span className="tipo-badge">{tipo}</span>
-      </div>
-
-      <div className="card-content">
-        <h3 className="card-title">{nombre}</h3>
-
-        {isAdmin && vendedor && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              padding: "0.5rem",
-              backgroundColor: "#f7fafc",
-              borderRadius: "0.375rem",
-              marginBottom: "0.75rem",
-              fontSize: "0.875rem",
-            }}
-          >
-            <FaUser style={{ color: "#667eea" }} />
-            <span style={{ color: "#4a5568", fontWeight: "500" }}>
-              {vendedor.razonSocial || vendedor.nombre}
-            </span>
-          </div>
-        )}
-
-        {estrellas > 0 && renderEstrellas()}
-
-        <div className="ubicacion-info">
-          <span className="location-icon">
-            <FaMapMarkerAlt />
-          </span>
-          <span className="ubicacion">{ubicacion}</span>
+        <div className="card-image">
+          {imagenes && imagenes.length > 0 ? (
+            <img src={imagenes[0]} alt={nombre} />
+          ) : (
+            <div className="placeholder-image">Sin imagen</div>
+          )}
+          <span className="tipo-badge">{tipo}</span>
         </div>
 
-        {descripcion && (
-          <p className="card-descripcion">
-            {descripcion.length > 120
-              ? `${descripcion.substring(0, 120)}...`
-              : descripcion}
-          </p>
-        )}
+        <div className="card-content">
+          <h3 className="card-title">{nombre}</h3>
 
-        {servicios && servicios.length > 0 && (
-          <div className="card-servicios">
-            {servicios.slice(0, 3).map((servicio, index) => (
-              <span key={index} className="servicio-item">
-                {servicio}
+          {isAdmin && vendedor && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.5rem",
+                backgroundColor: "#f7fafc",
+                borderRadius: "0.375rem",
+                marginBottom: "0.75rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              <FaUser style={{ color: "#667eea" }} />
+              <span style={{ color: "#4a5568", fontWeight: "500" }}>
+                {vendedor.razonSocial || vendedor.nombre}
               </span>
-            ))}
-            {servicios.length > 3 && (
-              <span className="servicio-item more">
-                +{servicios.length - 3}
-              </span>
-            )}
-          </div>
-        )}
-
-        <div className="card-footer">
-          <div className="precio-info">
-            <span className="precio-label">Desde</span>
-            <div>
-              <span className="precio">${precioNoche?.toLocaleString('es-AR')}</span>
             </div>
-            <span className="precio-unit">por noche</span>
+          )}
+
+          {estrellas > 0 && renderEstrellas()}
+
+          <div className="ubicacion-info">
+            <span className="location-icon">
+              <FaMapMarkerAlt />
+            </span>
+            <span className="ubicacion">{ubicacion}</span>
           </div>
-          <button 
-            className="btn-primary" 
-            onClick={handleReservar}
-            disabled={habitacionesDisponibles === 0}
-          >
-            {habitacionesDisponibles > 0 ? "Reservar" : "Sin habitaciones"}
-          </button>
+
+          {descripcion && (
+            <p className="card-descripcion">
+              {descripcion.length > 120
+                ? `${descripcion.substring(0, 120)}...`
+                : descripcion}
+            </p>
+          )}
+
+          {servicios && servicios.length > 0 && (
+            <div className="card-servicios">
+              {servicios.slice(0, 3).map((servicio, index) => (
+                <span key={index} className="servicio-item">
+                  {servicio}
+                </span>
+              ))}
+              {servicios.length > 3 && (
+                <span className="servicio-item more">
+                  +{servicios.length - 3}
+                </span>
+              )}
+            </div>
+          )}
+
+          <div className="card-footer">
+            <div className="precio-info">
+              <span className="precio-label">Desde</span>
+              <div>
+                <span className="precio">
+                  ${precioNoche?.toLocaleString("es-AR")}
+                </span>
+              </div>
+              <span className="precio-unit">por noche</span>
+            </div>
+            <button
+              className="btn-primary"
+              onClick={handleReservar}
+              disabled={habitacionesDisponibles === 0}
+            >
+              {habitacionesDisponibles > 0 ? "Reservar" : "Sin habitaciones"}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-      
+
       {showModal && (
         <ServiceDetailModal
           item={alojamiento}

@@ -23,7 +23,7 @@ const Alojamiento = sequelize.define(
         "apartamento",
         "resort",
         "cabaña",
-        "otro"
+        "otro",
       ),
       allowNull: false,
       defaultValue: "hotel",
@@ -72,8 +72,8 @@ const Alojamiento = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Users',
-        key: 'id'
+        model: "Users",
+        key: "id",
       },
       comment: "ID del vendedor que publicó este alojamiento",
     },
@@ -85,7 +85,7 @@ const Alojamiento = sequelize.define(
   {
     tableName: "alojamientos",
     timestamps: true,
-  }
+  },
 );
 
 // Asociaciones

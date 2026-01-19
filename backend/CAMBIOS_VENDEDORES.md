@@ -15,6 +15,7 @@ razonSocial: {
 ```
 
 **Usuarios actualizados en seeder:**
+
 - Admin: "Mercado Turismo S.A."
 - Agencia: "Viajes Premier S.A."
 - Operador Independiente: "María López - Operador Turístico"
@@ -26,6 +27,7 @@ razonSocial: {
 Se agregó el campo `vendedorId` a **todos** los modelos de servicios/productos:
 
 #### Modelos actualizados:
+
 - ✅ `Alojamiento` - Hoteles, hostels, apartamentos, etc.
 - ✅ `Pasaje` - Vuelos y transportes terrestres
 - ✅ `Auto` - Alquiler de vehículos
@@ -38,6 +40,7 @@ Se agregó el campo `vendedorId` a **todos** los modelos de servicios/productos:
 - ✅ `SalidaGrupal` - Salidas grupales
 
 #### Estructura del campo:
+
 ```javascript
 vendedorId: {
   type: DataTypes.INTEGER,
@@ -55,12 +58,14 @@ vendedorId: {
 ### 3. **Seeders Actualizados**
 
 #### Usuarios:
+
 - **ID 1**: Admin (Mercado Turismo S.A.)
 - **ID 2**: Agencia (Viajes Premier S.A.)
 - **ID 3**: Operador Agencia (Juan García)
 - **ID 4**: Operador Independiente (María López - Operador Turístico)
 
 #### Servicios de ejemplo con vendedorId:
+
 - Hotel Sheraton → vendedorId: 2 (Agencia)
 - Vuelo AR1680 (BUE-BRC) → vendedorId: 2 (Agencia)
 - Vuelo LA4120 (BUE-USH) → vendedorId: 4 (Operador Independiente)
@@ -75,11 +80,13 @@ vendedorId: {
 ```javascript
 // Ejemplo: Obtener alojamientos con datos del vendedor
 const alojamientos = await Alojamiento.findAll({
-  include: [{
-    model: User,
-    as: 'vendedor',
-    attributes: ['id', 'nombre', 'email', 'razonSocial', 'role']
-  }]
+  include: [
+    {
+      model: User,
+      as: "vendedor",
+      attributes: ["id", "nombre", "email", "razonSocial", "role"],
+    },
+  ],
 });
 ```
 
@@ -88,7 +95,7 @@ const alojamientos = await Alojamiento.findAll({
 ```javascript
 // Ejemplo: Obtener todos los servicios de un vendedor específico
 const serviciosVendedor = await Alojamiento.findAll({
-  where: { vendedorId: 2 }
+  where: { vendedorId: 2 },
 });
 ```
 

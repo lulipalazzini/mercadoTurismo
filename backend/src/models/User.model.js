@@ -45,7 +45,7 @@ const User = sequelize.define(
         "admin",
         "agencia",
         "operador_agencia",
-        "operador_independiente"
+        "operador_independiente",
       ),
       defaultValue: "operador_independiente",
       allowNull: false,
@@ -75,7 +75,8 @@ const User = sequelize.define(
     passwordAdmin: {
       type: DataTypes.STRING,
       allowNull: true,
-      comment: "Contraseña adicional para acceder a funciones de admin en el dashboard",
+      comment:
+        "Contraseña adicional para acceder a funciones de admin en el dashboard",
     },
   },
   {
@@ -102,7 +103,7 @@ const User = sequelize.define(
         }
       },
     },
-  }
+  },
 );
 
 // Método para comparar passwords

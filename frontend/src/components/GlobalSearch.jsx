@@ -53,7 +53,7 @@ export default function GlobalSearch() {
         fetch(endpoint.url)
           .then((res) => res.json())
           .then((data) => ({ key: endpoint.key, data }))
-          .catch(() => ({ key: endpoint.key, data: [] }))
+          .catch(() => ({ key: endpoint.key, data: [] })),
       );
 
       const responses = await Promise.all(promises);
@@ -111,70 +111,70 @@ export default function GlobalSearch() {
           searchInText(item.ubicacion, searchTerm) ||
           searchInText(item.descripcion, searchTerm) ||
           searchInText(item.ciudad, searchTerm) ||
-          searchInText(item.pais, searchTerm)
+          searchInText(item.pais, searchTerm),
       ),
       paquetes: allData.paquetes.filter(
         (item) =>
           searchInText(item.nombre, searchTerm) ||
           searchInText(item.destino, searchTerm) ||
           searchInText(item.descripcion, searchTerm) ||
-          searchInText(item.incluye, searchTerm)
+          searchInText(item.incluye, searchTerm),
       ),
       autos: allData.autos.filter(
         (item) =>
           searchInText(item.modelo, searchTerm) ||
           searchInText(item.marca, searchTerm) ||
           searchInText(item.ubicacion, searchTerm) ||
-          searchInText(item.descripcion, searchTerm)
+          searchInText(item.descripcion, searchTerm),
       ),
       pasajes: allData.pasajes.filter(
         (item) =>
           searchInText(item.origen, searchTerm) ||
           searchInText(item.destino, searchTerm) ||
           searchInText(item.aerolinea, searchTerm) ||
-          searchInText(item.descripcion, searchTerm)
+          searchInText(item.descripcion, searchTerm),
       ),
       transfers: allData.transfers.filter(
         (item) =>
           searchInText(item.origen, searchTerm) ||
           searchInText(item.destino, searchTerm) ||
           searchInText(item.tipoVehiculo, searchTerm) ||
-          searchInText(item.descripcion, searchTerm)
+          searchInText(item.descripcion, searchTerm),
       ),
       circuitos: allData.circuitos.filter(
         (item) =>
           searchInText(item.nombre, searchTerm) ||
           searchInText(item.destinos, searchTerm) ||
           searchInText(item.descripcion, searchTerm) ||
-          searchInText(item.incluye, searchTerm)
+          searchInText(item.incluye, searchTerm),
       ),
       excursiones: allData.excursiones.filter(
         (item) =>
           searchInText(item.nombre, searchTerm) ||
           searchInText(item.ubicacion, searchTerm) ||
           searchInText(item.descripcion, searchTerm) ||
-          searchInText(item.incluye, searchTerm)
+          searchInText(item.incluye, searchTerm),
       ),
       salidasGrupales: allData.salidasGrupales.filter(
         (item) =>
           searchInText(item.nombre, searchTerm) ||
           searchInText(item.destino, searchTerm) ||
           searchInText(item.descripcion, searchTerm) ||
-          searchInText(item.incluye, searchTerm)
+          searchInText(item.incluye, searchTerm),
       ),
       cruceros: allData.cruceros.filter(
         (item) =>
           searchInText(item.nombre, searchTerm) ||
           searchInText(item.naviera, searchTerm) ||
           searchInText(item.itinerario, searchTerm) ||
-          searchInText(item.descripcion, searchTerm)
+          searchInText(item.descripcion, searchTerm),
       ),
       seguros: allData.seguros.filter(
         (item) =>
           searchInText(item.nombre, searchTerm) ||
           searchInText(item.cobertura, searchTerm) ||
           searchInText(item.descripcion, searchTerm) ||
-          searchInText(item.incluye, searchTerm)
+          searchInText(item.incluye, searchTerm),
       ),
     };
 
@@ -193,10 +193,7 @@ export default function GlobalSearch() {
   }, [searchTerm, allData, performSearch]);
 
   const getTotalResults = () => {
-    return Object.values(results).reduce(
-      (total, arr) => total + arr.length,
-      0
-    );
+    return Object.values(results).reduce((total, arr) => total + arr.length, 0);
   };
 
   const handleClose = () => {

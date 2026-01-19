@@ -35,20 +35,21 @@ El número debe estar en formato internacional **sin espacios, guiones ni signos
 - **❌ Incorrecto**: `(54) 911-123-4567`
 
 ### Estructura del Formato:
+
 ```
 [Código País][Código Área sin 0][Número]
 ```
 
 **Ejemplos por país:**
 
-| País | Código | Ejemplo Original | Formato Correcto |
-|------|--------|-----------------|------------------|
-| Argentina | 54 | +54 9 11 1234-5678 | `5491112345678` |
-| España | 34 | +34 612 345 678 | `34612345678` |
-| México | 52 | +52 55 1234 5678 | `525512345678` |
-| Colombia | 57 | +57 300 123 4567 | `573001234567` |
-| Chile | 56 | +56 9 1234 5678 | `56912345678` |
-| Estados Unidos | 1 | +1 (555) 123-4567 | `15551234567` |
+| País           | Código | Ejemplo Original   | Formato Correcto |
+| -------------- | ------ | ------------------ | ---------------- |
+| Argentina      | 54     | +54 9 11 1234-5678 | `5491112345678`  |
+| España         | 34     | +34 612 345 678    | `34612345678`    |
+| México         | 52     | +52 55 1234 5678   | `525512345678`   |
+| Colombia       | 57     | +57 300 123 4567   | `573001234567`   |
+| Chile          | 56     | +56 9 1234 5678    | `56912345678`    |
+| Estados Unidos | 1      | +1 (555) 123-4567  | `15551234567`    |
 
 ## 🎯 Cómo Funciona
 
@@ -62,6 +63,7 @@ El número debe estar en formato internacional **sin espacios, guiones ni signos
 Cada tipo de servicio genera un mensaje personalizado con información relevante:
 
 ### Ejemplo - Alojamiento:
+
 ```
 Hola! Me interesa reservar:
 
@@ -75,6 +77,7 @@ Hola! Me interesa reservar:
 ```
 
 ### Ejemplo - Vuelo:
+
 ```
 Hola! Me interesa reservar:
 

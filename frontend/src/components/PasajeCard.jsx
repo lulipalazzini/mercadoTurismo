@@ -41,7 +41,7 @@ export default function PasajeCard({ item }) {
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp('pasaje', item);
+    abrirWhatsApp("pasaje", item);
   };
 
   return (
@@ -107,8 +107,8 @@ export default function PasajeCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           onClick={handleReservar}
           disabled={asientosDisponibles === 0}
         >

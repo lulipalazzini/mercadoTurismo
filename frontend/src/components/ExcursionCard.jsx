@@ -31,7 +31,7 @@ export default function ExcursionCard({ item }) {
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp('excursion', item);
+    abrirWhatsApp("excursion", item);
   };
 
   return (
@@ -106,8 +106,8 @@ export default function ExcursionCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           onClick={handleReservar}
           disabled={cupoDisponible === 0}
         >

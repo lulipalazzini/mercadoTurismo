@@ -14,7 +14,7 @@ const Transfer = sequelize.define(
         "aeropuerto-hotel",
         "hotel-aeropuerto",
         "interhotel",
-        "punto-a-punto"
+        "punto-a-punto",
       ),
       allowNull: false,
       defaultValue: "aeropuerto-hotel",
@@ -66,8 +66,8 @@ const Transfer = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Users',
-        key: 'id'
+        model: "Users",
+        key: "id",
       },
       comment: "ID del vendedor que publicó este transfer",
     },
@@ -79,7 +79,7 @@ const Transfer = sequelize.define(
   {
     tableName: "transfers",
     timestamps: true,
-  }
+  },
 );
 
 import User from "./User.model.js";

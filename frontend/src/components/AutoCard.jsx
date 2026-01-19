@@ -34,7 +34,7 @@ export default function AutoCard({ item }) {
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp('auto', item);
+    abrirWhatsApp("auto", item);
   };
 
   return (
@@ -112,8 +112,8 @@ export default function AutoCard({ item }) {
           <span className="precio">${precioDia}</span>
           <span className="precio-unit">/ día</span>
         </div>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           onClick={handleReservar}
           disabled={!disponible}
         >
