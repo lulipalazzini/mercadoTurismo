@@ -70,12 +70,12 @@ npm start
 
 ## 🔐 Valores Críticos a Cambiar
 
-| Archivo | Clave | Valor Actual | Cambiar a |
-|---------|-------|-------------|-----------|
-| `.env.production` | `VITE_API_URL` | URL dinámica | `https://www4.baehost.com/api` |
-| `backend/.env` | `JWT_SECRET` | Ejemplo genérico | **Valor único y fuerte** |
-| `backend/.env` | `ALLOWED_ORIGINS` | localhost | `https://www4.baehost.com` |
-| `backend/.env` | `NODE_ENV` | development | `production` |
+| Archivo           | Clave             | Valor Actual     | Cambiar a                      |
+| ----------------- | ----------------- | ---------------- | ------------------------------ |
+| `.env.production` | `VITE_API_URL`    | URL dinámica     | `https://www4.baehost.com/api` |
+| `backend/.env`    | `JWT_SECRET`      | Ejemplo genérico | **Valor único y fuerte**       |
+| `backend/.env`    | `ALLOWED_ORIGINS` | localhost        | `https://www4.baehost.com`     |
+| `backend/.env`    | `NODE_ENV`        | development      | `production`                   |
 
 ## ✨ Características Implementadas
 

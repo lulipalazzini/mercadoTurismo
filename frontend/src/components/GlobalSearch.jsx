@@ -32,7 +32,8 @@ export default function GlobalSearch() {
 
   const fetchAllData = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+      const API_URL =
+        import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       // Solo servicios minoristas (sin Cupos que es exclusivo de mayoristas)
       const endpoints = [
         { key: "alojamientos", url: `${API_URL}/alojamientos` },

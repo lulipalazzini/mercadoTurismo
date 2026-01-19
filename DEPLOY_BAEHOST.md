@@ -1,6 +1,7 @@
 # Guía de Deploy a BaeHost - Mercado Turismo
 
 ## Requisitos Previos
+
 - Acceso a BaeHost
 - Node.js 18+ disponible en BaeHost (verificar con soporte)
 - Dominio configurado: `https://www4.baehost.com/`
@@ -10,12 +11,15 @@
 ## 🚀 PASO 1: Preparar el Frontend
 
 ### 1.1 Crear archivo `.env.production`
+
 Crea en `frontend/.env.production`:
+
 ```env
 VITE_API_URL=https://www4.baehost.com/api
 ```
 
 ### 1.2 Compilar el Frontend
+
 ```bash
 cd frontend
 npm install
@@ -25,6 +29,7 @@ npm run build
 Esto genera la carpeta `frontend/dist/` con tu sitio estático.
 
 ### 1.3 Subir Frontend a BaeHost
+
 1. Via FTP/SFTP, conecta a tu hosting BaeHost
 2. Navega a la carpeta raíz de tu dominio (generalmente `public_html/`)
 3. Sube TODO el contenido de `frontend/dist/` a esa carpeta
@@ -35,7 +40,9 @@ Esto genera la carpeta `frontend/dist/` con tu sitio estático.
 ## 🚀 PASO 2: Preparar el Backend (Si BaeHost soporta Node.js)
 
 ### 2.1 Crear archivo `.env`
+
 Crea en `backend/.env`:
+
 ```env
 PORT=3001
 JWT_SECRET=tu_secreto_super_seguro_aqui_123456
@@ -46,12 +53,14 @@ RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
 ```
 
-**IMPORTANTE:** 
+**IMPORTANTE:**
+
 - Cambia `JWT_SECRET` a algo seguro y único
 - El puerto puede variar según BaeHost (verifica con soporte)
 - Database SQLite se creará automáticamente
 
 ### 2.2 Subir Backend a BaeHost
+
 1. Crea una carpeta `api/` o similar en tu servidor BaeHost
 2. Sube TODO el contenido de `backend/` a esa carpeta
 3. Instala dependencias en el servidor:
@@ -61,13 +70,16 @@ RATE_LIMIT_MAX_REQUESTS=100
    ```
 
 ### 2.3 Iniciar el Backend
+
 Opción A: Si BaeHost usa PM2 (recomendado):
+
 ```bash
 pm2 start src/index.js --name "mercado-turismo"
 pm2 save
 ```
 
 Opción B: Si BaeHost tiene cPanel con Node.js:
+
 - Ve a cPanel → Node.js
 - Crea nueva aplicación con:
   - Nodo: `src/index.js`
@@ -81,6 +93,7 @@ Opción B: Si BaeHost tiene cPanel con Node.js:
 Si tu backend corre en puerto 3001, necesitas un proxy en Apache:
 
 **En `backend/public/.htaccess` (si existe):**
+
 ```apache
 <IfModule mod_proxy.c>
   ProxyRequests Off
@@ -95,21 +108,27 @@ O configura en cPanel → Apache Modules para que proxy esté habilitado.
 ## 📝 PASO 4: Verificación Final
 
 ### Frontend:
+
 ```bash
 curl https://www4.baehost.com/
 ```
+
 Deberías ver tu aplicación React.
 
 ### Backend:
+
 ```bash
 curl https://www4.baehost.com/api/
 ```
+
 O (si está en subdirectorio):
+
 ```bash
 curl http://127.0.0.1:3001/
 ```
 
 ### Login/Auth:
+
 - Abre https://www4.baehost.com/login
 - Prueba registrarte
 - Verifica que se conecte sin errores de CORS
@@ -119,18 +138,22 @@ curl http://127.0.0.1:3001/
 ## ⚠️ Problemas Comunes
 
 ### 1. **CORS Error**
+
 - Solución: Verifica `ALLOWED_ORIGINS` en `.env` del backend
 - Debe incluir: `https://www4.baehost.com`
 
 ### 2. **404 en rutas del Frontend**
+
 - Solución: Asegúrate que `.htaccess` esté en `public_html/`
 - Debe redirigir todo a `index.html`
 
 ### 3. **Database Error**
+
 - Solución: Verifica permisos de carpeta `backend/`
 - SQLite necesita permisos de escritura (755 o 775)
 
 ### 4. **API No accesible**
+
 - Solución: Contacta a BaeHost para verificar si Node.js está soportado
 - Alternativa: Usa servicio de API externo (Railway, Render, etc.)
 
@@ -160,6 +183,7 @@ curl http://127.0.0.1:3001/
 ## 📦 Alternativa: Backend en Servicio Externo
 
 Si BaeHost NO soporta Node.js, deploya el backend en:
+
 - **Railway** (gratuito y fácil)
 - **Render** (buena relación precio/performance)
 - **Heroku** (clásico pero de pago)
