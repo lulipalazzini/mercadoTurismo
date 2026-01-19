@@ -62,6 +62,21 @@ const User = sequelize.define(
     direccion: {
       type: DataTypes.STRING,
     },
+    razonSocial: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      comment: "Razón social del vendedor (para operadores y agencias)",
+    },
+    fotoPerfil: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      comment: "URL o base64 de la foto de perfil del usuario",
+    },
+    passwordAdmin: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      comment: "Contraseña adicional para acceder a funciones de admin en el dashboard",
+    },
   },
   {
     timestamps: true,
@@ -71,11 +86,19 @@ const User = sequelize.define(
           const salt = await bcrypt.genSalt(10);
           user.password = await bcrypt.hash(user.password, salt);
         }
+        if (user.passwordAdmin) {
+          const salt = await bcrypt.genSalt(10);
+          user.passwordAdmin = await bcrypt.hash(user.passwordAdmin, salt);
+        }
       },
       beforeUpdate: async (user) => {
         if (user.changed("password")) {
           const salt = await bcrypt.genSalt(10);
           user.password = await bcrypt.hash(user.password, salt);
+        }
+        if (user.changed("passwordAdmin")) {
+          const salt = await bcrypt.genSalt(10);
+          user.passwordAdmin = await bcrypt.hash(user.passwordAdmin, salt);
         }
       },
     },
@@ -85,6 +108,12 @@ const User = sequelize.define(
 // Método para comparar passwords
 User.prototype.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Método para comparar password de admin
+User.prototype.compareAdminPassword = async function (candidatePassword) {
+  if (!this.passwordAdmin) return false;
+  return await bcrypt.compare(candidatePassword, this.passwordAdmin);
 };
 
 export default User;

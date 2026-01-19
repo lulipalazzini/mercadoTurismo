@@ -1,10 +1,18 @@
 import SalidaGrupal from "../models/SalidaGrupal.model.js";
+import User from "../models/User.model.js";
 
 export const getSalidasGrupales = async (req, res) => {
   try {
     const salidas = await SalidaGrupal.findAll({
       where: { activo: true },
       order: [["fechaSalida", "ASC"]],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+        },
+      ],
     });
     res.json(salidas);
   } catch (error) {

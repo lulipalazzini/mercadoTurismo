@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/card.css";
-import { FaShip } from "react-icons/fa";
+import { FaShip, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
+import { abrirWhatsApp } from "../utils/whatsapp";
+import { getUser } from "../services/auth.service";
+import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function CruceroCard({ item }) {
   const {
@@ -19,7 +22,12 @@ export default function CruceroCard({ item }) {
     itinerario,
     serviciosABordo,
     imagenes,
+    vendedor,
   } = item;
+
+  const [showModal, setShowModal] = useState(false);
+  const currentUser = getUser();
+  const isAdmin = currentUser?.role === "admin";
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("es-ES", {
@@ -31,6 +39,12 @@ export default function CruceroCard({ item }) {
 
   const handleCardClick = () => {
     trackCardClick("crucero").catch(console.error);
+    setShowModal(true);
+  };
+
+  const handleReservar = (e) => {
+    e.stopPropagation();
+    abrirWhatsApp('crucero', item);
   };
 
   return (
@@ -44,6 +58,25 @@ export default function CruceroCard({ item }) {
       <div className="card-header">
         <div className="card-header-content">
           <h3 className="card-title">{nombre}</h3>
+          {isAdmin && vendedor && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.5rem",
+                backgroundColor: "#f7fafc",
+                borderRadius: "0.375rem",
+                marginBottom: "0.75rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              <FaUser style={{ color: "#667eea" }} />
+              <span style={{ color: "#4a5568", fontWeight: "500" }}>
+                {vendedor.razonSocial || vendedor.nombre}
+              </span>
+            </div>
+          )}
           <p className="empresa">
             <FaShip /> {naviera} • {barco}
           </p>
@@ -105,10 +138,22 @@ export default function CruceroCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precioDesde}</span>
         </div>
-        <button className="btn-primary" disabled={cabinasDisponibles === 0}>
-          {cabinasDisponibles > 0 ? "Ver cabinas" : "Sin cabinas"}
+        <button 
+          className="btn-primary" 
+          onClick={handleReservar}
+          disabled={cabinasDisponibles === 0}
+        >
+          {cabinasDisponibles > 0 ? "Reservar" : "Sin cabinas"}
         </button>
       </div>
+
+      {showModal && (
+        <ServiceDetailModal
+          item={item}
+          tipo="crucero"
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }

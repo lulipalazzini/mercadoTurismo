@@ -1,10 +1,18 @@
 import Auto from "../models/Auto.model.js";
+import User from "../models/User.model.js";
 
 export const getAutos = async (req, res) => {
   try {
     const autos = await Auto.findAll({
       where: { disponible: true },
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+        },
+      ],
     });
     res.json(autos);
   } catch (error) {

@@ -40,12 +40,15 @@ import Transfers from "./dashboard/Transfers";
 import MercadoCupos from "./dashboard/MercadoCupos";
 import Ajustes from "./dashboard/Ajustes";
 import Usuarios from "./dashboard/Usuarios";
+import AdminPasswordModal from "./common/AdminPasswordModal";
+import { AdminAuthProvider, useAdminAuth } from "../context/AdminAuthContext";
 import "../styles/dashboard.css";
 
-export default function Dashboard() {
+function DashboardContent() {
   const [activeSection, setActiveSection] = useState("reservas");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
+  const { showAdminModal, handleAdminVerified, closeAdminModal, requestAdminAccess } = useAdminAuth();
 
   // Obtener información del usuario del localStorage
   const user = JSON.parse(localStorage.getItem("currentUser")) || {
@@ -330,7 +333,9 @@ export default function Dashboard() {
                 className={`nav-item ${
                   activeSection === "usuarios" ? "active" : ""
                 }`}
-                onClick={() => setActiveSection("usuarios")}
+                onClick={() => {
+                  requestAdminAccess(() => setActiveSection("usuarios"));
+                }}
               >
                 <span className="nav-icon">
                   <FaUsers />
@@ -374,7 +379,20 @@ export default function Dashboard() {
           <div className="header-right">
             <div className="user-menu">
               <div className="user-avatar">
-                {getUserDisplayName().substring(0, 2).toUpperCase()}
+                {user?.fotoPerfil ? (
+                  <img
+                    src={user.fotoPerfil}
+                    alt="Foto de perfil"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : (
+                  getUserDisplayName().substring(0, 2).toUpperCase()
+                )}
               </div>
               <div className="user-info">
                 <span className="user-name">{getUserDisplayName()}</span>
@@ -386,6 +404,20 @@ export default function Dashboard() {
 
         <div className="dashboard-content">{renderContent()}</div>
       </main>
+
+      <AdminPasswordModal
+        isOpen={showAdminModal}
+        onClose={closeAdminModal}
+        onSuccess={handleAdminVerified}
+      />
     </div>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <AdminAuthProvider>
+      <DashboardContent />
+    </AdminAuthProvider>
   );
 }

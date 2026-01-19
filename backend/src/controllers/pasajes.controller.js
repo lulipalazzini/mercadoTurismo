@@ -1,10 +1,18 @@
 import Pasaje from "../models/Pasaje.model.js";
+import User from "../models/User.model.js";
 
 export const getPasajes = async (req, res) => {
   try {
     const pasajes = await Pasaje.findAll({
       where: { activo: true },
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+        },
+      ],
     });
     res.json(pasajes);
   } catch (error) {

@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/card.css";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaUser } from "react-icons/fa";
+import { abrirWhatsApp } from "../utils/whatsapp";
+import { getUser } from "../services/auth.service";
+import { trackCardClick } from "../services/clickStats.service";
+import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function TransferCard({ item }) {
   const {
@@ -13,15 +17,49 @@ export default function TransferCard({ item }) {
     duracionEstimada,
     serviciosIncluidos,
     disponible,
+    vendedor,
   } = item;
 
+  const [showModal, setShowModal] = useState(false);
+  const currentUser = getUser();
+  const isAdmin = currentUser?.role === "admin";
+
+  const handleCardClick = () => {
+    trackCardClick("transfer").catch(console.error);
+    setShowModal(true);
+  };
+
+  const handleReservar = (e) => {
+    e.stopPropagation();
+    abrirWhatsApp('transfer', item);
+  };
+
   return (
-    <div className="service-card">
+    <div className="service-card" onClick={handleCardClick}>
       <div className="card-header">
         <div className="card-header-content">
           <h3 className="card-title">
             {origen} <FaArrowRight /> {destino}
           </h3>
+          {isAdmin && vendedor && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.5rem",
+                backgroundColor: "#f7fafc",
+                borderRadius: "0.375rem",
+                marginBottom: "0.75rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              <FaUser style={{ color: "#667eea" }} />
+              <span style={{ color: "#4a5568", fontWeight: "500" }}>
+                {vendedor.razonSocial || vendedor.nombre}
+              </span>
+            </div>
+          )}
           <p className="empresa">{tipoVehiculo}</p>
         </div>
         <span className="tipo-badge">{tipo}</span>
@@ -55,10 +93,22 @@ export default function TransferCard({ item }) {
         <div className="precio-info">
           <span className="precio">${precio}</span>
         </div>
-        <button className="btn-primary" disabled={!disponible}>
+        <button 
+          className="btn-primary" 
+          onClick={handleReservar}
+          disabled={!disponible}
+        >
           {disponible ? "Reservar" : "No disponible"}
         </button>
       </div>
+
+      {showModal && (
+        <ServiceDetailModal
+          item={item}
+          tipo="transfer"
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }

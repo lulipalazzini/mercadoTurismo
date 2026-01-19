@@ -1,10 +1,18 @@
 import Alojamiento from "../models/Alojamiento.model.js";
+import User from "../models/User.model.js";
 
 export const getAlojamientos = async (req, res) => {
   try {
     const alojamientos = await Alojamiento.findAll({
       where: { activo: true },
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+        },
+      ],
     });
     res.json(alojamientos);
   } catch (error) {

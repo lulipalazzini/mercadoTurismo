@@ -1,10 +1,18 @@
 import Circuito from "../models/Circuito.model.js";
+import User from "../models/User.model.js";
 
 export const getCircuitos = async (req, res) => {
   try {
     const circuitos = await Circuito.findAll({
       where: { activo: true },
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+        },
+      ],
     });
     res.json(circuitos);
   } catch (error) {

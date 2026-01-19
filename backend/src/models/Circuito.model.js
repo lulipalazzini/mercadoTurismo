@@ -84,6 +84,15 @@ const Circuito = sequelize.define(
       type: DataTypes.JSON,
       defaultValue: [],
     },
+    vendedorId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Users',
+        key: 'id'
+      },
+      comment: "ID del vendedor que publicó este circuito",
+    },
     activo: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -94,5 +103,11 @@ const Circuito = sequelize.define(
     timestamps: true,
   }
 );
+
+import User from "./User.model.js";
+Circuito.belongsTo(User, {
+  foreignKey: "vendedorId",
+  as: "vendedor",
+});
 
 export default Circuito;

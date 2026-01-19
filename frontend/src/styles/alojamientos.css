@@ -28,8 +28,8 @@
 
 .alojamientos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
   margin-top: 30px;
 }
 
@@ -44,15 +44,15 @@
 /* Card styles */
 .alojamiento-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
-  height: 100%;
   cursor: pointer;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  min-height: 460px;
 }
 
 .alojamiento-card:hover {
@@ -64,7 +64,7 @@
 .card-image {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 220px;
   overflow: hidden;
   background: linear-gradient(135deg, #f5f7fa 0%, #e8ebf0 100%);
 }
@@ -109,7 +109,7 @@
 }
 
 .card-content {
-  padding: 14px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -117,24 +117,24 @@
 }
 
 .alojamiento-card .card-title {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #1a1a1a;
-  margin: 0;
-  line-height: 1.35;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  letter-spacing: -0.01em;
-  min-height: 2em;
+  letter-spacing: -0.02em;
+  min-height: 2.8em;
 }
 
 .estrellas {
   display: flex;
-  gap: 2px;
-  margin: 6px 0 10px 0;
+  gap: 3px;
+  margin: 0 0 12px 0;
 }
 
 .estrella {
@@ -166,22 +166,23 @@
 }
 
 .card-descripcion {
-  font-size: 0.8rem;
-  color: #777;
-  line-height: 1.5;
-  margin: 8px 0;
+  font-size: 0.875rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 12px 0;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-height: 4.8em;
 }
 
 .card-servicios {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: 10px 0 4px 0;
+  gap: 8px;
+  margin: 12px 0;
 }
 
 .servicio-item {
@@ -225,36 +226,70 @@
 
 .card-footer {
   margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid #e8e8e8;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
 .precio-info {
   display: flex;
-  align-items: baseline;
-  gap: 4px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 
 .precio-label {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: #999;
-  font-weight: 400;
-  text-transform: lowercase;
-  letter-spacing: 0;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .precio {
-  font-size: 2rem;
-  font-weight: 900;
+  font-size: 1.75rem;
+  font-weight: 800;
   color: #1a1a1a;
   letter-spacing: -0.02em;
+  line-height: 1;
 }
 
 .precio-unit {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   color: #666;
   font-weight: 400;
+  margin-top: -2px;
+}
+
+/* Botón de reservar */
+.alojamiento-card .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.alojamiento-card .btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+}
+
+.alojamiento-card .btn-primary:disabled {
+  background: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* Responsive */
@@ -273,11 +308,48 @@
     gap: 20px;
   }
 
-  .precio {
-    font-size: 1.4rem;
+  .alojamiento-card {
+    min-height: auto;
   }
 
-  .card-title {
-    font-size: 1.1rem;
+  .card-image {
+    height: 200px;
+  }
+
+  .precio {
+    font-size: 1.5rem;
+  }
+
+  .alojamiento-card .card-title {
+    font-size: 1.15rem;
+  }
+
+  .card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .precio-info {
+    align-items: center;
+    text-align: center;
+  }
+
+  .alojamiento-card .btn-primary {
+    width: 100%;
+    padding: 12px 20px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .alojamientos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .alojamientos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   }
 }

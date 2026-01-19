@@ -12,7 +12,9 @@ const alojamientosData = [
     precioNoche: 25000,
     servicios: ["wifi", "piscina", "gimnasio", "spa", "restaurant"],
     capacidad: 200,
+    habitacionesDisponibles: 35,
     disponible: true,
+    vendedorId: 2,
   },
   {
     nombre: "Hostel Milhouse",
@@ -24,7 +26,9 @@ const alojamientosData = [
     precioNoche: 3500,
     servicios: ["wifi", "cocina_compartida", "bar"],
     capacidad: 80,
+    habitacionesDisponibles: 18,
     disponible: true,
+    vendedorId: 4,
   },
   {
     nombre: "Llao Llao Hotel & Resort",
@@ -36,7 +40,9 @@ const alojamientosData = [
     precioNoche: 45000,
     servicios: ["wifi", "piscina", "gimnasio", "spa", "golf", "restaurant"],
     capacidad: 150,
+    habitacionesDisponibles: 28,
     disponible: true,
+    vendedorId: 2,
   },
   {
     nombre: "Apartamento Palermo Soho",
@@ -48,7 +54,9 @@ const alojamientosData = [
     precioNoche: 12000,
     servicios: ["wifi", "cocina", "aire_acondicionado"],
     capacidad: 4,
+    habitacionesDisponibles: 1,
     disponible: true,
+    vendedorId: 4,
   },
   {
     nombre: "Cabaña Los Arrayanes",
@@ -60,7 +68,9 @@ const alojamientosData = [
     precioNoche: 18000,
     servicios: ["wifi", "cocina", "chimenea", "parrilla"],
     capacidad: 6,
+    habitacionesDisponibles: 3,
     disponible: true,
+    vendedorId: 2,
   },
   {
     nombre: "Hotel Continental Mendoza",
@@ -72,6 +82,7 @@ const alojamientosData = [
     precioNoche: 15000,
     servicios: ["wifi", "piscina", "restaurant", "estacionamiento"],
     capacidad: 100,
+    habitacionesDisponibles: 22,
     disponible: true,
   },
   {
@@ -84,6 +95,7 @@ const alojamientosData = [
     precioNoche: 4500,
     servicios: ["wifi", "cocina_compartida", "tours"],
     capacidad: 60,
+    habitacionesDisponibles: 14,
     disponible: true,
   },
   {
@@ -96,6 +108,7 @@ const alojamientosData = [
     precioNoche: 28000,
     servicios: ["wifi", "termas", "spa", "piscina", "restaurant"],
     capacidad: 180,
+    habitacionesDisponibles: 32,
     disponible: true,
   },
   {
@@ -108,6 +121,7 @@ const alojamientosData = [
     precioNoche: 14000,
     servicios: ["wifi", "restaurant", "bar", "terraza"],
     capacidad: 75,
+    habitacionesDisponibles: 16,
     disponible: true,
   },
   {
@@ -120,6 +134,7 @@ const alojamientosData = [
     precioNoche: 22000,
     servicios: ["wifi", "cocina", "gimnasio_edificio", "seguridad"],
     capacidad: 4,
+    habitacionesDisponibles: 1,
     disponible: true,
   },
   {
@@ -132,6 +147,7 @@ const alojamientosData = [
     precioNoche: 16000,
     servicios: ["wifi", "cocina", "chimenea", "deck"],
     capacidad: 5,
+    habitacionesDisponibles: 2,
     disponible: true,
   },
   {
@@ -144,6 +160,7 @@ const alojamientosData = [
     precioNoche: 13000,
     servicios: ["wifi", "restaurant", "business_center"],
     capacidad: 90,
+    habitacionesDisponibles: 20,
     disponible: true,
   },
   {
@@ -156,6 +173,7 @@ const alojamientosData = [
     precioNoche: 2800,
     servicios: ["wifi", "cocina_compartida"],
     capacidad: 40,
+    habitacionesDisponibles: 10,
     disponible: true,
   },
   {
@@ -168,6 +186,7 @@ const alojamientosData = [
     precioNoche: 32000,
     servicios: ["wifi", "piscina", "spa", "restaurant", "playa_privada"],
     capacidad: 220,
+    habitacionesDisponibles: 40,
     disponible: true,
   },
   {
@@ -180,6 +199,7 @@ const alojamientosData = [
     precioNoche: 38000,
     servicios: ["wifi", "piscina", "spa", "restaurant", "tours"],
     capacidad: 160,
+    habitacionesDisponibles: 30,
     disponible: true,
   },
 ];

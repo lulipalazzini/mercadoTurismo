@@ -1,10 +1,18 @@
 import Seguro from "../models/Seguro.model.js";
+import User from "../models/User.model.js";
 
 export const getSeguros = async (req, res) => {
   try {
     const seguros = await Seguro.findAll({
       where: { activo: true },
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+        },
+      ],
     });
     res.json(seguros);
   } catch (error) {

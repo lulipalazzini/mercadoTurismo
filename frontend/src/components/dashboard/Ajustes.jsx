@@ -7,6 +7,8 @@ import {
   FaEdit,
   FaUserCircle,
   FaShieldAlt,
+  FaCamera,
+  FaTrash,
 } from "react-icons/fa";
 import { updateUser } from "../../services/auth.service";
 import AlertModal from "../common/AlertModal";
@@ -27,6 +29,8 @@ export default function Ajustes() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertData, setAlertData] = useState({ type: "", message: "" });
   const [loading, setLoading] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [photoFile, setPhotoFile] = useState(null);
 
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -36,6 +40,7 @@ export default function Ajustes() {
         nombre: currentUser.nombre || "",
         email: currentUser.email || "",
       });
+      setPhotoPreview(currentUser.fotoPerfil || null);
     }
   }, []);
 
@@ -53,6 +58,59 @@ export default function Ajustes() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        setAlertData({
+          type: "error",
+          message: "La imagen no puede superar los 2MB",
+        });
+        setShowAlert(true);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result);
+        setPhotoFile(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setPhotoPreview(null);
+    setPhotoFile(null);
+  };
+
+  const handlePhotoSubmit = async () => {
+    try {
+      setLoading(true);
+      await updateUser(user.id, { fotoPerfil: photoFile });
+
+      const updatedUser = { ...user, fotoPerfil: photoFile };
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+
+      setAlertData({
+        type: "success",
+        message: "Foto de perfil actualizada correctamente",
+      });
+      setShowAlert(true);
+      setPhotoFile(null);
+    } catch (error) {
+      console.error("Error al actualizar foto:", error);
+      setAlertData({
+        type: "error",
+        message: "Error al actualizar la foto de perfil",
+      });
+      setShowAlert(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -221,6 +279,214 @@ export default function Ajustes() {
             marginTop: "2rem",
           }}
         >
+          {/* Photo Profile Card */}
+          <div className="package-card" style={{ height: "fit-content" }}>
+            <div className="package-header">
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                <FaCamera style={{ color: "#667eea" }} />
+                <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: "600" }}>
+                  Foto de Perfil
+                </h3>
+              </div>
+            </div>
+
+            <div className="package-body">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "1rem",
+                }}
+              >
+                <div
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    border: "3px solid #e2e8f0",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: photoPreview
+                      ? "transparent"
+                      : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                  }}
+                >
+                  {photoPreview ? (
+                    <img
+                      src={photoPreview}
+                      alt="Foto de perfil"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : (
+                    <span
+                      style={{
+                        fontSize: "3rem",
+                        fontWeight: "600",
+                        color: "white",
+                      }}
+                    >
+                      {user?.nombre?.substring(0, 2).toUpperCase() || "?"}
+                    </span>
+                  )}
+                </div>
+
+                <div style={{ width: "100%" }}>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoChange}
+                    style={{ display: "none" }}
+                    id="photo-upload"
+                  />
+                  <label
+                    htmlFor="photo-upload"
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      padding: "0.625rem 1rem",
+                      background:
+                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "0.375rem",
+                      fontSize: "0.875rem",
+                      fontWeight: "500",
+                      cursor: "pointer",
+                      textAlign: "center",
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    <FaCamera style={{ marginRight: "0.5rem" }} />
+                    Seleccionar Foto
+                  </label>
+                </div>
+
+                {photoFile && (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "0.75rem",
+                      width: "100%",
+                    }}
+                  >
+                    <button
+                      onClick={handlePhotoSubmit}
+                      disabled={loading}
+                      style={{
+                        flex: 1,
+                        padding: "0.625rem 1rem",
+                        background:
+                          "linear-gradient(135deg, #48bb78 0%, #38a169 100%)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "0.375rem",
+                        fontSize: "0.875rem",
+                        fontWeight: "500",
+                        cursor: loading ? "not-allowed" : "pointer",
+                        opacity: loading ? 0.7 : 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.5rem",
+                        transition: "all 0.2s ease",
+                      }}
+                    >
+                      <FaSave /> {loading ? "Guardando..." : "Guardar"}
+                    </button>
+                    <button
+                      onClick={handleRemovePhoto}
+                      className="btn-secondary"
+                      style={{
+                        flex: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <FaTrash /> Cancelar
+                    </button>
+                  </div>
+                )}
+
+                {photoPreview && !photoFile && (
+                  <button
+                    onClick={async () => {
+                      try {
+                        setLoading(true);
+                        await updateUser(user.id, { fotoPerfil: null });
+                        const updatedUser = { ...user, fotoPerfil: null };
+                        localStorage.setItem(
+                          "currentUser",
+                          JSON.stringify(updatedUser)
+                        );
+                        setUser(updatedUser);
+                        setPhotoPreview(null);
+                        setAlertData({
+                          type: "success",
+                          message: "Foto de perfil eliminada",
+                        });
+                        setShowAlert(true);
+                      } catch (error) {
+                        console.error("Error:", error);
+                        setAlertData({
+                          type: "error",
+                          message: "Error al eliminar la foto",
+                        });
+                        setShowAlert(true);
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                    disabled={loading}
+                    style={{
+                      width: "100%",
+                      padding: "0.625rem 1rem",
+                      background:
+                        "linear-gradient(135deg, #f56565 0%, #c53030 100%)",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "0.375rem",
+                      fontSize: "0.875rem",
+                      fontWeight: "500",
+                      cursor: loading ? "not-allowed" : "pointer",
+                      opacity: loading ? 0.7 : 1,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "0.5rem",
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    <FaTrash /> Eliminar Foto
+                  </button>
+                )}
+
+                <p
+                  style={{
+                    fontSize: "0.75rem",
+                    color: "#718096",
+                    textAlign: "center",
+                    margin: 0,
+                  }}
+                >
+                  Tamaño máximo: 2MB
+                  <br />
+                  Formatos: JPG, PNG, GIF
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Profile Card */}
           <div className="package-card" style={{ height: "fit-content" }}>
             <div className="package-header">

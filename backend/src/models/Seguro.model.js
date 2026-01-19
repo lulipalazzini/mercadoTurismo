@@ -95,6 +95,15 @@ const Seguro = sequelize.define(
       type: DataTypes.STRING,
       comment: "Número o referencia de póliza",
     },
+    vendedorId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Users',
+        key: 'id'
+      },
+      comment: "ID del vendedor que publicó este seguro",
+    },
     activo: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -105,5 +114,11 @@ const Seguro = sequelize.define(
     timestamps: true,
   }
 );
+
+import User from "./User.model.js";
+Seguro.belongsTo(User, {
+  foreignKey: "vendedorId",
+  as: "vendedor",
+});
 
 export default Seguro;

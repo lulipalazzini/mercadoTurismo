@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/card.css";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
+import { abrirWhatsApp } from "../utils/whatsapp";
+import { getUser } from "../services/auth.service";
+import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function PaqueteCard({ item }) {
+  const [showModal, setShowModal] = useState(false);
   const {
     nombre,
     descripcion,
@@ -15,7 +19,11 @@ export default function PaqueteCard({ item }) {
     fechaFin,
     incluye,
     imagen,
+    vendedor,
   } = item;
+
+  const currentUser = getUser();
+  const isAdmin = currentUser?.role === "admin";
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("es-ES", {
@@ -28,6 +36,12 @@ export default function PaqueteCard({ item }) {
   const handleCardClick = () => {
     // Trackear click en segundo plano (no bloquea la UI)
     trackCardClick("paquete").catch(console.error);
+    setShowModal(true);
+  };
+
+  const handleReservar = (e) => {
+    e.stopPropagation();
+    abrirWhatsApp('paquete', item);
   };
 
   return (
@@ -41,6 +55,25 @@ export default function PaqueteCard({ item }) {
       <div className="card-header">
         <div className="card-header-content">
           <h3 className="card-title">{nombre}</h3>
+          {isAdmin && vendedor && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.5rem",
+                backgroundColor: "#f7fafc",
+                borderRadius: "0.375rem",
+                marginBottom: "0.75rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              <FaUser style={{ color: "#667eea" }} />
+              <span style={{ color: "#4a5568", fontWeight: "500" }}>
+                {vendedor.razonSocial || vendedor.nombre}
+              </span>
+            </div>
+          )}
           <p className="destino">
             <FaMapMarkerAlt /> {destino}
           </p>
@@ -88,10 +121,22 @@ export default function PaqueteCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button className="btn-primary" disabled={cupoDisponible === 0}>
+        <button 
+          className="btn-primary" 
+          onClick={handleReservar}
+          disabled={cupoDisponible === 0}
+        >
           {cupoDisponible > 0 ? "Reservar" : "Sin cupos"}
         </button>
       </div>
+      
+      {showModal && (
+        <ServiceDetailModal
+          item={item}
+          tipo="paquete"
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }

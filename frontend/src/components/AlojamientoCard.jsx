@@ -1,8 +1,13 @@
-import React from "react";
-import { FaMapMarkerAlt, FaStar } from "react-icons/fa";
+import React, { useState } from "react";
+import { FaMapMarkerAlt, FaStar, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
+import { abrirWhatsApp } from "../utils/whatsapp";
+import { getUser } from "../services/auth.service";
+import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function AlojamientoCard({ alojamiento }) {
+  const [showModal, setShowModal] = useState(false);
+  
   const {
     id,
     nombre,
@@ -14,7 +19,11 @@ export default function AlojamientoCard({ alojamiento }) {
     descripcion,
     servicios,
     habitacionesDisponibles,
+    vendedor,
   } = alojamiento;
+
+  const currentUser = getUser();
+  const isAdmin = currentUser?.role === "admin";
 
   const renderEstrellas = () => {
     return (
@@ -31,13 +40,17 @@ export default function AlojamientoCard({ alojamiento }) {
   const handleVerDetalles = () => {
     // Trackear click en segundo plano
     trackCardClick("alojamiento").catch(console.error);
+    setShowModal(true);
+  };
 
-    // Por ahora solo navega, después implementaremos la página de detalle
-    window.location.href = `/alojamientos/${id}`;
+  const handleReservar = (e) => {
+    e.stopPropagation();
+    abrirWhatsApp('alojamiento', alojamiento);
   };
 
   return (
-    <div className="alojamiento-card" onClick={handleVerDetalles}>
+    <>
+      <div className="alojamiento-card" onClick={handleVerDetalles}>
       <div className="card-image">
         {imagenes && imagenes.length > 0 ? (
           <img src={imagenes[0]} alt={nombre} />
@@ -47,14 +60,30 @@ export default function AlojamientoCard({ alojamiento }) {
         <span className="tipo-badge">{tipo}</span>
       </div>
 
-      <div className="card-header">
-        <div className="card-header-content">
-          <h3 className="card-title">{nombre}</h3>
-        </div>
-      </div>
-
       <div className="card-content">
-        {estrellas && renderEstrellas()}
+        <h3 className="card-title">{nombre}</h3>
+
+        {isAdmin && vendedor && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              padding: "0.5rem",
+              backgroundColor: "#f7fafc",
+              borderRadius: "0.375rem",
+              marginBottom: "0.75rem",
+              fontSize: "0.875rem",
+            }}
+          >
+            <FaUser style={{ color: "#667eea" }} />
+            <span style={{ color: "#4a5568", fontWeight: "500" }}>
+              {vendedor.razonSocial || vendedor.nombre}
+            </span>
+          </div>
+        )}
+
+        {estrellas > 0 && renderEstrellas()}
 
         <div className="ubicacion-info">
           <span className="location-icon">
@@ -65,8 +94,8 @@ export default function AlojamientoCard({ alojamiento }) {
 
         {descripcion && (
           <p className="card-descripcion">
-            {descripcion.length > 80
-              ? `${descripcion.substring(0, 80)}...`
+            {descripcion.length > 120
+              ? `${descripcion.substring(0, 120)}...`
               : descripcion}
           </p>
         )}
@@ -89,11 +118,29 @@ export default function AlojamientoCard({ alojamiento }) {
         <div className="card-footer">
           <div className="precio-info">
             <span className="precio-label">Desde</span>
-            <span className="precio">${precioNoche}</span>
-            <span className="precio-unit">/ noche</span>
+            <div>
+              <span className="precio">${precioNoche?.toLocaleString('es-AR')}</span>
+            </div>
+            <span className="precio-unit">por noche</span>
           </div>
+          <button 
+            className="btn-primary" 
+            onClick={handleReservar}
+            disabled={habitacionesDisponibles === 0}
+          >
+            {habitacionesDisponibles > 0 ? "Reservar" : "Sin habitaciones"}
+          </button>
         </div>
       </div>
     </div>
+      
+      {showModal && (
+        <ServiceDetailModal
+          item={alojamiento}
+          tipo="alojamiento"
+          onClose={() => setShowModal(false)}
+        />
+      )}
+    </>
   );
 }

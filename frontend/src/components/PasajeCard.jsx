@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/card.css";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaUser } from "react-icons/fa";
+import { trackCardClick } from "../services/clickStats.service";
+import { abrirWhatsApp } from "../utils/whatsapp";
+import { getUser } from "../services/auth.service";
+import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function PasajeCard({ item }) {
   const {
@@ -16,7 +20,12 @@ export default function PasajeCard({ item }) {
     clase,
     precio,
     asientosDisponibles,
+    vendedor,
   } = item;
+
+  const [showModal, setShowModal] = useState(false);
+  const currentUser = getUser();
+  const isAdmin = currentUser?.role === "admin";
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("es-ES", {
@@ -27,6 +36,12 @@ export default function PasajeCard({ item }) {
 
   const handleCardClick = () => {
     trackCardClick("pasaje").catch(console.error);
+    setShowModal(true);
+  };
+
+  const handleReservar = (e) => {
+    e.stopPropagation();
+    abrirWhatsApp('pasaje', item);
   };
 
   return (
@@ -36,6 +51,25 @@ export default function PasajeCard({ item }) {
           <h3 className="card-title">
             {origen} <FaArrowRight /> {destino}
           </h3>
+          {isAdmin && vendedor && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.5rem",
+                backgroundColor: "#f7fafc",
+                borderRadius: "0.375rem",
+                marginBottom: "0.75rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              <FaUser style={{ color: "#667eea" }} />
+              <span style={{ color: "#4a5568", fontWeight: "500" }}>
+                {vendedor.razonSocial || vendedor.nombre}
+              </span>
+            </div>
+          )}
           {aerolinea && (
             <p className="empresa">
               {aerolinea} {numeroVuelo && `• ${numeroVuelo}`}
@@ -73,10 +107,22 @@ export default function PasajeCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button className="btn-primary" disabled={asientosDisponibles === 0}>
+        <button 
+          className="btn-primary" 
+          onClick={handleReservar}
+          disabled={asientosDisponibles === 0}
+        >
           {asientosDisponibles > 0 ? "Reservar" : "Sin asientos"}
         </button>
       </div>
+
+      {showModal && (
+        <ServiceDetailModal
+          item={item}
+          tipo="pasaje"
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }

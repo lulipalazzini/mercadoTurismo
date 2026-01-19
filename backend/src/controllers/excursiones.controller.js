@@ -1,10 +1,18 @@
 import Excursion from "../models/Excursion.model.js";
+import User from "../models/User.model.js";
 
 export const getExcursiones = async (req, res) => {
   try {
     const excursiones = await Excursion.findAll({
       where: { activo: true },
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+        },
+      ],
     });
     res.json(excursiones);
   } catch (error) {

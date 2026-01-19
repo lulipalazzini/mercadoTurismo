@@ -1,10 +1,18 @@
 import Crucero from "../models/Crucero.model.js";
+import User from "../models/User.model.js";
 
 export const getCruceros = async (req, res) => {
   try {
     const cruceros = await Crucero.findAll({
       where: { activo: true },
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+        },
+      ],
     });
     res.json(cruceros);
   } catch (error) {

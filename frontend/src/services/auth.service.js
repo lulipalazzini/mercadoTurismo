@@ -162,3 +162,29 @@ export const updateUser = async (userId, userData) => {
     throw error;
   }
 };
+
+// Verificar contraseña de admin
+export const verifyAdminPassword = async (password) => {
+  try {
+    const token = getToken();
+    const response = await fetch(`${API_URL}/verify-admin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Error al verificar contraseña");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error en verifyAdminPassword:", error);
+    throw error;
+  }
+};

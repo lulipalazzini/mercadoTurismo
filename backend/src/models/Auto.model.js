@@ -76,6 +76,15 @@ const Auto = sequelize.define(
       type: DataTypes.JSON,
       defaultValue: [],
     },
+    vendedorId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Users',
+        key: 'id'
+      },
+      comment: "ID del vendedor que publicó este auto",
+    },
     disponible: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -86,5 +95,11 @@ const Auto = sequelize.define(
     timestamps: true,
   }
 );
+
+import User from "./User.model.js";
+Auto.belongsTo(User, {
+  foreignKey: "vendedorId",
+  as: "vendedor",
+});
 
 export default Auto;

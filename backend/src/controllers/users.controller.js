@@ -85,7 +85,8 @@ export const createUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, email, role, telefono, direccion, agenciaId } = req.body;
+    const { nombre, email, role, telefono, direccion, agenciaId, fotoPerfil } =
+      req.body;
 
     const user = await User.findByPk(id);
     if (!user) {
@@ -107,6 +108,7 @@ export const updateUser = async (req, res) => {
     if (telefono !== undefined) user.telefono = telefono;
     if (direccion !== undefined) user.direccion = direccion;
     if (agenciaId !== undefined) user.agenciaId = agenciaId;
+    if (fotoPerfil !== undefined) user.fotoPerfil = fotoPerfil;
 
     await user.save();
 

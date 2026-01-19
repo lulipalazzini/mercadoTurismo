@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../styles/hero.css";
-import videoBackground from "../assets/2169879-uhd_3840_2160_30fps.mp4";
+import videoBackground from "../assets/2169879_uhd_3840_2160_30fps_V2.mp4";
 
 export default function Hero() {
   const [searchData, setSearchData] = useState({

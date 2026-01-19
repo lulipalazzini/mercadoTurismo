@@ -75,6 +75,15 @@ const Pasaje = sequelize.define(
     descripcion: {
       type: DataTypes.TEXT,
     },
+    vendedorId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Users',
+        key: 'id'
+      },
+      comment: "ID del vendedor que publicó este pasaje",
+    },
     activo: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -85,5 +94,11 @@ const Pasaje = sequelize.define(
     timestamps: true,
   }
 );
+
+import User from "./User.model.js";
+Pasaje.belongsTo(User, {
+  foreignKey: "vendedorId",
+  as: "vendedor",
+});
 
 export default Pasaje;

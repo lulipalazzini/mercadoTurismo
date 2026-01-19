@@ -62,6 +62,15 @@ const Transfer = sequelize.define(
       type: DataTypes.JSON,
       defaultValue: [],
     },
+    vendedorId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Users',
+        key: 'id'
+      },
+      comment: "ID del vendedor que publicó este transfer",
+    },
     disponible: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -72,5 +81,11 @@ const Transfer = sequelize.define(
     timestamps: true,
   }
 );
+
+import User from "./User.model.js";
+Transfer.belongsTo(User, {
+  foreignKey: "vendedorId",
+  as: "vendedor",
+});
 
 export default Transfer;

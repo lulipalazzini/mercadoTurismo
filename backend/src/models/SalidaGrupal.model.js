@@ -100,6 +100,15 @@ const SalidaGrupal = sequelize.define(
       type: DataTypes.JSON,
       defaultValue: [],
     },
+    vendedorId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Users',
+        key: 'id'
+      },
+      comment: "ID del vendedor que publicó esta salida grupal",
+    },
     activo: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -110,5 +119,11 @@ const SalidaGrupal = sequelize.define(
     timestamps: true,
   }
 );
+
+import User from "./User.model.js";
+SalidaGrupal.belongsTo(User, {
+  foreignKey: "vendedorId",
+  as: "vendedor",
+});
 
 export default SalidaGrupal;

@@ -1,10 +1,18 @@
 import Transfer from "../models/Transfer.model.js";
+import User from "../models/User.model.js";
 
 export const getTransfers = async (req, res) => {
   try {
     const transfers = await Transfer.findAll({
       where: { disponible: true },
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+        },
+      ],
     });
     res.json(transfers);
   } catch (error) {

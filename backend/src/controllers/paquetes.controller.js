@@ -5,6 +5,13 @@ export const getPaquetes = async (req, res) => {
   try {
     const paquetes = await Paquete.findAll({
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+        },
+      ],
     });
     res.json(paquetes);
   } catch (error) {

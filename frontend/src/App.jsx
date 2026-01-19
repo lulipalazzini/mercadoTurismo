@@ -6,6 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import GlobalSearch from "./components/GlobalSearch";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -33,9 +34,13 @@ function AppContent() {
     "/dashboard",
   ].includes(location.pathname);
 
+  // Mostrar búsqueda global solo en páginas minoristas
+  const showGlobalSearch = !hideNavbar;
+
   return (
     <>
       {!hideNavbar && <Navbar />}
+      {showGlobalSearch && <GlobalSearch />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

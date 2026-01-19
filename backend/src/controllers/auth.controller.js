@@ -103,6 +103,7 @@ export const login = async (req, res) => {
         nombre: user.nombre,
         email: user.email,
         role: user.role,
+        fotoPerfil: user.fotoPerfil,
       },
     });
   } catch (error) {
@@ -129,7 +130,8 @@ export const getProfile = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, email, currentPassword, newPassword } = req.body;
+    const { nombre, email, currentPassword, newPassword, fotoPerfil } =
+      req.body;
 
     // Verificar que el usuario solo pueda actualizar su propia información
     if (req.user.id !== parseInt(id) && req.user.role !== "admin") {
@@ -176,6 +178,7 @@ export const updateUser = async (req, res) => {
       }
       user.email = email;
     }
+    if (fotoPerfil !== undefined) user.fotoPerfil = fotoPerfil;
 
     await user.save();
 
@@ -186,12 +189,55 @@ export const updateUser = async (req, res) => {
         nombre: user.nombre,
         email: user.email,
         role: user.role,
+        fotoPerfil: user.fotoPerfil,
       },
     });
   } catch (error) {
     console.error("Error en updateUser:", error);
     res.status(500).json({
       message: "Error al actualizar usuario",
+      error: error.message,
+    });
+  }
+};
+
+export const verifyAdminPassword = async (req, res) => {
+  try {
+    const { password } = req.body;
+    const userId = req.user.id;
+
+    if (!password) {
+      return res.status(400).json({
+        message: "La contraseña es requerida",
+      });
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    if (user.role !== "admin") {
+      return res.status(403).json({
+        message: "No tienes permisos de administrador",
+      });
+    }
+
+    const isValid = await user.compareAdminPassword(password);
+    if (!isValid) {
+      return res.status(401).json({
+        message: "Contraseña de administrador incorrecta",
+      });
+    }
+
+    res.json({
+      message: "Contraseña verificada correctamente",
+      verified: true,
+    });
+  } catch (error) {
+    console.error("Error en verifyAdminPassword:", error);
+    res.status(500).json({
+      message: "Error al verificar contraseña",
       error: error.message,
     });
   }

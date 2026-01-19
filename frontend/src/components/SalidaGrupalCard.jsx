@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/card.css";
-import { FaGlobe } from "react-icons/fa";
+import { FaGlobe, FaUser } from "react-icons/fa";
+import { abrirWhatsApp } from "../utils/whatsapp";
+import { getUser } from "../services/auth.service";
+import { trackCardClick } from "../services/clickStats.service";
+import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function SalidaGrupalCard({ item }) {
   const {
@@ -14,7 +18,12 @@ export default function SalidaGrupalCard({ item }) {
     cupoDisponible,
     incluye,
     imagenes,
+    vendedor,
   } = item;
+
+  const [showModal, setShowModal] = useState(false);
+  const currentUser = getUser();
+  const isAdmin = currentUser?.role === "admin";
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("es-ES", {
@@ -24,8 +33,18 @@ export default function SalidaGrupalCard({ item }) {
     });
   };
 
+  const handleCardClick = () => {
+    trackCardClick("salidaGrupal").catch(console.error);
+    setShowModal(true);
+  };
+
+  const handleReservar = (e) => {
+    e.stopPropagation();
+    abrirWhatsApp('salida-grupal', item);
+  };
+
   return (
-    <div className="service-card">
+    <div className="service-card" onClick={handleCardClick}>
       {imagenes && imagenes.length > 0 && (
         <div className="card-image">
           <img src={imagenes[0]} alt={nombre} />
@@ -35,6 +54,25 @@ export default function SalidaGrupalCard({ item }) {
       <div className="card-header">
         <div className="card-header-content">
           <h3 className="card-title">{nombre}</h3>
+          {isAdmin && vendedor && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.5rem",
+                backgroundColor: "#f7fafc",
+                borderRadius: "0.375rem",
+                marginBottom: "0.75rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              <FaUser style={{ color: "#667eea" }} />
+              <span style={{ color: "#4a5568", fontWeight: "500" }}>
+                {vendedor.razonSocial || vendedor.nombre}
+              </span>
+            </div>
+          )}
           {destinos && destinos.length > 0 && (
             <p className="empresa">
               <FaGlobe /> {destinos.slice(0, 2).join(" • ")}
@@ -87,10 +125,22 @@ export default function SalidaGrupalCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button className="btn-primary" disabled={cupoDisponible === 0}>
+        <button 
+          className="btn-primary" 
+          onClick={handleReservar}
+          disabled={cupoDisponible === 0}
+        >
           {cupoDisponible > 0 ? "Reservar" : "Sin cupos"}
         </button>
       </div>
+
+      {showModal && (
+        <ServiceDetailModal
+          item={item}
+          tipo="salidaGrupal"
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }
