@@ -32,21 +32,22 @@ export default function GlobalSearch() {
 
   const fetchAllData = async () => {
     try {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       // Solo servicios minoristas (sin Cupos que es exclusivo de mayoristas)
       const endpoints = [
-        { key: "alojamientos", url: "http://localhost:3001/api/alojamientos" },
-        { key: "paquetes", url: "http://localhost:3001/api/paquetes" },
-        { key: "autos", url: "http://localhost:3001/api/autos" },
-        { key: "pasajes", url: "http://localhost:3001/api/pasajes" },
-        { key: "transfers", url: "http://localhost:3001/api/transfers" },
-        { key: "circuitos", url: "http://localhost:3001/api/circuitos" },
-        { key: "excursiones", url: "http://localhost:3001/api/excursiones" },
+        { key: "alojamientos", url: `${API_URL}/alojamientos` },
+        { key: "paquetes", url: `${API_URL}/paquetes` },
+        { key: "autos", url: `${API_URL}/autos` },
+        { key: "pasajes", url: `${API_URL}/pasajes` },
+        { key: "transfers", url: `${API_URL}/transfers` },
+        { key: "circuitos", url: `${API_URL}/circuitos` },
+        { key: "excursiones", url: `${API_URL}/excursiones` },
         {
           key: "salidasGrupales",
-          url: "http://localhost:3001/api/salidas-grupales",
+          url: `${API_URL}/salidas-grupales`,
         },
-        { key: "cruceros", url: "http://localhost:3001/api/cruceros" },
-        { key: "seguros", url: "http://localhost:3001/api/seguros" },
+        { key: "cruceros", url: `${API_URL}/cruceros` },
+        { key: "seguros", url: `${API_URL}/seguros` },
       ];
 
       const promises = endpoints.map((endpoint) =>
