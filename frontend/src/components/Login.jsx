@@ -60,11 +60,11 @@ export default function Login() {
     try {
       setLoading(true);
       const response = await login(formData.email, formData.password);
-      
+
       // Verificar si es admin inmediatamente después del login
       const user = JSON.parse(localStorage.getItem("currentUser"));
       console.log("Usuario después del login:", user); // Debug
-      
+
       if (user && user.role === "admin") {
         // Si es admin, mostrar modal de segunda contraseña
         setUserRole("admin");

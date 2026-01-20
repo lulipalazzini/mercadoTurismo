@@ -7,10 +7,14 @@ import api from "./api.js";
  * @param {string} [serviceName] - Nombre del servicio específico (opcional)
  * @returns {Promise<Object|null>} - Datos de la respuesta o null si falla
  */
-export const trackCardClick = async (cardType, serviceId = null, serviceName = null) => {
+export const trackCardClick = async (
+  cardType,
+  serviceId = null,
+  serviceName = null,
+) => {
   try {
     const payload = { cardType };
-    
+
     // Agregar serviceId y serviceName si están disponibles
     if (serviceId) {
       payload.serviceId = serviceId;
@@ -19,15 +23,11 @@ export const trackCardClick = async (cardType, serviceId = null, serviceName = n
       payload.serviceName = serviceName;
     }
 
-    const response = await api.post(
-      "/stats/increment",
-      payload,
-      {
-        headers: {
-          "x-sec-origin": "mercado-turismo-app",
-        },
-      }
-    );
+    const response = await api.post("/stats/increment", payload, {
+      headers: {
+        "x-sec-origin": "mercado-turismo-app",
+      },
+    });
 
     if (!response.ok) {
       console.warn(`No se pudo trackear el click en ${cardType}`);

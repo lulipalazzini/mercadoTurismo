@@ -32,19 +32,19 @@ export const incrementClickCount = async (req, res) => {
     }
 
     // Buscar o crear el registro (por categoría o por servicio específico)
-    const whereClause = { 
+    const whereClause = {
       cardType,
-      serviceId: serviceId || null
+      serviceId: serviceId || null,
     };
-    
+
     let stat = await ClickStats.findOne({ where: whereClause });
 
     if (!stat) {
-      stat = await ClickStats.create({ 
-        cardType, 
+      stat = await ClickStats.create({
+        cardType,
         serviceId: serviceId || null,
         serviceName: serviceName || null,
-        clicks: 1 
+        clicks: 1,
       });
     } else {
       stat.clicks += 1;
@@ -82,9 +82,9 @@ export const getAllStats = async (req, res) => {
     const statsByCategory = {};
     const categoryTotals = {};
 
-    stats.forEach(stat => {
+    stats.forEach((stat) => {
       const category = stat.cardType;
-      
+
       // Inicializar categoría si no existe
       if (!statsByCategory[category]) {
         statsByCategory[category] = [];
@@ -105,15 +105,17 @@ export const getAllStats = async (req, res) => {
     });
 
     // Ordenar servicios dentro de cada categoría por clicks
-    Object.keys(statsByCategory).forEach(category => {
+    Object.keys(statsByCategory).forEach((category) => {
       statsByCategory[category].sort((a, b) => b.clicks - a.clicks);
     });
 
     // Crear array de categorías con totales
-    const categoryStats = Object.entries(categoryTotals).map(([cardType, clicks]) => ({
-      cardType,
-      clicks,
-    })).sort((a, b) => b.clicks - a.clicks);
+    const categoryStats = Object.entries(categoryTotals)
+      .map(([cardType, clicks]) => ({
+        cardType,
+        clicks,
+      }))
+      .sort((a, b) => b.clicks - a.clicks);
 
     res.json({
       success: true,

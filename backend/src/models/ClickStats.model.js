@@ -40,7 +40,7 @@ const ClickStats = sequelize.define(
         name: "unique_card_service",
       },
     ],
-  }
+  },
 );
 
 export default ClickStats;

@@ -35,7 +35,9 @@ export default function PasajeCard({ item }) {
   };
 
   const handleCardClick = () => {
-    trackCardClick("pasaje", item.id, `${origen} - ${destino}`).catch(console.error);
+    trackCardClick("pasaje", item.id, `${origen} - ${destino}`).catch(
+      console.error,
+    );
     setShowModal(true);
   };
 
