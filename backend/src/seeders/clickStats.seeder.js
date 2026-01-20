@@ -17,15 +17,20 @@ const seedClickStats = async () => {
       "transfer",
     ];
 
+    // Crear estadísticas base por categoría (sin clicks iniciales)
     for (const cardType of cardTypes) {
-      const existingStat = await ClickStats.findOne({ where: { cardType } });
+      const existingStat = await ClickStats.findOne({
+        where: { cardType, serviceId: null },
+      });
 
       if (!existingStat) {
         await ClickStats.create({
           cardType,
+          serviceId: null,
+          serviceName: null,
           clicks: 0,
         });
-        console.log(`✅ Estadística creada para: ${cardType}`);
+        console.log(`✅ Estadística base creada para: ${cardType}`);
       } else {
         console.log(`⏭️  Estadística ya existe para: ${cardType}`);
       }

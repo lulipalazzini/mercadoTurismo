@@ -12,10 +12,8 @@ const connectDB = async () => {
     console.log("✅ SQLite conectado exitosamente");
 
     // Sincronizar modelos con la base de datos
-    // Usar alter en desarrollo para actualizar la estructura sin perder datos
-    if (process.env.NODE_ENV !== "production") {
-      await sequelize.sync({ alter: true });
-    }
+    // No usar sync en startup para evitar recrear tablas
+    // Usar seeders para inicializar/resetear la BD
     console.log("✅ Modelos sincronizados");
   } catch (error) {
     console.error(`❌ Error de conexión: ${error.message}`);

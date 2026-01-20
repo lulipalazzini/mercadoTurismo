@@ -27,7 +27,8 @@ export const runAllSeeders = async () => {
     console.log("✅ Conexión a la base de datos establecida\n");
 
     // Sincronizar modelos (crear/actualizar tablas)
-    await sequelize.sync({ force: false, alter: true });
+    // Usar force: true para recrear las tablas y aplicar correctamente los constraints
+    await sequelize.sync({ force: true });
     console.log("✅ Tablas sincronizadas\n");
 
     // Ejecutar seeders en orden (algunos tienen dependencias)
