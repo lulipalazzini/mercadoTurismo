@@ -40,20 +40,12 @@ import Transfers from "./dashboard/Transfers";
 import MercadoCupos from "./dashboard/MercadoCupos";
 import Ajustes from "./dashboard/Ajustes";
 import Usuarios from "./dashboard/Usuarios";
-import AdminPasswordModal from "./common/AdminPasswordModal";
-import { AdminAuthProvider, useAdminAuth } from "../context/AdminAuthContext";
 import "../styles/dashboard.css";
 
 function DashboardContent() {
   const [activeSection, setActiveSection] = useState("reservas");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
-  const {
-    showAdminModal,
-    handleAdminVerified,
-    closeAdminModal,
-    requestAdminAccess,
-  } = useAdminAuth();
 
   // Obtener información del usuario del localStorage
   const user = JSON.parse(localStorage.getItem("currentUser")) || {
@@ -76,9 +68,10 @@ function DashboardContent() {
   };
 
   const handleLogout = () => {
-    // Limpiar el localStorage
+    // Limpiar el localStorage y sessionStorage
     localStorage.removeItem("currentUser");
     localStorage.removeItem("token");
+    sessionStorage.removeItem("adminVerified");
     navigate("/login");
   };
 
@@ -338,9 +331,7 @@ function DashboardContent() {
                 className={`nav-item ${
                   activeSection === "usuarios" ? "active" : ""
                 }`}
-                onClick={() => {
-                  requestAdminAccess(() => setActiveSection("usuarios"));
-                }}
+                onClick={() => setActiveSection("usuarios")}
               >
                 <span className="nav-icon">
                   <FaUsers />
@@ -409,20 +400,10 @@ function DashboardContent() {
 
         <div className="dashboard-content">{renderContent()}</div>
       </main>
-
-      <AdminPasswordModal
-        isOpen={showAdminModal}
-        onClose={closeAdminModal}
-        onSuccess={handleAdminVerified}
-      />
     </div>
   );
 }
 
 export default function Dashboard() {
-  return (
-    <AdminAuthProvider>
-      <DashboardContent />
-    </AdminAuthProvider>
-  );
+  return <DashboardContent />;
 }

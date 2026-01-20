@@ -35,7 +35,7 @@ export default function PaqueteCard({ item }) {
 
   const handleCardClick = () => {
     // Trackear click en segundo plano (no bloquea la UI)
-    trackCardClick("paquete").catch(console.error);
+    trackCardClick("paquete", item.id, nombre).catch(console.error);
     setShowModal(true);
   };
 

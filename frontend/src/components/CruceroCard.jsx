@@ -38,7 +38,7 @@ export default function CruceroCard({ item }) {
   };
 
   const handleCardClick = () => {
-    trackCardClick("crucero").catch(console.error);
+    trackCardClick("crucero", item.id, nombre).catch(console.error);
     setShowModal(true);
   };
 

@@ -3,7 +3,7 @@ import ClickStats from "../models/ClickStats.model.js";
 // Incrementar contador de clicks para un tipo de card
 export const incrementClickCount = async (req, res) => {
   try {
-    const { cardType } = req.body;
+    const { cardType, serviceId, serviceName } = req.body;
 
     // Validación de header de seguridad
     if (req.headers["x-sec-origin"] !== "mercado-turismo-app") {
@@ -31,19 +31,35 @@ export const incrementClickCount = async (req, res) => {
       });
     }
 
-    // Buscar o crear el registro
-    let stat = await ClickStats.findOne({ where: { cardType } });
+    // Buscar o crear el registro (por categoría o por servicio específico)
+    const whereClause = { 
+      cardType,
+      serviceId: serviceId || null
+    };
+    
+    let stat = await ClickStats.findOne({ where: whereClause });
 
     if (!stat) {
-      stat = await ClickStats.create({ cardType, clicks: 1 });
+      stat = await ClickStats.create({ 
+        cardType, 
+        serviceId: serviceId || null,
+        serviceName: serviceName || null,
+        clicks: 1 
+      });
     } else {
       stat.clicks += 1;
+      // Actualizar el nombre si cambió
+      if (serviceName && stat.serviceName !== serviceName) {
+        stat.serviceName = serviceName;
+      }
       await stat.save();
     }
 
     res.json({
       success: true,
       cardType: stat.cardType,
+      serviceId: stat.serviceId,
+      serviceName: stat.serviceName,
       count: stat.clicks,
     });
   } catch (error) {
@@ -59,12 +75,51 @@ export const getAllStats = async (req, res) => {
       order: [["clicks", "DESC"]],
     });
 
+    // Calcular total de clicks
     const totalClicks = stats.reduce((sum, stat) => sum + stat.clicks, 0);
+
+    // Agrupar por categoría
+    const statsByCategory = {};
+    const categoryTotals = {};
+
+    stats.forEach(stat => {
+      const category = stat.cardType;
+      
+      // Inicializar categoría si no existe
+      if (!statsByCategory[category]) {
+        statsByCategory[category] = [];
+        categoryTotals[category] = 0;
+      }
+
+      // Sumar al total de la categoría
+      categoryTotals[category] += stat.clicks;
+
+      // Si tiene serviceId, es un servicio específico
+      if (stat.serviceId) {
+        statsByCategory[category].push({
+          serviceId: stat.serviceId,
+          serviceName: stat.serviceName,
+          clicks: stat.clicks,
+        });
+      }
+    });
+
+    // Ordenar servicios dentro de cada categoría por clicks
+    Object.keys(statsByCategory).forEach(category => {
+      statsByCategory[category].sort((a, b) => b.clicks - a.clicks);
+    });
+
+    // Crear array de categorías con totales
+    const categoryStats = Object.entries(categoryTotals).map(([cardType, clicks]) => ({
+      cardType,
+      clicks,
+    })).sort((a, b) => b.clicks - a.clicks);
 
     res.json({
       success: true,
       totalClicks,
-      stats,
+      stats: categoryStats, // Totales por categoría
+      statsByCategory, // Servicios específicos por categoría
     });
   } catch (error) {
     console.error("Error obteniendo estadísticas:", error);

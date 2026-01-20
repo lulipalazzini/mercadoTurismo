@@ -27,7 +27,7 @@ export default function SeguroCard({ item }) {
   const isAdmin = currentUser?.role === "admin";
 
   const handleCardClick = () => {
-    trackCardClick("seguro").catch(console.error);
+    trackCardClick("seguro", item.id, nombre).catch(console.error);
     setShowModal(true);
   };
 

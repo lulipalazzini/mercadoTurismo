@@ -25,7 +25,7 @@ export default function ExcursionCard({ item }) {
   const isAdmin = currentUser?.role === "admin";
 
   const handleCardClick = () => {
-    trackCardClick("excursion").catch(console.error);
+    trackCardClick("excursion", item.id, nombre).catch(console.error);
     setShowModal(true);
   };
 

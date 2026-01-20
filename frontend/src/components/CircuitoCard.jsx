@@ -34,7 +34,7 @@ export default function CircuitoCard({ item }) {
   };
 
   const handleCardClick = () => {
-    trackCardClick("circuito").catch(console.error);
+    trackCardClick("circuito", item.id, nombre).catch(console.error);
     setShowModal(true);
   };
 

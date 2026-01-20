@@ -25,7 +25,7 @@ export default function TransferCard({ item }) {
   const isAdmin = currentUser?.role === "admin";
 
   const handleCardClick = () => {
-    trackCardClick("transfer").catch(console.error);
+    trackCardClick("transfer", item.id, `${origen} - ${destino}`).catch(console.error);
     setShowModal(true);
   };
 

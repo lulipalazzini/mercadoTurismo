@@ -12,8 +12,17 @@ const ClickStats = sequelize.define(
     cardType: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
       comment: "Tipo de card: alojamiento, auto, paquete, crucero, etc.",
+    },
+    serviceId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: "ID del servicio específico (si aplica)",
+    },
+    serviceName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      comment: "Nombre del servicio específico",
     },
     clicks: {
       type: DataTypes.INTEGER,
@@ -24,6 +33,13 @@ const ClickStats = sequelize.define(
   {
     tableName: "click_stats",
     timestamps: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ["cardType", "serviceId"],
+        name: "unique_card_service",
+      },
+    ],
   }
 );
 

@@ -3,13 +3,25 @@ import api from "./api.js";
 /**
  * Trackea un click en una card específica
  * @param {string} cardType - Tipo de card (alojamiento, auto, paquete, etc.)
+ * @param {number} [serviceId] - ID del servicio específico (opcional)
+ * @param {string} [serviceName] - Nombre del servicio específico (opcional)
  * @returns {Promise<Object|null>} - Datos de la respuesta o null si falla
  */
-export const trackCardClick = async (cardType) => {
+export const trackCardClick = async (cardType, serviceId = null, serviceName = null) => {
   try {
+    const payload = { cardType };
+    
+    // Agregar serviceId y serviceName si están disponibles
+    if (serviceId) {
+      payload.serviceId = serviceId;
+    }
+    if (serviceName) {
+      payload.serviceName = serviceName;
+    }
+
     const response = await api.post(
       "/stats/increment",
-      { cardType },
+      payload,
       {
         headers: {
           "x-sec-origin": "mercado-turismo-app",

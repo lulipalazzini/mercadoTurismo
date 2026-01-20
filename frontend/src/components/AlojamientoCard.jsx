@@ -39,7 +39,7 @@ export default function AlojamientoCard({ alojamiento }) {
 
   const handleVerDetalles = () => {
     // Trackear click en segundo plano
-    trackCardClick("alojamiento").catch(console.error);
+    trackCardClick("alojamiento", id, nombre).catch(console.error);
     setShowModal(true);
   };
 

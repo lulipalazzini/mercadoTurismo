@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../services/auth.service";
+import { login, verifyAdminPassword } from "../services/auth.service";
+import AdminPasswordModal from "./common/AdminPasswordModal";
 import "../styles/auth.css";
 
 export default function Login() {
@@ -11,6 +12,8 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -56,16 +59,42 @@ export default function Login() {
 
     try {
       setLoading(true);
-      await login(formData.email, formData.password);
-
-      // Redirigir al dashboard
-      navigate("/dashboard");
+      const response = await login(formData.email, formData.password);
+      
+      // Verificar si es admin inmediatamente después del login
+      const user = JSON.parse(localStorage.getItem("currentUser"));
+      console.log("Usuario después del login:", user); // Debug
+      
+      if (user && user.role === "admin") {
+        // Si es admin, mostrar modal de segunda contraseña
+        setUserRole("admin");
+        setShowAdminModal(true);
+        setLoading(false);
+      } else {
+        // Si es usuario normal, ir directo al dashboard
+        setLoading(false);
+        navigate("/dashboard");
+      }
     } catch (error) {
       console.error("Error en login:", error);
       setErrorMessage(error.message || "Error al iniciar sesión");
-    } finally {
       setLoading(false);
     }
+  };
+
+  const handleAdminVerified = () => {
+    setShowAdminModal(false);
+    // Marcar que el admin está verificado en sessionStorage
+    sessionStorage.setItem("adminVerified", "true");
+    navigate("/dashboard");
+  };
+
+  const handleAdminModalClose = () => {
+    setShowAdminModal(false);
+    // Si cierra el modal, hacer logout
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("token");
+    setErrorMessage("Verificación de administrador cancelada");
   };
 
   return (
@@ -143,6 +172,12 @@ export default function Login() {
           </Link>
         </div>
       </div>
+
+      <AdminPasswordModal
+        isOpen={showAdminModal}
+        onClose={handleAdminModalClose}
+        onSuccess={handleAdminVerified}
+      />
     </div>
   );
 }

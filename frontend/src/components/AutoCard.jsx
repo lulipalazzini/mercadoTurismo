@@ -28,7 +28,7 @@ export default function AutoCard({ item }) {
   const isAdmin = currentUser?.role === "admin";
 
   const handleCardClick = () => {
-    trackCardClick("auto").catch(console.error);
+    trackCardClick("auto", item.id, `${marca} ${modelo}`).catch(console.error);
     setShowModal(true);
   };
 

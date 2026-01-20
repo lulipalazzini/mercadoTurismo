@@ -34,7 +34,7 @@ export default function SalidaGrupalCard({ item }) {
   };
 
   const handleCardClick = () => {
-    trackCardClick("salidaGrupal").catch(console.error);
+    trackCardClick("salidaGrupal", item.id, nombre).catch(console.error);
     setShowModal(true);
   };
 
