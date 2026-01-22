@@ -34,6 +34,7 @@ node src/migrate-roles.js
 ```
 
 **Salida esperada:**
+
 ```
 🔄 Iniciando migración de roles...
 
@@ -80,6 +81,7 @@ npm start
 ```
 
 **Salida esperada:**
+
 ```
 ✅ SQLite conectado exitosamente
 ✅ Modelos sincronizados
@@ -97,6 +99,7 @@ npm run dev
 ```
 
 **Salida esperada:**
+
 ```
   VITE v4.x.x  ready in xxx ms
 
@@ -150,7 +153,7 @@ Salir de SQLite: `.exit`
    - ❌ No deben aparecer: "Operador Independiente" ni "Operador de Agencia"
 
 3. **Verificar Mercado de Cupos:**
-   
+
    **Como Operador:**
    - Login con credenciales de operador
    - Ir a "Mercado de Cupos"
@@ -206,9 +209,11 @@ Si la migración mostró usuarios sin teléfono:
 ## 🐛 Solución de Problemas Comunes
 
 ### ❌ Error: "Column 'role' cannot be null"
+
 **Causa:** La migración no se ejecutó correctamente
 
 **Solución:**
+
 ```bash
 # Restaurar backup
 cp database.backup.sqlite database.sqlite
@@ -220,9 +225,11 @@ node src/migrate-roles.js
 ---
 
 ### ❌ Error: "Cannot find module 'migrate-roles.js'"
+
 **Causa:** Estás en el directorio incorrecto
 
 **Solución:**
+
 ```bash
 # Asegúrate de estar en la carpeta backend
 cd backend
@@ -235,9 +242,11 @@ node src/migrate-roles.js
 ---
 
 ### ❌ Frontend muestra roles antiguos
+
 **Causa:** Caché del navegador
 
 **Solución:**
+
 1. Hacer logout
 2. Limpiar caché del navegador (Ctrl + Shift + Delete)
 3. Recargar la página (Ctrl + F5)
@@ -246,9 +255,11 @@ node src/migrate-roles.js
 ---
 
 ### ❌ "Debes agregar un número de teléfono para publicar cupos"
+
 **Causa:** El usuario no tiene teléfono configurado
 
 **Solución:**
+
 1. Ir a Ajustes
 2. Agregar teléfono en formato internacional: `+5491112345678`
 3. Guardar
@@ -257,6 +268,7 @@ node src/migrate-roles.js
 ---
 
 ### ❌ Botón de WhatsApp no funciona
+
 **Posibles causas y soluciones:**
 
 1. **Operador sin teléfono:**
@@ -314,9 +326,10 @@ Antes de considerar la migración completa, verifica:
 
 ## 🎉 ¡Migración Exitosa!
 
-Si todos los puntos del checklist están marcados, ¡felicitaciones! 
+Si todos los puntos del checklist están marcados, ¡felicitaciones!
 
 El sistema está ahora funcionando con:
+
 - ✅ Roles simplificados
 - ✅ Permisos actualizados
 - ✅ Marketplace funcional
@@ -335,6 +348,7 @@ El sistema está ahora funcionando con:
 ## 💬 ¿Necesitas Ayuda?
 
 Si encuentras problemas no cubiertos en esta guía:
+
 1. Revisar logs del backend
 2. Revisar consola del navegador (F12)
 3. Verificar que el backup esté disponible

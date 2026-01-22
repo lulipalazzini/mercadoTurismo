@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import "../styles/card.css";
-import { FaGlobe, FaUser } from "react-icons/fa";
+import { FaArrowRight, FaUser } from "react-icons/fa";
+import { trackCardClick } from "../services/clickStats.service";
 import { abrirWhatsApp } from "../utils/whatsapp";
 import { getUser } from "../services/auth.service";
-import { trackCardClick } from "../services/clickStats.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function SalidaGrupalCard({ item }) {
+export default function PasajeCard({ item }) {
   const {
-    nombre,
-    descripcion,
-    destinos,
+    tipo,
+    origen,
+    destino,
+    aerolinea,
+    numeroVuelo,
     fechaSalida,
-    fechaRegreso,
-    duracion,
+    horaSalida,
+    fechaLlegada,
+    horaLlegada,
+    clase,
     precio,
-    cupoDisponible,
-    incluye,
-    imagenes,
+    asientosDisponibles,
     vendedor,
   } = item;
 
@@ -35,7 +37,6 @@ export default function SalidaGrupalCard({ item }) {
       return dateObj.toLocaleDateString("es-ES", {
         day: "2-digit",
         month: "short",
-        year: "numeric",
       });
     } catch (error) {
       return "Fecha no disponible";
@@ -43,26 +44,24 @@ export default function SalidaGrupalCard({ item }) {
   };
 
   const handleCardClick = () => {
-    trackCardClick("salidaGrupal", item.id, nombre).catch(console.error);
+    trackCardClick("pasaje", item.id, `${origen} - ${destino}`).catch(
+      console.error,
+    );
     setShowModal(true);
   };
 
   const handleReservar = (e) => {
     e.stopPropagation();
-    abrirWhatsApp("salida-grupal", item);
+    abrirWhatsApp("pasaje", item);
   };
 
   return (
     <div className="service-card" onClick={handleCardClick}>
-      {imagenes && imagenes.length > 0 && (
-        <div className="card-image">
-          <img src={imagenes[0]} alt={nombre} />
-        </div>
-      )}
-
       <div className="card-header">
         <div className="card-header-content">
-          <h3 className="card-title">{nombre}</h3>
+          <h3 className="card-title">
+            {origen} <FaArrowRight /> {destino}
+          </h3>
           {isAdmin && vendedor && (
             <div
               style={{
@@ -82,51 +81,36 @@ export default function SalidaGrupalCard({ item }) {
               </span>
             </div>
           )}
-          {destinos && destinos.length > 0 && (
+          {aerolinea && (
             <p className="empresa">
-              <FaGlobe /> {destinos.slice(0, 2).join(" • ")}
+              {aerolinea} {numeroVuelo && `• ${numeroVuelo}`}
             </p>
           )}
         </div>
-        <span className="tipo-badge">GRUPAL</span>
+        <span className="tipo-badge">{tipo}</span>
       </div>
 
       <div className="card-content">
-        <p className="descripcion">
-          {descripcion?.length > 120
-            ? `${descripcion.substring(0, 120)}...`
-            : descripcion}
-        </p>
-
         <div className="info-grid">
           <div className="info-item">
             <span className="info-label">Salida</span>
             <span className="info-value">{formatDate(fechaSalida)}</span>
+            {horaSalida && <span className="info-time">{horaSalida}</span>}
           </div>
           <div className="info-item">
-            <span className="info-label">Regreso</span>
-            <span className="info-value">{formatDate(fechaRegreso)}</span>
+            <span className="info-label">Llegada</span>
+            <span className="info-value">{formatDate(fechaLlegada)}</span>
+            {horaLlegada && <span className="info-time">{horaLlegada}</span>}
           </div>
           <div className="info-item">
-            <span className="info-label">Duración</span>
-            <span className="info-value">{duracion} días</span>
+            <span className="info-label">Clase</span>
+            <span className="info-value">{clase}</span>
           </div>
           <div className="info-item">
-            <span className="info-label">Cupos</span>
-            <span className="info-value">{cupoDisponible}</span>
+            <span className="info-label">Disponibles</span>
+            <span className="info-value">{asientosDisponibles}</span>
           </div>
         </div>
-
-        {incluye && incluye.length > 0 && (
-          <div className="features">
-            <p className="features-label">Incluye:</p>
-            <ul className="features-list">
-              {incluye.slice(0, 3).map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
 
       <div className="card-footer">
@@ -137,16 +121,16 @@ export default function SalidaGrupalCard({ item }) {
         <button
           className="btn-primary"
           onClick={handleReservar}
-          disabled={cupoDisponible === 0}
+          disabled={asientosDisponibles === 0}
         >
-          {cupoDisponible > 0 ? "Reservar" : "Sin cupos"}
+          {asientosDisponibles > 0 ? "Reservar" : "Sin asientos"}
         </button>
       </div>
 
       {showModal && (
         <ServiceDetailModal
           item={item}
-          tipo="salidaGrupal"
+          tipo="pasaje"
           onClose={() => setShowModal(false)}
         />
       )}

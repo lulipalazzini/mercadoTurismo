@@ -66,10 +66,12 @@ export default function Transfers() {
 
   return (
     <div className="servicios-container">
-      <h1 className="servicios-title">Transfers</h1>      <SearchBox
+      <h1 className="servicios-title">Transfers</h1>{" "}
+      <SearchBox
         onSearch={handleSearch}
         placeholder="Buscar transfers por origen o destino..."
-      />      <div className="servicios-grid">
+      />{" "}
+      <div className="servicios-grid">
         {transfers.length > 0 ? (
           transfers.map((transfer) => (
             <TransferCard key={transfer.id} item={transfer} />

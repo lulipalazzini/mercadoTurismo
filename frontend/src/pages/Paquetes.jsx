@@ -40,11 +40,11 @@ export default function Paquetes() {
   };
 
   const applyHeroFilters = () => {
-    const destino = searchParams.get('destino');
-    const origen = searchParams.get('origen');
-    const fechaIda = searchParams.get('fechaIda');
-    const fechaVuelta = searchParams.get('fechaVuelta');
-    const pasajeros = searchParams.get('pasajeros');
+    const destino = searchParams.get("destino");
+    const origen = searchParams.get("origen");
+    const fechaIda = searchParams.get("fechaIda");
+    const fechaVuelta = searchParams.get("fechaVuelta");
+    const pasajeros = searchParams.get("pasajeros");
 
     // Si no hay parámetros de búsqueda, mostrar todos
     if (!destino && !origen && !fechaIda && !fechaVuelta) {
@@ -57,11 +57,18 @@ export default function Paquetes() {
     const info = [];
     if (destino) info.push(`Destino: ${destino}`);
     if (origen) info.push(`Origen: ${origen}`);
-    if (fechaIda) info.push(`Ida: ${new Date(fechaIda + 'T00:00:00').toLocaleDateString()}`);
-    if (fechaVuelta) info.push(`Vuelta: ${new Date(fechaVuelta + 'T00:00:00').toLocaleDateString()}`);
-    if (pasajeros) info.push(`${pasajeros} pasajero${pasajeros > 1 ? 's' : ''}`);
-    
-    setSearchInfo(info.join(' • '));
+    if (fechaIda)
+      info.push(
+        `Ida: ${new Date(fechaIda + "T00:00:00").toLocaleDateString()}`,
+      );
+    if (fechaVuelta)
+      info.push(
+        `Vuelta: ${new Date(fechaVuelta + "T00:00:00").toLocaleDateString()}`,
+      );
+    if (pasajeros)
+      info.push(`${pasajeros} pasajero${pasajeros > 1 ? "s" : ""}`);
+
+    setSearchInfo(info.join(" • "));
 
     // Filtrar paquetes basado en los parámetros
     const filtered = allPaquetes.filter((paquete) => {
@@ -70,16 +77,18 @@ export default function Paquetes() {
       // Filtrar por destino
       if (destino) {
         const destinoLower = destino.toLowerCase();
-        matches = matches && (
-          paquete.destino?.toLowerCase().includes(destinoLower) ||
-          paquete.nombre?.toLowerCase().includes(destinoLower) ||
-          paquete.descripcion?.toLowerCase().includes(destinoLower)
-        );
+        matches =
+          matches &&
+          (paquete.destino?.toLowerCase().includes(destinoLower) ||
+            paquete.nombre?.toLowerCase().includes(destinoLower) ||
+            paquete.descripcion?.toLowerCase().includes(destinoLower));
       }
 
       // Filtrar por origen (si el paquete tiene información de origen)
       if (origen && paquete.origen) {
-        matches = matches && paquete.origen.toLowerCase().includes(origen.toLowerCase());
+        matches =
+          matches &&
+          paquete.origen.toLowerCase().includes(origen.toLowerCase());
       }
 
       // Filtrar por fechas (verificar disponibilidad si existe)
@@ -87,13 +96,16 @@ export default function Paquetes() {
         const fechaInicioPaquete = new Date(paquete.fechaInicio);
         const fechaIdaBusqueda = new Date(fechaIda);
         // Permitir paquetes que inician dentro de un rango de 30 días
-        const diffDays = Math.abs((fechaIdaBusqueda - fechaInicioPaquete) / (1000 * 60 * 60 * 24));
+        const diffDays = Math.abs(
+          (fechaIdaBusqueda - fechaInicioPaquete) / (1000 * 60 * 60 * 24),
+        );
         matches = matches && diffDays <= 30;
       }
 
       // Filtrar por capacidad de pasajeros (si existe)
       if (pasajeros && paquete.capacidadMaxima) {
-        matches = matches && parseInt(paquete.capacidadMaxima) >= parseInt(pasajeros);
+        matches =
+          matches && parseInt(paquete.capacidadMaxima) >= parseInt(pasajeros);
       }
 
       return matches;
@@ -142,7 +154,7 @@ export default function Paquetes() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Paquetes Turísticos</h1>
-      
+
       {searchInfo && (
         <div className="search-info-banner">
           <svg
@@ -162,19 +174,20 @@ export default function Paquetes() {
             onClick={() => {
               setPaquetes(allPaquetes);
               setSearchInfo(null);
-              window.history.pushState({}, '', '/paquetes');
+              window.history.pushState({}, "", "/paquetes");
             }}
           >
             Limpiar filtros
           </button>
         </div>
       )}
-      
+
       <SearchBox
         onSearch={handleSearch}
         placeholder="Buscar paquetes por destino..."
       />
-      <div className="servicios-grid">{paquetes.length > 0 ? (
+      <div className="servicios-grid">
+        {paquetes.length > 0 ? (
           paquetes.map((paquete) => (
             <PaqueteCard key={paquete.id} item={paquete} />
           ))
@@ -188,7 +201,7 @@ export default function Paquetes() {
               onClick={() => {
                 setPaquetes(allPaquetes);
                 setSearchInfo(null);
-                window.history.pushState({}, '', '/paquetes');
+                window.history.pushState({}, "", "/paquetes");
               }}
             >
               Ver todos los paquetes

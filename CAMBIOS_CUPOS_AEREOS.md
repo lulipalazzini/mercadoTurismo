@@ -5,6 +5,7 @@
 ## Resumen de Cambios
 
 Este documento detalla las modificaciones realizadas para:
+
 1. **Limitar los cupos del mercado a solo productos aéreos**
 2. **Eliminar completamente el módulo de Pasajes del sistema**
 
@@ -15,6 +16,7 @@ Este documento detalla las modificaciones realizadas para:
 ### Archivo: `backend/src/models/CupoMercado.model.js`
 
 **Cambio realizado:**
+
 - Campo `tipoProducto` modificado de `STRING(100)` a `ENUM("aereo")`
 - Valor por defecto: `"aereo"`
 - Ahora solo acepta cupos de tipo aéreo
@@ -35,6 +37,7 @@ tipoProducto: {
 ### Archivo: `backend/src/seeders/cuposMercado.seeder.js`
 
 **Cambio realizado:**
+
 - Reemplazados todos los tipos de cupos (paquetes, hoteles, excursiones, etc.)
 - Ahora contiene solo 8 cupos de tipo `"aereo"` con diferentes destinos:
   - Buenos Aires - Miami
@@ -47,6 +50,7 @@ tipoProducto: {
   - Buenos Aires - Los Ángeles
 
 Cada cupo incluye:
+
 - Descripción del vuelo con fecha de salida
 - Cantidad de cupos disponibles
 - Precios mayorista y minorista
@@ -67,6 +71,7 @@ Cada cupo incluye:
 ### Backend - Archivos Modificados:
 
 **`backend/src/index.js`:**
+
 - ❌ Eliminada importación: `import pasajesRoutes from "./routes/pasajes.routes.js"`
 - ❌ Eliminada ruta: `app.use("/api/pasajes", pasajesRoutes)`
 
@@ -83,14 +88,17 @@ Cada cupo incluye:
 ### Frontend - Archivos Modificados:
 
 **`frontend/src/App.jsx`:**
+
 - ❌ Eliminada importación: `import Pasajes from "./pages/Pasajes"`
 - ❌ Eliminada ruta: `<Route path="/pasajes" element={<Pasajes />} />`
 
 **`frontend/src/components/Navbar.jsx`:**
+
 - ❌ Eliminado del array `isDropdownActive`: `/pasajes`
 - ❌ Eliminado link del menú dropdown "Traslados"
 
 **`frontend/src/components/Dashboard.jsx`:**
+
 - ❌ Eliminada importación: `import Pasajes from "./dashboard/Pasajes"`
 - ❌ Eliminado del objeto `titles`: `pasajes: "Pasajes"`
 - ❌ Eliminado case del switch: `case "pasajes": return <Pasajes />`
@@ -103,11 +111,13 @@ Cada cupo incluye:
 ### `backend/src/migrate-cupos-aereos.js`
 
 Script para migrar la base de datos existente:
+
 - Elimina cupos que no sean aéreos
 - Actualiza "Pasaje Aéreo" a "aereo"
 - Recrea la tabla con el nuevo esquema ENUM
 
 **Uso:**
+
 ```bash
 cd backend
 node src/migrate-cupos-aereos.js
@@ -116,11 +126,13 @@ node src/migrate-cupos-aereos.js
 ### `backend/src/reset-cupos-mercado.js` (Actualizado)
 
 Script para resetear completamente los cupos:
+
 - Elimina todos los cupos existentes
 - Carga los nuevos seeders con solo cupos aéreos
 - Verifica el resultado
 
 **Uso:**
+
 ```bash
 cd backend
 node src/reset-cupos-mercado.js
@@ -131,6 +143,7 @@ node src/reset-cupos-mercado.js
 ## 5. Impacto en la Aplicación
 
 ### ✅ Funcionalidades que PERMANECEN:
+
 - Mercado de Cupos (ahora solo aéreos)
 - Paquetes
 - Alojamientos
@@ -143,12 +156,14 @@ node src/reset-cupos-mercado.js
 - Seguros
 
 ### ❌ Funcionalidades ELIMINADAS:
+
 - Módulo completo de Pasajes (backend y frontend)
 - Gestión CRUD de pasajes
 - Vista pública de pasajes
 - Dashboard de pasajes para operadores
 
 ### 🔄 Cambios en el Menú:
+
 - **Navbar público:** Dropdown "Traslados" ahora solo contiene "Autos" y "Transfer"
 - **Dashboard:** Sidebar ya no muestra la opción "Pasajes"
 
@@ -159,9 +174,11 @@ node src/reset-cupos-mercado.js
 ### Comandos ejecutados con éxito:
 
 1. **Migración de cupos:**
+
    ```bash
    node src/migrate-cupos-aereos.js
    ```
+
    ✅ Resultado: 1 cupo aéreo migrado correctamente
 
 2. **Reset y recarga de seeders:**
@@ -171,6 +188,7 @@ node src/reset-cupos-mercado.js
    ✅ Resultado: Tabla recreada y 8 cupos aéreos cargados
 
 ### Base de datos actualizada:
+
 - **Tabla:** `cupos_mercado`
 - **Campo:** `tipoProducto ENUM('aereo')`
 - **Registros:** 8 cupos aéreos con diferentes destinos internacionales
@@ -180,12 +198,14 @@ node src/reset-cupos-mercado.js
 ## 7. Próximos Pasos Recomendados
 
 1. **Reiniciar el servidor backend:**
+
    ```bash
    cd backend
    npm start
    ```
 
 2. **Reiniciar el frontend:**
+
    ```bash
    cd frontend
    npm run dev

@@ -47,9 +47,7 @@ export default function Navbar() {
           </Link>
           <div
             className={`nav-dropdown ${
-              isDropdownActive(["/autos", "/transfers"])
-                ? "active"
-                : ""
+              isDropdownActive(["/autos", "/transfers"]) ? "active" : ""
             }`}
           >
             <span className="dropdown-toggle">Traslados</span>

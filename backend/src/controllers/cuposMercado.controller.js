@@ -7,24 +7,26 @@ export const getCuposMercado = async (req, res) => {
   try {
     // Solo las agencias pueden ver el marketplace
     if (req.user.role !== "agencia") {
-      return res.status(403).json({ 
-        message: "Solo las agencias pueden ver el marketplace de cupos" 
+      return res.status(403).json({
+        message: "Solo las agencias pueden ver el marketplace de cupos",
       });
     }
 
     // Obtener cupos de operadores, con información del vendedor
     const cupos = await CupoMercado.findAll({
-      include: [{
-        model: User,
-        as: "vendedor",
-        attributes: ["id", "nombre", "email", "telefono", "razonSocial"],
-        where: {
-          role: "operador"
-        }
-      }],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "telefono", "razonSocial"],
+          where: {
+            role: "operador",
+          },
+        },
+      ],
       where: {
         estado: "disponible",
-        cantidad: { [Op.gt]: 0 }
+        cantidad: { [Op.gt]: 0 },
       },
       order: [["createdAt", "DESC"]],
     });
@@ -53,13 +55,15 @@ export const getMisCupos = async (req, res) => {
   try {
     const cupos = await CupoMercado.findAll({
       where: {
-        usuarioVendedorId: req.user.id
+        usuarioVendedorId: req.user.id,
       },
-      include: [{
-        model: User,
-        as: "vendedor",
-        attributes: ["id", "nombre", "email", "telefono"]
-      }],
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "telefono"],
+        },
+      ],
       order: [["createdAt", "DESC"]],
     });
 
@@ -74,21 +78,26 @@ export const getMisCupos = async (req, res) => {
 export const getCupoMercado = async (req, res) => {
   try {
     const cupo = await CupoMercado.findByPk(req.params.id, {
-      include: [{
-        model: User,
-        as: "vendedor",
-        attributes: ["id", "nombre", "email", "telefono", "razonSocial"]
-      }]
+      include: [
+        {
+          model: User,
+          as: "vendedor",
+          attributes: ["id", "nombre", "email", "telefono", "razonSocial"],
+        },
+      ],
     });
-    
+
     if (!cupo) {
       return res.status(404).json({ message: "Cupo no encontrado" });
     }
 
     // Verificar permisos: solo el vendedor o agencias pueden ver detalles
-    if (req.user.role === "operador" && cupo.usuarioVendedorId !== req.user.id) {
-      return res.status(403).json({ 
-        message: "No tienes permiso para ver este cupo" 
+    if (
+      req.user.role === "operador" &&
+      cupo.usuarioVendedorId !== req.user.id
+    ) {
+      return res.status(403).json({
+        message: "No tienes permiso para ver este cupo",
       });
     }
 
@@ -105,8 +114,9 @@ export const createCupoMercado = async (req, res) => {
     // Validar que el usuario tenga teléfono
     const user = await User.findByPk(req.user.id);
     if (!user.telefono) {
-      return res.status(400).json({ 
-        message: "Debes agregar un número de teléfono a tu perfil para publicar cupos" 
+      return res.status(400).json({
+        message:
+          "Debes agregar un número de teléfono a tu perfil para publicar cupos",
       });
     }
 
@@ -114,7 +124,7 @@ export const createCupoMercado = async (req, res) => {
       ...req.body,
       usuarioVendedorId: req.user.id,
     });
-    
+
     res.status(201).json({ message: "Cupo publicado exitosamente", cupo });
   } catch (error) {
     res
@@ -132,8 +142,8 @@ export const updateCupoMercado = async (req, res) => {
 
     // Solo el vendedor puede actualizar su cupo
     if (cupo.usuarioVendedorId !== req.user.id) {
-      return res.status(403).json({ 
-        message: "Solo puedes actualizar tus propios cupos" 
+      return res.status(403).json({
+        message: "Solo puedes actualizar tus propios cupos",
       });
     }
 
@@ -158,9 +168,13 @@ export const deleteCupoMercado = async (req, res) => {
     }
 
     // Solo el vendedor puede eliminar su cupo
-    if (cupo.usuarioVendedorId !== req.user.id && req.user.role !== "admin" && req.user.role !== "sysadmin") {
-      return res.status(403).json({ 
-        message: "Solo puedes eliminar tus propios cupos" 
+    if (
+      cupo.usuarioVendedorId !== req.user.id &&
+      req.user.role !== "admin" &&
+      req.user.role !== "sysadmin"
+    ) {
+      return res.status(403).json({
+        message: "Solo puedes eliminar tus propios cupos",
       });
     }
 
@@ -179,16 +193,17 @@ export const importarCupos = async (req, res) => {
     const { cupos } = req.body;
 
     if (!Array.isArray(cupos) || cupos.length === 0) {
-      return res.status(400).json({ 
-        message: "Debes proporcionar un array de cupos válido" 
+      return res.status(400).json({
+        message: "Debes proporcionar un array de cupos válido",
       });
     }
 
     // Validar que el usuario tenga teléfono
     const user = await User.findByPk(req.user.id);
     if (!user.telefono) {
-      return res.status(400).json({ 
-        message: "Debes agregar un número de teléfono a tu perfil para publicar cupos" 
+      return res.status(400).json({
+        message:
+          "Debes agregar un número de teléfono a tu perfil para publicar cupos",
       });
     }
 
@@ -198,15 +213,21 @@ export const importarCupos = async (req, res) => {
     // Validar y crear cada cupo
     for (let i = 0; i < cupos.length; i++) {
       const cupoData = cupos[i];
-      
+
       try {
         // Validar campos requeridos
-        if (!cupoData.tipoProducto || !cupoData.origen || !cupoData.destino || 
-            !cupoData.descripcion || !cupoData.cantidad || !cupoData.precioUnitario || 
-            !cupoData.fechaVencimiento) {
+        if (
+          !cupoData.tipoProducto ||
+          !cupoData.origen ||
+          !cupoData.destino ||
+          !cupoData.descripcion ||
+          !cupoData.cantidad ||
+          !cupoData.precioUnitario ||
+          !cupoData.fechaVencimiento
+        ) {
           errores.push({
             fila: i + 2, // +2 porque Excel empieza en 1 y tiene header
-            error: "Faltan campos requeridos"
+            error: "Faltan campos requeridos",
           });
           continue;
         }
@@ -215,7 +236,7 @@ export const importarCupos = async (req, res) => {
         if (cupoData.tipoProducto.toLowerCase() !== "aereo") {
           errores.push({
             fila: i + 2,
-            error: "Solo se permiten cupos de tipo 'aereo'"
+            error: "Solo se permiten cupos de tipo 'aereo'",
           });
           continue;
         }
@@ -242,7 +263,7 @@ export const importarCupos = async (req, res) => {
       } catch (error) {
         errores.push({
           fila: i + 2,
-          error: error.message
+          error: error.message,
         });
       }
     }
@@ -252,12 +273,12 @@ export const importarCupos = async (req, res) => {
       importados: cuposCreados.length,
       errores: errores.length,
       detalleErrores: errores,
-      cupos: cuposCreados
+      cupos: cuposCreados,
     });
   } catch (error) {
-    res.status(500).json({ 
-      message: "Error al importar cupos", 
-      error: error.message 
+    res.status(500).json({
+      message: "Error al importar cupos",
+      error: error.message,
     });
   }
 };

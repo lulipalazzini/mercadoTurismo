@@ -1,6 +1,7 @@
 # ✅ Resumen de Cambios - Sistema de Mercado de Cupos
 
 ## 🎯 Objetivo
+
 Simplificar el sistema de roles y eliminar la funcionalidad de compra directa de cupos, reemplazándola por un sistema de contacto vía WhatsApp.
 
 ---
@@ -10,18 +11,21 @@ Simplificar el sistema de roles y eliminar la funcionalidad de compra directa de
 ### 1️⃣ **Sistema de Roles Simplificado**
 
 #### Antes:
+
 - `operador_independiente`
 - `operador_agencia`
 - `agencia`
 - `admin`
 
 #### Después:
+
 - `operador` ✨
 - `agencia`
 - `admin`
 - `sysadmin` ✨
 
 **Migración automática:**
+
 - `operador_independiente` → `operador`
 - `operador_agencia` → `operador`
 
@@ -29,24 +33,26 @@ Simplificar el sistema de roles y eliminar la funcionalidad de compra directa de
 
 ### 2️⃣ **Nuevos Permisos por Rol**
 
-| Permiso | Operador | Agencia | Admin | SysAdmin |
-|---------|----------|---------|-------|----------|
-| 📝 Publicar cupos | ✅ | ✅ | ✅ | ✅ |
-| 👀 Ver mis cupos | ✅ | ✅ | ✅ | ✅ |
-| 🏪 Ver marketplace | ❌ | ✅ | ✅ | ✅ |
-| 💬 Contactar por WhatsApp | - | ✅ | ✅ | ✅ |
+| Permiso                   | Operador | Agencia | Admin | SysAdmin |
+| ------------------------- | -------- | ------- | ----- | -------- |
+| 📝 Publicar cupos         | ✅       | ✅      | ✅    | ✅       |
+| 👀 Ver mis cupos          | ✅       | ✅      | ✅    | ✅       |
+| 🏪 Ver marketplace        | ❌       | ✅      | ✅    | ✅       |
+| 💬 Contactar por WhatsApp | -        | ✅      | ✅    | ✅       |
 
 ---
 
 ### 3️⃣ **Marketplace Rediseñado**
 
 #### **Para Operadores:**
+
 - ✅ Pueden publicar cupos
 - ✅ Ven solo sus propios cupos
 - ❌ NO ven marketplace de otros
 - ❌ NO pueden comprar cupos
 
 #### **Para Agencias:**
+
 - ✅ Pueden publicar cupos
 - ✅ Ven sus propios cupos (tab "Mis Cupos")
 - ✅ Ven cupos de operadores (tab "Marketplace")
@@ -58,18 +64,22 @@ Simplificar el sistema de roles y eliminar la funcionalidad de compra directa de
 ### 4️⃣ **Cambios en la Interfaz**
 
 #### **Botón de Compra → Botón de WhatsApp**
+
 ```
 Antes: [🛒 Comprar Cupo]
 Después: [💬 Contactar por WhatsApp]
 ```
 
 #### **Información del Vendedor**
+
 Cada cupo en el marketplace muestra:
+
 - 👤 Nombre del operador
 - 🏢 Razón social (si existe)
 - 📞 Link directo a WhatsApp
 
 #### **Sistema de Tabs**
+
 - **Mis Cupos**: Gestiona tus publicaciones
 - **Marketplace**: Explora cupos disponibles (solo agencias)
 
@@ -78,6 +88,7 @@ Cada cupo en el marketplace muestra:
 ## 🔧 Archivos Modificados
 
 ### Backend (10 archivos)
+
 1. ✅ `src/models/User.model.js` - Roles simplificados
 2. ✅ `src/middleware/auth.middleware.js` - Nuevos middlewares de permisos
 3. ✅ `src/controllers/cuposMercado.controller.js` - Lógica de marketplace
@@ -86,6 +97,7 @@ Cada cupo en el marketplace muestra:
 6. ✅ `src/migrate-roles.js` - Script de migración (NUEVO)
 
 ### Frontend (8 archivos)
+
 7. ✅ `src/components/Dashboard.jsx` - Roles actualizados
 8. ✅ `src/components/dashboard/MercadoCupos.jsx` - Interfaz completa
 9. ✅ `src/components/dashboard/Usuarios.jsx` - Gestión de usuarios
@@ -96,6 +108,7 @@ Cada cupo en el marketplace muestra:
 14. ✅ `src/styles/dashboard.css` - Estilos de tabs y WhatsApp
 
 ### Documentación (2 archivos)
+
 15. ✅ `MIGRACION_ROLES.md` - Guía completa de migración
 16. ✅ `RESUMEN_CAMBIOS.md` - Este archivo
 
@@ -104,17 +117,20 @@ Cada cupo en el marketplace muestra:
 ## 🚀 Pasos para Implementar
 
 ### 1. **Backup de la Base de Datos**
+
 ```bash
 cp backend/database.sqlite backend/database.backup.sqlite
 ```
 
 ### 2. **Ejecutar Migración de Roles**
+
 ```bash
 cd backend
 node src/migrate-roles.js
 ```
 
 ### 3. **Reiniciar Servicios**
+
 ```bash
 # Terminal 1 - Backend
 cd backend
@@ -126,6 +142,7 @@ npm run dev
 ```
 
 ### 4. **Verificar Cambios**
+
 - ✅ Los usuarios antiguos tienen roles migrados
 - ✅ Los operadores ven solo sus cupos
 - ✅ Las agencias ven el marketplace
@@ -136,15 +153,19 @@ npm run dev
 ## ⚠️ Puntos Importantes
 
 ### ❗ Campo Teléfono Requerido
+
 Para publicar cupos, operadores y agencias **DEBEN** tener un número de teléfono configurado:
+
 1. Ir a **Ajustes** → **Perfil**
 2. Agregar teléfono con formato: `+5491112345678`
 3. Guardar cambios
 
 ### ❗ Sin Compra Directa
+
 El sistema **ya no permite** comprar cupos directamente. Todas las negociaciones se hacen por WhatsApp.
 
 ### ❗ Migración Irreversible
+
 Una vez ejecutada, la migración **no puede revertirse** sin un backup.
 
 ---
@@ -163,18 +184,21 @@ Una vez ejecutada, la migración **no puede revertirse** sin un backup.
 ## 🎨 Mejoras Visuales
 
 ### Botón de WhatsApp
+
 - 🟢 Color verde oficial de WhatsApp (#25D366)
 - ✨ Animación hover con elevación
 - 📱 Icono de WhatsApp integrado
 - 💬 Mensaje pre-cargado con contexto del cupo
 
 ### Tabs de Navegación
+
 - 🔄 Transiciones suaves
 - 📊 Contador de cupos en cada tab
 - 🎯 Indicador visual de tab activo
 - 📱 Responsive para móviles
 
 ### Cards de Cupos
+
 - 👤 Información del vendedor destacada
 - 🏷️ Tags de estado más visibles
 - ⏰ Indicador de urgencia (< 3 días)
@@ -185,15 +209,19 @@ Una vez ejecutada, la migración **no puede revertirse** sin un backup.
 ## 🐛 Solución de Problemas
 
 ### "No puedo ver el marketplace"
+
 **Solución:** Verificar que tu rol sea "agencia"
 
 ### "No puedo publicar cupos"
+
 **Solución:** Agregar teléfono en tu perfil (Ajustes)
 
 ### "El botón de WhatsApp no funciona"
+
 **Solución:** Verificar que el operador tenga teléfono configurado
 
 ### "Aparece error de roles en la base de datos"
+
 **Solución:** Ejecutar script de migración: `node src/migrate-roles.js`
 
 ---
@@ -213,6 +241,7 @@ Una vez ejecutada, la migración **no puede revertirse** sin un backup.
 ## 📞 Soporte
 
 Si encuentras problemas durante la implementación:
+
 1. Revisar [MIGRACION_ROLES.md](MIGRACION_ROLES.md) para detalles técnicos
 2. Verificar logs del backend durante la migración
 3. Revisar la consola del navegador para errores del frontend
@@ -222,6 +251,7 @@ Si encuentras problemas durante la implementación:
 ## 🎉 ¡Migración Completada!
 
 El sistema ahora está optimizado para:
+
 - ✅ Gestión simple de roles
 - ✅ Publicación eficiente de cupos
 - ✅ Contacto directo vía WhatsApp

@@ -72,7 +72,7 @@ const CupoMercado = sequelize.define(
   {
     tableName: "cupos_mercado",
     timestamps: true,
-  }
+  },
 );
 
 export default CupoMercado;

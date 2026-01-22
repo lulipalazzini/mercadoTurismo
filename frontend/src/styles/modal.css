@@ -651,17 +651,17 @@ textarea.form-control {
   .columns-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .preview-header {
     flex-direction: column;
     gap: 0.75rem;
     align-items: flex-start;
   }
-  
+
   .preview-table {
     font-size: 0.75rem;
   }
-  
+
   .preview-table th,
   .preview-table td {
     padding: 0.5rem 0.75rem;

@@ -30,52 +30,55 @@ export default function Hero() {
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?` +
-        `q=${encodeURIComponent(query)}` +
-        `&format=json` +
-        `&limit=8` +
-        `&addressdetails=1` +
-        `&accept-language=es` +
-        `&featuretype=city` // Priorizar ciudades
+          `q=${encodeURIComponent(query)}` +
+          `&format=json` +
+          `&limit=8` +
+          `&addressdetails=1` +
+          `&accept-language=es` +
+          `&featuretype=city`, // Priorizar ciudades
       );
 
       const data = await response.json();
-      
+
       // Filtrar y priorizar resultados más relevantes
       return data
-        .filter(place => {
+        .filter((place) => {
           const type = place.type;
           const placeClass = place.class;
           // Priorizar ciudades, capitales, aeropuertos
-          return type === 'city' || 
-                 type === 'administrative' || 
-                 placeClass === 'place' || 
-                 placeClass === 'boundary' ||
-                 placeClass === 'aeroway';
+          return (
+            type === "city" ||
+            type === "administrative" ||
+            placeClass === "place" ||
+            placeClass === "boundary" ||
+            placeClass === "aeroway"
+          );
         })
-        .map(place => {
-          const city = place.address?.city || 
-                      place.address?.town || 
-                      place.address?.village || 
-                      place.name;
-          const country = place.address?.country || '';
-          
-          let icon = '🏙️';
-          if (place.type === 'airport' || place.class === 'aeroway') {
-            icon = '✈️';
-          } else if (place.type === 'city' || place.type === 'administrative') {
-            icon = '🏙️';
+        .map((place) => {
+          const city =
+            place.address?.city ||
+            place.address?.town ||
+            place.address?.village ||
+            place.name;
+          const country = place.address?.country || "";
+
+          let icon = "🏙️";
+          if (place.type === "airport" || place.class === "aeroway") {
+            icon = "✈️";
+          } else if (place.type === "city" || place.type === "administrative") {
+            icon = "🏙️";
           }
-          
+
           return {
             name: city,
             country: country,
-            display: `${city}${country ? ', ' + country : ''}`,
-            icon: icon
+            display: `${city}${country ? ", " + country : ""}`,
+            icon: icon,
           };
         })
         .slice(0, 8);
     } catch (error) {
-      console.error('Error fetching destinations:', error);
+      console.error("Error fetching destinations:", error);
       return [];
     }
   };
@@ -83,7 +86,7 @@ export default function Hero() {
   // Handlers para origen
   const handleOrigenChange = (e) => {
     const value = e.target.value;
-    setSearchData(prev => ({ ...prev, origen: value }));
+    setSearchData((prev) => ({ ...prev, origen: value }));
 
     if (origenTimeoutRef.current) {
       clearTimeout(origenTimeoutRef.current);
@@ -102,7 +105,7 @@ export default function Hero() {
   };
 
   const handleOrigenSelect = (suggestion) => {
-    setSearchData(prev => ({ ...prev, origen: suggestion.display }));
+    setSearchData((prev) => ({ ...prev, origen: suggestion.display }));
     setShowOrigenSuggestions(false);
     setOrigenSuggestions([]);
   };
@@ -110,7 +113,7 @@ export default function Hero() {
   // Handlers para destino
   const handleDestinoChange = (e) => {
     const value = e.target.value;
-    setSearchData(prev => ({ ...prev, destino: value }));
+    setSearchData((prev) => ({ ...prev, destino: value }));
 
     if (destinoTimeoutRef.current) {
       clearTimeout(destinoTimeoutRef.current);
@@ -129,7 +132,7 @@ export default function Hero() {
   };
 
   const handleDestinoSelect = (suggestion) => {
-    setSearchData(prev => ({ ...prev, destino: suggestion.display }));
+    setSearchData((prev) => ({ ...prev, destino: suggestion.display }));
     setShowDestinoSuggestions(false);
     setDestinoSuggestions([]);
   };
@@ -145,21 +148,22 @@ export default function Hero() {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Construir query params para pasar a la página de paquetes
     const params = new URLSearchParams();
-    if (searchData.destino) params.append('destino', searchData.destino);
-    if (searchData.origen) params.append('origen', searchData.origen);
-    if (searchData.fechaIda) params.append('fechaIda', searchData.fechaIda);
-    if (searchData.fechaVuelta) params.append('fechaVuelta', searchData.fechaVuelta);
-    if (searchData.pasajeros) params.append('pasajeros', searchData.pasajeros);
-    
+    if (searchData.destino) params.append("destino", searchData.destino);
+    if (searchData.origen) params.append("origen", searchData.origen);
+    if (searchData.fechaIda) params.append("fechaIda", searchData.fechaIda);
+    if (searchData.fechaVuelta)
+      params.append("fechaVuelta", searchData.fechaVuelta);
+    if (searchData.pasajeros) params.append("pasajeros", searchData.pasajeros);
+
     // Navegar a paquetes con los parámetros de búsqueda
     navigate(`/paquetes?${params.toString()}`);
   };
@@ -226,7 +230,9 @@ export default function Hero() {
                       onClick={() => handleOrigenSelect(suggestion)}
                     >
                       <span className="suggestion-icon">{suggestion.icon}</span>
-                      <span className="suggestion-text">{suggestion.display}</span>
+                      <span className="suggestion-text">
+                        {suggestion.display}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -267,7 +273,9 @@ export default function Hero() {
                       onClick={() => handleDestinoSelect(suggestion)}
                     >
                       <span className="suggestion-icon">{suggestion.icon}</span>
-                      <span className="suggestion-text">{suggestion.display}</span>
+                      <span className="suggestion-text">
+                        {suggestion.display}
+                      </span>
                     </div>
                   ))}
                 </div>

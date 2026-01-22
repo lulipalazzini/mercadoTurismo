@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../styles/searchBox.css";
 
-export default function SearchBox({ onSearch, placeholder = "Buscar destino..." }) {
+export default function SearchBox({
+  onSearch,
+  placeholder = "Buscar destino...",
+}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -42,23 +45,24 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
           `format=json&` +
           `addressdetails=1&` +
           `limit=8&` +
-          `accept-language=es`
+          `accept-language=es`,
       );
-      
+
       const data = await response.json();
-      
+
       // Formatear resultados para mostrar ciudad, país
       const formatted = data.map((place) => {
         const parts = [];
-        
+
         if (place.address.city) parts.push(place.address.city);
         else if (place.address.town) parts.push(place.address.town);
         else if (place.address.village) parts.push(place.address.village);
-        else if (place.address.municipality) parts.push(place.address.municipality);
+        else if (place.address.municipality)
+          parts.push(place.address.municipality);
         else if (place.address.state) parts.push(place.address.state);
-        
+
         if (place.address.country) parts.push(place.address.country);
-        
+
         return {
           id: place.place_id,
           name: parts.join(", ") || place.display_name,
@@ -67,7 +71,7 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
           icon: getIconForType(place.type, place.class),
         };
       });
-      
+
       setSuggestions(formatted);
     } catch (error) {
       console.error("Error fetching destinations:", error);
@@ -92,7 +96,7 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
     const value = e.target.value;
     setSearchTerm(value);
     setShowSuggestions(true);
-    
+
     // Búsqueda local inmediata
     if (onSearch) {
       onSearch(value);
@@ -102,7 +106,7 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
   const handleSuggestionClick = (suggestion) => {
     setSearchTerm(suggestion.name);
     setShowSuggestions(false);
-    
+
     if (onSearch) {
       onSearch(suggestion.name);
     }
@@ -111,7 +115,7 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
   const handleSubmit = (e) => {
     e.preventDefault();
     setShowSuggestions(false);
-    
+
     if (onSearch) {
       onSearch(searchTerm);
     }
@@ -121,7 +125,7 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
     setSearchTerm("");
     setSuggestions([]);
     setShowSuggestions(false);
-    
+
     if (onSearch) {
       onSearch("");
     }
@@ -143,7 +147,7 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
-          
+
           <input
             type="text"
             className="search-box-input"
@@ -152,7 +156,7 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
             onChange={handleInputChange}
             onFocus={() => searchTerm.length >= 3 && setShowSuggestions(true)}
           />
-          
+
           {searchTerm && (
             <button
               type="button"
@@ -173,7 +177,7 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
               </svg>
             </button>
           )}
-          
+
           <button
             type="submit"
             className="search-box-submit"
@@ -184,7 +188,7 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
         </div>
       </form>
 
-      {showSuggestions && (searchTerm.length >= 3) && (
+      {showSuggestions && searchTerm.length >= 3 && (
         <div className="search-box-suggestions">
           {loading ? (
             <div className="search-box-suggestion-item loading">
@@ -222,7 +226,7 @@ export default function SearchBox({ onSearch, placeholder = "Buscar destino..." 
           )}
         </div>
       )}
-      
+
       {searchTerm.length > 0 && searchTerm.length < 3 && showSuggestions && (
         <div className="search-box-suggestions">
           <div className="search-box-suggestion-item hint">

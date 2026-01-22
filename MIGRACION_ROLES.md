@@ -5,20 +5,23 @@
 ### 1. Backend - Modelo de Usuario (User.model.js)
 
 **Antes:**
+
 ```javascript
-role: ENUM('admin', 'agencia', 'operador_agencia', 'operador_independiente')
-defaultValue: 'operador_independiente'
+role: ENUM("admin", "agencia", "operador_agencia", "operador_independiente");
+defaultValue: "operador_independiente";
 ```
 
 **Después:**
+
 ```javascript
-role: ENUM('admin', 'sysadmin', 'agencia', 'operador')
-defaultValue: 'operador'
+role: ENUM("admin", "sysadmin", "agencia", "operador");
+defaultValue: "operador";
 ```
 
 ### 2. Middleware de Autenticación (auth.middleware.js)
 
 **Nuevos middlewares agregados:**
+
 - `isSysAdmin` - Verifica rol de super administrador
 - `isOperador` - Verifica rol de operador
 - `isAgencia` - Verifica rol de agencia
@@ -28,6 +31,7 @@ defaultValue: 'operador'
 ### 3. Controlador de Cupos (cuposMercado.controller.js)
 
 **Cambios principales:**
+
 - ❌ **Eliminada** lógica de compra de cupos
 - ✅ **Nueva función** `getCuposMarketplace()` - Solo para agencias, muestra cupos de operadores
 - ✅ **Nueva función** `getMisCupos()` - Muestra cupos propios del usuario
@@ -37,6 +41,7 @@ defaultValue: 'operador'
 ### 4. Rutas de Cupos (cuposMercado.routes.js)
 
 **Antes:**
+
 ```javascript
 GET  /                   // Todos los cupos
 POST /                   // Crear cupo
@@ -44,6 +49,7 @@ PUT  /:id                // Comprar/actualizar cupo
 ```
 
 **Después:**
+
 ```javascript
 GET  /marketplace        // Marketplace (solo agencias)
 GET  /mis-cupos          // Mis cupos propios
@@ -55,18 +61,23 @@ DELETE /:id              // Eliminar cupo propio
 ### 5. Frontend - Componentes Actualizados
 
 #### Dashboard.jsx
+
 - Actualizado mapeo de roles en `getUserRole()`
 
 #### Usuarios.jsx, UsuarioFormModal.jsx, UsuarioEditModal.jsx
+
 - Actualizados options de roles
 - Actualizados badges y estilos de roles
 - Actualizado filtro de operadores
 
 #### Ajustes.jsx
+
 - Actualizado mapeo de nombres de roles
 
 #### MercadoCupos.jsx
+
 **Cambios completos:**
+
 - ✅ Tabs de navegación: "Mis Cupos" y "Marketplace"
 - ✅ Permisos por rol:
   - **Operador**: Solo ve "Mis Cupos", puede publicar
@@ -77,10 +88,12 @@ DELETE /:id              // Eliminar cupo propio
 - ✅ Validación de permisos antes de mostrar contenido
 
 #### cupos.service.js
+
 - `getCuposMarketplace()` - Nueva función para marketplace
 - `getMisCupos()` - Nueva función para cupos propios
 
 ### 6. Estilos (dashboard.css)
+
 - Agregados estilos para `.tabs-container` y `.tab-button`
 - Agregados estilos para `.btn-whatsapp`
 - Agregados efectos hover y transiciones
@@ -88,6 +101,7 @@ DELETE /:id              // Eliminar cupo propio
 ### 7. Script de Migración (migrate-roles.js)
 
 **Funcionalidad:**
+
 1. Altera temporalmente el enum para incluir roles antiguos
 2. Migra `operador_independiente` → `operador`
 3. Migra `operador_agencia` → `operador`
@@ -97,23 +111,25 @@ DELETE /:id              // Eliminar cupo propio
 
 ## 📋 Matriz de Permisos
 
-| Acción | Operador | Agencia | Admin | SysAdmin |
-|--------|----------|---------|-------|----------|
-| Publicar cupos | ✅ | ✅ | ✅ | ✅ |
-| Ver mis cupos | ✅ | ✅ | ✅ | ✅ |
-| Ver marketplace | ❌ | ✅ | ✅ | ✅ |
-| Ver cupos de otros | ❌ | ✅ | ✅ | ✅ |
-| Comprar cupos | ❌ | ❌ | ❌ | ❌ |
-| Contactar vía WhatsApp | - | ✅ | ✅ | ✅ |
+| Acción                 | Operador | Agencia | Admin | SysAdmin |
+| ---------------------- | -------- | ------- | ----- | -------- |
+| Publicar cupos         | ✅       | ✅      | ✅    | ✅       |
+| Ver mis cupos          | ✅       | ✅      | ✅    | ✅       |
+| Ver marketplace        | ❌       | ✅      | ✅    | ✅       |
+| Ver cupos de otros     | ❌       | ✅      | ✅    | ✅       |
+| Comprar cupos          | ❌       | ❌      | ❌    | ❌       |
+| Contactar vía WhatsApp | -        | ✅      | ✅    | ✅       |
 
 ## 🔄 Flujo del Marketplace
 
 ### Operador:
+
 1. Publica cupo con su teléfono
 2. Ve solo sus propios cupos
 3. No accede al marketplace
 
 ### Agencia:
+
 1. Puede publicar cupos
 2. Ve sus propios cupos en tab "Mis Cupos"
 3. Ve cupos de operadores en tab "Marketplace"
@@ -123,41 +139,50 @@ DELETE /:id              // Eliminar cupo propio
 ## 🚀 Cómo Ejecutar la Migración
 
 ### 1. Backup de la base de datos (Recomendado)
+
 ```bash
 # SQLite
 cp backend/database.sqlite backend/database.backup.sqlite
 ```
 
 ### 2. Ejecutar el script de migración
+
 ```bash
 cd backend
 node src/migrate-roles.js
 ```
 
 ### 3. Verificar la migración
+
 El script mostrará:
+
 - ✅ Usuarios migrados
 - ⚠️ Usuarios sin teléfono
 - 📊 Estadísticas finales de roles
 
 ### 4. Actualizar usuarios sin teléfono
+
 Después de la migración, es importante que operadores y agencias agreguen su número de teléfono para poder publicar cupos en el marketplace.
 
 ## ⚠️ Puntos Importantes
 
 ### Validaciones
+
 1. **Teléfono obligatorio** para publicar cupos
 2. Solo el **vendedor** puede actualizar/eliminar su cupo
 3. Solo **agencias** pueden ver marketplace
 4. **Operadores** solo ven sus cupos
 
 ### Seguridad
+
 - Tokens JWT incluyen el rol actualizado
 - Middleware valida permisos en cada endpoint
 - Frontend verifica roles antes de mostrar opciones
 
 ### Datos del Vendedor
+
 Los cupos ahora incluyen información completa del vendedor:
+
 ```javascript
 {
   id: 1,
@@ -179,19 +204,25 @@ Los cupos ahora incluyen información completa del vendedor:
 ## 🐛 Troubleshooting
 
 ### Error: "Column role has incorrect value"
+
 **Solución:** Ejecutar el script de migración que actualiza el enum correctamente.
 
 ### Error: "Debes agregar un número de teléfono"
+
 **Solución:** El usuario debe actualizar su perfil en Ajustes y agregar su número de teléfono.
 
 ### No veo el marketplace
+
 **Verificar:**
+
 - ¿Tu rol es "agencia"?
 - ¿Hay cupos publicados por operadores?
 - ¿El token JWT está actualizado?
 
 ### Botón de WhatsApp no funciona
+
 **Verificar:**
+
 - El operador tiene teléfono configurado
 - El formato del teléfono es correcto (incluye código de país)
 - El navegador permite abrir ventanas emergentes

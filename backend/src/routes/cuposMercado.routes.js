@@ -8,7 +8,11 @@ import {
   deleteCupoMercado,
   importarCupos,
 } from "../controllers/cuposMercado.controller.js";
-import { verifyToken, canPublishCupos, canViewMarketplace } from "../middleware/auth.middleware.js";
+import {
+  verifyToken,
+  canPublishCupos,
+  canViewMarketplace,
+} from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 

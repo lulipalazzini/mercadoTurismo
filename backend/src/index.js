@@ -30,11 +30,23 @@ import usersRoutes from "./routes/users.routes.js";
 dotenv.config();
 
 // Establecer relaciones entre modelos
-User.hasMany(CupoMercado, { foreignKey: 'usuarioVendedorId', as: 'cuposVendidos' });
-CupoMercado.belongsTo(User, { foreignKey: 'usuarioVendedorId', as: 'vendedor' });
+User.hasMany(CupoMercado, {
+  foreignKey: "usuarioVendedorId",
+  as: "cuposVendidos",
+});
+CupoMercado.belongsTo(User, {
+  foreignKey: "usuarioVendedorId",
+  as: "vendedor",
+});
 
-User.hasMany(CupoMercado, { foreignKey: 'usuarioCompradorId', as: 'cuposComprados' });
-CupoMercado.belongsTo(User, { foreignKey: 'usuarioCompradorId', as: 'comprador' });
+User.hasMany(CupoMercado, {
+  foreignKey: "usuarioCompradorId",
+  as: "cuposComprados",
+});
+CupoMercado.belongsTo(User, {
+  foreignKey: "usuarioCompradorId",
+  as: "comprador",
+});
 
 const app = express();
 const PORT = process.env.PORT || 3001;

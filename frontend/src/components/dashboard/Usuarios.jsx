@@ -228,12 +228,7 @@ export default function Usuarios() {
             </div>
             <div className="stat-content">
               <h3>
-                {
-                  (users || []).filter(
-                    (u) =>
-                      u.role === "operador"
-                  ).length
-                }
+                {(users || []).filter((u) => u.role === "operador").length}
               </h3>
               <p>Operadores</p>
             </div>

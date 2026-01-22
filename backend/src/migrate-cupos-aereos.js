@@ -33,7 +33,7 @@ async function migrateCuposToAereos() {
 
     // 3. Recrear la tabla con el nuevo ENUM (SQLite no soporta ALTER COLUMN)
     console.log("🔧 Recreando tabla con nuevo esquema...");
-    
+
     // Crear tabla temporal
     await sequelize.query(`
       CREATE TABLE cupos_mercado_new (
@@ -52,29 +52,31 @@ async function migrateCuposToAereos() {
         updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    
+
     // Copiar datos
     await sequelize.query(`
       INSERT INTO cupos_mercado_new 
       SELECT * FROM cupos_mercado;
     `);
-    
+
     // Eliminar tabla vieja
     await sequelize.query(`DROP TABLE cupos_mercado;`);
-    
+
     // Renombrar tabla nueva
-    await sequelize.query(`ALTER TABLE cupos_mercado_new RENAME TO cupos_mercado;`);
-    
+    await sequelize.query(
+      `ALTER TABLE cupos_mercado_new RENAME TO cupos_mercado;`,
+    );
+
     console.log("   ✓ Tabla recreada exitosamente\n");
 
     // 4. Verificar resultado
     const [result] = await sequelize.query(`
       SELECT COUNT(*) as total FROM cupos_mercado WHERE tipoProducto = 'aereo';
     `);
-    
+
     console.log("✅ Migración completada exitosamente!");
     console.log(`📊 Total de cupos aéreos: ${result[0].total}\n`);
-    
+
     process.exit(0);
   } catch (error) {
     console.error("❌ Error durante la migración:", error.message);

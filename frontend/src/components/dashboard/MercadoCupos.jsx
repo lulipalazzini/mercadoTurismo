@@ -34,20 +34,20 @@ export default function MercadoCupos() {
   const [alertData, setAlertData] = useState({ type: "", message: "" });
 
   const user = JSON.parse(localStorage.getItem("currentUser")) || {};
-  
+
   // Debug: verificar rol del usuario
   console.log("Usuario en MercadoCupos:", user);
   console.log("Rol del usuario:", user.role);
-  
+
   const canViewMarketplace = user.role === "agencia";
   const canPublish = user.role === "operador" || user.role === "agencia";
-  
+
   console.log("canPublish:", canPublish);
   console.log("canViewMarketplace:", canViewMarketplace);
-  
+
   // Operadores ven por defecto "mis-cupos", agencias ven "marketplace"
   const [vistaActiva, setVistaActiva] = useState(
-    user.role === "operador" ? "mis-cupos" : "marketplace"
+    user.role === "operador" ? "mis-cupos" : "marketplace",
   );
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function MercadoCupos() {
   const loadData = async () => {
     try {
       setLoading(true);
-      
+
       // Cargar mis cupos si puede publicar
       if (canPublish) {
         const misCuposData = await getMisCupos();
@@ -69,7 +69,7 @@ export default function MercadoCupos() {
         const marketplaceData = await getCuposMarketplace();
         setCupos(marketplaceData);
       }
-      
+
       setError(null);
     } catch (err) {
       setError(err.response?.data?.message || "Error al cargar los cupos");
@@ -109,7 +109,7 @@ export default function MercadoCupos() {
 
     const telefono = cupo.vendedor.telefono.replace(/\D/g, "");
     const mensaje = encodeURIComponent(
-      `Hola, estoy interesado en el cupo de ${cupo.tipoProducto}: ${cupo.descripcion}`
+      `Hola, estoy interesado en el cupo de ${cupo.tipoProducto}: ${cupo.descripcion}`,
     );
     const whatsappUrl = `https://wa.me/${telefono}?text=${mensaje}`;
     window.open(whatsappUrl, "_blank");
@@ -170,9 +170,9 @@ export default function MercadoCupos() {
     return matchSearch && matchCategoria;
   });
 
-  const categorias = [...new Set(cuposToDisplay.map((c) => c.tipoProducto))].filter(
-    Boolean
-  );
+  const categorias = [
+    ...new Set(cuposToDisplay.map((c) => c.tipoProducto)),
+  ].filter(Boolean);
 
   if (loading) {
     return (
@@ -217,14 +217,16 @@ export default function MercadoCupos() {
           <div className="header-info">
             <h1>Mercado de Cupos</h1>
             <p className="header-subtitle">
-              {canViewMarketplace 
+              {canViewMarketplace
                 ? "Explora cupos disponibles de operadores y gestiona tus publicaciones"
                 : "Gestiona tus cupos publicados"}
             </p>
           </div>
         </div>
         {canPublish && (
-          <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+          <div
+            style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}
+          >
             <button
               className="btn-secondary"
               onClick={() => setIsImportarModalOpen(true)}
@@ -329,7 +331,8 @@ export default function MercadoCupos() {
             const daysRemaining = getDaysRemaining(cupo.fechaVencimiento);
             const estadoBadge = getEstadoBadge(cupo.estado);
             const isUrgente = daysRemaining !== null && daysRemaining <= 3;
-            const showWhatsApp = vistaActiva === "marketplace" && cupo.estado === "disponible";
+            const showWhatsApp =
+              vistaActiva === "marketplace" && cupo.estado === "disponible";
 
             return (
               <div
@@ -354,18 +357,35 @@ export default function MercadoCupos() {
 
                   {/* Información del vendedor (solo en marketplace) */}
                   {vistaActiva === "marketplace" && cupo.vendedor && (
-                    <div className="vendedor-info" style={{ 
-                      padding: "0.75rem", 
-                      background: "#f8f9fa", 
-                      borderRadius: "8px",
-                      marginBottom: "1rem"
-                    }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <div
+                      className="vendedor-info"
+                      style={{
+                        padding: "0.75rem",
+                        background: "#f8f9fa",
+                        borderRadius: "8px",
+                        marginBottom: "1rem",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                        }}
+                      >
                         <FaUser style={{ color: "#6c757d" }} />
-                        <span><strong>Operador:</strong> {cupo.vendedor.nombre}</span>
+                        <span>
+                          <strong>Operador:</strong> {cupo.vendedor.nombre}
+                        </span>
                       </div>
                       {cupo.vendedor.razonSocial && (
-                        <div style={{ fontSize: "0.875rem", color: "#6c757d", marginTop: "0.25rem" }}>
+                        <div
+                          style={{
+                            fontSize: "0.875rem",
+                            color: "#6c757d",
+                            marginTop: "0.25rem",
+                          }}
+                        >
                           {cupo.vendedor.razonSocial}
                         </div>
                       )}
@@ -439,10 +459,14 @@ export default function MercadoCupos() {
                         fontWeight: "500",
                         width: "100%",
                         justifyContent: "center",
-                        transition: "all 0.2s"
+                        transition: "all 0.2s",
                       }}
-                      onMouseEnter={(e) => e.target.style.background = "#1fb855"}
-                      onMouseLeave={(e) => e.target.style.background = "#25D366"}
+                      onMouseEnter={(e) =>
+                        (e.target.style.background = "#1fb855")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.target.style.background = "#25D366")
+                      }
                     >
                       <FaWhatsapp size={20} /> Contactar por WhatsApp
                     </button>

@@ -11,7 +11,11 @@ import {
 import * as XLSX from "xlsx";
 import "../../styles/modal.css";
 
-export default function ImportarCuposModal({ isOpen, onClose, onImportSuccess }) {
+export default function ImportarCuposModal({
+  isOpen,
+  onClose,
+  onImportSuccess,
+}) {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,10 +26,18 @@ export default function ImportarCuposModal({ isOpen, onClose, onImportSuccess })
     { key: "tipoProducto", label: "Tipo Producto", ejemplo: "aereo" },
     { key: "origen", label: "Origen", ejemplo: "Buenos Aires" },
     { key: "destino", label: "Destino", ejemplo: "Miami" },
-    { key: "descripcion", label: "Descripción", ejemplo: "Vuelo BA-MIA clase económica" },
+    {
+      key: "descripcion",
+      label: "Descripción",
+      ejemplo: "Vuelo BA-MIA clase económica",
+    },
     { key: "cantidad", label: "Cantidad", ejemplo: "10" },
     { key: "precioUnitario", label: "Precio Unitario", ejemplo: "45000" },
-    { key: "fechaVencimiento", label: "Fecha Vencimiento", ejemplo: "2026-12-31" },
+    {
+      key: "fechaVencimiento",
+      label: "Fecha Vencimiento",
+      ejemplo: "2026-12-31",
+    },
   ];
 
   const optionalColumns = [
@@ -68,14 +80,14 @@ export default function ImportarCuposModal({ isOpen, onClose, onImportSuccess })
         // Validar columnas requeridas
         const firstRow = jsonData[0];
         const missingColumns = requiredColumns.filter(
-          (col) => !(col.key in firstRow)
+          (col) => !(col.key in firstRow),
         );
 
         if (missingColumns.length > 0) {
           setError(
             `Faltan columnas requeridas: ${missingColumns
               .map((c) => c.label)
-              .join(", ")}`
+              .join(", ")}`,
           );
           setPreview([]);
           return;
@@ -83,12 +95,12 @@ export default function ImportarCuposModal({ isOpen, onClose, onImportSuccess })
 
         // Validar que tipoProducto sea "aereo"
         const invalidRows = jsonData.filter(
-          (row) => row.tipoProducto?.toLowerCase() !== "aereo"
+          (row) => row.tipoProducto?.toLowerCase() !== "aereo",
         );
 
         if (invalidRows.length > 0) {
           setError(
-            `Error: Todos los cupos deben ser de tipo "aereo". Se encontraron ${invalidRows.length} filas con tipo diferente.`
+            `Error: Todos los cupos deben ser de tipo "aereo". Se encontraron ${invalidRows.length} filas con tipo diferente.`,
           );
           setPreview([]);
           return;
@@ -98,7 +110,9 @@ export default function ImportarCuposModal({ isOpen, onClose, onImportSuccess })
         setShowInstructions(false);
         setError(null);
       } catch (err) {
-        setError("Error al leer el archivo. Asegúrate de que sea un Excel válido.");
+        setError(
+          "Error al leer el archivo. Asegúrate de que sea un Excel válido.",
+        );
         setPreview([]);
       }
     };
@@ -116,14 +130,17 @@ export default function ImportarCuposModal({ isOpen, onClose, onImportSuccess })
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:3000/api/cupos-mercado/importar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await fetch(
+        "http://localhost:3000/api/cupos-mercado/importar",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ cupos: preview }),
         },
-        body: JSON.stringify({ cupos: preview }),
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -242,8 +259,12 @@ export default function ImportarCuposModal({ isOpen, onClose, onImportSuccess })
                   <strong>Importante:</strong>
                   <ul>
                     <li>Todos los cupos deben ser de tipo "aereo"</li>
-                    <li>Las fechas deben estar en formato AAAA-MM-DD (2026-12-31)</li>
-                    <li>Los precios deben ser números sin símbolos ni puntos</li>
+                    <li>
+                      Las fechas deben estar en formato AAAA-MM-DD (2026-12-31)
+                    </li>
+                    <li>
+                      Los precios deben ser números sin símbolos ni puntos
+                    </li>
                     <li>La cantidad debe ser un número entero positivo</li>
                   </ul>
                 </div>
@@ -277,7 +298,9 @@ export default function ImportarCuposModal({ isOpen, onClose, onImportSuccess })
             <label htmlFor="excel-file" className="file-upload-label">
               <FaUpload className="upload-icon" />
               <span className="upload-text">
-                {file ? file.name : "Haz click o arrastra tu archivo Excel aquí"}
+                {file
+                  ? file.name
+                  : "Haz click o arrastra tu archivo Excel aquí"}
               </span>
               {file && (
                 <span className="upload-success">

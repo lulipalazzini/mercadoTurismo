@@ -3,8 +3,7 @@ import CupoMercado from "../models/CupoMercado.model.js";
 const cuposMercadoData = [
   {
     tipoProducto: "aereo",
-    descripcion:
-      "Buenos Aires - Miami - Buenos Aires, Salida 15/03/2026",
+    descripcion: "Buenos Aires - Miami - Buenos Aires, Salida 15/03/2026",
     cantidad: 8,
     precioMayorista: 850.0,
     precioMinorista: 1150.0,
@@ -32,7 +31,8 @@ const cuposMercadoData = [
     precioMayorista: 750.0,
     precioMinorista: 1050.0,
     fechaVencimiento: "2026-05-05",
-    observaciones: "Temporada media. 2 valijas de 23kg incluidas. Asientos asignables.",
+    observaciones:
+      "Temporada media. 2 valijas de 23kg incluidas. Asientos asignables.",
     estado: "disponible",
     usuarioVendedorId: 2,
   },
@@ -43,7 +43,8 @@ const cuposMercadoData = [
     precioMayorista: 1350.0,
     precioMinorista: 1850.0,
     fechaVencimiento: "2026-06-10",
-    observaciones: "Temporada alta. Escalas programadas. Flexible para cambios.",
+    observaciones:
+      "Temporada alta. Escalas programadas. Flexible para cambios.",
     estado: "disponible",
     usuarioVendedorId: 4,
   },
@@ -54,7 +55,8 @@ const cuposMercadoData = [
     precioMayorista: 980.0,
     precioMinorista: 1380.0,
     fechaVencimiento: "2026-06-25",
-    observaciones: "Vuelos nocturnos. Entretenimiento a bordo. WiFi disponible.",
+    observaciones:
+      "Vuelos nocturnos. Entretenimiento a bordo. WiFi disponible.",
     estado: "disponible",
     usuarioVendedorId: 2,
   },
@@ -65,7 +67,8 @@ const cuposMercadoData = [
     precioMayorista: 820.0,
     precioMinorista: 1180.0,
     fechaVencimiento: "2026-08-05",
-    observaciones: "Caribe todo el año. Vuelo charter. Salida garantizada grupo mínimo.",
+    observaciones:
+      "Caribe todo el año. Vuelo charter. Salida garantizada grupo mínimo.",
     estado: "disponible",
     usuarioVendedorId: 3,
   },
@@ -76,7 +79,8 @@ const cuposMercadoData = [
     precioMayorista: 1280.0,
     precioMinorista: 1750.0,
     fechaVencimiento: "2026-09-10",
-    observaciones: "Temporada baja Europa. Conexión en São Paulo. Upgrade disponible.",
+    observaciones:
+      "Temporada baja Europa. Conexión en São Paulo. Upgrade disponible.",
     estado: "disponible",
     usuarioVendedorId: 4,
   },
@@ -87,7 +91,8 @@ const cuposMercadoData = [
     precioMayorista: 1100.0,
     precioMinorista: 1500.0,
     fechaVencimiento: "2026-10-15",
-    observaciones: "Costa oeste USA. Escala técnica Lima. Tarifa no reembolsable.",
+    observaciones:
+      "Costa oeste USA. Escala técnica Lima. Tarifa no reembolsable.",
     estado: "disponible",
     usuarioVendedorId: 2,
   },
@@ -98,7 +103,7 @@ export const seedCuposMercado = async () => {
     const count = await CupoMercado.count();
     if (count > 0) {
       console.log(
-        "⏭️  Cupos de mercado ya existen en la base de datos. Saltando..."
+        "⏭️  Cupos de mercado ya existen en la base de datos. Saltando...",
       );
       return;
     }

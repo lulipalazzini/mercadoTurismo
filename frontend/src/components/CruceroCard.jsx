@@ -31,11 +31,11 @@ export default function CruceroCard({ item }) {
 
   const formatDate = (date) => {
     if (!date) return "Fecha no disponible";
-    
+
     try {
       const dateObj = new Date(date);
       if (isNaN(dateObj.getTime())) return "Fecha no disponible";
-      
+
       return dateObj.toLocaleDateString("es-ES", {
         day: "2-digit",
         month: "short",

@@ -143,9 +143,7 @@ export default function UsuarioEditModal({
                     onChange={handleChange}
                     required
                   >
-                    <option value="operador">
-                      Operador
-                    </option>
+                    <option value="operador">Operador</option>
                     <option value="agencia">Agencia</option>
                     <option value="admin">Administrador</option>
                     <option value="sysadmin">Super Administrador</option>
