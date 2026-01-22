@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes, FaPlus, FaTrash } from "react-icons/fa";
 import { createSalidaGrupal } from "../../services/salidasGrupales.service";
 import AlertModal from "../common/AlertModal";
+import DestinoAutocomplete from "../common/DestinoAutocomplete";
 import "../../styles/modal.css";
 
 export default function SalidaGrupalFormModal({ isOpen, onClose, onSuccess }) {
@@ -156,23 +157,15 @@ export default function SalidaGrupalFormModal({ isOpen, onClose, onSuccess }) {
               </div>
 
               {/* Destino */}
-              <div className="form-group">
-                <label htmlFor="destino">
-                  Destino <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="destino"
-                  name="destino"
-                  className={`form-control ${errors.destino ? "error" : ""}`}
-                  value={formData.destino}
-                  onChange={handleChange}
-                  placeholder="Destino principal"
-                />
-                {errors.destino && (
-                  <span className="error-message">{errors.destino}</span>
-                )}
-              </div>
+              <DestinoAutocomplete
+                label="Destino"
+                name="destino"
+                value={formData.destino}
+                onChange={handleChange}
+                placeholder="Destino principal"
+                error={errors.destino}
+                required
+              />
 
               {/* Duracion */}
               <div className="form-group">

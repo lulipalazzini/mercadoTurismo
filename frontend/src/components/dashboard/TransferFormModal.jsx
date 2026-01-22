@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { createTransfer } from "../../services/transfers.service";
 import AlertModal from "../common/AlertModal";
+import DestinoAutocomplete from "../common/DestinoAutocomplete";
 import "../../styles/modal.css";
 
 export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
@@ -149,42 +150,26 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
               </div>
 
               {/* Origen */}
-              <div className="form-group">
-                <label htmlFor="origen">
-                  Origen <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="origen"
-                  name="origen"
-                  className={`form-control ${errors.origen ? "error" : ""}`}
-                  value={formData.origen}
-                  onChange={handleChange}
-                  placeholder="Punto de origen"
-                />
-                {errors.origen && (
-                  <span className="error-message">{errors.origen}</span>
-                )}
-              </div>
+              <DestinoAutocomplete
+                label="Origen"
+                name="origen"
+                value={formData.origen}
+                onChange={handleChange}
+                placeholder="Punto de origen"
+                error={errors.origen}
+                required
+              />
 
               {/* Destino */}
-              <div className="form-group">
-                <label htmlFor="destino">
-                  Destino <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="destino"
-                  name="destino"
-                  className={`form-control ${errors.destino ? "error" : ""}`}
-                  value={formData.destino}
-                  onChange={handleChange}
-                  placeholder="Punto de destino"
-                />
-                {errors.destino && (
-                  <span className="error-message">{errors.destino}</span>
-                )}
-              </div>
+              <DestinoAutocomplete
+                label="Destino"
+                name="destino"
+                value={formData.destino}
+                onChange={handleChange}
+                placeholder="Punto de destino"
+                error={errors.destino}
+                required
+              />
 
               {/* Capacidad de Pasajeros */}
               <div className="form-group">

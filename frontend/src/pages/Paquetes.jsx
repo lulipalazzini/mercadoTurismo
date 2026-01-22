@@ -127,7 +127,9 @@ export default function Paquetes() {
         paquete.nombre?.toLowerCase().includes(searchLower) ||
         paquete.destino?.toLowerCase().includes(searchLower) ||
         paquete.descripcion?.toLowerCase().includes(searchLower) ||
-        paquete.incluye?.toLowerCase().includes(searchLower)
+        (Array.isArray(paquete.incluye) && paquete.incluye.some(item => 
+          item?.toLowerCase().includes(searchLower)
+        ))
       );
     });
 

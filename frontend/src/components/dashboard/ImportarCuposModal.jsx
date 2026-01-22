@@ -24,8 +24,8 @@ export default function ImportarCuposModal({
 
   const requiredColumns = [
     { key: "tipoProducto", label: "Tipo Producto", ejemplo: "aereo" },
-    { key: "origen", label: "Origen", ejemplo: "Buenos Aires" },
-    { key: "destino", label: "Destino", ejemplo: "Miami" },
+    { key: "origen", label: "Origen", ejemplo: "Buenos Aires, Argentina" },
+    { key: "destino", label: "Destino", ejemplo: "Miami, Florida, Estados Unidos" },
     {
       key: "descripcion",
       label: "Descripción",
@@ -169,8 +169,8 @@ export default function ImportarCuposModal({
     const templateData = [
       {
         tipoProducto: "aereo",
-        origen: "Buenos Aires",
-        destino: "Miami",
+        origen: "Buenos Aires, Argentina",
+        destino: "Miami, Florida, Estados Unidos",
         descripcion: "Vuelo directo BA-MIA clase económica",
         cantidad: 10,
         precioUnitario: 45000,
@@ -182,8 +182,8 @@ export default function ImportarCuposModal({
       },
       {
         tipoProducto: "aereo",
-        origen: "Buenos Aires",
-        destino: "Madrid",
+        origen: "Buenos Aires, Argentina",
+        destino: "Madrid, España",
         descripcion: "Vuelo BA-MAD vía São Paulo",
         cantidad: 5,
         precioUnitario: 75000,
@@ -192,6 +192,19 @@ export default function ImportarCuposModal({
         aerolinea: "Iberia",
         clase: "Business",
         equipaje: "32kg incluido",
+      },
+      {
+        tipoProducto: "aereo",
+        origen: "Mendoza, Argentina",
+        destino: "Santiago, Chile",
+        descripcion: "Vuelo MDZ-SCL directo",
+        cantidad: 15,
+        precioUnitario: 25000,
+        fechaVencimiento: "2026-10-15",
+        fechaViaje: "2026-05-10",
+        aerolinea: "LATAM",
+        clase: "Económica",
+        equipaje: "23kg incluido",
       },
     ];
 
@@ -259,6 +272,9 @@ export default function ImportarCuposModal({
                   <strong>Importante:</strong>
                   <ul>
                     <li>Todos los cupos deben ser de tipo "aereo"</li>
+                    <li>
+                      Usa el formato completo de destinos: "Ciudad, Provincia/Estado, País" (Ej: "Mendoza, Argentina")
+                    </li>
                     <li>
                       Las fechas deben estar en formato AAAA-MM-DD (2026-12-31)
                     </li>

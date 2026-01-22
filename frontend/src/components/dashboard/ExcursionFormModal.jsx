@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { createExcursion } from "../../services/excursiones.service";
 import AlertModal from "../common/AlertModal";
+import DestinoAutocomplete from "../common/DestinoAutocomplete";
 import "../../styles/modal.css";
 
 export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
@@ -131,23 +132,15 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
               </div>
 
               {/* Destino */}
-              <div className="form-group">
-                <label htmlFor="destino">
-                  Destino <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="destino"
-                  name="destino"
-                  className={`form-control ${errors.destino ? "error" : ""}`}
-                  value={formData.destino}
-                  onChange={handleChange}
-                  placeholder="Ciudad o lugar"
-                />
-                {errors.destino && (
-                  <span className="error-message">{errors.destino}</span>
-                )}
-              </div>
+              <DestinoAutocomplete
+                label="Destino"
+                name="destino"
+                value={formData.destino}
+                onChange={handleChange}
+                placeholder="Ciudad o lugar"
+                error={errors.destino}
+                required
+              />
 
               {/* Tipo */}
               <div className="form-group">

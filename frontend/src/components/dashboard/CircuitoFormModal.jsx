@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes, FaPlus, FaTrash } from "react-icons/fa";
 import { createCircuito } from "../../services/circuitos.service";
 import AlertModal from "../common/AlertModal";
+import DestinoAutocomplete from "../common/DestinoAutocomplete";
 import "../../styles/modal.css";
 
 export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
@@ -247,23 +248,19 @@ export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
               <div className="form-group full-width">
                 <label>Destinos</label>
                 <div className="array-input">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Ej: París, Londres, Roma..."
+                  <DestinoAutocomplete
+                    label=""
+                    name="nuevoDestino"
                     value={nuevoDestino}
                     onChange={(e) => setNuevoDestino(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        handleAddDestino();
-                      }
-                    }}
+                    placeholder="Ej: París, Francia"
+                    error={null}
                   />
                   <button
                     type="button"
                     className="btn-secondary"
                     onClick={handleAddDestino}
+                    style={{ marginTop: '0.5rem' }}
                   >
                     <FaPlus /> Agregar
                   </button>

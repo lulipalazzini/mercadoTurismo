@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { createAlojamiento } from "../../services/alojamientos.service";
 import AlertModal from "../common/AlertModal";
+import DestinoAutocomplete from "../common/DestinoAutocomplete";
 import "../../styles/modal.css";
 
 export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
@@ -173,23 +174,15 @@ export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
               </div>
 
               {/* Ubicación */}
-              <div className="form-group">
-                <label htmlFor="ubicacion">
-                  Ubicación <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="ubicacion"
-                  name="ubicacion"
-                  className={`form-control ${errors.ubicacion ? "error" : ""}`}
-                  value={formData.ubicacion}
-                  onChange={handleChange}
-                  placeholder="Ciudad, País"
-                />
-                {errors.ubicacion && (
-                  <span className="error-message">{errors.ubicacion}</span>
-                )}
-              </div>
+              <DestinoAutocomplete
+                label="Ubicación"
+                name="ubicacion"
+                value={formData.ubicacion}
+                onChange={handleChange}
+                placeholder="Ciudad, País"
+                error={errors.ubicacion}
+                required
+              />
 
               {/* Precio por Noche */}
               <div className="form-group">

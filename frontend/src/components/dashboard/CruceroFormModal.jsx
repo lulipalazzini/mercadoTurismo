@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes, FaPlus, FaTrash } from "react-icons/fa";
 import { createCrucero } from "../../services/cruceros.service";
 import AlertModal from "../common/AlertModal";
+import DestinoAutocomplete from "../common/DestinoAutocomplete";
 import "../../styles/modal.css";
 
 export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
@@ -262,23 +263,19 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
               <div className="form-group full-width">
                 <label>Itinerario (puertos)</label>
                 <div className="array-input">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Ej: Miami, Cozumel, Grand Cayman..."
+                  <DestinoAutocomplete
+                    label=""
+                    name="nuevoItinerario"
                     value={nuevoItinerario}
                     onChange={(e) => setNuevoItinerario(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        handleAddItinerario();
-                      }
-                    }}
+                    placeholder="Ej: Miami, Florida, Estados Unidos"
+                    error={null}
                   />
                   <button
                     type="button"
                     className="btn-secondary"
                     onClick={handleAddItinerario}
+                    style={{ marginTop: '0.5rem' }}
                   >
                     <FaPlus /> Agregar
                   </button>
