@@ -34,7 +34,6 @@ import Autos from "./dashboard/Autos";
 import Circuitos from "./dashboard/Circuitos";
 import Cruceros from "./dashboard/Cruceros";
 import Excursiones from "./dashboard/Excursiones";
-import Pasajes from "./dashboard/Pasajes";
 import SalidasGrupales from "./dashboard/SalidasGrupales";
 import Transfers from "./dashboard/Transfers";
 import MercadoCupos from "./dashboard/MercadoCupos";
@@ -62,7 +61,9 @@ function DashboardContent() {
   const getUserRole = () => {
     const roles = {
       admin: "Administrador",
-      user: "Operador",
+      sysadmin: "Super Administrador",
+      agencia: "Agencia",
+      operador: "Operador",
     };
     return roles[user.role] || "Operador";
   };
@@ -84,7 +85,6 @@ function DashboardContent() {
       circuitos: "Circuitos",
       cruceros: "Cruceros",
       excursiones: "Excursiones",
-      pasajes: "Pasajes",
       "salidas-grupales": "Salidas Grupales",
       transfers: "Transfers",
       "mercado-cupos": "Mercado de Cupos",
@@ -113,8 +113,6 @@ function DashboardContent() {
         return <Cruceros />;
       case "excursiones":
         return <Excursiones />;
-      case "pasajes":
-        return <Pasajes />;
       case "salidas-grupales":
         return <SalidasGrupales />;
       case "transfers":
@@ -247,17 +245,6 @@ function DashboardContent() {
                 <FaHiking />
               </span>
               <span className="nav-label">Excursiones</span>
-            </button>
-            <button
-              className={`nav-item ${
-                activeSection === "pasajes" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("pasajes")}
-            >
-              <span className="nav-icon">
-                <FaPlane />
-              </span>
-              <span className="nav-label">Pasajes</span>
             </button>
             <button
               className={`nav-item ${

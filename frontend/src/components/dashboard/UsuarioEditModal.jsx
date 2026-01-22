@@ -19,7 +19,7 @@ export default function UsuarioEditModal({
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
-    role: "operador_independiente",
+    role: "operador",
     telefono: "",
     direccion: "",
   });
@@ -33,7 +33,7 @@ export default function UsuarioEditModal({
       setFormData({
         nombre: usuario.nombre || "",
         email: usuario.email || "",
-        role: usuario.role || "operador_independiente",
+        role: usuario.role || "operador",
         telefono: usuario.telefono || "",
         direccion: usuario.direccion || "",
       });
@@ -143,14 +143,12 @@ export default function UsuarioEditModal({
                     onChange={handleChange}
                     required
                   >
-                    <option value="operador_independiente">
-                      Operador Independiente
-                    </option>
-                    <option value="operador_agencia">
-                      Operador de Agencia
+                    <option value="operador">
+                      Operador
                     </option>
                     <option value="agencia">Agencia</option>
                     <option value="admin">Administrador</option>
+                    <option value="sysadmin">Super Administrador</option>
                   </select>
                 </div>
 

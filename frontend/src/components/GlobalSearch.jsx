@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import AlojamientoCard from "./AlojamientoCard";
 import PaqueteCard from "./PaqueteCard";
 import AutoCard from "./AutoCard";
-import PasajeCard from "./PasajeCard";
 import TransferCard from "./TransferCard";
 import CircuitoCard from "./CircuitoCard";
 import ExcursionCard from "./ExcursionCard";
@@ -18,7 +17,6 @@ export default function GlobalSearch() {
     alojamientos: [],
     paquetes: [],
     autos: [],
-    pasajes: [],
     transfers: [],
     circuitos: [],
     excursiones: [],
@@ -37,7 +35,6 @@ export default function GlobalSearch() {
         { key: "alojamientos", url: "http://localhost:3001/api/alojamientos" },
         { key: "paquetes", url: "http://localhost:3001/api/paquetes" },
         { key: "autos", url: "http://localhost:3001/api/autos" },
-        { key: "pasajes", url: "http://localhost:3001/api/pasajes" },
         { key: "transfers", url: "http://localhost:3001/api/transfers" },
         { key: "circuitos", url: "http://localhost:3001/api/circuitos" },
         { key: "excursiones", url: "http://localhost:3001/api/excursiones" },
@@ -91,7 +88,6 @@ export default function GlobalSearch() {
         alojamientos: [],
         paquetes: [],
         autos: [],
-        pasajes: [],
         transfers: [],
         circuitos: [],
         excursiones: [],
@@ -125,13 +121,6 @@ export default function GlobalSearch() {
           searchInText(item.modelo, searchTerm) ||
           searchInText(item.marca, searchTerm) ||
           searchInText(item.ubicacion, searchTerm) ||
-          searchInText(item.descripcion, searchTerm),
-      ),
-      pasajes: allData.pasajes.filter(
-        (item) =>
-          searchInText(item.origen, searchTerm) ||
-          searchInText(item.destino, searchTerm) ||
-          searchInText(item.aerolinea, searchTerm) ||
           searchInText(item.descripcion, searchTerm),
       ),
       transfers: allData.transfers.filter(
@@ -203,7 +192,6 @@ export default function GlobalSearch() {
       alojamientos: [],
       paquetes: [],
       autos: [],
-      pasajes: [],
       transfers: [],
       circuitos: [],
       excursiones: [],
@@ -307,19 +295,6 @@ export default function GlobalSearch() {
                       <div className="results-grid">
                         {results.autos.map((item) => (
                           <AutoCard key={item.id} item={item} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {results.pasajes.length > 0 && (
-                    <div className="result-section">
-                      <h2 className="section-title">
-                        Pasajes ({results.pasajes.length})
-                      </h2>
-                      <div className="results-grid">
-                        {results.pasajes.map((item) => (
-                          <PasajeCard key={item.id} item={item} />
                         ))}
                       </div>
                     </div>

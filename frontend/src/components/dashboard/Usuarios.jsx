@@ -78,9 +78,9 @@ export default function Usuarios() {
   const getRoleName = (role) => {
     const roles = {
       admin: "Administrador",
+      sysadmin: "Super Administrador",
       agencia: "Agencia",
-      operador_agencia: "Operador de Agencia",
-      operador_independiente: "Operador Independiente",
+      operador: "Operador",
     };
     return roles[role] || role;
   };
@@ -89,10 +89,11 @@ export default function Usuarios() {
     switch (role) {
       case "admin":
         return <FaUserShield />;
+      case "sysadmin":
+        return <FaUserShield />;
       case "agencia":
         return <FaBuilding />;
-      case "operador_agencia":
-      case "operador_independiente":
+      case "operador":
         return <FaUser />;
       default:
         return <FaUser />;
@@ -102,9 +103,9 @@ export default function Usuarios() {
   const getRoleBadgeColor = (role) => {
     const colors = {
       admin: { bg: "#fee", color: "#c53030" },
+      sysadmin: { bg: "#fce4ec", color: "#c2185b" },
       agencia: { bg: "#e3f2fd", color: "#0d47a1" },
-      operador_agencia: { bg: "#f3e5f5", color: "#6a1b9a" },
-      operador_independiente: { bg: "#e8f5e9", color: "#2e7d32" },
+      operador: { bg: "#e8f5e9", color: "#2e7d32" },
     };
     return colors[role] || { bg: "#f7fafc", color: "#2d3748" };
   };
@@ -181,11 +182,9 @@ export default function Usuarios() {
             >
               <option value="">Todos los roles</option>
               <option value="admin">Administrador</option>
+              <option value="sysadmin">Super Administrador</option>
               <option value="agencia">Agencia</option>
-              <option value="operador_agencia">Operador de Agencia</option>
-              <option value="operador_independiente">
-                Operador Independiente
-              </option>
+              <option value="operador">Operador</option>
             </select>
           </div>
         </div>
@@ -232,8 +231,7 @@ export default function Usuarios() {
                 {
                   (users || []).filter(
                     (u) =>
-                      u.role === "operador_agencia" ||
-                      u.role === "operador_independiente"
+                      u.role === "operador"
                   ).length
                 }
               </h3>

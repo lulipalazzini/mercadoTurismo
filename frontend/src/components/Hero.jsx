@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/hero.css";
 import videoBackground from "../assets/2169879_uhd_3840_2160_30fps_V2.mp4";
 
 export default function Hero() {
+  const navigate = useNavigate();
   const [searchData, setSearchData] = useState({
     origen: "",
     destino: "",
@@ -11,10 +13,155 @@ export default function Hero() {
     pasajeros: 1,
   });
 
+  // Estados para autocompletado
+  const [origenSuggestions, setOrigenSuggestions] = useState([]);
+  const [destinoSuggestions, setDestinoSuggestions] = useState([]);
+  const [showOrigenSuggestions, setShowOrigenSuggestions] = useState(false);
+  const [showDestinoSuggestions, setShowDestinoSuggestions] = useState(false);
+  const origenTimeoutRef = useRef(null);
+  const destinoTimeoutRef = useRef(null);
+  const origenRef = useRef(null);
+  const destinoRef = useRef(null);
+
+  // Función para buscar destinos con la API de Nominatim
+  const fetchDestinations = async (query) => {
+    if (query.length < 3) return [];
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?` +
+        `q=${encodeURIComponent(query)}` +
+        `&format=json` +
+        `&limit=8` +
+        `&addressdetails=1` +
+        `&accept-language=es` +
+        `&featuretype=city` // Priorizar ciudades
+      );
+
+      const data = await response.json();
+      
+      // Filtrar y priorizar resultados más relevantes
+      return data
+        .filter(place => {
+          const type = place.type;
+          const placeClass = place.class;
+          // Priorizar ciudades, capitales, aeropuertos
+          return type === 'city' || 
+                 type === 'administrative' || 
+                 placeClass === 'place' || 
+                 placeClass === 'boundary' ||
+                 placeClass === 'aeroway';
+        })
+        .map(place => {
+          const city = place.address?.city || 
+                      place.address?.town || 
+                      place.address?.village || 
+                      place.name;
+          const country = place.address?.country || '';
+          
+          let icon = '🏙️';
+          if (place.type === 'airport' || place.class === 'aeroway') {
+            icon = '✈️';
+          } else if (place.type === 'city' || place.type === 'administrative') {
+            icon = '🏙️';
+          }
+          
+          return {
+            name: city,
+            country: country,
+            display: `${city}${country ? ', ' + country : ''}`,
+            icon: icon
+          };
+        })
+        .slice(0, 8);
+    } catch (error) {
+      console.error('Error fetching destinations:', error);
+      return [];
+    }
+  };
+
+  // Handlers para origen
+  const handleOrigenChange = (e) => {
+    const value = e.target.value;
+    setSearchData(prev => ({ ...prev, origen: value }));
+
+    if (origenTimeoutRef.current) {
+      clearTimeout(origenTimeoutRef.current);
+    }
+
+    if (value.length >= 3) {
+      origenTimeoutRef.current = setTimeout(async () => {
+        const suggestions = await fetchDestinations(value);
+        setOrigenSuggestions(suggestions);
+        setShowOrigenSuggestions(true);
+      }, 300);
+    } else {
+      setOrigenSuggestions([]);
+      setShowOrigenSuggestions(false);
+    }
+  };
+
+  const handleOrigenSelect = (suggestion) => {
+    setSearchData(prev => ({ ...prev, origen: suggestion.display }));
+    setShowOrigenSuggestions(false);
+    setOrigenSuggestions([]);
+  };
+
+  // Handlers para destino
+  const handleDestinoChange = (e) => {
+    const value = e.target.value;
+    setSearchData(prev => ({ ...prev, destino: value }));
+
+    if (destinoTimeoutRef.current) {
+      clearTimeout(destinoTimeoutRef.current);
+    }
+
+    if (value.length >= 3) {
+      destinoTimeoutRef.current = setTimeout(async () => {
+        const suggestions = await fetchDestinations(value);
+        setDestinoSuggestions(suggestions);
+        setShowDestinoSuggestions(true);
+      }, 300);
+    } else {
+      setDestinoSuggestions([]);
+      setShowDestinoSuggestions(false);
+    }
+  };
+
+  const handleDestinoSelect = (suggestion) => {
+    setSearchData(prev => ({ ...prev, destino: suggestion.display }));
+    setShowDestinoSuggestions(false);
+    setDestinoSuggestions([]);
+  };
+
+  // Cerrar sugerencias al hacer click fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (origenRef.current && !origenRef.current.contains(event.target)) {
+        setShowOrigenSuggestions(false);
+      }
+      if (destinoRef.current && !destinoRef.current.contains(event.target)) {
+        setShowDestinoSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Búsqueda:", searchData);
-    // Aquí iría la lógica de búsqueda
+    
+    // Construir query params para pasar a la página de paquetes
+    const params = new URLSearchParams();
+    if (searchData.destino) params.append('destino', searchData.destino);
+    if (searchData.origen) params.append('origen', searchData.origen);
+    if (searchData.fechaIda) params.append('fechaIda', searchData.fechaIda);
+    if (searchData.fechaVuelta) params.append('fechaVuelta', searchData.fechaVuelta);
+    if (searchData.pasajeros) params.append('pasajeros', searchData.pasajeros);
+    
+    // Navegar a paquetes con los parámetros de búsqueda
+    navigate(`/paquetes?${params.toString()}`);
   };
 
   const handleChange = (e) => {
@@ -36,16 +183,16 @@ export default function Hero() {
       <div className="hero-overlay" aria-hidden="true" />
 
       <div className="hero-content">
-        <h1>Descubrí el mundo a tu manera</h1>
+        <h1>Descubrí el mundo a precios de remate</h1>
         <p className="lead">
-          Experiencias únicas, destinos increíbles y momentos que permanecen
-          para siempre. Tu próxima aventura comienza acá.
+          Somos la primer plataforma que conecta mayoristas, operadores y
+          viajantes en un mismo lugar.
         </p>
 
         {/* Formulario de Búsqueda Premium */}
         <form className="search-box" onSubmit={handleSubmit}>
           <div className="search-grid">
-            <div className="search-field">
+            <div className="search-field" ref={origenRef}>
               <label htmlFor="origen">
                 <svg
                   width="20"
@@ -66,12 +213,27 @@ export default function Hero() {
                 name="origen"
                 placeholder="¿Desde dónde viajas?"
                 value={searchData.origen}
-                onChange={handleChange}
+                onChange={handleOrigenChange}
+                autoComplete="off"
                 required
               />
+              {showOrigenSuggestions && origenSuggestions.length > 0 && (
+                <div className="hero-suggestions-dropdown">
+                  {origenSuggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="hero-suggestion-item"
+                      onClick={() => handleOrigenSelect(suggestion)}
+                    >
+                      <span className="suggestion-icon">{suggestion.icon}</span>
+                      <span className="suggestion-text">{suggestion.display}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div className="search-field">
+            <div className="search-field" ref={destinoRef}>
               <label htmlFor="destino">
                 <svg
                   width="20"
@@ -92,9 +254,24 @@ export default function Hero() {
                 name="destino"
                 placeholder="¿A dónde quieres ir?"
                 value={searchData.destino}
-                onChange={handleChange}
+                onChange={handleDestinoChange}
+                autoComplete="off"
                 required
               />
+              {showDestinoSuggestions && destinoSuggestions.length > 0 && (
+                <div className="hero-suggestions-dropdown">
+                  {destinoSuggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="hero-suggestion-item"
+                      onClick={() => handleDestinoSelect(suggestion)}
+                    >
+                      <span className="suggestion-icon">{suggestion.icon}</span>
+                      <span className="suggestion-text">{suggestion.display}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="search-field">

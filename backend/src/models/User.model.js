@@ -43,21 +43,23 @@ const User = sequelize.define(
     role: {
       type: DataTypes.ENUM(
         "admin",
+        "sysadmin",
         "agencia",
-        "operador_agencia",
-        "operador_independiente",
+        "operador",
       ),
-      defaultValue: "operador_independiente",
+      defaultValue: "operador",
       allowNull: false,
     },
     agenciaId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       comment:
-        "ID de la agencia a la que pertenece (solo para operador_agencia)",
+        "ID de la agencia a la que pertenece (solo para operador de agencia)",
     },
     telefono: {
       type: DataTypes.STRING,
+      allowNull: true,
+      comment: "Número de teléfono para contacto (WhatsApp)",
     },
     direccion: {
       type: DataTypes.STRING,

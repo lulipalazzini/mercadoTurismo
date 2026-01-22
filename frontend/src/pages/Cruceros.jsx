@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import CruceroCard from "../components/CruceroCard";
+import SearchBox from "../components/SearchBox";
 import "../styles/servicios.css";
 
 export default function Cruceros() {
   const [cruceros, setCruceros] = useState([]);
+  const [allCruceros, setAllCruceros] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,11 +21,31 @@ export default function Cruceros() {
       }
       const data = await response.json();
       setCruceros(data);
+      setAllCruceros(data);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setCruceros(allCruceros);
+      return;
+    }
+
+    const filtered = allCruceros.filter((crucero) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        crucero.nombre?.toLowerCase().includes(searchLower) ||
+        crucero.naviera?.toLowerCase().includes(searchLower) ||
+        crucero.itinerario?.toLowerCase().includes(searchLower) ||
+        crucero.descripcion?.toLowerCase().includes(searchLower)
+      );
+    });
+
+    setCruceros(filtered);
   };
 
   if (loading) {
@@ -45,6 +67,10 @@ export default function Cruceros() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Cruceros</h1>
+      <SearchBox
+        onSearch={handleSearch}
+        placeholder="Buscar cruceros por naviera o itinerario..."
+      />
       <div className="servicios-grid">
         {cruceros.length > 0 ? (
           cruceros.map((crucero) => (

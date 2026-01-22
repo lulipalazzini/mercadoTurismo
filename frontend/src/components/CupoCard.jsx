@@ -17,11 +17,19 @@ export default function CupoCard({ item }) {
 
   const formatDate = (date) => {
     if (!date) return "N/A";
-    return new Date(date).toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    
+    try {
+      const dateObj = new Date(date);
+      if (isNaN(dateObj.getTime())) return "N/A";
+      
+      return dateObj.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    } catch (error) {
+      return "N/A";
+    }
   };
 
   const formatCurrency = (amount) => {

@@ -221,9 +221,9 @@ export default function Ajustes() {
   const getRoleName = (role) => {
     const roles = {
       admin: "Administrador",
+      sysadmin: "Super Administrador",
       agencia: "Agencia",
-      operador_agencia: "Operador de Agencia",
-      operador_independiente: "Operador Independiente",
+      operador: "Operador",
     };
     return roles[role] || "Usuario";
   };

@@ -31,6 +31,23 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
     }).format(amount);
   };
 
+  const formatDate = (date) => {
+    if (!date) return "Fecha no disponible";
+    
+    try {
+      const dateObj = new Date(date);
+      if (isNaN(dateObj.getTime())) return "Fecha no disponible";
+      
+      return dateObj.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    } catch (error) {
+      return "Fecha no disponible";
+    }
+  };
+
   const handleReservar = () => {
     abrirWhatsApp(tipo, item);
   };
@@ -201,7 +218,7 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
                 {renderField("Duración", `${item.duracion} días`)}
                 {renderField(
                   "Salida",
-                  new Date(item.fechaSalida).toLocaleDateString(),
+                  formatDate(item.fechaInicio),
                   <FaCalendarAlt />,
                 )}
                 {renderField("Precio", formatCurrency(item.precio))}
@@ -231,7 +248,7 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
                 {renderField("Aerolínea", item.aerolinea)}
                 {renderField(
                   "Fecha",
-                  new Date(item.fecha).toLocaleDateString(),
+                  formatDate(item.fechaSalida),
                   <FaCalendarAlt />,
                 )}
                 {renderField("Asientos disponibles", item.asientosDisponibles)}
@@ -261,7 +278,7 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
                 {renderField("Duración", `${item.duracion} días`, <FaClock />)}
                 {renderField(
                   "Salida",
-                  new Date(item.fechaSalida).toLocaleDateString(),
+                  formatDate(item.fechaInicio),
                   <FaCalendarAlt />,
                 )}
                 {renderField("Precio", formatCurrency(item.precio))}
@@ -284,7 +301,7 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
                 {renderField("Duración", `${item.duracion} días`, <FaClock />)}
                 {renderField(
                   "Salida",
-                  new Date(item.fechaSalida).toLocaleDateString(),
+                  formatDate(item.fechaSalida),
                   <FaCalendarAlt />,
                 )}
                 {renderField(
@@ -308,7 +325,7 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
                 )}
                 {renderField(
                   "Salida",
-                  new Date(item.fechaSalida).toLocaleDateString(),
+                  formatDate(item.fechaSalida),
                   <FaCalendarAlt />,
                 )}
                 {renderField("Precio", formatCurrency(item.precio))}

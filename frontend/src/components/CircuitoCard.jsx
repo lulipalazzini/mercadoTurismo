@@ -27,10 +27,19 @@ export default function CircuitoCard({ item }) {
   const isAdmin = currentUser?.role === "admin";
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "short",
-    });
+    if (!date) return "Fecha no disponible";
+    
+    try {
+      const dateObj = new Date(date);
+      if (isNaN(dateObj.getTime())) return "Fecha no disponible";
+      
+      return dateObj.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "short",
+      });
+    } catch (error) {
+      return "Fecha no disponible";
+    }
   };
 
   const handleCardClick = () => {

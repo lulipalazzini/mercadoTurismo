@@ -5,6 +5,10 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import connectDB from "./config/database.js";
 
+// Importar modelos para establecer relaciones
+import User from "./models/User.model.js";
+import CupoMercado from "./models/CupoMercado.model.js";
+
 // Importar rutas
 import authRoutes from "./routes/auth.routes.js";
 import clientesRoutes from "./routes/clientes.routes.js";
@@ -17,7 +21,6 @@ import circuitosRoutes from "./routes/circuitos.routes.js";
 import crucerosRoutes from "./routes/cruceros.routes.js";
 import cuposMercadoRoutes from "./routes/cuposMercado.routes.js";
 import excursionesRoutes from "./routes/excursiones.routes.js";
-import pasajesRoutes from "./routes/pasajes.routes.js";
 import salidasGrupalesRoutes from "./routes/salidasGrupales.routes.js";
 import segurosRoutes from "./routes/seguros.routes.js";
 import transfersRoutes from "./routes/transfers.routes.js";
@@ -25,6 +28,13 @@ import clickStatsRoutes from "./routes/clickStats.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 
 dotenv.config();
+
+// Establecer relaciones entre modelos
+User.hasMany(CupoMercado, { foreignKey: 'usuarioVendedorId', as: 'cuposVendidos' });
+CupoMercado.belongsTo(User, { foreignKey: 'usuarioVendedorId', as: 'vendedor' });
+
+User.hasMany(CupoMercado, { foreignKey: 'usuarioCompradorId', as: 'cuposComprados' });
+CupoMercado.belongsTo(User, { foreignKey: 'usuarioCompradorId', as: 'comprador' });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -62,7 +72,6 @@ app.use("/api/circuitos", circuitosRoutes);
 app.use("/api/cruceros", crucerosRoutes);
 app.use("/api/cupos-mercado", cuposMercadoRoutes);
 app.use("/api/excursiones", excursionesRoutes);
-app.use("/api/pasajes", pasajesRoutes);
 app.use("/api/salidas-grupales", salidasGrupalesRoutes);
 app.use("/api/seguros", segurosRoutes);
 app.use("/api/transfers", transfersRoutes);

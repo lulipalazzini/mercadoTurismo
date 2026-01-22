@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import TransferCard from "../components/TransferCard";
+import SearchBox from "../components/SearchBox";
 import "../styles/servicios.css";
 
 export default function Transfers() {
   const [transfers, setTransfers] = useState([]);
+  const [allTransfers, setAllTransfers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,11 +21,31 @@ export default function Transfers() {
       }
       const data = await response.json();
       setTransfers(data);
+      setAllTransfers(data);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setTransfers(allTransfers);
+      return;
+    }
+
+    const filtered = allTransfers.filter((transfer) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        transfer.origen?.toLowerCase().includes(searchLower) ||
+        transfer.destino?.toLowerCase().includes(searchLower) ||
+        transfer.tipoVehiculo?.toLowerCase().includes(searchLower) ||
+        transfer.descripcion?.toLowerCase().includes(searchLower)
+      );
+    });
+
+    setTransfers(filtered);
   };
 
   if (loading) {
@@ -44,8 +66,10 @@ export default function Transfers() {
 
   return (
     <div className="servicios-container">
-      <h1 className="servicios-title">Transfers</h1>
-      <div className="servicios-grid">
+      <h1 className="servicios-title">Transfers</h1>      <SearchBox
+        onSearch={handleSearch}
+        placeholder="Buscar transfers por origen o destino..."
+      />      <div className="servicios-grid">
         {transfers.length > 0 ? (
           transfers.map((transfer) => (
             <TransferCard key={transfer.id} item={transfer} />

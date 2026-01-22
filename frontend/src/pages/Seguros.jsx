@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import SeguroCard from "../components/SeguroCard";
+import SearchBox from "../components/SearchBox";
 import "../styles/servicios.css";
 
 export default function Seguros() {
   const [seguros, setSeguros] = useState([]);
+  const [allSeguros, setAllSeguros] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,11 +21,31 @@ export default function Seguros() {
       }
       const data = await response.json();
       setSeguros(data);
+      setAllSeguros(data);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setSeguros(allSeguros);
+      return;
+    }
+
+    const filtered = allSeguros.filter((seguro) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        seguro.nombre?.toLowerCase().includes(searchLower) ||
+        seguro.cobertura?.toLowerCase().includes(searchLower) ||
+        seguro.descripcion?.toLowerCase().includes(searchLower) ||
+        seguro.incluye?.toLowerCase().includes(searchLower)
+      );
+    });
+
+    setSeguros(filtered);
   };
 
   if (loading) {
@@ -45,6 +67,10 @@ export default function Seguros() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Seguros de Viaje</h1>
+      <SearchBox
+        onSearch={handleSearch}
+        placeholder="Buscar seguros por cobertura o destino..."
+      />
       <div className="servicios-grid">
         {seguros.length > 0 ? (
           seguros.map((seguro) => <SeguroCard key={seguro.id} item={seguro} />)

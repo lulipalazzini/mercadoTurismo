@@ -6,42 +6,73 @@ import {
   FaCalendarAlt,
   FaClock,
   FaBox,
-  FaShoppingCart,
   FaEye,
   FaTag,
   FaDollarSign,
   FaCheckCircle,
   FaExclamationTriangle,
+  FaWhatsapp,
+  FaPhone,
+  FaUser,
+  FaFileExcel,
 } from "react-icons/fa";
-import { getCupos } from "../../services/cupos.service";
+import { getCuposMarketplace, getMisCupos } from "../../services/cupos.service";
 import PublicarCupoModal from "./PublicarCupoModal";
-import ComprarCupoModal from "./ComprarCupoModal";
+import ImportarCuposModal from "./ImportarCuposModal";
 import AlertModal from "../common/AlertModal";
 
 export default function MercadoCupos() {
   const [cupos, setCupos] = useState([]);
+  const [misCupos, setMisCupos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoriaFilter, setCategoriaFilter] = useState("");
-  const [estadoFilter, setEstadoFilter] = useState("disponible");
   const [isPublicarModalOpen, setIsPublicarModalOpen] = useState(false);
-  const [isComprarModalOpen, setIsComprarModalOpen] = useState(false);
-  const [selectedCupo, setSelectedCupo] = useState(null);
+  const [isImportarModalOpen, setIsImportarModalOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [alertData, setAlertData] = useState({ type: "", message: "" });
+
+  const user = JSON.parse(localStorage.getItem("currentUser")) || {};
+  
+  // Debug: verificar rol del usuario
+  console.log("Usuario en MercadoCupos:", user);
+  console.log("Rol del usuario:", user.role);
+  
+  const canViewMarketplace = user.role === "agencia";
+  const canPublish = user.role === "operador" || user.role === "agencia";
+  
+  console.log("canPublish:", canPublish);
+  console.log("canViewMarketplace:", canViewMarketplace);
+  
+  // Operadores ven por defecto "mis-cupos", agencias ven "marketplace"
+  const [vistaActiva, setVistaActiva] = useState(
+    user.role === "operador" ? "mis-cupos" : "marketplace"
+  );
 
   useEffect(() => {
-    loadCupos();
+    loadData();
   }, []);
 
-  const loadCupos = async () => {
+  const loadData = async () => {
     try {
       setLoading(true);
-      const data = await getCupos();
-      setCupos(data);
+      
+      // Cargar mis cupos si puede publicar
+      if (canPublish) {
+        const misCuposData = await getMisCupos();
+        setMisCupos(misCuposData);
+      }
+
+      // Cargar marketplace si es agencia
+      if (canViewMarketplace) {
+        const marketplaceData = await getCuposMarketplace();
+        setCupos(marketplaceData);
+      }
+      
       setError(null);
     } catch (err) {
-      setError("Error al cargar los cupos");
+      setError(err.response?.data?.message || "Error al cargar los cupos");
       console.error(err);
     } finally {
       setLoading(false);
@@ -49,16 +80,39 @@ export default function MercadoCupos() {
   };
 
   const handleCupoPublished = () => {
-    loadCupos();
+    loadData();
+    setAlertData({
+      type: "success",
+      message: "Cupo publicado exitosamente",
+    });
+    setShowAlert(true);
   };
 
-  const handleComprarClick = (cupo) => {
-    setSelectedCupo(cupo);
-    setIsComprarModalOpen(true);
+  const handleImportSuccess = (result) => {
+    loadData();
+    setAlertData({
+      type: "success",
+      message: `Se importaron ${result.importados} cupos exitosamente`,
+    });
+    setShowAlert(true);
   };
 
-  const handleCupoComprado = () => {
-    loadCupos();
+  const handleWhatsAppClick = (cupo) => {
+    if (!cupo.vendedor?.telefono) {
+      setAlertData({
+        type: "error",
+        message: "El operador no tiene número de teléfono disponible",
+      });
+      setShowAlert(true);
+      return;
+    }
+
+    const telefono = cupo.vendedor.telefono.replace(/\D/g, "");
+    const mensaje = encodeURIComponent(
+      `Hola, estoy interesado en el cupo de ${cupo.tipoProducto}: ${cupo.descripcion}`
+    );
+    const whatsappUrl = `https://wa.me/${telefono}?text=${mensaje}`;
+    window.open(whatsappUrl, "_blank");
   };
 
   const formatCurrency = (amount) => {
@@ -91,7 +145,7 @@ export default function MercadoCupos() {
       },
       vendido: {
         class: "badge-secondary",
-        icon: <FaShoppingCart />,
+        icon: <FaBox />,
         text: "Vendido",
       },
       vencido: {
@@ -103,7 +157,9 @@ export default function MercadoCupos() {
     return badges[estado] || badges.disponible;
   };
 
-  const filteredCupos = cupos.filter((cupo) => {
+  const cuposToDisplay = vistaActiva === "marketplace" ? cupos : misCupos;
+
+  const filteredCupos = cuposToDisplay.filter((cupo) => {
     const matchSearch =
       cupo.tipoProducto?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cupo.descripcion?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -111,12 +167,10 @@ export default function MercadoCupos() {
     const matchCategoria =
       !categoriaFilter || cupo.tipoProducto === categoriaFilter;
 
-    const matchEstado = !estadoFilter || cupo.estado === estadoFilter;
-
-    return matchSearch && matchCategoria && matchEstado;
+    return matchSearch && matchCategoria;
   });
 
-  const categorias = [...new Set(cupos.map((c) => c.tipoProducto))].filter(
+  const categorias = [...new Set(cuposToDisplay.map((c) => c.tipoProducto))].filter(
     Boolean
   );
 
@@ -126,6 +180,17 @@ export default function MercadoCupos() {
         <div className="loading-state">
           <div className="spinner"></div>
           <p>Cargando mercado de cupos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!canPublish) {
+    return (
+      <div className="dashboard-content">
+        <div className="error-state">
+          <FaExclamationTriangle />
+          <p>No tienes permisos para acceder al mercado de cupos</p>
         </div>
       </div>
     );
@@ -152,16 +217,50 @@ export default function MercadoCupos() {
           <div className="header-info">
             <h1>Mercado de Cupos</h1>
             <p className="header-subtitle">
-              Compra y vende cupos disponibles con otros operadores
+              {canViewMarketplace 
+                ? "Explora cupos disponibles de operadores y gestiona tus publicaciones"
+                : "Gestiona tus cupos publicados"}
             </p>
           </div>
         </div>
-        <button
-          className="btn-primary"
-          onClick={() => setIsPublicarModalOpen(true)}
-        >
-          <FaPlus /> Publicar Cupo
-        </button>
+        {canPublish && (
+          <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+            <button
+              className="btn-secondary"
+              onClick={() => setIsImportarModalOpen(true)}
+              style={{ height: "fit-content" }}
+            >
+              <FaFileExcel /> Importar Excel
+            </button>
+            <button
+              className="btn-primary"
+              onClick={() => setIsPublicarModalOpen(true)}
+              style={{ height: "fit-content" }}
+            >
+              <FaPlus /> Publicar Cupo
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Tabs de navegación */}
+      <div className="tabs-container" style={{ marginBottom: "1.5rem" }}>
+        {canPublish && (
+          <button
+            className={`tab-button ${vistaActiva === "mis-cupos" ? "active" : ""}`}
+            onClick={() => setVistaActiva("mis-cupos")}
+          >
+            <FaBox /> Mis Cupos ({misCupos.length})
+          </button>
+        )}
+        {canViewMarketplace && (
+          <button
+            className={`tab-button ${vistaActiva === "marketplace" ? "active" : ""}`}
+            onClick={() => setVistaActiva("marketplace")}
+          >
+            <FaStore /> Marketplace ({cupos.length})
+          </button>
+        )}
       </div>
 
       <div className="content-filters">
@@ -188,17 +287,6 @@ export default function MercadoCupos() {
               </option>
             ))}
           </select>
-
-          <select
-            className="filter-select"
-            value={estadoFilter}
-            onChange={(e) => setEstadoFilter(e.target.value)}
-          >
-            <option value="">Todos los estados</option>
-            <option value="disponible">Disponibles</option>
-            <option value="vendido">Vendidos</option>
-            <option value="vencido">Vencidos</option>
-          </select>
         </div>
       </div>
 
@@ -210,18 +298,7 @@ export default function MercadoCupos() {
           <div className="stat-info">
             <span className="stat-label">Disponibles</span>
             <span className="stat-value">
-              {cupos.filter((c) => c.estado === "disponible").length}
-            </span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon vendido">
-            <FaShoppingCart />
-          </div>
-          <div className="stat-info">
-            <span className="stat-label">Vendidos</span>
-            <span className="stat-value">
-              {cupos.filter((c) => c.estado === "vendido").length}
+              {cuposToDisplay.filter((c) => c.estado === "disponible").length}
             </span>
           </div>
         </div>
@@ -231,7 +308,7 @@ export default function MercadoCupos() {
           </div>
           <div className="stat-info">
             <span className="stat-label">Total Cupos</span>
-            <span className="stat-value">{cupos.length}</span>
+            <span className="stat-value">{cuposToDisplay.length}</span>
           </div>
         </div>
       </div>
@@ -240,7 +317,11 @@ export default function MercadoCupos() {
         <div className="empty-state">
           <FaStore />
           <h3>No hay cupos disponibles</h3>
-          <p>No se encontraron cupos que coincidan con tu búsqueda</p>
+          <p>
+            {vistaActiva === "marketplace"
+              ? "No se encontraron cupos en el marketplace"
+              : "Aún no has publicado ningún cupo"}
+          </p>
         </div>
       ) : (
         <div className="cupos-grid">
@@ -248,6 +329,7 @@ export default function MercadoCupos() {
             const daysRemaining = getDaysRemaining(cupo.fechaVencimiento);
             const estadoBadge = getEstadoBadge(cupo.estado);
             const isUrgente = daysRemaining !== null && daysRemaining <= 3;
+            const showWhatsApp = vistaActiva === "marketplace" && cupo.estado === "disponible";
 
             return (
               <div
@@ -269,6 +351,26 @@ export default function MercadoCupos() {
 
                 <div className="cupo-body">
                   <h3 className="cupo-title">{cupo.descripcion}</h3>
+
+                  {/* Información del vendedor (solo en marketplace) */}
+                  {vistaActiva === "marketplace" && cupo.vendedor && (
+                    <div className="vendedor-info" style={{ 
+                      padding: "0.75rem", 
+                      background: "#f8f9fa", 
+                      borderRadius: "8px",
+                      marginBottom: "1rem"
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <FaUser style={{ color: "#6c757d" }} />
+                        <span><strong>Operador:</strong> {cupo.vendedor.nombre}</span>
+                      </div>
+                      {cupo.vendedor.razonSocial && (
+                        <div style={{ fontSize: "0.875rem", color: "#6c757d", marginTop: "0.25rem" }}>
+                          {cupo.vendedor.razonSocial}
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   <div className="cupo-details">
                     <div className="detail-item">
@@ -319,17 +421,32 @@ export default function MercadoCupos() {
                 </div>
 
                 <div className="cupo-footer">
-                  {cupo.estado === "disponible" && (
+                  {showWhatsApp && (
                     <button
-                      className="btn-primary"
-                      onClick={() => handleComprarClick(cupo)}
+                      className="btn-whatsapp"
+                      onClick={() => handleWhatsAppClick(cupo)}
+                      style={{
+                        background: "#25D366",
+                        color: "white",
+                        border: "none",
+                        padding: "0.75rem 1.5rem",
+                        borderRadius: "8px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        cursor: "pointer",
+                        fontSize: "1rem",
+                        fontWeight: "500",
+                        width: "100%",
+                        justifyContent: "center",
+                        transition: "all 0.2s"
+                      }}
+                      onMouseEnter={(e) => e.target.style.background = "#1fb855"}
+                      onMouseLeave={(e) => e.target.style.background = "#25D366"}
                     >
-                      <FaShoppingCart /> Comprar Cupo
+                      <FaWhatsapp size={20} /> Contactar por WhatsApp
                     </button>
                   )}
-                  <button className="btn-secondary">
-                    <FaEye /> Ver Detalles
-                  </button>
                 </div>
               </div>
             );
@@ -343,21 +460,17 @@ export default function MercadoCupos() {
         onSuccess={handleCupoPublished}
       />
 
-      <ComprarCupoModal
-        isOpen={isComprarModalOpen}
-        onClose={() => {
-          setIsComprarModalOpen(false);
-          setSelectedCupo(null);
-        }}
-        onSuccess={handleCupoComprado}
-        cupo={selectedCupo}
+      <ImportarCuposModal
+        isOpen={isImportarModalOpen}
+        onClose={() => setIsImportarModalOpen(false)}
+        onImportSuccess={handleImportSuccess}
       />
 
       <AlertModal
         isOpen={showAlert}
         onClose={() => setShowAlert(false)}
-        message="Información del mercado de cupos"
-        type="info"
+        message={alertData.message}
+        type={alertData.type}
       />
     </div>
   );

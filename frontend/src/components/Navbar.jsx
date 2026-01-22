@@ -47,7 +47,7 @@ export default function Navbar() {
           </Link>
           <div
             className={`nav-dropdown ${
-              isDropdownActive(["/autos", "/pasajes", "/transfers"])
+              isDropdownActive(["/autos", "/transfers"])
                 ? "active"
                 : ""
             }`}
@@ -56,12 +56,6 @@ export default function Navbar() {
             <div className="dropdown-menu">
               <Link to="/autos" className={isActive("/autos") ? "active" : ""}>
                 Autos
-              </Link>
-              <Link
-                to="/pasajes"
-                className={isActive("/pasajes") ? "active" : ""}
-              >
-                Pasajes
               </Link>
               <Link
                 to="/transfers"
@@ -109,9 +103,6 @@ export default function Navbar() {
             className={isActive("/cruceros") ? "active" : ""}
           >
             Cruceros
-          </Link>
-          <Link to="/cupos" className={isActive("/cupos") ? "active" : ""}>
-            Cupos
           </Link>
           <Link to="/seguros" className={isActive("/seguros") ? "active" : ""}>
             Seguros

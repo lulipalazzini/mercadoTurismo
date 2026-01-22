@@ -10,9 +10,10 @@ const CupoMercado = sequelize.define(
       autoIncrement: true,
     },
     tipoProducto: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.ENUM("aereo"),
       allowNull: false,
-      comment: "Tipo de producto o servicio",
+      defaultValue: "aereo",
+      comment: "Tipo de producto - Solo cupos aéreos",
     },
     descripcion: {
       type: DataTypes.TEXT,

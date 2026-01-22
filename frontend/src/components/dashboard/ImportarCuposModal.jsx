@@ -1,0 +1,369 @@
+import React, { useState } from "react";
+import {
+  FaUpload,
+  FaTimes,
+  FaFileExcel,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaInfoCircle,
+  FaDownload,
+} from "react-icons/fa";
+import * as XLSX from "xlsx";
+import "../../styles/modal.css";
+
+export default function ImportarCuposModal({ isOpen, onClose, onImportSuccess }) {
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [showInstructions, setShowInstructions] = useState(true);
+
+  const requiredColumns = [
+    { key: "tipoProducto", label: "Tipo Producto", ejemplo: "aereo" },
+    { key: "origen", label: "Origen", ejemplo: "Buenos Aires" },
+    { key: "destino", label: "Destino", ejemplo: "Miami" },
+    { key: "descripcion", label: "Descripción", ejemplo: "Vuelo BA-MIA clase económica" },
+    { key: "cantidad", label: "Cantidad", ejemplo: "10" },
+    { key: "precioUnitario", label: "Precio Unitario", ejemplo: "45000" },
+    { key: "fechaVencimiento", label: "Fecha Vencimiento", ejemplo: "2026-12-31" },
+  ];
+
+  const optionalColumns = [
+    { key: "fechaViaje", label: "Fecha Viaje", ejemplo: "2026-03-15" },
+    { key: "aerolinea", label: "Aerolínea", ejemplo: "American Airlines" },
+    { key: "clase", label: "Clase", ejemplo: "Económica" },
+    { key: "equipaje", label: "Equipaje", ejemplo: "23kg incluido" },
+  ];
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+
+    if (!selectedFile.name.match(/\.(xlsx|xls)$/)) {
+      setError("Por favor selecciona un archivo Excel válido (.xlsx o .xls)");
+      return;
+    }
+
+    setFile(selectedFile);
+    setError(null);
+    readExcelFile(selectedFile);
+  };
+
+  const readExcelFile = (file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        if (jsonData.length === 0) {
+          setError("El archivo Excel está vacío");
+          setPreview([]);
+          return;
+        }
+
+        // Validar columnas requeridas
+        const firstRow = jsonData[0];
+        const missingColumns = requiredColumns.filter(
+          (col) => !(col.key in firstRow)
+        );
+
+        if (missingColumns.length > 0) {
+          setError(
+            `Faltan columnas requeridas: ${missingColumns
+              .map((c) => c.label)
+              .join(", ")}`
+          );
+          setPreview([]);
+          return;
+        }
+
+        // Validar que tipoProducto sea "aereo"
+        const invalidRows = jsonData.filter(
+          (row) => row.tipoProducto?.toLowerCase() !== "aereo"
+        );
+
+        if (invalidRows.length > 0) {
+          setError(
+            `Error: Todos los cupos deben ser de tipo "aereo". Se encontraron ${invalidRows.length} filas con tipo diferente.`
+          );
+          setPreview([]);
+          return;
+        }
+
+        setPreview(jsonData);
+        setShowInstructions(false);
+        setError(null);
+      } catch (err) {
+        setError("Error al leer el archivo. Asegúrate de que sea un Excel válido.");
+        setPreview([]);
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
+  const handleImport = async () => {
+    if (preview.length === 0) {
+      setError("No hay datos para importar");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("http://localhost:3000/api/cupos-mercado/importar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ cupos: preview }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error al importar cupos");
+      }
+
+      const result = await response.json();
+      onImportSuccess(result);
+      handleClose();
+    } catch (err) {
+      setError(err.message || "Error al importar cupos");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    setFile(null);
+    setPreview([]);
+    setError(null);
+    setShowInstructions(true);
+    onClose();
+  };
+
+  const downloadTemplate = () => {
+    const templateData = [
+      {
+        tipoProducto: "aereo",
+        origen: "Buenos Aires",
+        destino: "Miami",
+        descripcion: "Vuelo directo BA-MIA clase económica",
+        cantidad: 10,
+        precioUnitario: 45000,
+        fechaVencimiento: "2026-12-31",
+        fechaViaje: "2026-03-15",
+        aerolinea: "American Airlines",
+        clase: "Económica",
+        equipaje: "23kg incluido",
+      },
+      {
+        tipoProducto: "aereo",
+        origen: "Buenos Aires",
+        destino: "Madrid",
+        descripcion: "Vuelo BA-MAD vía São Paulo",
+        cantidad: 5,
+        precioUnitario: 75000,
+        fechaVencimiento: "2026-11-30",
+        fechaViaje: "2026-04-20",
+        aerolinea: "Iberia",
+        clase: "Business",
+        equipaje: "32kg incluido",
+      },
+    ];
+
+    const ws = XLSX.utils.json_to_sheet(templateData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Cupos");
+    XLSX.writeFile(wb, "plantilla_cupos.xlsx");
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-container modal-importar-cupos">
+        <div className="modal-header">
+          <div className="modal-header-content">
+            <FaFileExcel className="modal-icon" />
+            <div>
+              <h2>Importar Cupos desde Excel</h2>
+              <p className="modal-subtitle">
+                Carga múltiples cupos de forma rápida y sencilla
+              </p>
+            </div>
+          </div>
+          <button className="modal-close" onClick={handleClose}>
+            <FaTimes />
+          </button>
+        </div>
+
+        <div className="modal-body">
+          {showInstructions && (
+            <div className="import-instructions">
+              <div className="instruction-header">
+                <FaInfoCircle />
+                <h3>Instrucciones de importación</h3>
+              </div>
+
+              <div className="instruction-section">
+                <h4>📋 Columnas Requeridas</h4>
+                <div className="columns-grid">
+                  {requiredColumns.map((col) => (
+                    <div key={col.key} className="column-item required">
+                      <strong>{col.label}</strong>
+                      <span className="column-example">Ej: {col.ejemplo}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="instruction-section">
+                <h4>✨ Columnas Opcionales</h4>
+                <div className="columns-grid">
+                  {optionalColumns.map((col) => (
+                    <div key={col.key} className="column-item optional">
+                      <strong>{col.label}</strong>
+                      <span className="column-example">Ej: {col.ejemplo}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="instruction-alert">
+                <FaExclamationTriangle />
+                <div>
+                  <strong>Importante:</strong>
+                  <ul>
+                    <li>Todos los cupos deben ser de tipo "aereo"</li>
+                    <li>Las fechas deben estar en formato AAAA-MM-DD (2026-12-31)</li>
+                    <li>Los precios deben ser números sin símbolos ni puntos</li>
+                    <li>La cantidad debe ser un número entero positivo</li>
+                  </ul>
+                </div>
+              </div>
+
+              <button
+                className="btn-secondary"
+                onClick={downloadTemplate}
+                style={{ width: "100%", marginTop: "1rem" }}
+              >
+                <FaDownload /> Descargar Plantilla de Ejemplo
+              </button>
+            </div>
+          )}
+
+          {error && (
+            <div className="alert alert-danger">
+              <FaExclamationTriangle />
+              <span>{error}</span>
+            </div>
+          )}
+
+          <div className="file-upload-zone">
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={handleFileChange}
+              id="excel-file"
+              style={{ display: "none" }}
+            />
+            <label htmlFor="excel-file" className="file-upload-label">
+              <FaUpload className="upload-icon" />
+              <span className="upload-text">
+                {file ? file.name : "Haz click o arrastra tu archivo Excel aquí"}
+              </span>
+              {file && (
+                <span className="upload-success">
+                  <FaCheckCircle /> Archivo cargado correctamente
+                </span>
+              )}
+            </label>
+          </div>
+
+          {preview.length > 0 && (
+            <div className="preview-section">
+              <div className="preview-header">
+                <h3>
+                  <FaCheckCircle style={{ color: "var(--success)" }} />
+                  Vista previa ({preview.length} cupos)
+                </h3>
+                <button
+                  className="btn-link"
+                  onClick={() => {
+                    setPreview([]);
+                    setFile(null);
+                    setShowInstructions(true);
+                  }}
+                >
+                  Cambiar archivo
+                </button>
+              </div>
+
+              <div className="preview-table-container">
+                <table className="preview-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Tipo</th>
+                      <th>Origen</th>
+                      <th>Destino</th>
+                      <th>Cantidad</th>
+                      <th>Precio</th>
+                      <th>Vencimiento</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {preview.slice(0, 5).map((row, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{row.tipoProducto}</td>
+                        <td>{row.origen}</td>
+                        <td>{row.destino}</td>
+                        <td>{row.cantidad}</td>
+                        <td>${row.precioUnitario?.toLocaleString()}</td>
+                        <td>{row.fechaVencimiento}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {preview.length > 5 && (
+                  <p className="preview-more">
+                    ... y {preview.length - 5} cupos más
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="modal-footer">
+          <button className="btn-secondary" onClick={handleClose}>
+            Cancelar
+          </button>
+          <button
+            className="btn-primary"
+            onClick={handleImport}
+            disabled={loading || preview.length === 0}
+          >
+            {loading ? (
+              <>
+                <span className="spinner-small"></span> Importando...
+              </>
+            ) : (
+              <>
+                <FaUpload /> Importar {preview.length} Cupos
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,12 +1,27 @@
 import api from "./api.js";
 
 /**
- * Obtiene todos los cupos del mercado
+ * Obtiene el marketplace de cupos (solo para agencias)
  */
-export const getCupos = async () => {
+export const getCuposMarketplace = async () => {
   try {
-    const response = await api.get("/cupos-mercado");
-    if (!response.ok) throw new Error("Error al obtener cupos");
+    const response = await api.get("/cupos-mercado/marketplace");
+    if (!response.ok) throw new Error("Error al obtener cupos del marketplace");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+};
+
+/**
+ * Obtiene mis cupos publicados (operadores y agencias)
+ */
+export const getMisCupos = async () => {
+  try {
+    const response = await api.get("/cupos-mercado/mis-cupos");
+    if (!response.ok) throw new Error("Error al obtener mis cupos");
     const data = await response.json();
     return data;
   } catch (error) {

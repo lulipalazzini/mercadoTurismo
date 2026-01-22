@@ -152,6 +152,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative; /* Para posicionar el dropdown */
 }
 
 .search-field label {
@@ -208,6 +209,69 @@
   background-repeat: no-repeat;
   background-position: right 1.25rem center;
   padding-right: 3rem;
+}
+
+/* Dropdown de sugerencias del Hero */
+.hero-suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  animation: slideDownHero 0.2s ease-out;
+  margin-top: -2px;
+}
+
+@keyframes slideDownHero {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.hero-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.hero-suggestion-item:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(91, 155, 213, 0.08) 0%,
+    rgba(91, 155, 213, 0.03) 100%
+  );
+  padding-left: 1.25rem;
+}
+
+.hero-suggestion-item .suggestion-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.hero-suggestion-item .suggestion-text {
+  font-size: 0.875rem;
+  color: #1a1a1a;
+  font-weight: 500;
 }
 
 .search-btn {
@@ -422,6 +486,23 @@
   .search-btn svg {
     width: 18px;
     height: 18px;
+  }
+
+  .hero-suggestions-dropdown {
+    max-height: 200px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .hero-suggestion-item {
+    padding: 0.625rem 0.875rem;
+  }
+
+  .hero-suggestion-item:hover {
+    padding-left: 1rem;
+  }
+
+  .hero-suggestion-item .suggestion-text {
+    font-size: 0.8125rem;
   }
 }
 
