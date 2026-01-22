@@ -143,7 +143,7 @@ export default function PaqueteFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error al crear paquete:", error);
       setAlertMessage(
-        "Error al crear el paquete. Por favor intenta nuevamente."
+        "Error al crear el paquete. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {

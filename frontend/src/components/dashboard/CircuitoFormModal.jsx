@@ -127,7 +127,7 @@ export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error:", error);
       setAlertMessage(
-        "Error al crear el circuito. Por favor intenta nuevamente."
+        "Error al crear el circuito. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -260,7 +260,7 @@ export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
                     type="button"
                     className="btn-secondary"
                     onClick={handleAddDestino}
-                    style={{ marginTop: '0.5rem' }}
+                    style={{ marginTop: "0.5rem" }}
                   >
                     <FaPlus /> Agregar
                   </button>

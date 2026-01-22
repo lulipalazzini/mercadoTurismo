@@ -78,7 +78,7 @@ export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error al crear alojamiento:", error);
       setAlertMessage(
-        "Error al crear el alojamiento. Por favor intenta nuevamente."
+        "Error al crear el alojamiento. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {

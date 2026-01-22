@@ -25,7 +25,11 @@ export default function ImportarCuposModal({
   const requiredColumns = [
     { key: "tipoProducto", label: "Tipo Producto", ejemplo: "aereo" },
     { key: "origen", label: "Origen", ejemplo: "Buenos Aires, Argentina" },
-    { key: "destino", label: "Destino", ejemplo: "Miami, Florida, Estados Unidos" },
+    {
+      key: "destino",
+      label: "Destino",
+      ejemplo: "Miami, Florida, Estados Unidos",
+    },
     {
       key: "descripcion",
       label: "Descripción",
@@ -273,7 +277,8 @@ export default function ImportarCuposModal({
                   <ul>
                     <li>Todos los cupos deben ser de tipo "aereo"</li>
                     <li>
-                      Usa el formato completo de destinos: "Ciudad, Provincia/Estado, País" (Ej: "Mendoza, Argentina")
+                      Usa el formato completo de destinos: "Ciudad,
+                      Provincia/Estado, País" (Ej: "Mendoza, Argentina")
                     </li>
                     <li>
                       Las fechas deben estar en formato AAAA-MM-DD (2026-12-31)

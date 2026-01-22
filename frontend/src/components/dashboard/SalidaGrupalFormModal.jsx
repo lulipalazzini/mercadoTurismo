@@ -99,7 +99,7 @@ export default function SalidaGrupalFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error:", error);
       setAlertMessage(
-        "Error al crear la salida grupal. Por favor intenta nuevamente."
+        "Error al crear la salida grupal. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {

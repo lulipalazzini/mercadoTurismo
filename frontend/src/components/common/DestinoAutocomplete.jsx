@@ -31,7 +31,7 @@ export default function DestinoAutocomplete({
           `&limit=8` +
           `&addressdetails=1` +
           `&accept-language=es` +
-          `&featuretype=city`
+          `&featuretype=city`,
       );
 
       const data = await response.json();

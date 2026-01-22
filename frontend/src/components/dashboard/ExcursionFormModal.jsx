@@ -76,7 +76,7 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error:", error);
       setAlertMessage(
-        "Error al crear la excursión. Por favor intenta nuevamente."
+        "Error al crear la excursión. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {

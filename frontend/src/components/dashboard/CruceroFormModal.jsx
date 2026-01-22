@@ -99,7 +99,7 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error:", error);
       setAlertMessage(
-        "Error al crear el crucero. Por favor intenta nuevamente."
+        "Error al crear el crucero. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -275,7 +275,7 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
                     type="button"
                     className="btn-secondary"
                     onClick={handleAddItinerario}
-                    style={{ marginTop: '0.5rem' }}
+                    style={{ marginTop: "0.5rem" }}
                   >
                     <FaPlus /> Agregar
                   </button>
