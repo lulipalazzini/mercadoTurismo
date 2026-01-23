@@ -1,7 +1,15 @@
-import Paquete from "../models/Paquete.model.js";
-import User from "../models/User.model.js";
+const Paquete = require("../models/Paquete.model");
+const User = require("../models/User.model");
 
-export const getPaquetes = async (req, res) => {
+const getPaquetes = async (req, res) => {
+  console.log('\n🌄 [PAQUETES] Obteniendo todos los paquetes...');
+  
+  // Validar que res.json exista
+  if (!res || typeof res.json !== 'function') {
+    console.error('❌ [PAQUETES] Objeto res inválido');
+    return;
+  }
+  
   try {
     const paquetes = await Paquete.findAll({
       order: [["createdAt", "DESC"]],
@@ -13,15 +21,26 @@ export const getPaquetes = async (req, res) => {
         },
       ],
     });
-    res.json(paquetes);
+    console.log(`   Paquetes encontrados: ${paquetes.length}`);
+    console.log('✅ [PAQUETES] Paquetes obtenidos exitosamente');
+    
+    // Asegurar que devolvemos JSON válido
+    return res.status(200).json(paquetes);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error al obtener paquetes", error: error.message });
+    console.error('❌ [PAQUETES] Error en getPaquetes:');
+    console.error('   Mensaje:', error.message);
+    console.error('   Stack:', error.stack);
+    
+    return res.status(500).json({ 
+      success: false,
+      message: "Error al obtener paquetes", 
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 };
 
-export const getPaquete = async (req, res) => {
+const getPaquete = async (req, res) => {
   try {
     const paquete = await Paquete.findByPk(req.params.id);
     if (!paquete) {
@@ -35,22 +54,31 @@ export const getPaquete = async (req, res) => {
   }
 };
 
-export const createPaquete = async (req, res) => {
+const createPaquete = async (req, res) => {
   try {
+    console.log('\n➕ [PAQUETES] Creando nuevo paquete...');
+    console.log('   Usuario ID:', req.user.id);
+    console.log('   Datos:', JSON.stringify(req.body, null, 2));
+    
     const paquete = await Paquete.create({
       ...req.body,
       cupoDisponible: req.body.cupoMaximo,
       createdBy: req.user.id, // Guardar quién creó el paquete
     });
+    
+    console.log(`✅ [PAQUETES] Paquete creado exitosamente - ID: ${paquete.id}`);
     res.status(201).json({ message: "Paquete creado exitosamente", paquete });
   } catch (error) {
+    console.error('❌ [PAQUETES] Error en createPaquete:');
+    console.error('   Mensaje:', error.message);
+    console.error('   Stack:', error.stack);
     res
       .status(500)
       .json({ message: "Error al crear paquete", error: error.message });
   }
 };
 
-export const updatePaquete = async (req, res) => {
+const updatePaquete = async (req, res) => {
   try {
     const paquete = await Paquete.findByPk(req.params.id);
     if (!paquete) {
@@ -65,7 +93,7 @@ export const updatePaquete = async (req, res) => {
   }
 };
 
-export const deletePaquete = async (req, res) => {
+const deletePaquete = async (req, res) => {
   try {
     const paquete = await Paquete.findByPk(req.params.id);
     if (!paquete) {
@@ -78,4 +106,13 @@ export const deletePaquete = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar paquete", error: error.message });
   }
+};
+
+
+module.exports = {
+  getPaquetes,
+  getPaquete,
+  createPaquete,
+  updatePaquete,
+  deletePaquete
 };

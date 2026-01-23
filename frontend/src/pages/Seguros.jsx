@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import SeguroCard from "../components/SeguroCard";
 import SearchBox from "../components/SearchBox";
 import "../styles/servicios.css";
-
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 export default function Seguros() {
   const [seguros, setSeguros] = useState([]);
   const [allSeguros, setAllSeguros] = useState([]);
@@ -15,7 +16,7 @@ export default function Seguros() {
 
   const fetchSeguros = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/seguros");
+      const response = await fetch(`${API_BASE_URL}/seguros`);
       if (!response.ok) {
         throw new Error("Error al cargar los seguros");
       }

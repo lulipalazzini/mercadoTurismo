@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   register,
   login,
   getProfile,
   updateUser,
   verifyAdminPassword,
-} from "../controllers/auth.controller.js";
-import { verifyToken } from "../middleware/auth.middleware.js";
+} = require("../controllers/auth.controller");
+const { verifyToken } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -16,4 +16,4 @@ router.get("/profile", verifyToken, getProfile);
 router.put("/update/:id", verifyToken, updateUser);
 router.post("/verify-admin", verifyToken, verifyAdminPassword);
 
-export default router;
+module.exports = router;

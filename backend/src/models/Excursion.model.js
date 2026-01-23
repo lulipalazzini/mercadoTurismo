@@ -1,5 +1,5 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database.js";
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
 
 const Excursion = sequelize.define(
   "Excursion",
@@ -116,10 +116,10 @@ const Excursion = sequelize.define(
   },
 );
 
-import User from "./User.model.js";
+const User = require("./User.model");
 Excursion.belongsTo(User, {
   foreignKey: "vendedorId",
   as: "vendedor",
 });
 
-export default Excursion;
+module.exports = Excursion;

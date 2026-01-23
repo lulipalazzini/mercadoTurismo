@@ -1,5 +1,5 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database.js";
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
 
 const SalidaGrupal = sequelize.define(
   "SalidaGrupal",
@@ -120,10 +120,10 @@ const SalidaGrupal = sequelize.define(
   },
 );
 
-import User from "./User.model.js";
+const User = require("./User.model");
 SalidaGrupal.belongsTo(User, {
   foreignKey: "vendedorId",
   as: "vendedor",
 });
 
-export default SalidaGrupal;
+module.exports = SalidaGrupal;

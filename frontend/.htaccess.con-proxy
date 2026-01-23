@@ -1,0 +1,26 @@
+# Configuración de Apache para Reverse Proxy
+# Coloca este archivo en el directorio raíz de mercadoturismo.ar
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Redirigir todas las peticiones a /api al backend Node.js
+  # IMPORTANTE: Cambiar localhost:3001 por la IP/puerto donde corre el backend
+  RewriteCond %{REQUEST_URI} ^/api
+  RewriteRule ^api/(.*)$ http://localhost:3001/api/$1 [P,L]
+  
+  # Para el frontend React - redirigir todo al index.html
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-l
+  RewriteCond %{REQUEST_URI} !^/api
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# Habilitar CORS si es necesario
+<IfModule mod_headers.c>
+  Header set Access-Control-Allow-Origin "*"
+  Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+  Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>

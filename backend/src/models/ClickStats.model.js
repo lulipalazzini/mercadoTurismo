@@ -1,5 +1,5 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database.js";
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
 
 const ClickStats = sequelize.define(
   "ClickStats",
@@ -43,4 +43,4 @@ const ClickStats = sequelize.define(
   },
 );
 
-export default ClickStats;
+module.exports = ClickStats;

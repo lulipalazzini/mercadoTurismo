@@ -1,25 +1,35 @@
-import { Sequelize } from "sequelize";
+const { Sequelize } = require("sequelize");
+
+console.log('\n🗄️  [DATABASE] Inicializando configuración de base de datos...');
+console.log(`   Dialect: sqlite`);
+console.log(`   Storage: ./database.sqlite`);
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "./database.sqlite",
-  logging: false,
+  logging: (msg) => console.log(`   [SQL] ${msg}`), // Log queries SQL
 });
 
 const connectDB = async () => {
   try {
+    console.log('   Intentando conectar a la base de datos...');
     await sequelize.authenticate();
-    console.log("✅ SQLite conectado exitosamente");
+    console.log("✅ [DATABASE] SQLite conectado exitosamente");
 
     // Sincronizar modelos con la base de datos
     // No usar sync en startup para evitar recrear tablas
     // Usar seeders para inicializar/resetear la BD
-    console.log("✅ Modelos sincronizados");
+    console.log("✅ [DATABASE] Modelos sincronizados");
   } catch (error) {
-    console.error(`❌ Error de conexión: ${error.message}`);
+    console.error('\n' + '❌'.repeat(30));
+    console.error(`❌ [DATABASE] Error de conexión:`);
+    console.error(`   Mensaje: ${error.message}`);
+    console.error(`   Stack: ${error.stack}`);
+    console.error('❌'.repeat(30) + '\n');
     process.exit(1);
   }
 };
 
-export { sequelize, connectDB };
-export default connectDB;
+module.exports = connectDB;
+module.exports.sequelize = sequelize;
+module.exports.connectDB = connectDB;

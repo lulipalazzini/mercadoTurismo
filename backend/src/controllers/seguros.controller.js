@@ -1,7 +1,7 @@
-import Seguro from "../models/Seguro.model.js";
-import User from "../models/User.model.js";
+const Seguro = require("../models/Seguro.model");
+const User = require("../models/User.model");
 
-export const getSeguros = async (req, res) => {
+const getSeguros = async (req, res) => {
   try {
     const seguros = await Seguro.findAll({
       where: { activo: true },
@@ -22,7 +22,7 @@ export const getSeguros = async (req, res) => {
   }
 };
 
-export const getSeguro = async (req, res) => {
+const getSeguro = async (req, res) => {
   try {
     const seguro = await Seguro.findByPk(req.params.id);
     if (!seguro) {
@@ -36,7 +36,7 @@ export const getSeguro = async (req, res) => {
   }
 };
 
-export const createSeguro = async (req, res) => {
+const createSeguro = async (req, res) => {
   try {
     const seguro = await Seguro.create(req.body);
     res.status(201).json({ message: "Seguro creado exitosamente", seguro });
@@ -47,7 +47,7 @@ export const createSeguro = async (req, res) => {
   }
 };
 
-export const updateSeguro = async (req, res) => {
+const updateSeguro = async (req, res) => {
   try {
     const seguro = await Seguro.findByPk(req.params.id);
     if (!seguro) {
@@ -62,7 +62,7 @@ export const updateSeguro = async (req, res) => {
   }
 };
 
-export const deleteSeguro = async (req, res) => {
+const deleteSeguro = async (req, res) => {
   try {
     const seguro = await Seguro.findByPk(req.params.id);
     if (!seguro) {
@@ -75,4 +75,13 @@ export const deleteSeguro = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar seguro", error: error.message });
   }
+};
+
+
+module.exports = {
+  getSeguros,
+  getSeguro,
+  createSeguro,
+  updateSeguro,
+  deleteSeguro
 };

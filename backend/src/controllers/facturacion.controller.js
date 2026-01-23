@@ -1,10 +1,10 @@
-import Reserva from "../models/Reserva.model.js";
-import Cliente from "../models/Cliente.model.js";
-import Paquete from "../models/Paquete.model.js";
-import { sequelize } from "../config/database.js";
-import { fn, col } from "sequelize";
+const Reserva = require("../models/Reserva.model");
+const Cliente = require("../models/Cliente.model");
+const Paquete = require("../models/Paquete.model");
+const { sequelize } = require("../config/database");
+const { fn, col } = require("sequelize");
 
-export const getEstadisticas = async (req, res) => {
+const getEstadisticas = async (req, res) => {
   try {
     const totalReservas = await Reserva.count();
     const reservasConfirmadas = await Reserva.count({
@@ -53,7 +53,7 @@ export const getEstadisticas = async (req, res) => {
   }
 };
 
-export const getFacturas = async (req, res) => {
+const getFacturas = async (req, res) => {
   try {
     const facturas = await Reserva.findAll({
       where: { pagoRealizado: true },
@@ -69,4 +69,10 @@ export const getFacturas = async (req, res) => {
       .status(500)
       .json({ message: "Error al obtener facturas", error: error.message });
   }
+};
+
+
+module.exports = {
+  getEstadisticas,
+  getFacturas
 };

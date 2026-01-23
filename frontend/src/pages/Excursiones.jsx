@@ -3,6 +3,9 @@ import ExcursionCard from "../components/ExcursionCard";
 import SearchBox from "../components/SearchBox";
 import "../styles/servicios.css";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+
 export default function Excursiones() {
   const [excursiones, setExcursiones] = useState([]);
   const [allExcursiones, setAllExcursiones] = useState([]);
@@ -15,7 +18,7 @@ export default function Excursiones() {
 
   const fetchExcursiones = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/excursiones");
+      const response = await fetch(`${API_BASE_URL}/excursiones`);
       if (!response.ok) {
         throw new Error("Error al cargar las excursiones");
       }

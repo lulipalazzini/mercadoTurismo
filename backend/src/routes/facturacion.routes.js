@@ -1,9 +1,9 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getEstadisticas,
   getFacturas,
-} from "../controllers/facturacion.controller.js";
-import { verifyToken, isAdmin } from "../middleware/auth.middleware.js";
+} = require("../controllers/facturacion.controller");
+const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -12,4 +12,4 @@ router.use(verifyToken); // Todas las rutas requieren autenticación
 router.get("/estadisticas", isAdmin, getEstadisticas);
 router.get("/facturas", getFacturas);
 
-export default router;
+module.exports = router;

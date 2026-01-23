@@ -1,7 +1,7 @@
-import SalidaGrupal from "../models/SalidaGrupal.model.js";
-import User from "../models/User.model.js";
+const SalidaGrupal = require("../models/SalidaGrupal.model");
+const User = require("../models/User.model");
 
-export const getSalidasGrupales = async (req, res) => {
+const getSalidasGrupales = async (req, res) => {
   try {
     const salidas = await SalidaGrupal.findAll({
       where: { activo: true },
@@ -23,7 +23,7 @@ export const getSalidasGrupales = async (req, res) => {
   }
 };
 
-export const getSalidaGrupal = async (req, res) => {
+const getSalidaGrupal = async (req, res) => {
   try {
     const salida = await SalidaGrupal.findByPk(req.params.id);
     if (!salida) {
@@ -38,7 +38,7 @@ export const getSalidaGrupal = async (req, res) => {
   }
 };
 
-export const createSalidaGrupal = async (req, res) => {
+const createSalidaGrupal = async (req, res) => {
   try {
     const salida = await SalidaGrupal.create({
       ...req.body,
@@ -54,7 +54,7 @@ export const createSalidaGrupal = async (req, res) => {
   }
 };
 
-export const updateSalidaGrupal = async (req, res) => {
+const updateSalidaGrupal = async (req, res) => {
   try {
     const salida = await SalidaGrupal.findByPk(req.params.id);
     if (!salida) {
@@ -70,7 +70,7 @@ export const updateSalidaGrupal = async (req, res) => {
   }
 };
 
-export const deleteSalidaGrupal = async (req, res) => {
+const deleteSalidaGrupal = async (req, res) => {
   try {
     const salida = await SalidaGrupal.findByPk(req.params.id);
     if (!salida) {
@@ -84,4 +84,13 @@ export const deleteSalidaGrupal = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+
+module.exports = {
+  getSalidasGrupales,
+  getSalidaGrupal,
+  createSalidaGrupal,
+  updateSalidaGrupal,
+  deleteSalidaGrupal
 };

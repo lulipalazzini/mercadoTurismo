@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getCircuitos,
   getCircuito,
   createCircuito,
   updateCircuito,
   deleteCircuito,
-} from "../controllers/circuitos.controller.js";
-import { verifyToken, isAdmin } from "../middleware/auth.middleware.js";
+} = require("../controllers/circuitos.controller");
+const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post("/", verifyToken, createCircuito);
 router.put("/:id", verifyToken, updateCircuito);
 router.delete("/:id", verifyToken, deleteCircuito);
 
-export default router;
+module.exports = router;

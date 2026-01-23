@@ -3,6 +3,9 @@ import AutoCard from "../components/AutoCard";
 import SearchBox from "../components/SearchBox";
 import "../styles/servicios.css";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+
 export default function Autos() {
   const [autos, setAutos] = useState([]);
   const [allAutos, setAllAutos] = useState([]);
@@ -15,7 +18,7 @@ export default function Autos() {
 
   const fetchAutos = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/autos");
+      const response = await fetch(`${API_BASE_URL}/autos`);
       if (!response.ok) {
         throw new Error("Error al cargar los autos");
       }

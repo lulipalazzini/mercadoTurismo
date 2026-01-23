@@ -1,5 +1,5 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database.js";
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
 
 const Alojamiento = sequelize.define(
   "Alojamiento",
@@ -89,10 +89,10 @@ const Alojamiento = sequelize.define(
 );
 
 // Asociaciones
-import User from "./User.model.js";
+const User = require("./User.model");
 Alojamiento.belongsTo(User, {
   foreignKey: "vendedorId",
   as: "vendedor",
 });
 
-export default Alojamiento;
+module.exports = Alojamiento;

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import CupoCard from "../components/CupoCard";
 import "../styles/servicios.css";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+
 export default function Cupos() {
   const [cupos, setCupos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,14 +16,14 @@ export default function Cupos() {
 
   const fetchCupos = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/cupos-mercado");
+      const response = await fetch(`${API_BASE_URL}/cupos-mercado`);
       if (!response.ok) {
         throw new Error("Error al cargar los cupos");
       }
       const data = await response.json();
       // Filtrar solo los cupos disponibles para mostrar en el frontend minorista
       const cuposDisponibles = data.filter(
-        (cupo) => cupo.estado === "disponible"
+        (cupo) => cupo.estado === "disponible",
       );
       setCupos(cuposDisponibles);
     } catch (err) {

@@ -1,7 +1,7 @@
-import Circuito from "../models/Circuito.model.js";
-import User from "../models/User.model.js";
+const Circuito = require("../models/Circuito.model");
+const User = require("../models/User.model");
 
-export const getCircuitos = async (req, res) => {
+const getCircuitos = async (req, res) => {
   try {
     const circuitos = await Circuito.findAll({
       where: { activo: true },
@@ -22,7 +22,7 @@ export const getCircuitos = async (req, res) => {
   }
 };
 
-export const getCircuito = async (req, res) => {
+const getCircuito = async (req, res) => {
   try {
     const circuito = await Circuito.findByPk(req.params.id);
     if (!circuito) {
@@ -36,7 +36,7 @@ export const getCircuito = async (req, res) => {
   }
 };
 
-export const createCircuito = async (req, res) => {
+const createCircuito = async (req, res) => {
   try {
     const circuito = await Circuito.create(req.body);
     res.status(201).json({ message: "Circuito creado exitosamente", circuito });
@@ -47,7 +47,7 @@ export const createCircuito = async (req, res) => {
   }
 };
 
-export const updateCircuito = async (req, res) => {
+const updateCircuito = async (req, res) => {
   try {
     const circuito = await Circuito.findByPk(req.params.id);
     if (!circuito) {
@@ -62,7 +62,7 @@ export const updateCircuito = async (req, res) => {
   }
 };
 
-export const deleteCircuito = async (req, res) => {
+const deleteCircuito = async (req, res) => {
   try {
     const circuito = await Circuito.findByPk(req.params.id);
     if (!circuito) {
@@ -75,4 +75,13 @@ export const deleteCircuito = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar circuito", error: error.message });
   }
+};
+
+
+module.exports = {
+  getCircuitos,
+  getCircuito,
+  createCircuito,
+  updateCircuito,
+  deleteCircuito
 };

@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getCruceros,
   getCrucero,
   createCrucero,
   updateCrucero,
   deleteCrucero,
-} from "../controllers/cruceros.controller.js";
-import { verifyToken, isAdmin } from "../middleware/auth.middleware.js";
+} = require("../controllers/cruceros.controller");
+const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post("/", verifyToken, createCrucero);
 router.put("/:id", verifyToken, updateCrucero);
 router.delete("/:id", verifyToken, deleteCrucero);
 
-export default router;
+module.exports = router;

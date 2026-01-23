@@ -13,7 +13,6 @@ Se han creado **16 archivos de seeders** con datos de ejemplo para poblar la bas
 | `alojamientos.seeder.js`    | 15        | Hoteles, hostels, resorts, etc.         |
 | `autos.seeder.js`           | 15        | Vehículos de alquiler                   |
 | `paquetes.seeder.js`        | 15        | Paquetes turísticos                     |
-| `pasajes.seeder.js`         | 15        | Pasajes aéreos y terrestres             |
 | `excursiones.seeder.js`     | 15        | Excursiones y tours                     |
 | `transfers.seeder.js`       | 15        | Servicios de transfer                   |
 | `seguros.seeder.js`         | 15        | Seguros de viaje                        |

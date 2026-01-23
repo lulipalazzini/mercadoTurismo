@@ -1,6 +1,6 @@
-import Cupo from "../models/Cupo.model.js";
+const Cupo = require("../models/Cupo.model");
 
-export const getCupos = async (req, res) => {
+const getCupos = async (req, res) => {
   try {
     const cupos = await Cupo.findAll({
       order: [["createdAt", "DESC"]],
@@ -13,7 +13,7 @@ export const getCupos = async (req, res) => {
   }
 };
 
-export const getCupo = async (req, res) => {
+const getCupo = async (req, res) => {
   try {
     const cupo = await Cupo.findByPk(req.params.id);
     if (!cupo) {
@@ -27,7 +27,7 @@ export const getCupo = async (req, res) => {
   }
 };
 
-export const createCupo = async (req, res) => {
+const createCupo = async (req, res) => {
   try {
     const cupo = await Cupo.create({
       ...req.body,
@@ -41,7 +41,7 @@ export const createCupo = async (req, res) => {
   }
 };
 
-export const updateCupo = async (req, res) => {
+const updateCupo = async (req, res) => {
   try {
     const cupo = await Cupo.findByPk(req.params.id);
     if (!cupo) {
@@ -56,7 +56,7 @@ export const updateCupo = async (req, res) => {
   }
 };
 
-export const deleteCupo = async (req, res) => {
+const deleteCupo = async (req, res) => {
   try {
     const cupo = await Cupo.findByPk(req.params.id);
     if (!cupo) {
@@ -69,4 +69,13 @@ export const deleteCupo = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar cupo", error: error.message });
   }
+};
+
+
+module.exports = {
+  getCupos,
+  getCupo,
+  createCupo,
+  updateCupo,
+  deleteCupo
 };

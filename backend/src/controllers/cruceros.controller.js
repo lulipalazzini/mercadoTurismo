@@ -1,7 +1,7 @@
-import Crucero from "../models/Crucero.model.js";
-import User from "../models/User.model.js";
+const Crucero = require("../models/Crucero.model");
+const User = require("../models/User.model");
 
-export const getCruceros = async (req, res) => {
+const getCruceros = async (req, res) => {
   try {
     const cruceros = await Crucero.findAll({
       where: { activo: true },
@@ -22,7 +22,7 @@ export const getCruceros = async (req, res) => {
   }
 };
 
-export const getCrucero = async (req, res) => {
+const getCrucero = async (req, res) => {
   try {
     const crucero = await Crucero.findByPk(req.params.id);
     if (!crucero) {
@@ -36,7 +36,7 @@ export const getCrucero = async (req, res) => {
   }
 };
 
-export const createCrucero = async (req, res) => {
+const createCrucero = async (req, res) => {
   try {
     const crucero = await Crucero.create(req.body);
     res.status(201).json({ message: "Crucero creado exitosamente", crucero });
@@ -47,7 +47,7 @@ export const createCrucero = async (req, res) => {
   }
 };
 
-export const updateCrucero = async (req, res) => {
+const updateCrucero = async (req, res) => {
   try {
     const crucero = await Crucero.findByPk(req.params.id);
     if (!crucero) {
@@ -62,7 +62,7 @@ export const updateCrucero = async (req, res) => {
   }
 };
 
-export const deleteCrucero = async (req, res) => {
+const deleteCrucero = async (req, res) => {
   try {
     const crucero = await Crucero.findByPk(req.params.id);
     if (!crucero) {
@@ -75,4 +75,13 @@ export const deleteCrucero = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar crucero", error: error.message });
   }
+};
+
+
+module.exports = {
+  getCruceros,
+  getCrucero,
+  createCrucero,
+  updateCrucero,
+  deleteCrucero
 };

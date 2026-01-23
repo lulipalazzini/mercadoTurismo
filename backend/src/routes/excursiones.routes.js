@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getExcursiones,
   getExcursion,
   createExcursion,
   updateExcursion,
   deleteExcursion,
-} from "../controllers/excursiones.controller.js";
-import { verifyToken, isAdmin } from "../middleware/auth.middleware.js";
+} = require("../controllers/excursiones.controller");
+const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post("/", verifyToken, createExcursion);
 router.put("/:id", verifyToken, updateExcursion);
 router.delete("/:id", verifyToken, deleteExcursion);
 
-export default router;
+module.exports = router;

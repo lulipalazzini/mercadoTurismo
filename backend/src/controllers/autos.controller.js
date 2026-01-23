@@ -1,7 +1,7 @@
-import Auto from "../models/Auto.model.js";
-import User from "../models/User.model.js";
+const Auto = require("../models/Auto.model");
+const User = require("../models/User.model");
 
-export const getAutos = async (req, res) => {
+const getAutos = async (req, res) => {
   try {
     const autos = await Auto.findAll({
       where: { disponible: true },
@@ -22,7 +22,7 @@ export const getAutos = async (req, res) => {
   }
 };
 
-export const getAuto = async (req, res) => {
+const getAuto = async (req, res) => {
   try {
     const auto = await Auto.findByPk(req.params.id);
     if (!auto) {
@@ -36,7 +36,7 @@ export const getAuto = async (req, res) => {
   }
 };
 
-export const createAuto = async (req, res) => {
+const createAuto = async (req, res) => {
   try {
     const auto = await Auto.create(req.body);
     res.status(201).json({ message: "Auto creado exitosamente", auto });
@@ -47,7 +47,7 @@ export const createAuto = async (req, res) => {
   }
 };
 
-export const updateAuto = async (req, res) => {
+const updateAuto = async (req, res) => {
   try {
     const auto = await Auto.findByPk(req.params.id);
     if (!auto) {
@@ -62,7 +62,7 @@ export const updateAuto = async (req, res) => {
   }
 };
 
-export const deleteAuto = async (req, res) => {
+const deleteAuto = async (req, res) => {
   try {
     const auto = await Auto.findByPk(req.params.id);
     if (!auto) {
@@ -75,4 +75,13 @@ export const deleteAuto = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar auto", error: error.message });
   }
+};
+
+
+module.exports = {
+  getAutos,
+  getAuto,
+  createAuto,
+  updateAuto,
+  deleteAuto
 };

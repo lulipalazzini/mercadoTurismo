@@ -1,6 +1,6 @@
-import User from "../models/User.model.js";
+const User = require("../models/User.model");
 
-export const getUsers = async (req, res) => {
+const getUsers = async (req, res) => {
   try {
     const users = await User.findAll({
       attributes: { exclude: ["password"] },
@@ -15,7 +15,7 @@ export const getUsers = async (req, res) => {
   }
 };
 
-export const getUserById = async (req, res) => {
+const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findByPk(id, {
@@ -35,7 +35,7 @@ export const getUserById = async (req, res) => {
   }
 };
 
-export const createUser = async (req, res) => {
+const createUser = async (req, res) => {
   try {
     const { nombre, email, password, role, telefono, direccion, agenciaId } =
       req.body;
@@ -82,7 +82,7 @@ export const createUser = async (req, res) => {
   }
 };
 
-export const updateUser = async (req, res) => {
+const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, email, role, telefono, direccion, agenciaId, fotoPerfil } =
@@ -127,7 +127,7 @@ export const updateUser = async (req, res) => {
   }
 };
 
-export const deleteUser = async (req, res) => {
+const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -152,4 +152,13 @@ export const deleteUser = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar usuario", error: error.message });
   }
+};
+
+
+module.exports = {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser
 };

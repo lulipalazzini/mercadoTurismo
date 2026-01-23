@@ -1,7 +1,7 @@
-import Alojamiento from "../models/Alojamiento.model.js";
-import User from "../models/User.model.js";
+const Alojamiento = require("../models/Alojamiento.model");
+const User = require("../models/User.model");
 
-export const getAlojamientos = async (req, res) => {
+const getAlojamientos = async (req, res) => {
   try {
     const alojamientos = await Alojamiento.findAll({
       where: { activo: true },
@@ -22,7 +22,7 @@ export const getAlojamientos = async (req, res) => {
   }
 };
 
-export const getAlojamiento = async (req, res) => {
+const getAlojamiento = async (req, res) => {
   try {
     const alojamiento = await Alojamiento.findByPk(req.params.id);
     if (!alojamiento) {
@@ -36,7 +36,7 @@ export const getAlojamiento = async (req, res) => {
   }
 };
 
-export const createAlojamiento = async (req, res) => {
+const createAlojamiento = async (req, res) => {
   try {
     const alojamiento = await Alojamiento.create(req.body);
     res
@@ -49,7 +49,7 @@ export const createAlojamiento = async (req, res) => {
   }
 };
 
-export const updateAlojamiento = async (req, res) => {
+const updateAlojamiento = async (req, res) => {
   try {
     const alojamiento = await Alojamiento.findByPk(req.params.id);
     if (!alojamiento) {
@@ -65,7 +65,7 @@ export const updateAlojamiento = async (req, res) => {
   }
 };
 
-export const deleteAlojamiento = async (req, res) => {
+const deleteAlojamiento = async (req, res) => {
   try {
     const alojamiento = await Alojamiento.findByPk(req.params.id);
     if (!alojamiento) {
@@ -78,4 +78,13 @@ export const deleteAlojamiento = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar alojamiento", error: error.message });
   }
+};
+
+
+module.exports = {
+  getAlojamientos,
+  getAlojamiento,
+  createAlojamiento,
+  updateAlojamiento,
+  deleteAlojamiento
 };

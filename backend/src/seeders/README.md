@@ -18,7 +18,7 @@ seeders/
 ├── alojamientos.seeder.js     # 15 alojamientos (hoteles, hostels, etc.)
 ├── autos.seeder.js            # 15 autos de alquiler
 ├── paquetes.seeder.js         # 15 paquetes turísticos
-├── pasajes.seeder.js          # 15 pasajes (aéreos y terrestres)
+
 ├── excursiones.seeder.js      # 15 excursiones
 ├── transfers.seeder.js        # 15 servicios de transfer
 ├── seguros.seeder.js          # 15 seguros de viaje

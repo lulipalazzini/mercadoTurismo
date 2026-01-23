@@ -1,24 +1,34 @@
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
-export const verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
+  console.log('\n🔐 [AUTH MIDDLEWARE] Verificando token...');
   const token = req.header("Authorization")?.replace("Bearer ", "");
+  console.log(`   Token presente: ${token ? 'Sí' : 'No'}`);
+  console.log(`   Authorization header: ${req.header("Authorization")}`);
 
   if (!token) {
+    console.log('❌ [AUTH MIDDLEWARE] No hay token');
     return res
       .status(401)
       .json({ message: "No hay token, autorización denegada" });
   }
 
   try {
+    console.log('   Verificando token con JWT_SECRET...');
+    console.log(`   JWT_SECRET presente: ${process.env.JWT_SECRET ? 'Sí' : 'No'}`);
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
+    console.log(`✅ [AUTH MIDDLEWARE] Token válido - Usuario ID: ${decoded.id}, Role: ${decoded.role}`);
     next();
   } catch (error) {
-    res.status(401).json({ message: "Token no válido" });
+    console.error('❌ [AUTH MIDDLEWARE] Error al verificar token:');
+    console.error('   Tipo:', error.name);
+    console.error('   Mensaje:', error.message);
+    res.status(401).json({ message: "Token no válido", error: error.message });
   }
 };
 
-export const isAdmin = (req, res, next) => {
+const isAdmin = (req, res, next) => {
   if (req.user.role !== "admin" && req.user.role !== "sysadmin") {
     return res
       .status(403)
@@ -27,7 +37,7 @@ export const isAdmin = (req, res, next) => {
   next();
 };
 
-export const isSysAdmin = (req, res, next) => {
+const isSysAdmin = (req, res, next) => {
   if (req.user.role !== "sysadmin") {
     return res
       .status(403)
@@ -36,7 +46,7 @@ export const isSysAdmin = (req, res, next) => {
   next();
 };
 
-export const isOperador = (req, res, next) => {
+const isOperador = (req, res, next) => {
   if (req.user.role !== "operador") {
     return res
       .status(403)
@@ -45,7 +55,7 @@ export const isOperador = (req, res, next) => {
   next();
 };
 
-export const isAgencia = (req, res, next) => {
+const isAgencia = (req, res, next) => {
   if (req.user.role !== "agencia") {
     return res
       .status(403)
@@ -54,7 +64,7 @@ export const isAgencia = (req, res, next) => {
   next();
 };
 
-export const canPublishCupos = (req, res, next) => {
+const canPublishCupos = (req, res, next) => {
   if (req.user.role !== "operador" && req.user.role !== "agencia") {
     return res
       .status(403)
@@ -63,11 +73,22 @@ export const canPublishCupos = (req, res, next) => {
   next();
 };
 
-export const canViewMarketplace = (req, res, next) => {
+const canViewMarketplace = (req, res, next) => {
   if (req.user.role !== "agencia") {
     return res
       .status(403)
       .json({ message: "Solo agencias pueden ver el marketplace de cupos" });
   }
   next();
+};
+
+
+module.exports = {
+  verifyToken,
+  isAdmin,
+  isSysAdmin,
+  isOperador,
+  isAgencia,
+  canPublishCupos,
+  canViewMarketplace
 };

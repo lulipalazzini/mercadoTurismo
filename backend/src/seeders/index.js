@@ -4,7 +4,6 @@ import { seedClientes } from "./clientes.seeder.js";
 import { seedAlojamientos } from "./alojamientos.seeder.js";
 import { seedAutos } from "./autos.seeder.js";
 import { seedPaquetes } from "./paquetes.seeder.js";
-import { seedPasajes } from "./pasajes.seeder.js";
 import { seedExcursiones } from "./excursiones.seeder.js";
 import { seedTransfers } from "./transfers.seeder.js";
 import { seedSeguros } from "./seguros.seeder.js";
@@ -37,7 +36,6 @@ export const runAllSeeders = async () => {
     await seedPaquetes();
     await seedAlojamientos();
     await seedAutos();
-    await seedPasajes();
     await seedExcursiones();
     await seedTransfers();
     await seedSeguros();

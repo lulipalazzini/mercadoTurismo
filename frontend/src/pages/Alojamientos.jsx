@@ -3,6 +3,9 @@ import AlojamientoCard from "../components/AlojamientoCard";
 import SearchBox from "../components/SearchBox";
 import "../styles/alojamientos.css";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+
 export default function Alojamientos() {
   const [alojamientos, setAlojamientos] = useState([]);
   const [allAlojamientos, setAllAlojamientos] = useState([]);
@@ -15,7 +18,7 @@ export default function Alojamientos() {
 
   const fetchAlojamientos = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/alojamientos");
+      const response = await fetch(`${API_BASE_URL}/alojamientos`);
       if (!response.ok) {
         throw new Error("Error al cargar los alojamientos");
       }

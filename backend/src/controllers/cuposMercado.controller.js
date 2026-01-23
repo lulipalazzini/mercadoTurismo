@@ -1,18 +1,24 @@
-import CupoMercado from "../models/CupoMercado.model.js";
-import User from "../models/User.model.js";
-import { Op } from "sequelize";
+const CupoMercado = require("../models/CupoMercado.model");
+const User = require("../models/User.model");
+const { Op } = require("sequelize");
 
 // Obtener cupos del marketplace (solo para agencias)
-export const getCuposMercado = async (req, res) => {
+const getCuposMercado = async (req, res) => {
   try {
+    console.log('\n💰 [CUPOS MERCADO] Obteniendo cupos del marketplace...');
+    console.log(`   Usuario ID: ${req.user.id}`);
+    console.log(`   Role: ${req.user.role}`);
+    
     // Solo las agencias pueden ver el marketplace
     if (req.user.role !== "agencia") {
+      console.log('❌ [CUPOS MERCADO] Acceso denegado - No es agencia');
       return res.status(403).json({
         message: "Solo las agencias pueden ver el marketplace de cupos",
       });
     }
 
     // Obtener cupos de operadores, con información del vendedor
+    console.log('   Consultando base de datos...');
     const cupos = await CupoMercado.findAll({
       include: [
         {
@@ -30,6 +36,7 @@ export const getCuposMercado = async (req, res) => {
       },
       order: [["createdAt", "DESC"]],
     });
+    console.log(`   Cupos encontrados: ${cupos.length}`);
 
     // Actualizar estados según fecha de vencimiento
     const hoy = new Date();
@@ -38,12 +45,17 @@ export const getCuposMercado = async (req, res) => {
     for (const cupo of cupos) {
       const vencimiento = new Date(cupo.fechaVencimiento);
       if (vencimiento < hoy && cupo.estado === "disponible") {
+        console.log(`   Actualizando cupo ${cupo.id} a vencido`);
         await cupo.update({ estado: "vencido" });
       }
     }
 
+    console.log('✅ [CUPOS MERCADO] Cupos obtenidos exitosamente');
     res.json(cupos);
   } catch (error) {
+    console.error('❌ [CUPOS MERCADO] Error en getCuposMercado:');
+    console.error('   Mensaje:', error.message);
+    console.error('   Stack:', error.stack);
     res
       .status(500)
       .json({ message: "Error al obtener cupos", error: error.message });
@@ -51,8 +63,11 @@ export const getCuposMercado = async (req, res) => {
 };
 
 // Obtener mis cupos publicados (operadores y agencias)
-export const getMisCupos = async (req, res) => {
+const getMisCupos = async (req, res) => {
   try {
+    console.log('\n📋 [CUPOS MERCADO] Obteniendo mis cupos...');
+    console.log(`   Usuario ID: ${req.user.id}`);
+    
     const cupos = await CupoMercado.findAll({
       where: {
         usuarioVendedorId: req.user.id,
@@ -66,16 +81,21 @@ export const getMisCupos = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
-
+    
+    console.log(`   Cupos encontrados: ${cupos.length}`);
+    console.log('✅ [CUPOS MERCADO] Mis cupos obtenidos exitosamente');
     res.json(cupos);
   } catch (error) {
+    console.error('❌ [CUPOS MERCADO] Error en getMisCupos:');
+    console.error('   Mensaje:', error.message);
+    console.error('   Stack:', error.stack);
     res
       .status(500)
       .json({ message: "Error al obtener cupos", error: error.message });
   }
 };
 
-export const getCupoMercado = async (req, res) => {
+const getCupoMercado = async (req, res) => {
   try {
     const cupo = await CupoMercado.findByPk(req.params.id, {
       include: [
@@ -109,7 +129,7 @@ export const getCupoMercado = async (req, res) => {
   }
 };
 
-export const createCupoMercado = async (req, res) => {
+const createCupoMercado = async (req, res) => {
   try {
     // Validar que el usuario tenga teléfono
     const user = await User.findByPk(req.user.id);
@@ -133,7 +153,7 @@ export const createCupoMercado = async (req, res) => {
   }
 };
 
-export const updateCupoMercado = async (req, res) => {
+const updateCupoMercado = async (req, res) => {
   try {
     const cupo = await CupoMercado.findByPk(req.params.id);
     if (!cupo) {
@@ -160,7 +180,7 @@ export const updateCupoMercado = async (req, res) => {
   }
 };
 
-export const deleteCupoMercado = async (req, res) => {
+const deleteCupoMercado = async (req, res) => {
   try {
     const cupo = await CupoMercado.findByPk(req.params.id);
     if (!cupo) {
@@ -188,7 +208,7 @@ export const deleteCupoMercado = async (req, res) => {
 };
 
 // Importar cupos desde Excel
-export const importarCupos = async (req, res) => {
+const importarCupos = async (req, res) => {
   try {
     const { cupos } = req.body;
 
@@ -281,4 +301,15 @@ export const importarCupos = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+
+module.exports = {
+  getCuposMercado,
+  getMisCupos,
+  getCupoMercado,
+  createCupoMercado,
+  updateCupoMercado,
+  deleteCupoMercado,
+  importarCupos
 };

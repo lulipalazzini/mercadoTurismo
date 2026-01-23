@@ -3,6 +3,9 @@ import SalidaGrupalCard from "../components/SalidaGrupalCard";
 import SearchBox from "../components/SearchBox";
 import "../styles/servicios.css";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+
 export default function SalidasGrupales() {
   const [salidas, setSalidas] = useState([]);
   const [allSalidas, setAllSalidas] = useState([]);
@@ -15,9 +18,7 @@ export default function SalidasGrupales() {
 
   const fetchSalidas = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:3001/api/salidas-grupales",
-      );
+      const response = await fetch(`${API_BASE_URL}/salidas-grupales`);
       if (!response.ok) {
         throw new Error("Error al cargar las salidas grupales");
       }

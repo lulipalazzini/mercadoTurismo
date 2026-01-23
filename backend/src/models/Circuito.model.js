@@ -1,5 +1,5 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database.js";
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
 
 const Circuito = sequelize.define(
   "Circuito",
@@ -104,10 +104,10 @@ const Circuito = sequelize.define(
   },
 );
 
-import User from "./User.model.js";
+const User = require("./User.model");
 Circuito.belongsTo(User, {
   foreignKey: "vendedorId",
   as: "vendedor",
 });
 
-export default Circuito;
+module.exports = Circuito;

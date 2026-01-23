@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import CruceroCard from "../components/CruceroCard";
 import SearchBox from "../components/SearchBox";
 import "../styles/servicios.css";
-
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 export default function Cruceros() {
   const [cruceros, setCruceros] = useState([]);
   const [allCruceros, setAllCruceros] = useState([]);
@@ -15,7 +16,7 @@ export default function Cruceros() {
 
   const fetchCruceros = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/cruceros");
+      const response = await fetch(`${API_BASE_URL}/cruceros`);
       if (!response.ok) {
         throw new Error("Error al cargar los cruceros");
       }

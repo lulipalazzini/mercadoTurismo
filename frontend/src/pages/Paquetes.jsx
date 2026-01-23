@@ -4,6 +4,9 @@ import PaqueteCard from "../components/PaqueteCard";
 import SearchBox from "../components/SearchBox";
 import "../styles/servicios.css";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+
 export default function Paquetes() {
   const [searchParams] = useSearchParams();
   const [paquetes, setPaquetes] = useState([]);
@@ -25,7 +28,7 @@ export default function Paquetes() {
 
   const fetchPaquetes = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/paquetes");
+      const response = await fetch(`${API_BASE_URL}/paquetes`);
       if (!response.ok) {
         throw new Error("Error al cargar los paquetes");
       }

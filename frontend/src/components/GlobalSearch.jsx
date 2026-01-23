@@ -10,6 +10,8 @@ import CruceroCard from "./CruceroCard";
 import SeguroCard from "./SeguroCard";
 import "../styles/globalSearch.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+
 export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,18 +34,18 @@ export default function GlobalSearch() {
     try {
       // Solo servicios minoristas (sin Cupos que es exclusivo de mayoristas)
       const endpoints = [
-        { key: "alojamientos", url: "http://localhost:3001/api/alojamientos" },
-        { key: "paquetes", url: "http://localhost:3001/api/paquetes" },
-        { key: "autos", url: "http://localhost:3001/api/autos" },
-        { key: "transfers", url: "http://localhost:3001/api/transfers" },
-        { key: "circuitos", url: "http://localhost:3001/api/circuitos" },
-        { key: "excursiones", url: "http://localhost:3001/api/excursiones" },
+        { key: "alojamientos", url: `${API_BASE_URL}/alojamientos` },
+        { key: "paquetes", url: `${API_BASE_URL}/paquetes` },
+        { key: "autos", url: `${API_BASE_URL}/autos` },
+        { key: "transfers", url: `${API_BASE_URL}/transfers` },
+        { key: "circuitos", url: `${API_BASE_URL}/circuitos` },
+        { key: "excursiones", url: `${API_BASE_URL}/excursiones` },
         {
           key: "salidasGrupales",
-          url: "http://localhost:3001/api/salidas-grupales",
+          url: `${API_BASE_URL}/salidas-grupales`,
         },
-        { key: "cruceros", url: "http://localhost:3001/api/cruceros" },
-        { key: "seguros", url: "http://localhost:3001/api/seguros" },
+        { key: "cruceros", url: `${API_BASE_URL}/cruceros` },
+        { key: "seguros", url: `${API_BASE_URL}/seguros` },
       ];
 
       const promises = endpoints.map((endpoint) =>

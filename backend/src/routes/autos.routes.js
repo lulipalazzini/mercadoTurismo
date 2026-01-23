@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getAutos,
   getAuto,
   createAuto,
   updateAuto,
   deleteAuto,
-} from "../controllers/autos.controller.js";
-import { verifyToken, isAdmin } from "../middleware/auth.middleware.js";
+} = require("../controllers/autos.controller");
+const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post("/", verifyToken, createAuto);
 router.put("/:id", verifyToken, updateAuto);
 router.delete("/:id", verifyToken, deleteAuto);
 
-export default router;
+module.exports = router;

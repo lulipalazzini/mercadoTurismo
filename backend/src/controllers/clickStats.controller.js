@@ -1,7 +1,7 @@
-import ClickStats from "../models/ClickStats.model.js";
+const ClickStats = require("../models/ClickStats.model");
 
 // Incrementar contador de clicks para un tipo de card
-export const incrementClickCount = async (req, res) => {
+const incrementClickCount = async (req, res) => {
   try {
     const { cardType, serviceId, serviceName } = req.body;
 
@@ -69,7 +69,7 @@ export const incrementClickCount = async (req, res) => {
 };
 
 // Obtener todos los contadores
-export const getAllStats = async (req, res) => {
+const getAllStats = async (req, res) => {
   try {
     const stats = await ClickStats.findAll({
       order: [["clicks", "DESC"]],
@@ -130,7 +130,7 @@ export const getAllStats = async (req, res) => {
 };
 
 // Obtener contador de un tipo específico
-export const getStatByType = async (req, res) => {
+const getStatByType = async (req, res) => {
   try {
     const { cardType } = req.params;
 
@@ -149,4 +149,11 @@ export const getStatByType = async (req, res) => {
     console.error("Error obteniendo estadística:", error);
     res.status(500).json({ error: "Error en la base de datos" });
   }
+};
+
+
+module.exports = {
+  incrementClickCount,
+  getAllStats,
+  getStatByType
 };

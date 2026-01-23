@@ -1,10 +1,10 @@
-import express from "express";
-import rateLimit from "express-rate-limit";
-import {
+const express = require("express");
+const rateLimit = require("express-rate-limit");
+const {
   incrementClickCount,
   getAllStats,
   getStatByType,
-} from "../controllers/clickStats.controller.js";
+} = require("../controllers/clickStats.controller");
 
 const router = express.Router();
 
@@ -26,4 +26,4 @@ router.get("/", getAllStats);
 // GET /api/stats/:cardType - Obtener estadística de un tipo específico
 router.get("/:cardType", getStatByType);
 
-export default router;
+module.exports = router;

@@ -1,6 +1,6 @@
-import Cliente from "../models/Cliente.model.js";
+const Cliente = require("../models/Cliente.model");
 
-export const getClientes = async (req, res) => {
+const getClientes = async (req, res) => {
   try {
     const clientes = await Cliente.findAll({ order: [["createdAt", "DESC"]] });
     res.json(clientes);
@@ -11,7 +11,7 @@ export const getClientes = async (req, res) => {
   }
 };
 
-export const getCliente = async (req, res) => {
+const getCliente = async (req, res) => {
   try {
     const cliente = await Cliente.findByPk(req.params.id);
     if (!cliente) {
@@ -25,7 +25,7 @@ export const getCliente = async (req, res) => {
   }
 };
 
-export const createCliente = async (req, res) => {
+const createCliente = async (req, res) => {
   try {
     const cliente = await Cliente.create(req.body);
     res.status(201).json({ message: "Cliente creado exitosamente", cliente });
@@ -36,7 +36,7 @@ export const createCliente = async (req, res) => {
   }
 };
 
-export const updateCliente = async (req, res) => {
+const updateCliente = async (req, res) => {
   try {
     const cliente = await Cliente.findByPk(req.params.id);
     if (!cliente) {
@@ -51,7 +51,7 @@ export const updateCliente = async (req, res) => {
   }
 };
 
-export const deleteCliente = async (req, res) => {
+const deleteCliente = async (req, res) => {
   try {
     const cliente = await Cliente.findByPk(req.params.id);
     if (!cliente) {
@@ -64,4 +64,13 @@ export const deleteCliente = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar cliente", error: error.message });
   }
+};
+
+
+module.exports = {
+  getClientes,
+  getCliente,
+  createCliente,
+  updateCliente,
+  deleteCliente
 };

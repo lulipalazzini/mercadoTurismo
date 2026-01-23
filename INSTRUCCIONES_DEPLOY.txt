@@ -1,0 +1,139 @@
+═══════════════════════════════════════════════════════════════
+  INSTRUCCIONES DE DEPLOY EN WNPOWER - mercadoturismo.ar
+═══════════════════════════════════════════════════════════════
+
+📦 PASO 1: SUBIR EL BACKEND
+────────────────────────────────────────────────────────────────
+
+1. Sube la carpeta backend/ completa a tu servidor
+   Ubicación: /home/tu_usuario/backend/
+
+2. En el servidor, edita: backend/src/index.js
+   ⚠️ IMPORTANTE: Si hay una línea que dice:
+      var http = require('http');
+   → BORRALA (esa línea rompe todo)
+   
+   El archivo debe empezar con:
+      import express from "express";
+
+
+📦 PASO 2: CONFIGURAR NODE.JS EN CPANEL
+────────────────────────────────────────────────────────────────
+
+1. Ve a: cPanel > "Setup Node.js App"
+
+2. Click en "Create Application" con estos datos:
+
+   ┌─────────────────────────────────────────────────────────┐
+   │ Node.js Version:        18.x o superior                 │
+   │ Application Mode:       Production                      │
+   │ Application Root:       /home/tu_usuario/backend        │
+   │ Application URL:        mercadoturismo.ar/api          │
+   │ Application Startup:    app.js                          │
+   └─────────────────────────────────────────────────────────┘
+
+   ⚠️ CRÍTICO: Application URL DEBE ser "mercadoturismo.ar/api"
+   
+   NO definas PORT - Passenger lo asigna automáticamente
+
+3. Después de crear la app, copia el comando "Run NPM Install"
+   y ejecútalo en la terminal de cPanel:
+   
+   cd /home/tu_usuario/backend && npm install --production
+
+
+📦 PASO 3: VERIFICAR EL .ENV
+────────────────────────────────────────────────────────────────
+
+En el servidor, edita: backend/.env
+
+Debe tener esto (SIN PORT):
+
+# NO DEFINIR PORT - Passenger lo maneja
+JWT_SECRET=mercado_turismo_secret_key_2026_super_seguro
+NODE_ENV=production
+FRONTEND_URL=https://mercadoturismo.ar
+BASE_PATH=/api
+
+DB_HOST=localhost
+DB_USER=tu_usuario_mysql
+DB_PASSWORD=tu_password_mysql
+DB_NAME=mercado_turismo
+DB_PORT=3306
+
+
+📦 PASO 4: SUBIR EL FRONTEND
+────────────────────────────────────────────────────────────────
+
+1. Ve a tu carpeta local: frontend/dist/
+
+2. Sube TODO el contenido a: /home/tu_usuario/public_html/
+   
+   Debe quedar así:
+   public_html/
+   ├── index.html
+   ├── assets/
+   └── .htaccess (incluido en dist)
+
+
+📦 PASO 5: REINICIAR LA APLICACIÓN
+────────────────────────────────────────────────────────────────
+
+En cPanel > Setup Node.js App:
+→ Click en el botón "RESTART"
+
+
+🧪 PASO 6: PROBAR QUE FUNCIONA
+────────────────────────────────────────────────────────────────
+
+1. Prueba el backend:
+   https://mercadoturismo.ar/api/
+   
+   ✅ Debe devolver: {"message":"API Mercado Turismo funcionando"}
+
+2. Prueba el frontend:
+   https://mercadoturismo.ar/
+   
+   ✅ Debe cargar tu página sin error 503
+
+3. Prueba una sección específica:
+   https://mercadoturismo.ar/paquetes
+   
+   ✅ Debe cargar los paquetes desde la base de datos
+
+
+❌ SI ALGO NO FUNCIONA
+────────────────────────────────────────────────────────────────
+
+Error 503 en /api:
+→ El backend no arranca
+→ Revisa logs: cPanel > Metrics > Errors
+→ O ejecuta: cd ~/backend && node src/index.js
+→ Verifica que NO haya "var http = require('http');" en index.js
+
+Error en base de datos:
+→ Verifica las credenciales en el .env
+→ Asegúrate de que la base de datos existe en cPanel
+
+Frontend carga pero no trae datos:
+→ Verifica que Application URL sea "mercadoturismo.ar/api"
+→ No debe ser solo "api" ni "mercadoturismo.ar"
+
+
+✅ CHECKLIST FINAL
+────────────────────────────────────────────────────────────────
+
+□ Backend subido a ~/backend/
+□ src/index.js NO tiene "var http = require('http');"
+□ .env NO tiene PORT definido
+□ Aplicación Node.js creada con URL: mercadoturismo.ar/api
+□ npm install ejecutado
+□ Frontend (dist/) subido a public_html/
+□ Aplicación reiniciada
+□ https://mercadoturismo.ar/api/ devuelve JSON
+□ https://mercadoturismo.ar/ carga la página
+
+
+═══════════════════════════════════════════════════════════════
+Si todo está ✅, tu app debe estar funcionando correctamente.
+═══════════════════════════════════════════════════════════════

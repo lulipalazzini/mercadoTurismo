@@ -1,7 +1,7 @@
-import Transfer from "../models/Transfer.model.js";
-import User from "../models/User.model.js";
+const Transfer = require("../models/Transfer.model");
+const User = require("../models/User.model");
 
-export const getTransfers = async (req, res) => {
+const getTransfers = async (req, res) => {
   try {
     const transfers = await Transfer.findAll({
       where: { disponible: true },
@@ -22,7 +22,7 @@ export const getTransfers = async (req, res) => {
   }
 };
 
-export const getTransfer = async (req, res) => {
+const getTransfer = async (req, res) => {
   try {
     const transfer = await Transfer.findByPk(req.params.id);
     if (!transfer) {
@@ -36,7 +36,7 @@ export const getTransfer = async (req, res) => {
   }
 };
 
-export const createTransfer = async (req, res) => {
+const createTransfer = async (req, res) => {
   try {
     const transfer = await Transfer.create(req.body);
     res.status(201).json({ message: "Transfer creado exitosamente", transfer });
@@ -47,7 +47,7 @@ export const createTransfer = async (req, res) => {
   }
 };
 
-export const updateTransfer = async (req, res) => {
+const updateTransfer = async (req, res) => {
   try {
     const transfer = await Transfer.findByPk(req.params.id);
     if (!transfer) {
@@ -62,7 +62,7 @@ export const updateTransfer = async (req, res) => {
   }
 };
 
-export const deleteTransfer = async (req, res) => {
+const deleteTransfer = async (req, res) => {
   try {
     const transfer = await Transfer.findByPk(req.params.id);
     if (!transfer) {
@@ -75,4 +75,13 @@ export const deleteTransfer = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar transfer", error: error.message });
   }
+};
+
+
+module.exports = {
+  getTransfers,
+  getTransfer,
+  createTransfer,
+  updateTransfer,
+  deleteTransfer
 };

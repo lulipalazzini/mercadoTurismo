@@ -2,6 +2,18 @@
 
 API REST para el sistema de gestión de turismo.
 
+## ⚠️ IMPORTANTE: CommonJS
+
+**Este proyecto usa CommonJS (require/module.exports)** para compatibilidad con Phusion Passenger (WNPower hosting).
+
+- ✅ Usa `require()` en lugar de `import`
+- ✅ Usa `module.exports` en lugar de `export`
+- ✅ NO tiene `"type": "module"` en package.json
+
+Para más información sobre la conversión, ver:
+- [SOLUCION_ERR_REQUIRE_ESM.md](./SOLUCION_ERR_REQUIRE_ESM.md)
+- [DEPLOY_FINAL.md](./DEPLOY_FINAL.md)
+
 ## 🚀 Instalación
 
 ```bash
@@ -103,3 +115,74 @@ El proyecto usa **SQLite** con **Sequelize**. La base de datos se crea automáti
 - **bcryptjs** - Hash de contraseñas
 - **cors** - CORS middleware
 - **dotenv** - Variables de entorno
+
+## 🚀 Deploy en WNPower
+
+### Verificación Pre-Deploy
+
+Antes de subir al servidor, ejecuta:
+
+```bash
+node verify-pre-deploy.js
+```
+
+Esto verificará que todo esté listo para deploy (CommonJS, sin errores, etc.)
+
+### Pasos para Deploy
+
+1. **Subir código al servidor:**
+   ```bash
+   git push origin main
+   # O usar FTP/File Manager
+   ```
+
+2. **En el servidor (SSH):**
+   ```bash
+   cd ~/mercad25.mercadoturismo.ar/backend
+   git pull origin main
+   npm install
+   touch tmp/restart.txt
+   ```
+
+3. **Configurar en Panel WNPower:**
+   - Application startup: `app.js`
+   - Node.js version: 18.x o 20.x
+   - Variables de entorno: JWT_SECRET, FRONTEND_URL, NODE_ENV=production
+
+4. **Verificar logs:**
+   ```bash
+   tail -f ~/logs/mercad25.mercadoturismo.ar.error_log
+   ```
+
+Para guía completa de deploy, ver [DEPLOY_FINAL.md](./DEPLOY_FINAL.md)
+
+## 📝 Scripts Útiles
+
+- `npm start` - Iniciar en producción
+- `npm run dev` - Iniciar en desarrollo con nodemon
+- `node verify-pre-deploy.js` - Verificar antes de deploy
+- `node convert-to-commonjs.js` - Convertir archivos nuevos a CommonJS (si es necesario)
+
+## 🐛 Troubleshooting
+
+### Error: ERR_REQUIRE_ESM
+Si ves este error, significa que hay archivos usando ESM en lugar de CommonJS.
+Ver [SOLUCION_ERR_REQUIRE_ESM.md](./SOLUCION_ERR_REQUIRE_ESM.md) para la solución.
+
+### Error: Cannot find module
+```bash
+npm install
+touch tmp/restart.txt
+```
+
+### La app no arranca en WNPower
+1. Verificar logs en `~/logs/*.error_log`
+2. Verificar configuración en Panel Node.js Apps
+3. Verificar que entry point sea `app.js`
+4. Verificar variables de entorno
+
+## 📚 Documentación Adicional
+
+- [SOLUCION_ERR_REQUIRE_ESM.md](./SOLUCION_ERR_REQUIRE_ESM.md) - Explicación del cambio ESM → CommonJS
+- [DEPLOY_FINAL.md](./DEPLOY_FINAL.md) - Guía completa de deploy
+- [RESUMEN_VISUAL.md](./RESUMEN_VISUAL.md) - Resumen visual de cambios

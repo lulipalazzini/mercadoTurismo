@@ -1,0 +1,37 @@
+# Configuración para Phusion Passenger en WNPower/cPanel
+PassengerEnabled On
+PassengerAppType node
+PassengerStartupFile app.js
+PassengerAppRoot /home/USERNAME/PATH_TO_YOUR_BACKEND
+
+# Variables de entorno
+SetEnv NODE_ENV production
+
+# Asegurar que todas las respuestas tengan Content-Type correcto
+<IfModule mod_headers.c>
+    # Forzar Content-Type JSON para respuestas API
+    <FilesMatch "\.(json)$">
+        Header set Content-Type "application/json; charset=utf-8"
+    </FilesMatch>
+    
+    # Headers de seguridad
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Reescritura de URLs para API
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # No reescribir archivos que existen físicamente
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Redirigir todo al app de Node.js
+    RewriteRule ^(.*)$ http://127.0.0.1:3001/$1 [P,L]
+</IfModule>
+
+# Logging de errores
+php_flag display_errors Off
+php_flag log_errors On

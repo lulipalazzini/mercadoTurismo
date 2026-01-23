@@ -1,5 +1,5 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getCuposMercado,
   getMisCupos,
   getCupoMercado,
@@ -7,12 +7,12 @@ import {
   updateCupoMercado,
   deleteCupoMercado,
   importarCupos,
-} from "../controllers/cuposMercado.controller.js";
-import {
+} = require("../controllers/cuposMercado.controller");
+const {
   verifyToken,
   canPublishCupos,
   canViewMarketplace,
-} from "../middleware/auth.middleware.js";
+} = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -31,4 +31,4 @@ router.post("/", verifyToken, canPublishCupos, createCupoMercado);
 router.put("/:id", verifyToken, canPublishCupos, updateCupoMercado);
 router.delete("/:id", verifyToken, deleteCupoMercado);
 
-export default router;
+module.exports = router;

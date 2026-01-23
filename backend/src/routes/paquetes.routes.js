@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getPaquetes,
   getPaquete,
   createPaquete,
   updatePaquete,
   deletePaquete,
-} from "../controllers/paquetes.controller.js";
-import { verifyToken, isAdmin } from "../middleware/auth.middleware.js";
+} = require("../controllers/paquetes.controller");
+const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post("/", verifyToken, createPaquete);
 router.put("/:id", verifyToken, updatePaquete);
 router.delete("/:id", verifyToken, deletePaquete);
 
-export default router;
+module.exports = router;

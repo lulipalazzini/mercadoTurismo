@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getAlojamientos,
   getAlojamiento,
   createAlojamiento,
   updateAlojamiento,
   deleteAlojamiento,
-} from "../controllers/alojamientos.controller.js";
-import { verifyToken, isAdmin } from "../middleware/auth.middleware.js";
+} = require("../controllers/alojamientos.controller");
+const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post("/", verifyToken, createAlojamiento);
 router.put("/:id", verifyToken, updateAlojamiento);
 router.delete("/:id", verifyToken, deleteAlojamiento);
 
-export default router;
+module.exports = router;

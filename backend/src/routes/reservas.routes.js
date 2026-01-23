@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getReservas,
   getReserva,
   createReserva,
   updateReserva,
   cancelReserva,
-} from "../controllers/reservas.controller.js";
-import { verifyToken } from "../middleware/auth.middleware.js";
+} = require("../controllers/reservas.controller");
+const { verifyToken } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post("/", createReserva);
 router.put("/:id", updateReserva);
 router.patch("/:id/cancel", cancelReserva);
 
-export default router;
+module.exports = router;

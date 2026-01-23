@@ -1,8 +1,8 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database.js";
-import Cliente from "./Cliente.model.js";
-import Paquete from "./Paquete.model.js";
-import User from "./User.model.js";
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
+const Cliente = require("./Cliente.model");
+const Paquete = require("./Paquete.model");
+const User = require("./User.model");
 
 const Reserva = sequelize.define(
   "Reserva",
@@ -84,4 +84,4 @@ Reserva.belongsTo(Cliente, { foreignKey: "clienteId", as: "cliente" });
 Reserva.belongsTo(Paquete, { foreignKey: "paqueteId", as: "paquete" });
 Reserva.belongsTo(User, { foreignKey: "createdById", as: "createdBy" });
 
-export default Reserva;
+module.exports = Reserva;

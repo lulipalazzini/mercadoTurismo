@@ -1,8 +1,8 @@
-import Reserva from "../models/Reserva.model.js";
-import Paquete from "../models/Paquete.model.js";
-import Cliente from "../models/Cliente.model.js";
+const Reserva = require("../models/Reserva.model");
+const Paquete = require("../models/Paquete.model");
+const Cliente = require("../models/Cliente.model");
 
-export const getReservas = async (req, res) => {
+const getReservas = async (req, res) => {
   try {
     const reservas = await Reserva.findAll({
       include: [
@@ -19,7 +19,7 @@ export const getReservas = async (req, res) => {
   }
 };
 
-export const getReserva = async (req, res) => {
+const getReserva = async (req, res) => {
   try {
     const reserva = await Reserva.findByPk(req.params.id, {
       include: [
@@ -38,7 +38,7 @@ export const getReserva = async (req, res) => {
   }
 };
 
-export const createReserva = async (req, res) => {
+const createReserva = async (req, res) => {
   try {
     const { paqueteId, numeroPersonas } = req.body;
 
@@ -82,7 +82,7 @@ export const createReserva = async (req, res) => {
   }
 };
 
-export const updateReserva = async (req, res) => {
+const updateReserva = async (req, res) => {
   try {
     const reserva = await Reserva.findByPk(req.params.id);
 
@@ -106,7 +106,7 @@ export const updateReserva = async (req, res) => {
   }
 };
 
-export const cancelReserva = async (req, res) => {
+const cancelReserva = async (req, res) => {
   try {
     const reserva = await Reserva.findByPk(req.params.id);
     if (!reserva) {
@@ -133,4 +133,13 @@ export const cancelReserva = async (req, res) => {
       .status(500)
       .json({ message: "Error al cancelar reserva", error: error.message });
   }
+};
+
+
+module.exports = {
+  getReservas,
+  getReserva,
+  createReserva,
+  updateReserva,
+  cancelReserva
 };

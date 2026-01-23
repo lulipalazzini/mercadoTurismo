@@ -1,5 +1,5 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database.js";
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
 
 const Cupo = sequelize.define(
   "Cupo",
@@ -98,4 +98,4 @@ Cupo.beforeSave((cupo) => {
   }
 });
 
-export default Cupo;
+module.exports = Cupo;

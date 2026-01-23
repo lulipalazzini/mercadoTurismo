@@ -1,7 +1,7 @@
-import Excursion from "../models/Excursion.model.js";
-import User from "../models/User.model.js";
+const Excursion = require("../models/Excursion.model");
+const User = require("../models/User.model");
 
-export const getExcursiones = async (req, res) => {
+const getExcursiones = async (req, res) => {
   try {
     const excursiones = await Excursion.findAll({
       where: { activo: true },
@@ -22,7 +22,7 @@ export const getExcursiones = async (req, res) => {
   }
 };
 
-export const getExcursion = async (req, res) => {
+const getExcursion = async (req, res) => {
   try {
     const excursion = await Excursion.findByPk(req.params.id);
     if (!excursion) {
@@ -36,7 +36,7 @@ export const getExcursion = async (req, res) => {
   }
 };
 
-export const createExcursion = async (req, res) => {
+const createExcursion = async (req, res) => {
   try {
     const excursion = await Excursion.create(req.body);
     res
@@ -49,7 +49,7 @@ export const createExcursion = async (req, res) => {
   }
 };
 
-export const updateExcursion = async (req, res) => {
+const updateExcursion = async (req, res) => {
   try {
     const excursion = await Excursion.findByPk(req.params.id);
     if (!excursion) {
@@ -64,7 +64,7 @@ export const updateExcursion = async (req, res) => {
   }
 };
 
-export const deleteExcursion = async (req, res) => {
+const deleteExcursion = async (req, res) => {
   try {
     const excursion = await Excursion.findByPk(req.params.id);
     if (!excursion) {
@@ -77,4 +77,13 @@ export const deleteExcursion = async (req, res) => {
       .status(500)
       .json({ message: "Error al eliminar excursion", error: error.message });
   }
+};
+
+
+module.exports = {
+  getExcursiones,
+  getExcursion,
+  createExcursion,
+  updateExcursion,
+  deleteExcursion
 };

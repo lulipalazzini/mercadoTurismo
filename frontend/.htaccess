@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # No tocar las peticiones a /api (las maneja Passenger directamente)
+  RewriteCond %{REQUEST_URI} !^/api/
+  
+  # Routing para React - redirigir todo lo demás a index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
