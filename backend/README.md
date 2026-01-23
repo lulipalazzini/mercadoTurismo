@@ -11,6 +11,7 @@ API REST para el sistema de gestión de turismo.
 - ✅ NO tiene `"type": "module"` en package.json
 
 Para más información sobre la conversión, ver:
+
 - [SOLUCION_ERR_REQUIRE_ESM.md](./SOLUCION_ERR_REQUIRE_ESM.md)
 - [DEPLOY_FINAL.md](./DEPLOY_FINAL.md)
 
@@ -131,12 +132,14 @@ Esto verificará que todo esté listo para deploy (CommonJS, sin errores, etc.)
 ### Pasos para Deploy
 
 1. **Subir código al servidor:**
+
    ```bash
    git push origin main
    # O usar FTP/File Manager
    ```
 
 2. **En el servidor (SSH):**
+
    ```bash
    cd ~/mercad25.mercadoturismo.ar/backend
    git pull origin main
@@ -166,16 +169,19 @@ Para guía completa de deploy, ver [DEPLOY_FINAL.md](./DEPLOY_FINAL.md)
 ## 🐛 Troubleshooting
 
 ### Error: ERR_REQUIRE_ESM
+
 Si ves este error, significa que hay archivos usando ESM en lugar de CommonJS.
 Ver [SOLUCION_ERR_REQUIRE_ESM.md](./SOLUCION_ERR_REQUIRE_ESM.md) para la solución.
 
 ### Error: Cannot find module
+
 ```bash
 npm install
 touch tmp/restart.txt
 ```
 
 ### La app no arranca en WNPower
+
 1. Verificar logs en `~/logs/*.error_log`
 2. Verificar configuración en Panel Node.js Apps
 3. Verificar que entry point sea `app.js`

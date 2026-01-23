@@ -1,29 +1,33 @@
 const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
-  console.log('\n🔐 [AUTH MIDDLEWARE] Verificando token...');
+  console.log("\n🔐 [AUTH MIDDLEWARE] Verificando token...");
   const token = req.header("Authorization")?.replace("Bearer ", "");
-  console.log(`   Token presente: ${token ? 'Sí' : 'No'}`);
+  console.log(`   Token presente: ${token ? "Sí" : "No"}`);
   console.log(`   Authorization header: ${req.header("Authorization")}`);
 
   if (!token) {
-    console.log('❌ [AUTH MIDDLEWARE] No hay token');
+    console.log("❌ [AUTH MIDDLEWARE] No hay token");
     return res
       .status(401)
       .json({ message: "No hay token, autorización denegada" });
   }
 
   try {
-    console.log('   Verificando token con JWT_SECRET...');
-    console.log(`   JWT_SECRET presente: ${process.env.JWT_SECRET ? 'Sí' : 'No'}`);
+    console.log("   Verificando token con JWT_SECRET...");
+    console.log(
+      `   JWT_SECRET presente: ${process.env.JWT_SECRET ? "Sí" : "No"}`,
+    );
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    console.log(`✅ [AUTH MIDDLEWARE] Token válido - Usuario ID: ${decoded.id}, Role: ${decoded.role}`);
+    console.log(
+      `✅ [AUTH MIDDLEWARE] Token válido - Usuario ID: ${decoded.id}, Role: ${decoded.role}`,
+    );
     next();
   } catch (error) {
-    console.error('❌ [AUTH MIDDLEWARE] Error al verificar token:');
-    console.error('   Tipo:', error.name);
-    console.error('   Mensaje:', error.message);
+    console.error("❌ [AUTH MIDDLEWARE] Error al verificar token:");
+    console.error("   Tipo:", error.name);
+    console.error("   Mensaje:", error.message);
     res.status(401).json({ message: "Token no válido", error: error.message });
   }
 };
@@ -82,7 +86,6 @@ const canViewMarketplace = (req, res, next) => {
   next();
 };
 
-
 module.exports = {
   verifyToken,
   isAdmin,
@@ -90,5 +93,5 @@ module.exports = {
   isOperador,
   isAgencia,
   canPublishCupos,
-  canViewMarketplace
+  canViewMarketplace,
 };

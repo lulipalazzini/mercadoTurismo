@@ -3,14 +3,14 @@ const User = require("../models/User.model");
 
 const register = async (req, res) => {
   try {
-    console.log('\n🔐 [AUTH] Intentando registrar usuario...');
+    console.log("\n🔐 [AUTH] Intentando registrar usuario...");
     const { nombre, email, password, role, telefono, direccion } = req.body;
     console.log(`   Email: ${email}`);
-    console.log(`   Role: ${role || 'user'}`);
+    console.log(`   Role: ${role || "user"}`);
 
     // Validaciones
     if (!nombre || !email || !password) {
-      console.log('❌ [AUTH] Faltan campos requeridos');
+      console.log("❌ [AUTH] Faltan campos requeridos");
       return res.status(400).json({
         message: "Nombre, email y contraseña son requeridos",
       });
@@ -26,12 +26,12 @@ const register = async (req, res) => {
     console.log(`   Verificando si email existe...`);
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      console.log('❌ [AUTH] Email ya registrado');
+      console.log("❌ [AUTH] Email ya registrado");
       return res.status(400).json({ message: "El email ya está registrado" });
     }
 
     // Crear nuevo usuario
-    console.log('   Creando nuevo usuario...');
+    console.log("   Creando nuevo usuario...");
     const user = await User.create({
       nombre,
       email,
@@ -43,13 +43,13 @@ const register = async (req, res) => {
     console.log(`✅ [AUTH] Usuario creado exitosamente: ID ${user.id}`);
 
     // Generar token
-    console.log('   Generando token JWT...');
+    console.log("   Generando token JWT...");
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET || "secret_key_default",
       { expiresIn: "7d" },
     );
-    console.log('✅ [AUTH] Token generado exitosamente');
+    console.log("✅ [AUTH] Token generado exitosamente");
 
     res.status(201).json({
       message: "Usuario registrado exitosamente",
@@ -62,13 +62,13 @@ const register = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('❌ [AUTH] Error en register:');
-    console.error('   Tipo:', error.name);
-    console.error('   Mensaje:', error.message);
-    console.error('   Stack:', error.stack);
-    
+    console.error("❌ [AUTH] Error en register:");
+    console.error("   Tipo:", error.name);
+    console.error("   Mensaje:", error.message);
+    console.error("   Stack:", error.stack);
+
     if (error.name === "SequelizeValidationError") {
-      console.error('   Errores de validación:', error.errors);
+      console.error("   Errores de validación:", error.errors);
       return res.status(400).json({
         message: "Error de validación",
         errors: error.errors.map((e) => e.message),
@@ -82,44 +82,44 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    console.log('\n🔑 [AUTH] Intentando login...');
+    console.log("\n🔑 [AUTH] Intentando login...");
     const { email, password } = req.body;
     console.log(`   Email: ${email}`);
 
     // Validaciones
     if (!email || !password) {
-      console.log('❌ [AUTH] Faltan credenciales');
+      console.log("❌ [AUTH] Faltan credenciales");
       return res.status(400).json({
         message: "Email y contraseña son requeridos",
       });
     }
 
     // Buscar usuario
-    console.log('   Buscando usuario en BD...');
+    console.log("   Buscando usuario en BD...");
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      console.log('❌ [AUTH] Usuario no encontrado');
+      console.log("❌ [AUTH] Usuario no encontrado");
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
     console.log(`   Usuario encontrado: ID ${user.id}`);
 
     // Verificar password
-    console.log('   Verificando contraseña...');
+    console.log("   Verificando contraseña...");
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      console.log('❌ [AUTH] Contraseña incorrecta');
+      console.log("❌ [AUTH] Contraseña incorrecta");
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
-    console.log('✅ [AUTH] Contraseña válida');
+    console.log("✅ [AUTH] Contraseña válida");
 
     // Generar token
-    console.log('   Generando token JWT...');
+    console.log("   Generando token JWT...");
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET || "secret_key_default",
       { expiresIn: "7d" },
     );
-    console.log('✅ [AUTH] Login exitoso');
+    console.log("✅ [AUTH] Login exitoso");
 
     res.json({
       message: "Login exitoso",
@@ -133,10 +133,10 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('❌ [AUTH] Error en login:');
-    console.error('   Tipo:', error.name);
-    console.error('   Mensaje:', error.message);
-    console.error('   Stack:', error.stack);
+    console.error("❌ [AUTH] Error en login:");
+    console.error("   Tipo:", error.name);
+    console.error("   Mensaje:", error.message);
+    console.error("   Stack:", error.stack);
     res
       .status(500)
       .json({ message: "Error al iniciar sesión", error: error.message });
@@ -272,11 +272,10 @@ const verifyAdminPassword = async (req, res) => {
   }
 };
 
-
 module.exports = {
   register,
   login,
   getProfile,
   updateUser,
-  verifyAdminPassword
+  verifyAdminPassword,
 };

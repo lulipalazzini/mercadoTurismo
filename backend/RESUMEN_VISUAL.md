@@ -99,7 +99,7 @@ import User from "./models/User.model.js";
 // ✅ AHORA (CommonJS)
 const express = require("express");
 const { DataTypes } = require("sequelize");
-const User = require("./models/User.model");  // Sin .js
+const User = require("./models/User.model"); // Sin .js
 ```
 
 ### Exportaciones

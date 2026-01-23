@@ -7,17 +7,21 @@ El error `ERR_REQUIRE_ESM` ocurría porque el código usaba módulos ES (import/
 ## 🔧 Cambios Realizados
 
 ### 1. **package.json**
+
 - ❌ Eliminado: `"type": "module"`
 - ✅ Ahora usa CommonJS por defecto
 
 ### 2. **app.js** (Entry Point de Passenger)
+
 - ❌ Antes: `await import('./src/index.js')`
 - ✅ Ahora: `require('./src/index.js')`
 
 ### 3. **Todos los archivos del backend** (50 archivos convertidos)
+
 Convertidos automáticamente usando el script `convert-to-commonjs.js`:
 
 #### Modelos (15 archivos)
+
 - User.model.js
 - CupoMercado.model.js
 - Paquete.model.js
@@ -25,26 +29,31 @@ Convertidos automáticamente usando el script `convert-to-commonjs.js`:
 - Y 11 más...
 
 #### Rutas (17 archivos)
+
 - auth.routes.js
 - paquetes.routes.js
 - cuposMercado.routes.js
 - Y 14 más...
 
 #### Controladores (17 archivos)
+
 - auth.controller.js
 - paquetes.controller.js
 - cuposMercado.controller.js
 - Y 14 más...
 
 #### Middleware (1 archivo)
+
 - auth.middleware.js
 
 #### Configuración
+
 - database.js
 
 ### 4. **Cambios en la sintaxis**
 
 **ANTES (ESM):**
+
 ```javascript
 import express from "express";
 import { DataTypes } from "sequelize";
@@ -55,6 +64,7 @@ export { sequelize, connectDB };
 ```
 
 **AHORA (CommonJS):**
+
 ```javascript
 const express = require("express");
 const { DataTypes } = require("sequelize");
@@ -70,6 +80,7 @@ module.exports.connectDB = connectDB;
 ## ✅ Verificación Local
 
 La aplicación se probó localmente y arrancó exitosamente:
+
 ```
 ✅ SERVIDOR INICIADO CORRECTAMENTE
 🚀 Puerto: 3001
@@ -81,20 +92,26 @@ La aplicación se probó localmente y arrancó exitosamente:
 ## 📦 Próximos Pasos para Deploy en WNPower
 
 ### 1. **Subir los cambios al servidor**
+
 Usar Git, FTP o el File Manager de cPanel para subir todos los archivos modificados.
 
 ### 2. **Verificar la configuración en WNPower**
+
 En el panel de Node.js de WNPower:
+
 - ✅ **Entry Point:** `app.js` (NO cambiar)
 - ✅ **Node Version:** Usar la misma que tienes localmente (v22.14.0 o compatible)
 - ✅ **Environment Variables:** Verificar que estén configuradas
 
 ### 3. **Reiniciar la aplicación**
+
 - En el panel de WNPower, hacer clic en "Restart"
 - O ejecutar: `touch tmp/restart.txt` (en el directorio de la app)
 
 ### 4. **Verificar logs**
+
 Revisar los logs en WNPower para confirmar:
+
 ```
 ✅ [PASSENGER] Aplicación iniciada correctamente
 ✅ SERVIDOR INICIADO CORRECTAMENTE

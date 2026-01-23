@@ -39,12 +39,14 @@ git push origin main
 ### 3. Deploy en WNPower (10 minutos)
 
 #### A. Conectar al servidor por SSH
+
 ```bash
 # Usar tu cliente SSH favorito (PuTTY, terminal, etc.)
 ssh usuario@mercadoturismo.ar
 ```
 
 #### B. Actualizar el código
+
 ```bash
 # Ir a la carpeta de tu aplicación
 cd ~/mercad25.mercadoturismo.ar/backend
@@ -67,6 +69,7 @@ touch tmp/restart.txt
 1. **Ir a cPanel → Setup Node.js App**
 
 2. **Verificar configuración:**
+
    ```
    Application root:      mercad25.mercadoturismo.ar/backend
    Application URL:       mercad25.mercadoturismo.ar
@@ -85,12 +88,14 @@ touch tmp/restart.txt
 ### 5. Probar que Funciona (5 minutos)
 
 #### A. Ver los logs
+
 ```bash
 # En SSH, ver logs en tiempo real
 tail -f ~/logs/mercad25.mercadoturismo.ar.error_log
 ```
 
 **Deberías ver:**
+
 ```
 ✅ [PASSENGER] Aplicación iniciada correctamente
 ✅ SERVIDOR INICIADO CORRECTAMENTE
@@ -98,6 +103,7 @@ tail -f ~/logs/mercad25.mercadoturismo.ar.error_log
 ```
 
 **NO deberías ver:**
+
 ```
 ❌ ERR_REQUIRE_ESM    ← Este error ya no debería aparecer
 ```
@@ -122,6 +128,7 @@ tail -f ~/logs/mercad25.mercadoturismo.ar.error_log
 ### Problema: Sigue apareciendo ERR_REQUIRE_ESM
 
 **Solución:**
+
 ```bash
 # Verificar que NO exista "type": "module"
 cat package.json | grep "type"
@@ -138,6 +145,7 @@ touch tmp/restart.txt
 ### Problema: Cannot find module
 
 **Solución:**
+
 ```bash
 cd ~/mercad25.mercadoturismo.ar/backend
 rm -rf node_modules package-lock.json
@@ -148,6 +156,7 @@ touch tmp/restart.txt
 ### Problema: 502 Bad Gateway
 
 **Solución:**
+
 ```bash
 # Ver qué dice el log
 tail -50 ~/logs/mercad25.mercadoturismo.ar.error_log
@@ -162,6 +171,7 @@ touch tmp/restart.txt
 ### Problema: La API responde pero el frontend no se conecta
 
 **Solución:**
+
 1. Verificar CORS en variables de entorno (FRONTEND_URL)
 2. Verificar que el frontend apunte a la URL correcta del backend
 3. Ver logs del navegador (F12 → Console)

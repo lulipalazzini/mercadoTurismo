@@ -5,20 +5,20 @@ const { Op } = require("sequelize");
 // Obtener cupos del marketplace (solo para agencias)
 const getCuposMercado = async (req, res) => {
   try {
-    console.log('\n💰 [CUPOS MERCADO] Obteniendo cupos del marketplace...');
+    console.log("\n💰 [CUPOS MERCADO] Obteniendo cupos del marketplace...");
     console.log(`   Usuario ID: ${req.user.id}`);
     console.log(`   Role: ${req.user.role}`);
-    
+
     // Solo las agencias pueden ver el marketplace
     if (req.user.role !== "agencia") {
-      console.log('❌ [CUPOS MERCADO] Acceso denegado - No es agencia');
+      console.log("❌ [CUPOS MERCADO] Acceso denegado - No es agencia");
       return res.status(403).json({
         message: "Solo las agencias pueden ver el marketplace de cupos",
       });
     }
 
     // Obtener cupos de operadores, con información del vendedor
-    console.log('   Consultando base de datos...');
+    console.log("   Consultando base de datos...");
     const cupos = await CupoMercado.findAll({
       include: [
         {
@@ -50,12 +50,12 @@ const getCuposMercado = async (req, res) => {
       }
     }
 
-    console.log('✅ [CUPOS MERCADO] Cupos obtenidos exitosamente');
+    console.log("✅ [CUPOS MERCADO] Cupos obtenidos exitosamente");
     res.json(cupos);
   } catch (error) {
-    console.error('❌ [CUPOS MERCADO] Error en getCuposMercado:');
-    console.error('   Mensaje:', error.message);
-    console.error('   Stack:', error.stack);
+    console.error("❌ [CUPOS MERCADO] Error en getCuposMercado:");
+    console.error("   Mensaje:", error.message);
+    console.error("   Stack:", error.stack);
     res
       .status(500)
       .json({ message: "Error al obtener cupos", error: error.message });
@@ -65,9 +65,9 @@ const getCuposMercado = async (req, res) => {
 // Obtener mis cupos publicados (operadores y agencias)
 const getMisCupos = async (req, res) => {
   try {
-    console.log('\n📋 [CUPOS MERCADO] Obteniendo mis cupos...');
+    console.log("\n📋 [CUPOS MERCADO] Obteniendo mis cupos...");
     console.log(`   Usuario ID: ${req.user.id}`);
-    
+
     const cupos = await CupoMercado.findAll({
       where: {
         usuarioVendedorId: req.user.id,
@@ -81,14 +81,14 @@ const getMisCupos = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
-    
+
     console.log(`   Cupos encontrados: ${cupos.length}`);
-    console.log('✅ [CUPOS MERCADO] Mis cupos obtenidos exitosamente');
+    console.log("✅ [CUPOS MERCADO] Mis cupos obtenidos exitosamente");
     res.json(cupos);
   } catch (error) {
-    console.error('❌ [CUPOS MERCADO] Error en getMisCupos:');
-    console.error('   Mensaje:', error.message);
-    console.error('   Stack:', error.stack);
+    console.error("❌ [CUPOS MERCADO] Error en getMisCupos:");
+    console.error("   Mensaje:", error.message);
+    console.error("   Stack:", error.stack);
     res
       .status(500)
       .json({ message: "Error al obtener cupos", error: error.message });
@@ -303,7 +303,6 @@ const importarCupos = async (req, res) => {
   }
 };
 
-
 module.exports = {
   getCuposMercado,
   getMisCupos,
@@ -311,5 +310,5 @@ module.exports = {
   createCupoMercado,
   updateCupoMercado,
   deleteCupoMercado,
-  importarCupos
+  importarCupos,
 };

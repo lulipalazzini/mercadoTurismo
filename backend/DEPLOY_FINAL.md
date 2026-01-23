@@ -1,6 +1,7 @@
 # 🚀 DEPLOY A WNPOWER - GUÍA RÁPIDA
 
 ## ✅ Estado Actual
+
 - ✅ Código convertido de ESM a CommonJS
 - ✅ 50 archivos actualizados automáticamente
 - ✅ Probado localmente con éxito
@@ -9,6 +10,7 @@
 ## 📦 PASO 1: Preparar archivos para subir
 
 ### Archivos modificados (subir todos):
+
 ```
 backend/
 ├── package.json                    ← SIN "type": "module"
@@ -26,6 +28,7 @@ backend/
 ```
 
 ### ⚠️ NO subir:
+
 - `node_modules/` (se instalan en el servidor)
 - `.env` (configurar en WNPower)
 - `database.sqlite` (opcional, según necesites)
@@ -33,6 +36,7 @@ backend/
 ## 🔧 PASO 2: Subir al servidor WNPower
 
 ### Opción A: Git (RECOMENDADO)
+
 ```bash
 # En tu máquina local
 cd c:\Users\lulip\OneDrive\Documentos\GitHub\mercadoTurismo
@@ -56,9 +60,11 @@ touch tmp/restart.txt
 ```
 
 ### Opción B: FTP/SFTP
+
 1. Conectar con FileZilla o similar
 2. Subir TODA la carpeta `backend/` (excepto node_modules)
 3. Conectar por SSH y ejecutar:
+
 ```bash
 cd ~/mercad25.mercadoturismo.ar/backend
 npm install
@@ -66,10 +72,12 @@ touch tmp/restart.txt
 ```
 
 ### Opción C: cPanel File Manager
+
 1. Abrir File Manager en cPanel
 2. Navegar a `mercad25.mercadoturismo.ar/backend`
 3. Subir archivos uno por uno o en ZIP
 4. Usar Terminal en cPanel:
+
 ```bash
 cd ~/mercad25.mercadoturismo.ar/backend
 npm install
@@ -79,9 +87,11 @@ touch tmp/restart.txt
 ## ⚙️ PASO 3: Configurar en WNPower
 
 ### 1. Acceder al Panel de Node.js Apps
+
 - cPanel → Software → Setup Node.js App
 
 ### 2. Verificar/Editar la aplicación existente:
+
 ```
 Application root:     mercad25.mercadoturismo.ar/backend
 Application URL:      mercad25.mercadoturismo.ar
@@ -90,7 +100,9 @@ Node.js version:      18.x o 20.x               ← VERIFICAR
 ```
 
 ### 3. Variables de Entorno (Environment Variables)
+
 Agregar o verificar:
+
 ```
 JWT_SECRET=tu_secreto_super_seguro_aqui
 FRONTEND_URL=https://mercadoturismo.ar
@@ -99,12 +111,14 @@ PORT=                                            ← Dejar vacío (Passenger lo 
 ```
 
 ### 4. Guardar y Reiniciar
+
 - Clic en "Save" o "Update"
 - Clic en "Restart" o ejecutar: `touch tmp/restart.txt`
 
 ## 🔍 PASO 4: Verificar el Deploy
 
 ### 1. Ver logs en tiempo real (SSH):
+
 ```bash
 cd ~/mercad25.mercadoturismo.ar/backend
 tail -f logs/passenger.log
@@ -113,7 +127,9 @@ tail -f ~/logs/mercad25.mercadoturismo.ar.error_log
 ```
 
 ### 2. Verificar que arrancó correctamente:
+
 Deberías ver en los logs:
+
 ```
 ✅ [PASSENGER] Aplicación iniciada correctamente
 ✅ SERVIDOR INICIADO CORRECTAMENTE
@@ -121,6 +137,7 @@ Deberías ver en los logs:
 ```
 
 ### 3. Probar la API:
+
 ```bash
 # Desde tu navegador o terminal
 curl https://mercad25.mercadoturismo.ar/
@@ -133,6 +150,7 @@ curl https://mercad25.mercadoturismo.ar/api
 ## 🚨 TROUBLESHOOTING
 
 ### Error: "Cannot find module"
+
 ```bash
 # Instalar dependencias
 cd ~/mercad25.mercadoturismo.ar/backend
@@ -141,6 +159,7 @@ touch tmp/restart.txt
 ```
 
 ### Error: ERR_REQUIRE_ESM persiste
+
 ```bash
 # Verificar que NO exista "type": "module"
 cat package.json | grep "type"
@@ -152,6 +171,7 @@ touch tmp/restart.txt
 ```
 
 ### Error: 502 Bad Gateway
+
 ```bash
 # Ver logs de error
 tail -50 ~/logs/mercad25.mercadoturismo.ar.error_log
@@ -162,6 +182,7 @@ touch tmp/restart.txt
 ```
 
 ### Error: Permission denied
+
 ```bash
 # Arreglar permisos
 cd ~/mercad25.mercadoturismo.ar/backend
@@ -173,6 +194,7 @@ touch tmp/restart.txt
 ```
 
 ### La app no arranca
+
 ```bash
 # Probar manualmente
 cd ~/mercad25.mercadoturismo.ar/backend
@@ -199,6 +221,7 @@ node app.js
 Si después de seguir todos los pasos sigue sin funcionar:
 
 1. **Copiar los logs completos:**
+
 ```bash
 tail -100 ~/logs/mercad25.mercadoturismo.ar.error_log > error.log
 tail -100 ~/mercad25.mercadoturismo.ar/backend/logs/passenger.log > passenger.log

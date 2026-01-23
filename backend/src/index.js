@@ -5,13 +5,13 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const connectDB = require("./config/database");
 
-console.log('='.repeat(60));
-console.log('🚀 INICIANDO SERVIDOR BACKEND - MERCADO TURISMO');
-console.log('='.repeat(60));
+console.log("=".repeat(60));
+console.log("🚀 INICIANDO SERVIDOR BACKEND - MERCADO TURISMO");
+console.log("=".repeat(60));
 console.log(`📅 Fecha: ${new Date().toISOString()}`);
 console.log(`🖥️  Node Version: ${process.version}`);
 console.log(`📁 Working Directory: ${process.cwd()}`);
-console.log('='.repeat(60));
+console.log("=".repeat(60));
 
 // Importar modelos para establecer relaciones
 const User = require("./models/User.model");
@@ -59,15 +59,21 @@ CupoMercado.belongsTo(User, {
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-console.log('\n📝 Variables de entorno:');
+console.log("\n📝 Variables de entorno:");
 console.log(`   PORT: ${PORT}`);
-console.log(`   NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
-console.log(`   DATABASE_URL: ${process.env.DATABASE_URL ? '✅ Configurada' : '❌ NO configurada'}`);
-console.log(`   JWT_SECRET: ${process.env.JWT_SECRET ? '✅ Configurada' : '❌ NO configurada'}`);
-console.log(`   FRONTEND_URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+console.log(`   NODE_ENV: ${process.env.NODE_ENV || "development"}`);
+console.log(
+  `   DATABASE_URL: ${process.env.DATABASE_URL ? "✅ Configurada" : "❌ NO configurada"}`,
+);
+console.log(
+  `   JWT_SECRET: ${process.env.JWT_SECRET ? "✅ Configurada" : "❌ NO configurada"}`,
+);
+console.log(
+  `   FRONTEND_URL: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
+);
 
 // Conectar a la base de datos
-console.log('\n🔌 Conectando a la base de datos...');
+console.log("\n🔌 Conectando a la base de datos...");
 connectDB();
 
 // Middlewares de seguridad
@@ -95,21 +101,21 @@ app.use(express.urlencoded({ extended: true }));
 
 // Asegurar que todas las respuestas sean JSON
 app.use((req, res, next) => {
-  res.setHeader('Content-Type', 'application/json');
+  res.setHeader("Content-Type", "application/json");
   next();
 });
 
 // Middleware de logging para todas las requests
 app.use((req, res, next) => {
   const timestamp = new Date().toISOString();
-  console.log(`\n${'='.repeat(60)}`);
+  console.log(`\n${"=".repeat(60)}`);
   console.log(`📥 [${timestamp}] ${req.method} ${req.path}`);
   console.log(`   IP: ${req.ip}`);
   console.log(`   Headers:`, JSON.stringify(req.headers, null, 2));
   if (req.body && Object.keys(req.body).length > 0) {
     console.log(`   Body:`, JSON.stringify(req.body, null, 2));
   }
-  console.log(`${'='.repeat(60)}`);
+  console.log(`${"=".repeat(60)}`);
   next();
 });
 
@@ -138,7 +144,7 @@ app.get("/api", (req, res) => {
 
 // Ruta raíz
 app.get("/", (req, res) => {
-  res.json({ 
+  res.json({
     message: "API Mercado Turismo",
     version: "1.0.0",
     endpoints: [
@@ -146,63 +152,65 @@ app.get("/", (req, res) => {
       "/api/paquetes",
       "/api/cupos-mercado",
       "/api/clientes",
-      "/api/users"
-    ]
+      "/api/users",
+    ],
   });
 });
 
 // Catch-all para rutas no encontradas - Devolver JSON, NO HTML
 app.use((req, res) => {
   console.log(`⚠️  [404] Ruta no encontrada: ${req.method} ${req.path}`);
-  res.status(404).json({ 
+  res.status(404).json({
     message: "Ruta no encontrada",
     path: req.path,
     method: req.method,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
 // Manejo de errores
 app.use((err, req, res, next) => {
-  console.error('\n' + '❌'.repeat(30));
-  console.error('❌ ERROR EN EL SERVIDOR:');
-  console.error('❌'.repeat(30));
-  console.error('📍 Ruta:', req.method, req.path);
-  console.error('📝 Error:', err.message);
-  console.error('📚 Stack:', err.stack);
-  console.error('❌'.repeat(30) + '\n');
-  
-  res.status(err.status || 500).json({ 
-    message: "Error del servidor", 
+  console.error("\n" + "❌".repeat(30));
+  console.error("❌ ERROR EN EL SERVIDOR:");
+  console.error("❌".repeat(30));
+  console.error("📍 Ruta:", req.method, req.path);
+  console.error("📝 Error:", err.message);
+  console.error("📚 Stack:", err.stack);
+  console.error("❌".repeat(30) + "\n");
+
+  res.status(err.status || 500).json({
+    message: "Error del servidor",
     error: err.message,
     path: req.path,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
 // Para Phusion Passenger (WNPower), el puerto lo asigna el sistema automáticamente
 // Si no hay PORT definido, usa 3001 para desarrollo local
 const server = app.listen(PORT, () => {
-  console.log('\n' + '✅'.repeat(30));
-  console.log('✅ SERVIDOR INICIADO CORRECTAMENTE');
-  console.log('✅'.repeat(30));
+  console.log("\n" + "✅".repeat(30));
+  console.log("✅ SERVIDOR INICIADO CORRECTAMENTE");
+  console.log("✅".repeat(30));
   console.log(`🚀 Puerto: ${PORT}`);
-  console.log(`🌍 Entorno: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`📡 CORS habilitado para: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+  console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
+  console.log(
+    `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
+  );
   console.log(`🔗 API disponible en: http://localhost:${PORT}/api`);
-  console.log('✅'.repeat(30) + '\n');
+  console.log("✅".repeat(30) + "\n");
 });
 
 // Manejo de errores no capturados
-process.on('uncaughtException', (error) => {
-  console.error('\n💥 UNCAUGHT EXCEPTION:', error);
-  console.error('Stack:', error.stack);
+process.on("uncaughtException", (error) => {
+  console.error("\n💥 UNCAUGHT EXCEPTION:", error);
+  console.error("Stack:", error.stack);
   process.exit(1);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('\n💥 UNHANDLED REJECTION:', reason);
-  console.error('Promise:', promise);
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("\n💥 UNHANDLED REJECTION:", reason);
+  console.error("Promise:", promise);
 });
 
 module.exports = app;

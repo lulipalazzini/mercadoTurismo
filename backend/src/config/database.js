@@ -1,6 +1,6 @@
 const { Sequelize } = require("sequelize");
 
-console.log('\n🗄️  [DATABASE] Inicializando configuración de base de datos...');
+console.log("\n🗄️  [DATABASE] Inicializando configuración de base de datos...");
 console.log(`   Dialect: sqlite`);
 console.log(`   Storage: ./database.sqlite`);
 
@@ -12,7 +12,7 @@ const sequelize = new Sequelize({
 
 const connectDB = async () => {
   try {
-    console.log('   Intentando conectar a la base de datos...');
+    console.log("   Intentando conectar a la base de datos...");
     await sequelize.authenticate();
     console.log("✅ [DATABASE] SQLite conectado exitosamente");
 
@@ -21,11 +21,11 @@ const connectDB = async () => {
     // Usar seeders para inicializar/resetear la BD
     console.log("✅ [DATABASE] Modelos sincronizados");
   } catch (error) {
-    console.error('\n' + '❌'.repeat(30));
+    console.error("\n" + "❌".repeat(30));
     console.error(`❌ [DATABASE] Error de conexión:`);
     console.error(`   Mensaje: ${error.message}`);
     console.error(`   Stack: ${error.stack}`);
-    console.error('❌'.repeat(30) + '\n');
+    console.error("❌".repeat(30) + "\n");
     process.exit(1);
   }
 };
