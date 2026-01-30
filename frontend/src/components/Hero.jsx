@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/hero.css";
-import videoBackground from "../assets/2169879_uhd_3840_2160_30fps_V2.mp4";
+import heroImage from "../assets/img/paisaje_01.png";
 
 export default function Hero() {
   const navigate = useNavigate();
@@ -175,13 +175,10 @@ export default function Hero() {
 
   return (
     <section className="hero" id="hero">
-      <video
-        className="hero-video"
-        src={videoBackground}
-        autoPlay
-        muted
-        loop
-        playsInline
+      <img
+        className="hero-image"
+        src={heroImage}
+        alt="Paisaje turístico"
       />
 
       <div className="hero-overlay" aria-hidden="true" />

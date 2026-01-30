@@ -7,10 +7,9 @@
 .servicios-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--primary);
   margin: 30px;
   text-align: center;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Search Info Banner */
@@ -18,13 +17,13 @@
   max-width: 800px;
   margin: 1.5rem auto 1rem;
   padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary);
   border-radius: 12px;
   display: flex;
   align-items: center;
   gap: 1rem;
   color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(36, 100, 235, 0.3);
   animation: slideDown 0.3s ease-out;
 }
 
@@ -92,19 +91,19 @@
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   border-radius: 8px;
-  border: 2px solid #667eea;
+  border: 2px solid var(--primary);
   background: white;
-  color: #667eea;
+  color: var(--primary);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .no-results-container .btn-secondary:hover {
-  background: #667eea;
+  background: var(--primary);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(36, 100, 235, 0.3);
 }
 
 .loading,

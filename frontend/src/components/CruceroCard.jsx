@@ -80,7 +80,7 @@ export default function CruceroCard({ item }) {
                 fontSize: "0.875rem",
               }}
             >
-              <FaUser style={{ color: "#667eea" }} />
+              <FaUser style={{ color: "var(--primary)" }} />
               <span style={{ color: "#4a5568", fontWeight: "500" }}>
                 {vendedor.razonSocial || vendedor.nombre}
               </span>

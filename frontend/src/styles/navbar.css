@@ -1,20 +1,17 @@
-/* Navbar Premium con Glassmorphism */
+/* Navbar - Identidad Mercado Turismo */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  background: rgba(10, 25, 41, 0.7);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-color);
   transition: all var(--transition-smooth);
 }
 
 .navbar.scrolled {
-  background: rgba(10, 25, 41, 0.85);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
 }
 
 .nav-container {
@@ -27,9 +24,9 @@
 }
 
 .brand {
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--primary);
   text-decoration: none;
   font-size: 1.25rem;
   transition: var(--transition-smooth);
@@ -39,8 +36,7 @@
 }
 
 .brand:hover {
-  opacity: 0.9;
-  transform: translateX(-2px);
+  opacity: 0.85;
 }
 
 .nav-links {
@@ -58,7 +54,7 @@
   color: var(--text-secondary);
   text-decoration: none;
   padding: 0.5rem 0.875rem;
-  border-radius: 8px;
+  border-radius: 6px;
   font-weight: 500;
   font-size: 0.875rem;
   transition: all var(--transition-smooth);
@@ -68,8 +64,8 @@
 }
 
 .nav-dropdown.active .dropdown-toggle {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.12);
+  color: var(--primary);
+  background: var(--color-blue-light);
   font-weight: 600;
 }
 
@@ -85,13 +81,13 @@
   transform: translateX(-50%) scaleX(0);
   width: 60%;
   height: 2px;
-  background: var(--accent);
+  background: var(--primary);
   transition: transform var(--transition-smooth);
 }
 
 .dropdown-toggle:hover {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--primary);
+  background: var(--color-blue-light);
 }
 
 .dropdown-toggle:hover::after {
@@ -102,19 +98,17 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background: rgba(10, 25, 41, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: var(--bg-white);
   border-radius: 8px;
   padding: 0.5rem 0;
   min-width: 160px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
   transition: all var(--transition-smooth);
   z-index: 1001;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .nav-dropdown:hover .dropdown-menu {
@@ -135,8 +129,8 @@
 }
 
 .dropdown-menu a.active {
-  background: rgba(255, 255, 255, 0.15);
-  color: var(--text-primary);
+  background: var(--color-blue-light);
+  color: var(--primary);
   font-weight: 600;
 }
 
@@ -145,8 +139,8 @@
 }
 
 .dropdown-menu a:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
+  background: var(--bg-lighter);
+  color: var(--primary);
   padding-left: 1.25rem;
 }
 
@@ -162,8 +156,8 @@
 }
 
 .nav-links > a.active {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.12);
+  color: var(--primary);
+  background: var(--color-blue-light);
   font-weight: 600;
 }
 
@@ -179,13 +173,13 @@
   transform: translateX(-50%) scaleX(0);
   width: 60%;
   height: 2px;
-  background: var(--accent);
+  background: var(--primary);
   transition: transform var(--transition-smooth);
 }
 
 .nav-links a:hover {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--primary);
+  background: var(--color-blue-light);
 }
 
 .nav-links a:hover::after {
@@ -193,14 +187,10 @@
 }
 
 .cta {
-  background: linear-gradient(
-    135deg,
-    var(--accent) 0%,
-    var(--accent-hover) 100%
-  );
+  background: var(--primary);
   color: #ffffff !important;
   padding: 0.5rem 1.25rem !important;
-  box-shadow: 0 6px 20px rgba(91, 155, 213, 0.25);
+  box-shadow: var(--shadow-sm);
   font-weight: 600;
 }
 
@@ -209,20 +199,16 @@
 }
 
 .cta:hover {
-  background: linear-gradient(
-    135deg,
-    var(--accent-hover) 0%,
-    var(--accent) 100%
-  );
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(91, 155, 213, 0.3);
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-login {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary);
   color: #ffffff !important;
   padding: 0.5rem 1.25rem !important;
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  box-shadow: var(--shadow-sm);
   font-weight: 600;
   margin-left: 0.5rem;
 }
@@ -232,9 +218,9 @@
 }
 
 .btn-login:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .nav-toggle {
@@ -248,7 +234,7 @@
 }
 
 .nav-toggle:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--bg-lighter);
 }
 
 .hamburger {
@@ -282,19 +268,19 @@
 
 .hamburger.open {
   transform: rotate(45deg);
-  background: var(--accent);
+  background: var(--primary);
 }
 
 .hamburger.open::before {
   transform: rotate(90deg);
   top: 0;
-  background: var(--accent);
+  background: var(--primary);
 }
 
 .hamburger.open::after {
   transform: rotate(90deg);
   top: 0;
-  background: var(--accent);
+  background: var(--primary);
 }
 
 .sr-only {

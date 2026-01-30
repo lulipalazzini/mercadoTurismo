@@ -90,7 +90,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary);
   color: white;
   font-size: 1rem;
   font-weight: 600;
@@ -191,7 +191,7 @@
 
 .servicio-item {
   font-size: 0.7rem;
-  color: #667eea;
+  color: var(--primary);
   background: #f0f4ff;
   padding: 4px 8px;
   border-radius: 4px;
@@ -221,7 +221,7 @@
 
 .servicio-tag {
   background: #f0f4ff;
-  color: #667eea;
+  color: var(--primary);
   padding: 3px 8px;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -270,7 +270,7 @@
 
 /* Botón de reservar */
 .alojamiento-card .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -280,13 +280,13 @@
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 8px rgba(36, 100, 235, 0.3);
 }
 
 .alojamiento-card .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-  background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+  box-shadow: 0 4px 12px rgba(36, 100, 235, 0.4);
+  background: var(--primary-dark);
 }
 
 .alojamiento-card .btn-primary:disabled {

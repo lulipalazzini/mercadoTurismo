@@ -1,36 +1,46 @@
-/* Importar tipografía premium de Google Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+/* Importar tipografía DM Sans - Manual de Marca Mercado Turismo */
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 :root {
-  /* Tipografía moderna y profesional */
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    sans-serif;
+  /* Tipografía - DM Sans (sans serif geométrica, bajo contraste) */
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.6;
   font-weight: 400;
 
-  /* Paleta de colores profesional */
-  --primary: #0066ff;
-  --primary-dark: #0052cc;
-  --accent: #5b9bd5;
-  --accent-hover: #4a86c7;
-  --bg-dark: #0a1929;
-  --bg-darker: #050d18;
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.85);
-  --text-muted: rgba(255, 255, 255, 0.6);
+  /* Paleta de colores oficial - Mercado Turismo */
+  /* Color corporativo principal */
+  --primary: #2464EB;
+  --primary-dark: #1a4bb8;
+  --primary-light: #4885f5;
+  
+  /* Paleta complementaria */
+  --color-blue-light: #DBEAFE;
+  --color-green: #069669;
+  --color-green-light: #D5E9E2;
+  --color-orange: #EA580B;
+  --color-yellow: #FEF3C6;
+  --color-red: #BE103C;
+  --color-pink: #FCE7F3;
+  --color-sky: #8DCAF6;
 
-  /* Sombras premium */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.16);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.24);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.32);
+  /* Colores de interfaz */
+  --bg-white: #ffffff;
+  --bg-light: #f8fafc;
+  --bg-lighter: #fafbfc;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+
+  /* Sombras suaves - estética simple y atemporal */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.1);
 
   /* Transiciones suaves */
   --transition-fast: 0.15s ease;
   --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-elegant: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-  color-scheme: dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -47,7 +57,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: var(--bg-dark);
+  background: var(--bg-light);
   color: var(--text-primary);
   overflow-x: hidden;
 }
@@ -60,12 +70,7 @@ body,
 }
 
 #root {
-  background: linear-gradient(
-    180deg,
-    var(--bg-darker) 0%,
-    var(--bg-dark) 50%,
-    var(--bg-darker) 100%
-  );
+  background: var(--bg-white);
   min-height: 100vh;
 }
 
@@ -77,12 +82,13 @@ h5,
 h6 {
   font-weight: 700;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
 }
 
 h1 {
   font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 h2 {
@@ -91,7 +97,7 @@ h2 {
 }
 
 p {
-  line-height: 1.7;
+  line-height: 1.6;
   color: var(--text-secondary);
 }
 
@@ -102,19 +108,21 @@ a {
 }
 
 button {
-  border-radius: 12px;
+  border-radius: 8px;
   border: none;
-  padding: 0.875rem 1.75rem;
+  padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   font-family: inherit;
   cursor: pointer;
   transition: var(--transition-smooth);
-  letter-spacing: 0.01em;
+  background: var(--primary);
+  color: white;
 }
 
 button:hover {
-  transform: translateY(-2px);
+  background: var(--primary-dark);
+  transform: translateY(-1px);
 }
 
 button:active {
@@ -223,34 +231,20 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-darker);
+  background: var(--bg-lighter);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--border-color);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  background: var(--text-muted);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }

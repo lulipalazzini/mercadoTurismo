@@ -285,7 +285,7 @@ export default function Ajustes() {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
               >
-                <FaCamera style={{ color: "#667eea" }} />
+                <FaCamera style={{ color: "var(--primary)" }} />
                 <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: "600" }}>
                   Foto de Perfil
                 </h3>
@@ -313,7 +313,7 @@ export default function Ajustes() {
                     justifyContent: "center",
                     background: photoPreview
                       ? "transparent"
-                      : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      : "var(--primary)",
                   }}
                 >
                   {photoPreview ? (
@@ -354,7 +354,7 @@ export default function Ajustes() {
                       width: "100%",
                       padding: "0.625rem 1rem",
                       background:
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        "var(--primary)",
                       color: "white",
                       border: "none",
                       borderRadius: "0.375rem",
@@ -493,7 +493,7 @@ export default function Ajustes() {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
               >
-                <FaUser style={{ color: "#667eea" }} />
+                <FaUser style={{ color: "var(--primary)" }} />
                 <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: "600" }}>
                   Información Personal
                 </h3>
@@ -591,7 +591,7 @@ export default function Ajustes() {
                           flex: 1,
                           padding: "0.625rem 1rem",
                           background:
-                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                            "var(--primary)",
                           color: "white",
                           border: "none",
                           borderRadius: "0.375rem",
@@ -727,7 +727,7 @@ export default function Ajustes() {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
               >
-                <FaLock style={{ color: "#667eea" }} />
+                <FaLock style={{ color: "var(--primary)" }} />
                 <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: "600" }}>
                   Seguridad
                 </h3>
@@ -753,7 +753,7 @@ export default function Ajustes() {
                       width: "100%",
                       padding: "0.625rem 1rem",
                       background:
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        "var(--primary)",
                       color: "white",
                       border: "none",
                       borderRadius: "0.375rem",
@@ -884,7 +884,7 @@ export default function Ajustes() {
                           flex: 1,
                           padding: "0.625rem 1rem",
                           background:
-                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                            "var(--primary)",
                           color: "white",
                           border: "none",
                           borderRadius: "0.375rem",

@@ -71,12 +71,12 @@ export default function Reportes() {
           1850000, 2100000, 1950000, 2200000, 2400000, 2150000, 2300000,
           2500000, 2350000, 2600000, 2450000, 2800000,
         ],
-        borderColor: "#667eea",
-        backgroundColor: "rgba(102, 126, 234, 0.1)",
+        borderColor: "#2464EB",
+        backgroundColor: "rgba(36, 100, 235, 0.1)",
         fill: true,
         tension: 0.4,
         pointRadius: 4,
-        pointBackgroundColor: "#667eea",
+        pointBackgroundColor: "#2464EB",
         pointBorderColor: "#fff",
         pointBorderWidth: 2,
         pointHoverRadius: 6,
@@ -297,7 +297,7 @@ export default function Reportes() {
               margin: "0 0 1rem 0",
             }}
           >
-            <FaChartLine style={{ color: "#667eea" }} /> Ventas Mensuales
+            <FaChartLine style={{ color: "var(--primary)" }} /> Ventas Mensuales
           </h3>
           <div style={{ height: "300px" }}>
             <Line data={ventasData} options={ventasOptions} />
@@ -321,7 +321,7 @@ export default function Reportes() {
               margin: "0 0 1rem 0",
             }}
           >
-            <FaClipboardList style={{ color: "#667eea" }} /> Reservas por Estado
+            <FaClipboardList style={{ color: "var(--primary)" }} /> Reservas por Estado
           </h3>
           <div
             style={{
@@ -354,7 +354,7 @@ export default function Reportes() {
             marginBottom: "1rem",
           }}
         >
-          <FaTrophy style={{ color: "#667eea" }} /> Paquetes Más Vendidos
+          <FaTrophy style={{ color: "var(--primary)" }} /> Paquetes Más Vendidos
         </h3>
         <div className="table-container">
           <table className="crm-table">

@@ -1,4 +1,4 @@
-/* Hero Section - Pantalla Completa Premium */
+/* Hero Section - Identidad Mercado Turismo */
 .hero {
   position: relative;
   height: 100vh;
@@ -10,16 +10,18 @@
   color: var(--text-primary);
   overflow: hidden;
   padding: 0;
+  background: linear-gradient(135deg, var(--color-blue-light) 0%, var(--bg-white) 100%);
 }
 
-.hero-video {
+.hero-video,
+.hero-image {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   z-index: 0;
-  filter: brightness(0.85);
+  opacity: 0.3;
 }
 
 .hero-overlay {
@@ -27,9 +29,9 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(10, 25, 41, 0.3) 0%,
-    rgba(10, 25, 41, 0.65) 50%,
-    rgba(10, 25, 41, 0.85) 100%
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.6) 100%
   );
   z-index: 1;
 }
@@ -47,18 +49,11 @@
 
 .hero-content h1 {
   font-size: clamp(2rem, 5vw, 3.25rem);
-  font-weight: 800;
+  font-weight: 700;
   margin: 0 0 1rem;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   line-height: 1.15;
-  background: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    rgba(255, 255, 255, 0.85) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--primary);
   animation: fadeIn 1s ease-out 0.3s forwards;
   opacity: 0;
 }
@@ -93,7 +88,7 @@
 }
 
 .btn-link {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--primary);
   text-decoration: none;
   font-size: 0.9375rem;
   font-weight: 500;
@@ -107,14 +102,14 @@
   bottom: -2px;
   left: 0;
   width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.9);
+  height: 2px;
+  background: var(--primary);
   transform: scaleX(0);
   transition: transform var(--transition-smooth);
 }
 
 .btn-link:hover {
-  color: #ffffff;
+  color: var(--primary-dark);
 }
 
 .btn-link:hover::after {
@@ -126,19 +121,18 @@
   font-size: 0.875rem;
 }
 
-/* Formulario de Búsqueda Premium */
+/* Formulario de Búsqueda */
 .search-box {
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 16px;
+  background: var(--bg-white);
+  border-radius: 12px;
   padding: 1.5rem 1.75rem;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-lg);
   margin: 1.5rem auto 1rem;
   max-width: 900px;
   width: 92%;
   animation: fadeIn 1s ease-out 1s forwards;
   opacity: 0;
+  border: 1px solid var(--border-color);
 }
 
 .search-grid {
@@ -161,12 +155,11 @@
   gap: 0.5rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1a1a1a;
-  letter-spacing: 0.01em;
+  color: var(--text-primary);
 }
 
 .search-field label svg {
-  color: var(--accent);
+  color: var(--primary);
   width: 18px;
   height: 18px;
 }
@@ -175,26 +168,26 @@
 .search-field select {
   width: 100%;
   padding: 0.7rem 0.95rem;
-  border: 2px solid rgba(0, 0, 0, 0.08);
-  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   font-size: 0.875rem;
   font-family: inherit;
-  font-weight: 500;
-  color: #1a1a1a;
-  background: #ffffff;
+  font-weight: 400;
+  color: var(--text-primary);
+  background: var(--bg-white);
   transition: all var(--transition-smooth);
   outline: none;
 }
 
 .search-field input::placeholder {
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--text-muted);
   font-weight: 400;
 }
 
 .search-field input:focus,
 .search-field select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.12);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(36, 100, 235, 0.1);
 }
 
 .search-field input:hover,
@@ -217,16 +210,16 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
   border-top: none;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 8px 8px;
   max-height: 250px;
   overflow-y: auto;
   z-index: 1000;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-md);
   animation: slideDownHero 0.2s ease-out;
-  margin-top: -2px;
+  margin-top: -1px;
 }
 
 @keyframes slideDownHero {
@@ -255,22 +248,19 @@
 }
 
 .hero-suggestion-item:hover {
-  background: linear-gradient(
-    90deg,
-    rgba(91, 155, 213, 0.08) 0%,
-    rgba(91, 155, 213, 0.03) 100%
-  );
+  background: var(--color-blue-light);
   padding-left: 1.25rem;
 }
 
 .hero-suggestion-item .suggestion-icon {
   font-size: 1.25rem;
   flex-shrink: 0;
+  color: var(--primary);
 }
 
 .hero-suggestion-item .suggestion-text {
   font-size: 0.875rem;
-  color: #1a1a1a;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -280,28 +270,24 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.7rem 1.75rem;
-  background: linear-gradient(
-    135deg,
-    var(--accent) 0%,
-    var(--accent-hover) 100%
-  );
+  background: var(--primary);
   color: #ffffff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 0.9375rem;
-  font-weight: 700;
+  font-weight: 600;
   font-family: inherit;
   cursor: pointer;
   transition: all var(--transition-smooth);
-  box-shadow: 0 6px 20px rgba(91, 155, 213, 0.3);
-  letter-spacing: 0.01em;
+  box-shadow: var(--shadow-sm);
   min-height: 46px;
   grid-column: span 3;
 }
 
 .search-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(91, 155, 213, 0.35);
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .search-btn:active {

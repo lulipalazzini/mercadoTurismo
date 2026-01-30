@@ -1,4 +1,4 @@
-/* App Layout - Diseño Premium y Profesional */
+/* App Layout - Diseño simple, atemporal y tecnológico */
 
 .home-content {
   max-width: 1200px;
@@ -33,38 +33,30 @@ section:nth-child(4) {
 
 section h2 {
   font-size: clamp(1.5rem, 4.5vw, 2.25rem);
-  font-weight: 800;
+  font-weight: 700;
   margin-bottom: 0.875rem;
-  letter-spacing: -0.02em;
-  background: linear-gradient(
-    135deg,
-    var(--text-primary) 0%,
-    var(--text-secondary) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
 }
 
 section p {
   font-size: clamp(0.9375rem, 2.5vw, 1.0625rem);
-  line-height: 1.7;
-  color: var(--text-muted);
+  line-height: 1.6;
+  color: var(--text-secondary);
   max-width: 650px;
 }
 
-/* Footer Premium */
+/* Footer */
 footer {
   margin-top: 4rem;
   padding-top: 2.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border-color);
   text-align: center;
 }
 
 footer small {
   color: var(--text-muted);
   font-size: 0.875rem;
-  letter-spacing: 0.02em;
 }
 
 /* Responsive Layout */

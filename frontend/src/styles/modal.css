@@ -232,7 +232,7 @@ textarea.form-control {
 }
 
 .modal-footer .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary);
   color: white;
   border: none;
   border-radius: 6px;
@@ -240,13 +240,13 @@ textarea.form-control {
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 8px rgba(36, 100, 235, 0.3);
   margin: 0;
 }
 
 .modal-footer .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(36, 100, 235, 0.4);
 }
 
 .modal-footer .btn-primary:disabled {
@@ -269,7 +269,7 @@ textarea.form-control {
 
 .modal-footer .btn-secondary:hover {
   background: #f6f8fa;
-  border-color: #667eea;
+  border-color: var(--primary);
 }
 
 .modal-footer .btn-secondary:disabled {

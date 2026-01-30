@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../styles/navbar.css";
+import logo from "../assets/logo/MT_marca_01.webp";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -16,7 +17,7 @@ export default function Navbar() {
     <header className="navbar">
       <div className="nav-container">
         <Link to="/" className="brand">
-          MercadoTurismo
+          <img src={logo} alt="Mercado Turismo" style={{ height: '40px' }} />
         </Link>
 
         <button

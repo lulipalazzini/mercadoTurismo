@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { login, verifyAdminPassword } from "../services/auth.service";
 import AdminPasswordModal from "./common/AdminPasswordModal";
 import "../styles/auth.css";
+import logo from "../assets/logo/MT_marca_01.webp";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -101,6 +102,7 @@ export default function Login() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
+          <img src={logo} alt="Mercado Turismo" style={{ height: '60px', marginBottom: '1rem' }} />
           <h1>Acceso Mayorista</h1>
           <p>Inicia sesión para acceder al panel</p>
         </div>

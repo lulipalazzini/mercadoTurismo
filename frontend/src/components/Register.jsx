@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../services/auth.service";
 import "../styles/auth.css";
+import logo from "../assets/logo/MT_marca_01.webp";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -101,6 +102,7 @@ export default function Register() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
+          <img src={logo} alt="Mercado Turismo" style={{ height: '60px', marginBottom: '1rem' }} />
           <h1>Registro de Usuario</h1>
           <p>Únete a nuestra plataforma mayorista</p>
         </div>

@@ -72,7 +72,7 @@ export default function AdminPasswordModal({ isOpen, onClose, onSuccess }) {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <FaLock style={{ color: "#667eea", fontSize: "1.5rem" }} />
+            <FaLock style={{ color: "var(--primary)", fontSize: "1.5rem" }} />
             <h2 style={{ margin: 0, fontSize: "1.25rem", fontWeight: "600" }}>
               Verificación de Administrador
             </h2>
@@ -160,7 +160,7 @@ export default function AdminPasswordModal({ isOpen, onClose, onSuccess }) {
               style={{
                 flex: 1,
                 padding: "0.625rem 1rem",
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                background: "var(--primary)",
                 color: "white",
                 border: "none",
                 borderRadius: "0.375rem",
