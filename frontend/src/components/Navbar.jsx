@@ -17,7 +17,7 @@ export default function Navbar() {
     <header className="navbar">
       <div className="nav-container">
         <Link to="/" className="brand">
-          <img src={logo} alt="Mercado Turismo" style={{ height: '40px' }} />
+          <img src={logo} alt="Mercado Turismo" style={{ height: "40px" }} />
         </Link>
 
         <button

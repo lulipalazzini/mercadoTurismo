@@ -10,7 +10,11 @@
   color: var(--text-primary);
   overflow: hidden;
   padding: 0;
-  background: linear-gradient(135deg, var(--color-blue-light) 0%, var(--bg-white) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-blue-light) 0%,
+    var(--bg-white) 100%
+  );
 }
 
 .hero-video,

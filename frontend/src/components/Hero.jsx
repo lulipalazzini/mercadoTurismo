@@ -175,11 +175,7 @@ export default function Hero() {
 
   return (
     <section className="hero" id="hero">
-      <img
-        className="hero-image"
-        src={heroImage}
-        alt="Paisaje turístico"
-      />
+      <img className="hero-image" src={heroImage} alt="Paisaje turístico" />
 
       <div className="hero-overlay" aria-hidden="true" />
 

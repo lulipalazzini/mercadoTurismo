@@ -3,25 +3,30 @@
 
 :root {
   /* Tipografía - DM Sans (sans serif geométrica, bajo contraste) */
-  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    "DM Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   line-height: 1.6;
   font-weight: 400;
 
   /* Paleta de colores oficial - Mercado Turismo */
   /* Color corporativo principal */
-  --primary: #2464EB;
+  --primary: #2464eb;
   --primary-dark: #1a4bb8;
   --primary-light: #4885f5;
-  
+
   /* Paleta complementaria */
-  --color-blue-light: #DBEAFE;
+  --color-blue-light: #dbeafe;
   --color-green: #069669;
-  --color-green-light: #D5E9E2;
-  --color-orange: #EA580B;
-  --color-yellow: #FEF3C6;
-  --color-red: #BE103C;
-  --color-pink: #FCE7F3;
-  --color-sky: #8DCAF6;
+  --color-green-light: #d5e9e2;
+  --color-orange: #ea580b;
+  --color-yellow: #fef3c6;
+  --color-red: #be103c;
+  --color-pink: #fce7f3;
+  --color-sky: #8dcaf6;
 
   /* Colores de interfaz */
   --bg-white: #ffffff;

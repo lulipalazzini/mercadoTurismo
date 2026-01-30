@@ -102,7 +102,11 @@ export default function Login() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <img src={logo} alt="Mercado Turismo" style={{ height: '60px', marginBottom: '1rem' }} />
+          <img
+            src={logo}
+            alt="Mercado Turismo"
+            style={{ height: "60px", marginBottom: "1rem" }}
+          />
           <h1>Acceso Mayorista</h1>
           <p>Inicia sesión para acceder al panel</p>
         </div>

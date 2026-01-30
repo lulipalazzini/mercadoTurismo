@@ -37,7 +37,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 );
 
 export default function Reportes() {
@@ -321,7 +321,8 @@ export default function Reportes() {
               margin: "0 0 1rem 0",
             }}
           >
-            <FaClipboardList style={{ color: "var(--primary)" }} /> Reservas por Estado
+            <FaClipboardList style={{ color: "var(--primary)" }} /> Reservas por
+            Estado
           </h3>
           <div
             style={{

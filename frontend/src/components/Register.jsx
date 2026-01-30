@@ -102,7 +102,11 @@ export default function Register() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <img src={logo} alt="Mercado Turismo" style={{ height: '60px', marginBottom: '1rem' }} />
+          <img
+            src={logo}
+            alt="Mercado Turismo"
+            style={{ height: "60px", marginBottom: "1rem" }}
+          />
           <h1>Registro de Usuario</h1>
           <p>Únete a nuestra plataforma mayorista</p>
         </div>
