@@ -24,7 +24,16 @@ const getTrenes = async (req, res) => {
     // (No se aplica filtro isPublic para B2C)
 
     // Filtros de búsqueda
-    const { tipo, clase, origen, destino, empresa, precioMin, precioMax, moneda } = req.query;
+    const {
+      tipo,
+      clase,
+      origen,
+      destino,
+      empresa,
+      precioMin,
+      precioMax,
+      moneda,
+    } = req.query;
 
     if (tipo) {
       whereClause.tipo = tipo;

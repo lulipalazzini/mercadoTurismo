@@ -234,7 +234,10 @@ export const getRoleBadge = (user) => {
  */
 export const isB2BUser = (user) => {
   if (!user) return false;
-  return user.userType === "B2B" || ["agencia", "operador"].includes(getUserRole(user));
+  return (
+    user.userType === "B2B" ||
+    ["agencia", "operador"].includes(getUserRole(user))
+  );
 };
 
 /**

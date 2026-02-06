@@ -96,7 +96,9 @@ export default function CruceroCard({ item }) {
             <FaShip /> {naviera} • {barco}
           </p>
         </div>
-        <span className="tipo-badge tipo-crucero">{duracionDias || duracion}D</span>
+        <span className="tipo-badge tipo-crucero">
+          {duracionDias || duracion}D
+        </span>
       </div>
 
       <div className="card-content">
@@ -153,10 +155,15 @@ export default function CruceroCard({ item }) {
           {importeAdulto ? (
             <>
               <span className="precio-label">Adulto</span>
-              <span className="precio">{moneda || 'USD'} {importeAdulto}</span>
+              <span className="precio">
+                {moneda || "USD"} {importeAdulto}
+              </span>
               {importeMenor && (
-                <span className="precio-menor" style={{ fontSize: '0.75rem', color: '#666' }}>
-                  Menor: {moneda || 'USD'} {importeMenor}
+                <span
+                  className="precio-menor"
+                  style={{ fontSize: "0.75rem", color: "#666" }}
+                >
+                  Menor: {moneda || "USD"} {importeMenor}
                 </span>
               )}
             </>

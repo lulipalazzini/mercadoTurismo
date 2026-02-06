@@ -173,19 +173,22 @@ const createRecurso = async (req, res) => {
 - **Console log:** `⚠️ MODO GLOBAL: Mostrando TODOS los cupos`
 
 **Lógica especial:**
+
 ```javascript
 // NO filtrar por userId
 // Mostrar cupos de TODOS los usuarios B2B
 const cupos = await CupoMercado.findAll({
-  include: [{
-    model: User,
-    as: "vendedor",
-    where: { userType: "B2B" } // Cualquier usuario B2B
-  }],
+  include: [
+    {
+      model: User,
+      as: "vendedor",
+      where: { userType: "B2B" }, // Cualquier usuario B2B
+    },
+  ],
   where: {
     estado: "disponible",
-    cantidad: { [Op.gt]: 0 }
-  }
+    cantidad: { [Op.gt]: 0 },
+  },
 });
 ```
 
@@ -200,7 +203,7 @@ Usuario autenticado (B2B)
     ↓
 shouldFilterByOwnership(user, moduleName)
     ↓
-¿Es "cuposMercado"? 
+¿Es "cuposMercado"?
     ├─ SÍ → NO filtrar (ver todos)
     └─ NO → Filtrar por userId (solo lo suyo)
 ```
@@ -262,6 +265,7 @@ Los controllers ya están preparados para usar `userId`, pero los **modelos aún
 ```
 
 **Lista de modelos:**
+
 - [ ] Paquete.model.js
 - [ ] Alojamiento.model.js
 - [ ] Auto.model.js

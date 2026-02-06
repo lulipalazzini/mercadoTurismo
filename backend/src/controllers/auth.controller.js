@@ -134,8 +134,7 @@ const registerB2B = async (req, res) => {
     // Validar campos básicos
     if (!email || !password || !telefono || !countryCode) {
       return res.status(400).json({
-        message:
-          "Email, contraseña, teléfono y país son campos obligatorios",
+        message: "Email, contraseña, teléfono y país son campos obligatorios",
       });
     }
 

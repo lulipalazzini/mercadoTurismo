@@ -21,8 +21,10 @@ const getCuposMercado = async (req, res) => {
 
     // ⚠️ EXCEPCIÓN: NO FILTRAR POR OWNERSHIP
     // Tanto agencias como operadores/proveedores ven TODOS los cupos
-    console.log("   ⚠️ MODO GLOBAL: Mostrando TODOS los cupos (sin filtro de ownership)");
-    
+    console.log(
+      "   ⚠️ MODO GLOBAL: Mostrando TODOS los cupos (sin filtro de ownership)",
+    );
+
     // Obtener cupos de todos los usuarios B2B, con información del vendedor
     console.log("   Consultando base de datos...");
     const cupos = await CupoMercado.findAll({

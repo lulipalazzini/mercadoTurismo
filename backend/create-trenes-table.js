@@ -1,10 +1,10 @@
-const { sequelize } = require('./src/config/database');
+const { sequelize } = require("./src/config/database");
 
 async function createTrenesTable() {
   try {
-    console.log('🚄 CREANDO TABLA DE TRENES\n');
-    console.log('=' .repeat(60));
-    
+    console.log("🚄 CREANDO TABLA DE TRENES\n");
+    console.log("=".repeat(60));
+
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS trenes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,23 +35,22 @@ async function createTrenesTable() {
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
-    
+
     console.log('✅ Tabla "trenes" creada exitosamente');
-    
+
     // Verificar estructura
     const [columns] = await sequelize.query(`PRAGMA table_info(trenes)`);
     console.log(`\n📊 Tabla tiene ${columns.length} columnas:`);
-    columns.forEach(col => {
+    columns.forEach((col) => {
       console.log(`   - ${col.name} (${col.type})`);
     });
-    
-    console.log('\n' + '='.repeat(60));
-    console.log('✅ MIGRACIÓN COMPLETA');
-    console.log('='.repeat(60));
+
+    console.log("\n" + "=".repeat(60));
+    console.log("✅ MIGRACIÓN COMPLETA");
+    console.log("=".repeat(60));
     process.exit(0);
-    
   } catch (error) {
-    console.error('❌ Error al crear tabla:', error.message);
+    console.error("❌ Error al crear tabla:", error.message);
     console.error(error.stack);
     process.exit(1);
   }

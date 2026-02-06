@@ -9,6 +9,7 @@ El sistema de registro profesional B2B ha sido implementado completamente y est�
 ## 📦 Archivos Creados/Modificados
 
 ### Backend (5 archivos)
+
 1. ✅ `backend/src/models/User.model.js` - Extendido con 8 campos B2B
 2. ✅ `backend/src/services/validation.service.js` - Validación CUIT/Tax ID (280 líneas)
 3. ✅ `backend/src/controllers/validation.controller.js` - Endpoints de validación (120 líneas)
@@ -16,6 +17,7 @@ El sistema de registro profesional B2B ha sido implementado completamente y est�
 5. ✅ `backend/src/routes/auth.routes.js` - 3 nuevas rutas
 
 ### Frontend (10 archivos)
+
 1. ✅ `frontend/src/components/RegisterB2BWizard.jsx` - Contenedor principal (247 líneas)
 2. ✅ `frontend/src/components/wizard/Step1BasicData.jsx` - Datos básicos (220 líneas)
 3. ✅ `frontend/src/components/wizard/Step2ArgentinaData.jsx` - Fiscal Argentina (300 líneas)
@@ -34,17 +36,17 @@ El sistema de registro profesional B2B ha sido implementado completamente y est�
 ## 🚀 Cómo Acceder
 
 ### URL Directa
+
 ```
 http://localhost:5173/registro-profesional
 ```
 
 ### Desde el Código
+
 ```jsx
 import { Link } from "react-router-dom";
 
-<Link to="/registro-profesional">
-  Registro Profesional
-</Link>
+<Link to="/registro-profesional">Registro Profesional</Link>;
 ```
 
 ---
@@ -52,21 +54,25 @@ import { Link } from "react-router-dom";
 ## 🎯 Características Principales
 
 ### ✨ Wizard de 3 Pasos
+
 1. **Paso 1**: Email, teléfono, contraseña, país
 2. **Paso 2**: Datos fiscales (bifurcación Argentina/Exterior)
 3. **Paso 3**: Confirmación y Términos & Condiciones
 
 ### 🌎 Bifurcación Automática
+
 - **Argentina**: Validación CUIT con AFIP → Activación automática
 - **Exterior**: Validación básica → Revisión manual (48h)
 
 ### ✅ Validaciones Implementadas
+
 - Frontend: Validación instantánea en cada campo
 - Backend: Validación doble antes de guardar
 - CUIT: Algoritmo completo con dígito verificador
 - Tax ID: Formatos por país (CNPJ, RUT, VAT, etc.)
 
 ### 🎨 UX Premium
+
 - Indicador de progreso visual
 - Password toggle con ojito
 - Selector de país con banderas
@@ -123,6 +129,7 @@ Usuario selecciona país
 ## 🔧 Datos de Prueba
 
 ### Argentina
+
 ```
 Email: agencia@test.com
 Teléfono: +54 11 1234-5678
@@ -135,6 +142,7 @@ Ciudad: Buenos Aires
 ```
 
 ### Brasil
+
 ```
 Email: agencia@test.com.br
 Teléfono: +55 11 91234-5678
@@ -171,10 +179,12 @@ El sistema soporta 14 países con validación específica:
 ## 📝 Tipos de Entidad
 
 ### Argentina
+
 - Persona Física
 - Persona Jurídica
 
 ### Exterior
+
 - Empresa
 - Independiente
 - Agencia de Viajes
@@ -186,6 +196,7 @@ El sistema soporta 14 países con validación específica:
 ## 🔐 Resultado del Registro
 
 ### Base de Datos
+
 ```javascript
 {
   email: "agencia@test.com",
@@ -216,6 +227,7 @@ El sistema soporta 14 países con validación específica:
 ```
 
 ### JWT Token
+
 ```javascript
 {
   userId: 123,
@@ -228,9 +240,10 @@ El sistema soporta 14 países con validación específica:
 ```
 
 ### localStorage
+
 ```javascript
-localStorage.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-localStorage.currentUser = "{...}"
+localStorage.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+localStorage.currentUser = "{...}";
 ```
 
 ---
@@ -242,6 +255,7 @@ Para agregar el link al registro profesional desde la página de inicio, ver:
 📄 **`GUIA_LINK_REGISTRO_B2B.md`**
 
 Opciones sugeridas:
+
 1. Botón en Hero Section
 2. Banner dedicado B2B
 3. Link en Navbar
@@ -252,11 +266,13 @@ Opciones sugeridas:
 ## 📚 Documentación Adicional
 
 ### Archivos de Referencia
+
 1. `IMPLEMENTACION_REGISTRO_B2B_COMPLETA.md` - Guía completa de implementación
 2. `DOCUMENTACION_REGISTRO_B2B.md` - Arquitectura técnica detallada
 3. `GUIA_LINK_REGISTRO_B2B.md` - Cómo agregar link desde Home
 
 ### API Endpoints
+
 ```
 POST /api/auth/register-b2b
 POST /api/auth/validate-cuit
@@ -268,6 +284,7 @@ POST /api/auth/validate-tax-id
 ## 🐛 Debugging
 
 ### Console Logs Implementados
+
 ```javascript
 [WIZARD] Enviando registro B2B...
 [AUTH SERVICE] Registrando usuario B2B...
@@ -293,6 +310,7 @@ POST /api/auth/validate-tax-id
 ## ✅ Verificación
 
 ### Checklist Post-Implementación
+
 - [x] Backend compila sin errores
 - [x] Frontend compila sin errores
 - [x] Ruta `/registro-profesional` accesible
@@ -309,6 +327,7 @@ POST /api/auth/validate-tax-id
 ## 🚀 Próximos Pasos
 
 ### Para Producción
+
 1. ✅ Sistema B2B completo
 2. ⏳ Agregar link desde Home (15 min)
 3. ⏳ Crear páginas T&C y Política de Privacidad
@@ -317,6 +336,7 @@ POST /api/auth/validate-tax-id
 6. ⏳ Panel admin para aprobar usuarios exterior
 
 ### Opcional
+
 - Testing automatizado
 - Analytics tracking
 - A/B testing de conversión
@@ -339,6 +359,7 @@ Para medir el éxito del sistema:
 ## 🎉 Resultado Final
 
 **Sistema B2B completo y funcional** con:
+
 - ✅ Wizard de 3 pasos intuitivo
 - ✅ Validación CUIT automática (Argentina)
 - ✅ Soporte para 14 países

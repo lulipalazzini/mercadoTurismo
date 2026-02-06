@@ -13,6 +13,7 @@ Se ha implementado un sistema completo de registro B2B para usuarios profesional
 #### 1. Modelo de Base de Datos (User.model.js)
 
 **Nuevos campos agregados:**
+
 ```javascript
 // Identificación B2B
 userType: ENUM('B2C', 'B2B') - Tipo de usuario
@@ -25,7 +26,7 @@ fiscalData: JSON - Datos fiscales según país:
   - Exterior: { taxId, taxType, businessRegistry }
 
 businessData: JSON - Datos comerciales:
-  { provincia, ciudad, codigoPostal, domicilioFiscal, domicilioFisico, 
+  { provincia, ciudad, codigoPostal, domicilioFiscal, domicilioFisico,
     oficinaVirtual, whatsapp, nombreComercial }
 
 // Estado de validación
@@ -37,6 +38,7 @@ validatedAt: DATE
 #### 2. Servicio de Validaciones (validation.service.js)
 
 **Funciones implementadas:**
+
 - `validateCUIT(cuit)` - Validación de formato y dígito verificador
 - `consultarAFIP(cuit)` - Consulta a AFIP (placeholder preparado para API real)
 - `validarActividadesTurismo(actividades)` - Verifica códigos AFIP de turismo
@@ -44,6 +46,7 @@ validatedAt: DATE
 - `validateInternationalTaxId(taxId, countryCode)` - Tax ID según país
 
 **Códigos de actividades turísticas soportados:**
+
 - 791100 - Agencias de viajes minoristas
 - 791200 - Agencias de viajes mayoristas
 - 799000 - Servicios de reservas y conexos
@@ -53,6 +56,7 @@ validatedAt: DATE
 #### 3. Controlador de Validaciones (validation.controller.js)
 
 **Endpoints:**
+
 ```
 POST /api/auth/validate-cuit
 Body: { cuit: string }
@@ -66,21 +70,22 @@ Response: { success, validated, taxId }
 #### 4. Controlador de Autenticación Extendido (auth.controller.js)
 
 **Nuevo endpoint:**
+
 ```
 POST /api/auth/register-b2b
 Body: {
   // Paso 1
   email, telefono, password, countryCode, acceptedTerms,
-  
+
   // Paso 2
   entityType, nombre, razonSocial,
-  
+
   // Argentina
   cuit, condicionIVA,
-  
+
   // Exterior
   taxId, taxType,
-  
+
   // Paso 3
   provincia, ciudad, codigoPostal, domicilioFiscal, domicilioFisico,
   oficinaVirtual, whatsapp, nombreComercial
@@ -90,6 +95,7 @@ Response: { success, token, user }
 ```
 
 **Lógica de validación:**
+
 1. Validar campos obligatorios
 2. Validar email y teléfono internacional
 3. Verificar que email no exista
@@ -111,12 +117,14 @@ Response: { success, token, user }
 #### 1. Wizard Multi-Paso (RegisterB2BWizard.jsx)
 
 **Estructura:**
+
 - 3 pasos con navegación condicional
 - Indicador de progreso visual
 - State management centralizado
 - Validaciones por paso
 
 **Flow:**
+
 ```
 Paso 1: Datos Básicos
   → Bifurcación según país
@@ -129,6 +137,7 @@ Paso 1: Datos Básicos
 #### 2. Step 1 - Datos Básicos (Step1BasicData.jsx)
 
 **Campos:**
+
 - Email (validación formato)
 - Teléfono (formato internacional: +XX XXXX XXXX)
 - Contraseña (mínimo 6 caracteres)
@@ -136,12 +145,14 @@ Paso 1: Datos Básicos
 - País (selector con flags)
 
 **Validaciones en tiempo real:**
+
 - Email formato válido
 - Teléfono comienza con +
 - Contraseñas coinciden
 - Todos los campos completos
 
 **Comportamiento:**
+
 - Al seleccionar país → habilita botón "Siguiente"
 - País Argentina → Step 2A
 - País Exterior → Step 2B
@@ -149,6 +160,7 @@ Paso 1: Datos Básicos
 #### 3. Step 2A - Datos Fiscales Argentina (Step2ArgentinaData.jsx)
 
 **Campos obligatorios:**
+
 - Tipo de persona (física/jurídica)
 - CUIT (con validación automática)
 - Razón social / Nombre
@@ -162,6 +174,7 @@ Paso 1: Datos Básicos
 - WhatsApp
 
 **Validación automática CUIT:**
+
 1. Usuario ingresa CUIT
 2. Click en "Validar CUIT"
 3. Frontend → POST /api/auth/validate-cuit
@@ -180,6 +193,7 @@ Paso 1: Datos Básicos
    - ❌ Bloquea avance
 
 **Códigos de error:**
+
 - "Dígito verificador inválido"
 - "CUIT no activo en AFIP"
 - "No tiene actividades de turismo registradas"
@@ -187,6 +201,7 @@ Paso 1: Datos Básicos
 #### 4. Step 2B - Datos Comerciales Exterior (Step2ExteriorData.jsx)
 
 **Campos:**
+
 - Tipo de entidad (empresa/independiente)
 - Nombre comercial
 - Razón social (opcional)
@@ -200,6 +215,7 @@ Paso 1: Datos Básicos
 - Checkbox "Oficina virtual"
 
 **Validación:**
+
 - Formato básico (sin consulta a entidades extranjeras)
 - Validación declarativa
 - Status final: `incomplete` → revisión manual posterior
@@ -207,12 +223,14 @@ Paso 1: Datos Básicos
 #### 5. Step 3 - Confirmación (Step3Confirmation.jsx)
 
 **Funcionalidad:**
+
 - Resumen de todos los datos ingresados
 - Editar cualquier dato (volver a steps anteriores)
 - Checkbox "Acepto Términos y Condiciones"
 - Botón "Completar registro"
 
 **Datos mostrados:**
+
 - Contacto (email, teléfono)
 - Identidad (CUIT o Tax ID, razón social)
 - Si Argentina: datos de AFIP validados
@@ -220,6 +238,7 @@ Paso 1: Datos Básicos
 - WhatsApp, oficina virtual
 
 **Envío final:**
+
 1. Usuario acepta T&C
 2. Click "Completar registro"
 3. POST /api/auth/register-b2b con todos los datos
@@ -230,6 +249,7 @@ Paso 1: Datos Básicos
 #### 6. Servicios Frontend
 
 **b2b.service.js:**
+
 ```javascript
 registerB2B(userData) - Registro completo
 validateCUIT(cuit) - Validación CUIT
@@ -237,6 +257,7 @@ validateTaxId(taxId, countryCode) - Validación Tax ID
 ```
 
 **validation.utils.js:**
+
 ```javascript
 validateEmail(email)
 validateInternationalPhone(phone)
@@ -255,6 +276,7 @@ tiposEntidad - Según país
 #### 7. Estilos (registerWizard.css)
 
 **Componentes:**
+
 - `.wizard-container` - Contenedor principal con fondo gradient
 - `.wizard-card` - Tarjeta centrada con sombra
 - `.wizard-progress` - Barra de progreso + indicadores de pasos
@@ -264,6 +286,7 @@ tiposEntidad - Según país
 - `.summary-section` - Secciones del resumen
 
 **Animaciones:**
+
 - Transición suave entre pasos (fade + slide)
 - Progreso animado
 - Hover states en botones
@@ -426,10 +449,11 @@ POST /api/auth/validate-tax-id  ← NUEVO
 ```
 
 **Actualización de App.jsx necesaria:**
+
 ```jsx
 import RegisterB2BWizard from "./components/RegisterB2BWizard";
 
-<Route path="/registro-profesional" element={<RegisterB2BWizard />} />
+<Route path="/registro-profesional" element={<RegisterB2BWizard />} />;
 ```
 
 ---
@@ -437,6 +461,7 @@ import RegisterB2BWizard from "./components/RegisterB2BWizard";
 ## ✅ FUNCIONALIDADES COMPLETADAS
 
 ### Backend ✓
+
 - [x] Modelo User extendido con campos B2B
 - [x] Servicio de validación CUIT con algoritmo completo
 - [x] Preparación para integración AFIP/ARCA (placeholder)
@@ -447,6 +472,7 @@ import RegisterB2BWizard from "./components/RegisterB2BWizard";
 - [x] Status de validación automático
 
 ### Frontend ✓
+
 - [x] Wizard multi-paso con navegación condicional
 - [x] Step 1: Datos básicos con validaciones
 - [x] Step 2A: Datos fiscales Argentina con validación CUIT automática
@@ -464,6 +490,7 @@ import RegisterB2BWizard from "./components/RegisterB2BWizard";
 ### 1. Base de Datos
 
 Ejecutar migración para agregar columnas nuevas:
+
 ```bash
 # Backend
 cd backend
@@ -474,6 +501,7 @@ npm run dev
 ### 2. Variables de Entorno
 
 No se requieren cambios, pero preparado para:
+
 ```env
 AFIP_API_URL=https://api.afip.gob.ar/...
 AFIP_API_KEY=tu_clave_api
@@ -482,6 +510,7 @@ AFIP_API_KEY=tu_clave_api
 ### 3. Frontend
 
 Actualizar rutas en `App.jsx` y agregar enlaces:
+
 ```jsx
 // Navbar o Hero
 <Link to="/registro-profesional">Crear cuenta profesional</Link>
@@ -510,12 +539,12 @@ POST http://localhost:5000/api/auth/register-b2b
   "password": "123456",
   "countryCode": "AR",
   "acceptedTerms": true,
-  
+
   "entityType": "juridica",
   "razonSocial": "Viajes del Sur SRL",
   "cuit": "20-12345678-9",
   "condicionIVA": "RESPONSABLE_INSCRIPTO",
-  
+
   "provincia": "CABA",
   "ciudad": "Buenos Aires",
   "domicilioFiscal": "Av Corrientes 1234"
@@ -552,31 +581,35 @@ npm run dev
 ## 🔮 EXTENSIONES FUTURAS
 
 ### Integración AFIP Real
+
 ```javascript
 // validation.service.js
 async function consultarAFIP(cuit) {
   const response = await fetch(`${process.env.AFIP_API_URL}/consulta`, {
-    headers: { 'Authorization': `Bearer ${process.env.AFIP_API_KEY}` },
-    method: 'POST',
-    body: JSON.stringify({ cuit })
+    headers: { Authorization: `Bearer ${process.env.AFIP_API_KEY}` },
+    method: "POST",
+    body: JSON.stringify({ cuit }),
   });
-  
+
   return response.json();
 }
 ```
 
 ### Validaciones Externas por País
+
 - Brasil: Consulta CNPJ en Receita Federal
 - Uruguay: Validación RUT en DGI
 - Chile: Validación RUT en SII
 
 ### Panel de Administración
+
 - Dashboard para admins con usuarios `validationStatus: 'incomplete'`
 - Aprobar/rechazar usuarios del exterior
 - Ver documentación subida
 - Historial de validaciones
 
 ### Upload de Documentación
+
 - Certificado de inscripción AFIP
 - Constancia de CUIT
 - Certificados internacionales
@@ -589,6 +622,7 @@ async function consultarAFIP(cuit) {
 ### Logs
 
 Todos los procesos loguean con prefijos:
+
 - `[AUTH]` - Autenticación general
 - `[AUTH B2B]` - Registro profesional
 - `[VALIDATION]` - Validaciones de CUIT/Tax ID
@@ -597,14 +631,17 @@ Todos los procesos loguean con prefijos:
 ### Errores Comunes
 
 **1. "CUIT no activo"**
+
 - Verificar en AFIP que el CUIT esté activo
 - Revisar estado impositivo del contribuyente
 
 **2. "No tiene actividades de turismo"**
+
 - Agregar código 791200 (agencias mayoristas) en AFIP
 - Lista completa en `validation.service.js` → `codigosTurismo`
 
 **3. "Email ya registrado"**
+
 - Usuario debe recuperar contraseña o usar otro email
 
 ---
@@ -622,6 +659,6 @@ El sistema está **100% funcional** y listo para producción con las siguientes 
 ✅ Base de datos flexible (JSON para datos específicos)  
 ✅ Preparado para integración AFIP real  
 ✅ Manejo de errores completo  
-✅ Documentación exhaustiva  
+✅ Documentación exhaustiva
 
 **Próximo paso:** Agregar la ruta `/registro-profesional` en el frontend y probar el flujo completo.

@@ -39,35 +39,35 @@ export default function TrenCard({ item }) {
 
   const getTipoLabel = (tipo) => {
     const labels = {
-      'alta-velocidad': 'Alta Velocidad',
-      'regional': 'Regional',
-      'turistico': 'Turístico',
-      'nocturno': 'Nocturno',
-      'suburbano': 'Suburbano'
+      "alta-velocidad": "Alta Velocidad",
+      regional: "Regional",
+      turistico: "Turístico",
+      nocturno: "Nocturno",
+      suburbano: "Suburbano",
     };
     return labels[tipo] || tipo;
   };
 
   const getClaseLabel = (clase) => {
     const labels = {
-      'economica': 'Económica',
-      'primera': 'Primera Clase',
-      'ejecutiva': 'Ejecutiva',
-      'premium': 'Premium',
-      'suite': 'Suite'
+      economica: "Económica",
+      primera: "Primera Clase",
+      ejecutiva: "Ejecutiva",
+      premium: "Premium",
+      suite: "Suite",
     };
     return labels[clase] || clase;
   };
 
   const getTipoBadgeColor = (tipo) => {
     const colors = {
-      'alta-velocidad': '#2196f3',
-      'regional': '#4caf50',
-      'turistico': '#ff9800',
-      'nocturno': '#9c27b0',
-      'suburbano': '#607d8b'
+      "alta-velocidad": "#2196f3",
+      regional: "#4caf50",
+      turistico: "#ff9800",
+      nocturno: "#9c27b0",
+      suburbano: "#607d8b",
     };
-    return colors[tipo] || '#757575';
+    return colors[tipo] || "#757575";
   };
 
   return (
@@ -96,15 +96,23 @@ export default function TrenCard({ item }) {
               </div>
             )}
             <p className="empresa">{empresa}</p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-              <span style={{ fontSize: '1.2rem' }}>🚆</span>
-              <span style={{ fontSize: '0.875rem', color: '#666' }}>
-                {origen} <FaArrowRight style={{ fontSize: '0.75rem' }} /> {destino}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                marginTop: "0.5rem",
+              }}
+            >
+              <span style={{ fontSize: "1.2rem" }}>🚆</span>
+              <span style={{ fontSize: "0.875rem", color: "#666" }}>
+                {origen} <FaArrowRight style={{ fontSize: "0.75rem" }} />{" "}
+                {destino}
               </span>
             </div>
           </div>
-          <span 
-            className="tipo-badge" 
+          <span
+            className="tipo-badge"
             style={{ backgroundColor: getTipoBadgeColor(tipo) }}
           >
             {getTipoLabel(tipo)}
@@ -125,7 +133,7 @@ export default function TrenCard({ item }) {
             </div>
           </div>
 
-          <div className="info-grid" style={{ marginTop: '0.5rem' }}>
+          <div className="info-grid" style={{ marginTop: "0.5rem" }}>
             {distanciaKm && (
               <div className="info-item">
                 <span className="info-label">
@@ -158,12 +166,13 @@ export default function TrenCard({ item }) {
           <div className="price-section">
             <span className="price-label">Desde</span>
             <span className="price">
-              {moneda === 'USD' && '$'}
-              {moneda === 'EUR' && '€'}
-              {moneda === 'ARS' && '$'}
-              {moneda === 'BRL' && 'R$'}
-              {moneda === 'CLP' && '$'}
-              {precio.toLocaleString()} {moneda !== 'USD' && moneda !== 'EUR' ? moneda : ''}
+              {moneda === "USD" && "$"}
+              {moneda === "EUR" && "€"}
+              {moneda === "ARS" && "$"}
+              {moneda === "BRL" && "R$"}
+              {moneda === "CLP" && "$"}
+              {precio.toLocaleString()}{" "}
+              {moneda !== "USD" && moneda !== "EUR" ? moneda : ""}
             </span>
           </div>
           <button className="btn-reservar" onClick={handleReservar}>

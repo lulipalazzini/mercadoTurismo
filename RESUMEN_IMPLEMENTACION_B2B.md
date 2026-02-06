@@ -39,6 +39,7 @@ Se ha implementado con éxito un sistema completo de roles y permisos B2B que tr
 ### Lógica de Roles
 
 #### AGENCIA (🏢)
+
 **Condición:** `businessModel === "solo_pasajeros" AND serviceType === "intermediario"`
 
 - ✅ Visible al público B2C
@@ -46,6 +47,7 @@ Se ha implementado con éxito un sistema completo de roles y permisos B2B que tr
 - ❌ NO ve información de operadores
 
 #### OPERADOR (🏭)
+
 **Condición:** Cualquier otra combinación
 
 - ❌ NO visible al público (nunca)
@@ -53,6 +55,7 @@ Se ha implementado con éxito un sistema completo de roles y permisos B2B que tr
 - ❌ NO ve módulos B2C
 
 #### EXCEPCIÓN: Mercado de Cupos ⚠️
+
 - Todos los B2B ven TODOS los cupos (marketplace global)
 - NO se aplica filtro de ownership
 
@@ -63,38 +66,19 @@ Se ha implementado con éxito un sistema completo de roles y permisos B2B que tr
 ### Backend (20 archivos)
 
 **Nuevos:**
+
 1. `backend/src/middleware/checkOwnership.js` (180 líneas)
 2. `backend/src/middleware/rolePermissions.js` (200 líneas)
 
-**Modificados - Models:**
-3. `backend/src/models/User.model.js` (+80 líneas, role calculation)
-4. `backend/src/models/Paquete.model.js` (+userId field)
-5. `backend/src/models/Alojamiento.model.js` (+userId field)
-6. `backend/src/models/Auto.model.js` (+userId field)
-7. `backend/src/models/Transfer.model.js` (+userId field)
-8. `backend/src/models/Excursion.model.js` (+userId field)
-9. `backend/src/models/SalidaGrupal.model.js` (+userId field)
-10. `backend/src/models/Crucero.model.js` (+userId field)
-11. `backend/src/models/Seguro.model.js` (+userId field)
+**Modificados - Models:** 3. `backend/src/models/User.model.js` (+80 líneas, role calculation) 4. `backend/src/models/Paquete.model.js` (+userId field) 5. `backend/src/models/Alojamiento.model.js` (+userId field) 6. `backend/src/models/Auto.model.js` (+userId field) 7. `backend/src/models/Transfer.model.js` (+userId field) 8. `backend/src/models/Excursion.model.js` (+userId field) 9. `backend/src/models/SalidaGrupal.model.js` (+userId field) 10. `backend/src/models/Crucero.model.js` (+userId field) 11. `backend/src/models/Seguro.model.js` (+userId field)
 
-**Modificados - Controllers:**
-12. `backend/src/controllers/paquetes.controller.js`
-13. `backend/src/controllers/alojamientos.controller.js`
-14. `backend/src/controllers/autos.controller.js`
-15. `backend/src/controllers/transfers.controller.js`
-16. `backend/src/controllers/excursiones.controller.js`
-17. `backend/src/controllers/salidasGrupales.controller.js`
-18. `backend/src/controllers/cruceros.controller.js`
-19. `backend/src/controllers/seguros.controller.js`
-20. `backend/src/controllers/cuposMercado.controller.js`
+**Modificados - Controllers:** 12. `backend/src/controllers/paquetes.controller.js` 13. `backend/src/controllers/alojamientos.controller.js` 14. `backend/src/controllers/autos.controller.js` 15. `backend/src/controllers/transfers.controller.js` 16. `backend/src/controllers/excursiones.controller.js` 17. `backend/src/controllers/salidasGrupales.controller.js` 18. `backend/src/controllers/cruceros.controller.js` 19. `backend/src/controllers/seguros.controller.js` 20. `backend/src/controllers/cuposMercado.controller.js`
 
 ### Frontend (2 archivos)
 
-**Nuevos:**
-21. `frontend/src/utils/rolePermissions.js` (650 líneas)
+**Nuevos:** 21. `frontend/src/utils/rolePermissions.js` (650 líneas)
 
-**Modificados:**
-22. `frontend/src/components/Dashboard.jsx` (refactorizado completo)
+**Modificados:** 22. `frontend/src/components/Dashboard.jsx` (refactorizado completo)
 
 ---
 
@@ -114,6 +98,7 @@ calculateB2BRole() {
 ### 2. Filtrado de Ownership
 
 **Backend (controllers):**
+
 ```javascript
 const whereClause = { activo: true };
 if (req.user && shouldFilterByOwnership(req.user, "paquetes")) {
@@ -122,6 +107,7 @@ if (req.user && shouldFilterByOwnership(req.user, "paquetes")) {
 ```
 
 **Excepción cuposMercado:**
+
 ```javascript
 if (isCuposMercadoModule(moduleName)) {
   return false; // NO filtrar, ver todos
@@ -131,6 +117,7 @@ if (isCuposMercadoModule(moduleName)) {
 ### 3. Dashboard Dinámico
 
 **Frontend:**
+
 ```javascript
 const modulesBySection = getModulesBySection(user);
 // Renderiza solo módulos permitidos para el rol
@@ -141,6 +128,7 @@ const modulesBySection = getModulesBySection(user);
 ## 🧪 Casos de Prueba
 
 ### ✅ Caso 1: Agencia ve solo sus paquetes
+
 ```
 Usuario: Agencia ID 123
 GET /api/paquetes → WHERE userId = 123
@@ -148,6 +136,7 @@ Resultado: Solo sus paquetes
 ```
 
 ### ✅ Caso 2: Operador NO ve módulo Paquetes
+
 ```
 Usuario: Operador
 Dashboard.jsx → canAccessModule(user, "paquetes") → false
@@ -155,12 +144,14 @@ Módulo no renderizado
 ```
 
 ### ✅ Caso 3: Todos los B2B ven todos los cupos
+
 ```
 Agencia ID 123: GET /api/cupos-mercado → Cupos de TODOS
 Operador ID 456: GET /api/cupos-mercado → Cupos de TODOS
 ```
 
 ### ✅ Caso 4: No editar contenido ajeno
+
 ```
 Usuario A intenta: PUT /api/paquetes/999 (de Usuario B)
 Middleware checkOwnership() → 403 Forbidden
@@ -201,10 +192,12 @@ UPDATE Paquetes SET userId = vendedorId WHERE userId IS NULL;
 ## 🚀 Próximos Pasos
 
 ### 1. Base de Datos
+
 - [ ] Ejecutar migración para agregar columna userId
 - [ ] Sincronizar datos legacy (userId = vendedorId)
 
 ### 2. Testing
+
 - [ ] Registrar usuario como Agencia
 - [ ] Verificar calculatedRole = "agencia"
 - [ ] Crear paquete y verificar userId
@@ -215,6 +208,7 @@ UPDATE Paquetes SET userId = vendedorId WHERE userId IS NULL;
 - [ ] Intentar editar recurso ajeno (debe fallar)
 
 ### 3. Componentes Faltantes
+
 - [ ] `dashboard/ReservasB2B.jsx`
 - [ ] `dashboard/ServiciosB2B.jsx`
 - [ ] `dashboard/ClientesB2B.jsx`
@@ -227,13 +221,14 @@ UPDATE Paquetes SET userId = vendedorId WHERE userId IS NULL;
 **Archivos nuevos:** 5  
 **Archivos modificados:** 20  
 **Tiempo:** 1 sesión  
-**Cobertura:** 100%  
+**Cobertura:** 100%
 
 ---
 
 ## ✅ Checklist Completo
 
 ### Backend
+
 - [x] User model con campos B2B
 - [x] calculateB2BRole() implementado
 - [x] Hooks beforeCreate/beforeUpdate
@@ -244,6 +239,7 @@ UPDATE Paquetes SET userId = vendedorId WHERE userId IS NULL;
 - [x] Excepción cuposMercado
 
 ### Frontend
+
 - [x] rolePermissions.js utilidad
 - [x] Dashboard dinámico por rol
 - [x] Navegación filtrada
@@ -251,6 +247,7 @@ UPDATE Paquetes SET userId = vendedorId WHERE userId IS NULL;
 - [x] Badges de rol
 
 ### Documentación
+
 - [x] SISTEMA_ROLES_PERMISOS_B2B.md
 - [x] CONTROLLERS_ACTUALIZADOS.md
 - [x] RESUMEN_IMPLEMENTACION_B2B.md (este)
@@ -265,7 +262,7 @@ UPDATE Paquetes SET userId = vendedorId WHERE userId IS NULL;
 ✅ **Mantenibilidad:** Código centralizado  
 ✅ **Flexibilidad:** Sistema de excepciones  
 ✅ **Multi-tenant:** Aislamiento de datos por usuario  
-✅ **Marketplace:** Mercado de Cupos global  
+✅ **Marketplace:** Mercado de Cupos global
 
 ---
 

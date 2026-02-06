@@ -47,7 +47,9 @@ const getCruceros = async (req, res) => {
       if (duracionMax) {
         whereClause.duracionDias[Op.lte] = parseInt(duracionMax);
       }
-      console.log(`⏱️ Filtrando por duración: ${duracionMin || 'N/A'}-${duracionMax || 'N/A'} días`);
+      console.log(
+        `⏱️ Filtrando por duración: ${duracionMin || "N/A"}-${duracionMax || "N/A"} días`,
+      );
     }
 
     // Filtro por moneda
@@ -63,7 +65,15 @@ const getCruceros = async (req, res) => {
         {
           model: User,
           as: "vendedor",
-          attributes: ["id", "nombre", "email", "razonSocial", "role", "calculatedRole", "isVisibleToPassengers"],
+          attributes: [
+            "id",
+            "nombre",
+            "email",
+            "razonSocial",
+            "role",
+            "calculatedRole",
+            "isVisibleToPassengers",
+          ],
         },
       ],
     });

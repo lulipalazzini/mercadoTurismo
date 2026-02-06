@@ -89,7 +89,7 @@ export default function Paquetes() {
     } catch (error) {
       console.error("Error al eliminar paquete:", error);
       setAlertMessage(
-        "Error al eliminar el paquete. Por favor intenta nuevamente."
+        "Error al eliminar el paquete. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -234,7 +234,7 @@ export default function Paquetes() {
                 {paquetes.length > 0
                   ? Math.round(
                       paquetes.reduce((sum, p) => sum + (p.comision || 10), 0) /
-                        paquetes.length
+                        paquetes.length,
                     )
                   : 0}
                 %
@@ -257,7 +257,7 @@ export default function Paquetes() {
                   <div className="package-category">
                     <span
                       className={`category-badge ${getCategoryColor(
-                        paquete.categoria
+                        paquete.categoria,
                       )}`}
                     >
                       {paquete.categoria || "Estándar"}
@@ -344,7 +344,7 @@ export default function Paquetes() {
                         <span className="commission-amount">
                           {paquete.comision}% (
                           {formatCurrency(
-                            (paquete.precio * paquete.comision) / 100
+                            (paquete.precio * paquete.comision) / 100,
                           )}
                           )
                         </span>
@@ -354,7 +354,7 @@ export default function Paquetes() {
                 </div>
 
                 <div className="package-footer">
-                  <button 
+                  <button
                     className="btn-secondary btn-block"
                     onClick={() => handlePreviewClick(paquete)}
                   >

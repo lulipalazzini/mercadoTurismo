@@ -53,16 +53,11 @@ export default function Trenes() {
     <div className="servicios-container">
       <h1 className="servicios-title">Trenes</h1>
 
-      <ModuleFilters 
-        module="trenes" 
-        onFiltersChange={handleFiltersChange}
-      />
+      <ModuleFilters module="trenes" onFiltersChange={handleFiltersChange} />
 
       <div className="servicios-grid">
         {trenes && trenes.length > 0 ? (
-          trenes.map((tren) => (
-            <TrenCard key={tren.id} item={tren} />
-          ))
+          trenes.map((tren) => <TrenCard key={tren.id} item={tren} />)
         ) : (
           <p className="no-results">
             No se encontraron trenes que coincidan con los filtros seleccionados

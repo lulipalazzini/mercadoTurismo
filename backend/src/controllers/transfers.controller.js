@@ -60,7 +60,15 @@ const getTransfers = async (req, res) => {
         {
           model: User,
           as: "vendedor",
-          attributes: ["id", "nombre", "email", "razonSocial", "role", "calculatedRole", "isVisibleToPassengers"],
+          attributes: [
+            "id",
+            "nombre",
+            "email",
+            "razonSocial",
+            "role",
+            "calculatedRole",
+            "isVisibleToPassengers",
+          ],
         },
       ],
     });
@@ -104,12 +112,10 @@ const createTransfer = async (req, res) => {
 
     const transfer = await Transfer.create(transferData);
     const parsedTransfer = parseItemJsonFields(transfer, JSON_FIELDS);
-    res
-      .status(201)
-      .json({
-        message: "Transfer creado exitosamente",
-        transfer: parsedTransfer,
-      });
+    res.status(201).json({
+      message: "Transfer creado exitosamente",
+      transfer: parsedTransfer,
+    });
   } catch (error) {
     res
       .status(500)

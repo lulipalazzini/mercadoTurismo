@@ -136,6 +136,7 @@
 ## 📊 Mapeo de Campos por Módulo
 
 ### Paquetes
+
 ```
 Hero → Módulo
 ─────────────────────────────────
@@ -153,6 +154,7 @@ precio        : DECIMAL
 ```
 
 ### Cruceros
+
 ```
 Hero → Módulo
 ─────────────────────────────────
@@ -170,6 +172,7 @@ precioDesde   : DECIMAL
 ```
 
 ### Alojamientos
+
 ```
 Hero → Módulo
 ─────────────────────────────────
@@ -187,6 +190,7 @@ estrellas     : INTEGER (1-5)
 ```
 
 ### Autos
+
 ```
 Hero → Módulo
 ─────────────────────────────────
@@ -205,6 +209,7 @@ precioDia         : DECIMAL
 ```
 
 ### Excursiones
+
 ```
 Hero → Módulo
 ─────────────────────────────────
@@ -226,11 +231,13 @@ precio        : DECIMAL
 ## 🎬 Ejemplo de Interacción Completa
 
 ### Paso 1: Usuario en Home
+
 ```
 URL actual: https://mercadoturismo.com/
 ```
 
 ### Paso 2: Selecciona Paquetes y llena formulario
+
 ```
 Tipo: Paquetes
 Destino: "París"
@@ -240,6 +247,7 @@ Precio máx: 5000
 ```
 
 ### Paso 3: Click en "Buscar Paquetes"
+
 ```
 navigate("/paquetes", {
   search: "?destino=París&fechaInicio=2026-06-01&duracion=7&precioMax=5000"
@@ -247,11 +255,13 @@ navigate("/paquetes", {
 ```
 
 ### Paso 4: URL actualizada
+
 ```
 URL: https://mercadoturismo.com/paquetes?destino=París&fechaInicio=2026-06-01&duracion=7&precioMax=5000
 ```
 
 ### Paso 5: Módulo recibe params
+
 ```javascript
 // ModuleFilters.jsx
 const [searchParams] = useSearchParams();
@@ -264,29 +274,34 @@ const [searchParams] = useSearchParams();
 ```
 
 ### Paso 6: Filtros se aplican
+
 ```javascript
 // Paquetes.jsx
-const filtered = allPaquetes.filter(p => 
-  p.destino.toLowerCase().includes("parís") &&
-  new Date(p.fechaInicio) >= new Date("2026-06-01") &&
-  p.duracion >= 7 &&
-  p.precio <= 5000
+const filtered = allPaquetes.filter(
+  (p) =>
+    p.destino.toLowerCase().includes("parís") &&
+    new Date(p.fechaInicio) >= new Date("2026-06-01") &&
+    p.duracion >= 7 &&
+    p.precio <= 5000,
 );
 // Resultado: 15 paquetes
 ```
 
 ### Paso 7: Usuario agrega filtro adicional
+
 ```
 Panel de filtros:
 Precio mín: 2000 (nuevo filtro)
 ```
 
 ### Paso 8: URL se actualiza automáticamente
+
 ```
 URL: https://mercadoturismo.com/paquetes?destino=París&fechaInicio=2026-06-01&duracion=7&precioMin=2000&precioMax=5000
 ```
 
 ### Paso 9: Resultados refinados
+
 ```
 Resultado: 8 paquetes (filtrados adicionalmente)
 ```

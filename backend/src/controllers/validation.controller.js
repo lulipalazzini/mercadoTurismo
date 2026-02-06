@@ -34,8 +34,7 @@ const validateCuitEndpoint = async (req, res) => {
     if (afipData.estado !== "ACTIVO") {
       return res.status(400).json({
         success: false,
-        error:
-          "El CUIT no está activo. Verifique su situación fiscal en AFIP.",
+        error: "El CUIT no está activo. Verifique su situación fiscal en AFIP.",
         afipData: {
           estado: afipData.estado,
           razonSocial: afipData.razonSocial,

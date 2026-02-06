@@ -55,7 +55,8 @@ const Crucero = sequelize.define(
     puertoSalida: {
       type: DataTypes.STRING,
       allowNull: false,
-      comment: "Puerto de salida explícito (DIFERENTE de puertos en itinerario)",
+      comment:
+        "Puerto de salida explícito (DIFERENTE de puertos en itinerario)",
     },
     puertosDestino: {
       type: DataTypes.JSON,
@@ -162,7 +163,8 @@ const Crucero = sequelize.define(
         model: "Users",
         key: "id",
       },
-      comment: "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
+      comment:
+        "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
     },
     activo: {
       type: DataTypes.BOOLEAN,

@@ -44,10 +44,10 @@ export default function Alojamientos() {
       // Filtro por ubicación
       if (filters.ubicacion) {
         const ubicacionLower = filters.ubicacion.toLowerCase();
-        matches = matches && (
-          alojamiento.ubicacion?.toLowerCase().includes(ubicacionLower) ||
-          alojamiento.nombre?.toLowerCase().includes(ubicacionLower)
-        );
+        matches =
+          matches &&
+          (alojamiento.ubicacion?.toLowerCase().includes(ubicacionLower) ||
+            alojamiento.nombre?.toLowerCase().includes(ubicacionLower));
       }
 
       // Filtro por fecha de inicio
@@ -71,12 +71,15 @@ export default function Alojamientos() {
 
       // Filtro por estrellas
       if (filters.estrellas && alojamiento.estrellas) {
-        matches = matches && alojamiento.estrellas >= parseInt(filters.estrellas);
+        matches =
+          matches && alojamiento.estrellas >= parseInt(filters.estrellas);
       }
 
       // Filtro por precio máximo
       if (filters.precioMax && alojamiento.precioNoche) {
-        matches = matches && parseFloat(alojamiento.precioNoche) <= parseFloat(filters.precioMax);
+        matches =
+          matches &&
+          parseFloat(alojamiento.precioNoche) <= parseFloat(filters.precioMax);
       }
 
       return matches;
@@ -105,8 +108,8 @@ export default function Alojamientos() {
     <div className="alojamientos-container">
       <h1 className="alojamientos-title">Alojamientos Disponibles</h1>
 
-      <ModuleFilters 
-        module="alojamientos" 
+      <ModuleFilters
+        module="alojamientos"
         onFiltersChange={handleFiltersChange}
       />
 
@@ -117,7 +120,8 @@ export default function Alojamientos() {
           ))
         ) : (
           <p className="no-results">
-            No se encontraron alojamientos que coincidan con los filtros seleccionados
+            No se encontraron alojamientos que coincidan con los filtros
+            seleccionados
           </p>
         )}
       </div>

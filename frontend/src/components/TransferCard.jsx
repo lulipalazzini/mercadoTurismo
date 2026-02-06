@@ -66,8 +66,14 @@ export default function TransferCard({ item }) {
           <p className="empresa">{tipoVehiculo}</p>
         </div>
         {tipoServicio && (
-          <span className="tipo-badge" style={{ backgroundColor: tipoServicio === 'privado' ? '#4caf50' : '#ff9800' }}>
-            {tipoServicio === 'privado' ? 'Privado' : 'Compartido'}
+          <span
+            className="tipo-badge"
+            style={{
+              backgroundColor:
+                tipoServicio === "privado" ? "#4caf50" : "#ff9800",
+            }}
+          >
+            {tipoServicio === "privado" ? "Privado" : "Compartido"}
           </span>
         )}
         {!tipoServicio && <span className="tipo-badge">{tipo}</span>}

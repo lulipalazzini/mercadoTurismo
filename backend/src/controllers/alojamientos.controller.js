@@ -29,7 +29,15 @@ const getAlojamientos = async (req, res) => {
         {
           model: User,
           as: "vendedor",
-          attributes: ["id", "nombre", "email", "razonSocial", "role", "calculatedRole", "isVisibleToPassengers"],
+          attributes: [
+            "id",
+            "nombre",
+            "email",
+            "razonSocial",
+            "role",
+            "calculatedRole",
+            "isVisibleToPassengers",
+          ],
         },
       ],
     });
@@ -76,12 +84,10 @@ const createAlojamiento = async (req, res) => {
 
     const alojamiento = await Alojamiento.create(alojamientoData);
     const parsedAlojamiento = parseItemJsonFields(alojamiento, JSON_FIELDS);
-    res
-      .status(201)
-      .json({
-        message: "Alojamiento creado exitosamente",
-        alojamiento: parsedAlojamiento,
-      });
+    res.status(201).json({
+      message: "Alojamiento creado exitosamente",
+      alojamiento: parsedAlojamiento,
+    });
   } catch (error) {
     res
       .status(500)

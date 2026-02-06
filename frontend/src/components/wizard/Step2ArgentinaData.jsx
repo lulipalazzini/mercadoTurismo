@@ -321,8 +321,7 @@ export default function Step2ArgentinaData({
       {!formData.oficinaVirtual && (
         <div className="form-group">
           <label htmlFor="domicilioFisico">
-            Domicilio físico / comercial{" "}
-            <span className="required">*</span>
+            Domicilio físico / comercial <span className="required">*</span>
           </label>
           <input
             type="text"

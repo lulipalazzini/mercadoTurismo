@@ -22,13 +22,13 @@ export default function Paquetes() {
     try {
       // Construir query string desde los filtros
       const params = new URLSearchParams();
-      Object.keys(queryParams).forEach(key => {
+      Object.keys(queryParams).forEach((key) => {
         if (queryParams[key]) {
           params.append(key, queryParams[key]);
         }
       });
-      
-      const url = `${API_BASE_URL}/paquetes${params.toString() ? '?' + params.toString() : ''}`;
+
+      const url = `${API_BASE_URL}/paquetes${params.toString() ? "?" + params.toString() : ""}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Error al cargar los paquetes");
@@ -54,10 +54,7 @@ export default function Paquetes() {
     <div className="servicios-container">
       <h1 className="servicios-title">Paquetes Turísticos</h1>
 
-      <ModuleFilters 
-        module="paquetes" 
-        onFiltersChange={handleFiltersChange}
-      />
+      <ModuleFilters module="paquetes" onFiltersChange={handleFiltersChange} />
 
       <div className="servicios-grid">
         {paquetes.length > 0 ? (
@@ -65,7 +62,10 @@ export default function Paquetes() {
             <PaqueteCard key={paquete.id} item={paquete} />
           ))
         ) : (
-          <p className="no-results">No se encontraron paquetes que coincidan con los filtros seleccionados</p>
+          <p className="no-results">
+            No se encontraron paquetes que coincidan con los filtros
+            seleccionados
+          </p>
         )}
       </div>
     </div>

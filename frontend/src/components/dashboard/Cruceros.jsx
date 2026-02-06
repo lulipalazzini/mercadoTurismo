@@ -93,20 +93,20 @@ export default function Cruceros() {
   const filteredItems = items.filter(
     (item) =>
       item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.naviera.toLowerCase().includes(searchTerm.toLowerCase())
+      item.naviera.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Calcular estadísticas
   const navierasUnicas = [...new Set(items.map((c) => c.naviera))].length;
   const today = new Date();
   const proximasSalidas = items.filter(
-    (c) => new Date(c.fechaSalida) > today
+    (c) => new Date(c.fechaSalida) > today,
   ).length;
   const capacidadPromedio =
     items.length > 0
       ? Math.round(
           items.reduce((sum, c) => sum + Number(c.capacidad || 0), 0) /
-            items.length
+            items.length,
         )
       : 0;
 
@@ -280,21 +280,21 @@ export default function Cruceros() {
 
                 <div className="package-footer">
                   <div className="package-actions">
-                    <button 
+                    <button
                       className="btn-icon-action"
                       onClick={() => handlePreviewClick(item)}
                       title="Ver vista previa"
                     >
                       <FaShip />
                     </button>
-                    <button 
+                    <button
                       className="btn-icon-action"
                       onClick={() => handleEditClick(item)}
                       title="Editar"
                     >
                       <FaEdit />
                     </button>
-                    <button 
+                    <button
                       className="btn-icon-action danger"
                       onClick={() => handleDeleteClick(item)}
                       title="Eliminar"

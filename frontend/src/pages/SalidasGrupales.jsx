@@ -44,10 +44,10 @@ export default function SalidasGrupales() {
       // Filtro por destino
       if (filters.destino) {
         const destinoLower = filters.destino.toLowerCase();
-        matches = matches && (
-          salida.destino?.toLowerCase().includes(destinoLower) ||
-          salida.nombre?.toLowerCase().includes(destinoLower)
-        );
+        matches =
+          matches &&
+          (salida.destino?.toLowerCase().includes(destinoLower) ||
+            salida.nombre?.toLowerCase().includes(destinoLower));
       }
 
       // Filtro por fecha de salida
@@ -64,7 +64,8 @@ export default function SalidasGrupales() {
 
       // Filtro por precio máximo
       if (filters.precioMax && salida.precio) {
-        matches = matches && parseFloat(salida.precio) <= parseFloat(filters.precioMax);
+        matches =
+          matches && parseFloat(salida.precio) <= parseFloat(filters.precioMax);
       }
 
       return matches;
@@ -92,9 +93,9 @@ export default function SalidasGrupales() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Salidas Grupales</h1>
-      
-      <ModuleFilters 
-        module="salidas-grupales" 
+
+      <ModuleFilters
+        module="salidas-grupales"
         onFiltersChange={handleFiltersChange}
       />
 
@@ -105,7 +106,8 @@ export default function SalidasGrupales() {
           ))
         ) : (
           <p className="no-results">
-            No se encontraron salidas grupales que coincidan con los filtros seleccionados
+            No se encontraron salidas grupales que coincidan con los filtros
+            seleccionados
           </p>
         )}
       </div>

@@ -20,13 +20,13 @@ export default function Autos() {
     try {
       // Construir query string desde los filtros
       const params = new URLSearchParams();
-      Object.keys(queryParams).forEach(key => {
+      Object.keys(queryParams).forEach((key) => {
         if (queryParams[key]) {
           params.append(key, queryParams[key]);
         }
       });
-      
-      const url = `${API_BASE_URL}/autos${params.toString() ? '?' + params.toString() : ''}`;
+
+      const url = `${API_BASE_URL}/autos${params.toString() ? "?" + params.toString() : ""}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Error al cargar los autos");
@@ -66,11 +66,8 @@ export default function Autos() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Renta de Autos</h1>
-      
-      <ModuleFilters 
-        module="autos" 
-        onFiltersChange={handleFiltersChange}
-      />
+
+      <ModuleFilters module="autos" onFiltersChange={handleFiltersChange} />
 
       <div className="servicios-grid">
         {autos.length > 0 ? (

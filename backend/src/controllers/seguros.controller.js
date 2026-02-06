@@ -29,7 +29,15 @@ const getSeguros = async (req, res) => {
         {
           model: User,
           as: "vendedor",
-          attributes: ["id", "nombre", "email", "razonSocial", "role", "calculatedRole", "isVisibleToPassengers"],
+          attributes: [
+            "id",
+            "nombre",
+            "email",
+            "razonSocial",
+            "role",
+            "calculatedRole",
+            "isVisibleToPassengers",
+          ],
         },
       ],
     });

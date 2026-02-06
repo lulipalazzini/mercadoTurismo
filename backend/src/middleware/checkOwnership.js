@@ -36,7 +36,7 @@ const checkOwnership = (Model, idParam = "id") => {
       if (!resourceOwnerId) {
         // Si el recurso no tiene owner, permitir (datos legacy)
         console.warn(
-          `[OWNERSHIP] Recurso ${Model.name}#${resourceId} sin owner`
+          `[OWNERSHIP] Recurso ${Model.name}#${resourceId} sin owner`,
         );
         return next();
       }

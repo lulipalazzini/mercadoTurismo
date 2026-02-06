@@ -14,7 +14,10 @@ export default function Step3Confirmation({
 
   const handleSubmit = () => {
     if (!acceptedTerms) {
-      setErrors({ ...errors, terms: "Debe aceptar los Términos y Condiciones" });
+      setErrors({
+        ...errors,
+        terms: "Debe aceptar los Términos y Condiciones",
+      });
       return;
     }
 
@@ -129,7 +132,10 @@ export default function Step3Confirmation({
                         fill="none"
                         stroke="#10b981"
                         strokeWidth="2"
-                        style={{ marginLeft: "0.5rem", verticalAlign: "middle" }}
+                        style={{
+                          marginLeft: "0.5rem",
+                          verticalAlign: "middle",
+                        }}
                       >
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
@@ -199,7 +205,9 @@ export default function Step3Confirmation({
                 {formData.razonSocial && (
                   <div className="summary-row">
                     <span className="summary-label">Razón social:</span>
-                    <span className="summary-value">{formData.razonSocial}</span>
+                    <span className="summary-value">
+                      {formData.razonSocial}
+                    </span>
                   </div>
                 )}
                 <div className="summary-row">
@@ -208,12 +216,12 @@ export default function Step3Confirmation({
                     {formData.entityType === "empresa"
                       ? "Empresa"
                       : formData.entityType === "independiente"
-                      ? "Independiente"
-                      : formData.entityType === "agencia"
-                      ? "Agencia"
-                      : formData.entityType === "operador"
-                      ? "Tour Operador"
-                      : "Proveedor"}
+                        ? "Independiente"
+                        : formData.entityType === "agencia"
+                          ? "Agencia"
+                          : formData.entityType === "operador"
+                            ? "Tour Operador"
+                            : "Proveedor"}
                   </span>
                 </div>
                 <div className="summary-row">
@@ -298,7 +306,11 @@ export default function Step3Confirmation({
       </div>
 
       <div className="wizard-actions">
-        <button type="button" className="btn-secondary" onClick={() => onBack()}>
+        <button
+          type="button"
+          className="btn-secondary"
+          onClick={() => onBack()}
+        >
           Volver
         </button>
         <button

@@ -63,6 +63,7 @@ Resultados filtrados se muestran instantáneamente
 **Propósito**: Buscador principal en el Hero con selección de tipo de servicio
 
 **Características**:
+
 - Selector de tipo de servicio (Paquetes, Alojamientos, Cruceros, Autos, Excursiones)
 - Formulario dinámico que cambia según el tipo seleccionado
 - Validación de campos según módulo
@@ -71,30 +72,35 @@ Resultados filtrados se muestran instantáneamente
 **Campos por módulo**:
 
 **Paquetes**:
+
 - Destino (text)
 - Fecha de inicio (date)
 - Duración en días (number)
 - Precio máximo (number)
 
 **Cruceros**:
+
 - Puerto de salida (text)
 - Fecha de salida (date)
 - Duración en noches (number)
 - Precio máximo (number)
 
 **Alojamientos**:
+
 - Ubicación (text)
 - Check-in (date)
 - Check-out (date)
 - Tipo (select: hotel, hostel, apartamento, resort, cabaña)
 
 **Autos**:
+
 - Ubicación de retiro (text)
 - Fecha de retiro (date)
 - Fecha de devolución (date)
 - Categoría (select: económico, compacto, sedan, SUV, lujo, van)
 
 **Excursiones**:
+
 - Destino (text)
 - Tipo (select: cultural, aventura, naturaleza, gastronómica, deportiva)
 - Duración en horas (number)
@@ -107,6 +113,7 @@ Resultados filtrados se muestran instantáneamente
 **Propósito**: Componente reutilizable de filtros para cada módulo
 
 **Características**:
+
 - Se adapta automáticamente según el prop `module` (`"paquetes"`, `"cruceros"`, etc.)
 - Lee filtros desde URL params al cargar
 - Actualiza URL al cambiar filtros
@@ -115,8 +122,9 @@ Resultados filtrados se muestran instantáneamente
 - Botón para limpiar todos los filtros
 
 **Props**:
+
 ```javascript
-<ModuleFilters 
+<ModuleFilters
   module="paquetes" // Tipo de módulo
   onFiltersChange={handleFiltersChange} // Callback con filtros actualizados
 />
@@ -137,6 +145,7 @@ Cada módulo tiene su configuración de campos definida en la función `getModul
 ```
 
 **Tipos de campos soportados**:
+
 - `text`: Input de texto
 - `number`: Input numérico con min/max
 - `date`: Selector de fecha
@@ -148,49 +157,49 @@ Cada módulo tiene su configuración de campos definida en la función `getModul
 
 ### Modelo: Paquete
 
-| Campo BD | Filtro | Tipo | Validación |
-|----------|--------|------|------------|
-| `destino` | ✅ | TEXT | Búsqueda parcial case-insensitive |
-| `fechaInicio` | ✅ | DATE | Mayor o igual a filtro |
-| `duracion` | ✅ | INTEGER | Mayor o igual a filtro |
-| `precio` | ✅ | DECIMAL | Entre precioMin y precioMax |
+| Campo BD      | Filtro | Tipo    | Validación                        |
+| ------------- | ------ | ------- | --------------------------------- |
+| `destino`     | ✅     | TEXT    | Búsqueda parcial case-insensitive |
+| `fechaInicio` | ✅     | DATE    | Mayor o igual a filtro            |
+| `duracion`    | ✅     | INTEGER | Mayor o igual a filtro            |
+| `precio`      | ✅     | DECIMAL | Entre precioMin y precioMax       |
 
 ### Modelo: Crucero
 
-| Campo BD | Filtro | Tipo | Validación |
-|----------|--------|------|------------|
-| `puertoSalida` | ✅ | TEXT | Búsqueda parcial |
-| `fechaSalida` | ✅ | DATE | Coincidencia exacta o rango |
-| `duracion` | ✅ | INTEGER | Comparación numérica |
-| `precioDesde` | ✅ | DECIMAL | Menor o igual a precioMax |
+| Campo BD       | Filtro | Tipo    | Validación                  |
+| -------------- | ------ | ------- | --------------------------- |
+| `puertoSalida` | ✅     | TEXT    | Búsqueda parcial            |
+| `fechaSalida`  | ✅     | DATE    | Coincidencia exacta o rango |
+| `duracion`     | ✅     | INTEGER | Comparación numérica        |
+| `precioDesde`  | ✅     | DECIMAL | Menor o igual a precioMax   |
 
 ### Modelo: Alojamiento
 
-| Campo BD | Filtro | Tipo | Validación |
-|----------|--------|------|------------|
-| `ubicacion` | ✅ | TEXT | Búsqueda parcial |
-| `tipo` | ✅ | ENUM | Coincidencia exacta |
-| `estrellas` | ✅ | INTEGER | Coincidencia exacta |
-| `precioNoche` | ✅ | DECIMAL | Menor o igual a filtro |
+| Campo BD      | Filtro | Tipo    | Validación             |
+| ------------- | ------ | ------- | ---------------------- |
+| `ubicacion`   | ✅     | TEXT    | Búsqueda parcial       |
+| `tipo`        | ✅     | ENUM    | Coincidencia exacta    |
+| `estrellas`   | ✅     | INTEGER | Coincidencia exacta    |
+| `precioNoche` | ✅     | DECIMAL | Menor o igual a filtro |
 
 ### Modelo: Auto
 
-| Campo BD | Filtro | Tipo | Validación |
-|----------|--------|------|------------|
-| `ubicacion` | ✅ | TEXT | Búsqueda parcial |
-| `categoria` | ✅ | ENUM | Coincidencia exacta |
-| `capacidadPasajeros` | ✅ | INTEGER | Mayor o igual a filtro |
-| `transmision` | ✅ | ENUM | Coincidencia exacta |
-| `precioDia` | ✅ | DECIMAL | Menor o igual a filtro |
+| Campo BD             | Filtro | Tipo    | Validación             |
+| -------------------- | ------ | ------- | ---------------------- |
+| `ubicacion`          | ✅     | TEXT    | Búsqueda parcial       |
+| `categoria`          | ✅     | ENUM    | Coincidencia exacta    |
+| `capacidadPasajeros` | ✅     | INTEGER | Mayor o igual a filtro |
+| `transmision`        | ✅     | ENUM    | Coincidencia exacta    |
+| `precioDia`          | ✅     | DECIMAL | Menor o igual a filtro |
 
 ### Modelo: Excursion
 
-| Campo BD | Filtro | Tipo | Validación |
-|----------|--------|------|------------|
-| `destino` | ✅ | TEXT | Búsqueda parcial |
-| `tipo` | ✅ | ENUM | Coincidencia exacta |
-| `duracion` | ✅ | INTEGER | Comparación numérica |
-| `precio` | ✅ | DECIMAL | Menor o igual a filtro |
+| Campo BD   | Filtro | Tipo    | Validación             |
+| ---------- | ------ | ------- | ---------------------- |
+| `destino`  | ✅     | TEXT    | Búsqueda parcial       |
+| `tipo`     | ✅     | ENUM    | Coincidencia exacta    |
+| `duracion` | ✅     | INTEGER | Comparación numérica   |
+| `precio`   | ✅     | DECIMAL | Menor o igual a filtro |
 
 ---
 
@@ -217,18 +226,20 @@ export default function Paquetes() {
       let matches = true;
 
       if (filters.destino) {
-        matches = matches && paquete.destino
-          ?.toLowerCase()
-          .includes(filters.destino.toLowerCase());
+        matches =
+          matches &&
+          paquete.destino
+            ?.toLowerCase()
+            .includes(filters.destino.toLowerCase());
       }
 
       if (filters.duracion) {
-        matches = matches && 
-          paquete.duracion >= parseInt(filters.duracion);
+        matches = matches && paquete.duracion >= parseInt(filters.duracion);
       }
 
       if (filters.precioMax) {
-        matches = matches && 
+        matches =
+          matches &&
           parseFloat(paquete.precio) <= parseFloat(filters.precioMax);
       }
 
@@ -241,16 +252,15 @@ export default function Paquetes() {
   return (
     <div>
       <h1>Paquetes Turísticos</h1>
-      
+
       {/* Componente de filtros */}
-      <ModuleFilters 
-        module="paquetes"
-        onFiltersChange={handleFiltersChange}
-      />
+      <ModuleFilters module="paquetes" onFiltersChange={handleFiltersChange} />
 
       {/* Resultados */}
       <div>
-        {paquetes.map(p => <PaqueteCard key={p.id} item={p} />)}
+        {paquetes.map((p) => (
+          <PaqueteCard key={p.id} item={p} />
+        ))}
       </div>
     </div>
   );
@@ -300,14 +310,18 @@ const handleFilterChange = (key, value) => {
 ## 🎨 Estilos
 
 ### `unifiedSearch.css`
+
 Estilos para el buscador del Hero:
+
 - Selector de tipo de servicio con botones tipo "pill"
 - Formulario adaptable con grid responsive
 - Animaciones suaves de entrada
 - Estados hover/active profesionales
 
 ### `moduleFilters.css`
+
 Estilos para filtros de módulos:
+
 - Panel colapsable con animación slideDown
 - Grid adaptable de campos de filtro
 - Banner de filtros activos
@@ -319,14 +333,17 @@ Estilos para filtros de módulos:
 ## 📱 Responsive Design
 
 ### Desktop (> 968px)
+
 - Buscador Hero: Campos en grid de 4 columnas
 - Filtros módulo: Grid de 3-4 columnas según espacio
 
 ### Tablet (640px - 968px)
+
 - Buscador Hero: Campos en 2 columnas
 - Filtros módulo: 2 columnas
 
 ### Mobile (< 640px)
+
 - Buscador Hero: 1 columna, scroll horizontal para tipos
 - Filtros módulo: 1 columna, botones full-width
 
@@ -335,12 +352,14 @@ Estilos para filtros de módulos:
 ## ✅ Validaciones
 
 ### Frontend
+
 - Campos required según contexto
 - Validación de tipos (number, date)
 - Rangos min/max en campos numéricos
 - Opciones predefinidas en selects (evita valores inválidos)
 
 ### Backend (Próxima fase)
+
 - Sanitización de query params
 - Validación de tipos en controllers
 - Protección contra SQL injection
@@ -351,18 +370,21 @@ Estilos para filtros de módulos:
 ## 🚀 Próximos Pasos
 
 ### Backend
+
 1. Actualizar controllers para soportar filtros dinámicos
 2. Implementar query builders con Sequelize
 3. Añadir paginación de resultados
 4. Optimizar consultas con índices
 
 ### Frontend
+
 5. Añadir debounce en filtros de texto
 6. Implementar ordenamiento de resultados
 7. Agregar vista de lista/grid
 8. Guardar filtros favoritos del usuario
 
 ### UX
+
 9. Añadir sugerencias de destinos populares
 10. Implementar historial de búsquedas
 11. Mostrar número de resultados encontrados
@@ -398,15 +420,18 @@ Estilos para filtros de módulos:
 ## 🐛 Troubleshooting
 
 ### Los filtros no se aplican
+
 - ✅ Verificar que `onFiltersChange` esté conectado en el módulo
 - ✅ Revisar que los nombres de campos coincidan con la BD
 - ✅ Comprobar logs de consola para errores
 
 ### URL no se actualiza
+
 - ✅ Verificar que estás usando `useSearchParams` de react-router-dom
 - ✅ Asegurar que el componente está dentro de un `<Router>`
 
 ### Filtros desaparecen al recargar
+
 - ✅ Los filtros se mantienen en la URL (query params)
 - ✅ `ModuleFilters` lee automáticamente los params al montar
 - ✅ Si se pierden, revisar la función `useEffect` de inicialización
@@ -418,6 +443,7 @@ Estilos para filtros de módulos:
 ### Archivos Clave
 
 **Frontend**:
+
 - `frontend/src/components/UnifiedHeroSearch.jsx` - Búsqueda Hero
 - `frontend/src/components/ModuleFilters.jsx` - Filtros de módulo
 - `frontend/src/pages/Paquetes.jsx` - Ejemplo de implementación
@@ -425,6 +451,7 @@ Estilos para filtros de módulos:
 - `frontend/src/styles/moduleFilters.css` - Estilos filtros
 
 **Backend**:
+
 - `backend/src/models/Paquete.model.js` - Modelo Paquetes
 - `backend/src/models/Crucero.model.js` - Modelo Cruceros
 - `backend/src/models/Alojamiento.model.js` - Modelo Alojamientos
@@ -432,6 +459,7 @@ Estilos para filtros de módulos:
 - `backend/src/models/Excursion.model.js` - Modelo Excursiones
 
 ### Dependencias
+
 - `react-router-dom` v6+ - Navegación y query params
 - React 18+ - Componentes funcionales con hooks
 

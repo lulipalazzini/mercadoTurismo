@@ -23,13 +23,25 @@ const Tren = sequelize.define(
       comment: "Empresa operadora del tren",
     },
     tipo: {
-      type: DataTypes.ENUM("alta-velocidad", "regional", "turistico", "nocturno", "suburbano"),
+      type: DataTypes.ENUM(
+        "alta-velocidad",
+        "regional",
+        "turistico",
+        "nocturno",
+        "suburbano",
+      ),
       allowNull: false,
       defaultValue: "regional",
       comment: "Tipo de servicio ferroviario",
     },
     clase: {
-      type: DataTypes.ENUM("economica", "primera", "ejecutiva", "premium", "suite"),
+      type: DataTypes.ENUM(
+        "economica",
+        "primera",
+        "ejecutiva",
+        "premium",
+        "suite",
+      ),
       allowNull: false,
       defaultValue: "economica",
       comment: "Clase de servicio disponible",

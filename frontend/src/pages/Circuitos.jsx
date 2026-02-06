@@ -44,12 +44,14 @@ export default function Circuitos() {
       // Filtro por destino (busca en nombre, descripción y destinos JSON)
       if (filters.destino) {
         const destinoLower = filters.destino.toLowerCase();
-        matches = matches && (
-          circuito.nombre?.toLowerCase().includes(destinoLower) ||
-          circuito.descripcion?.toLowerCase().includes(destinoLower) ||
-          (Array.isArray(circuito.destinos) && 
-            circuito.destinos.some(d => d.toLowerCase().includes(destinoLower)))
-        );
+        matches =
+          matches &&
+          (circuito.nombre?.toLowerCase().includes(destinoLower) ||
+            circuito.descripcion?.toLowerCase().includes(destinoLower) ||
+            (Array.isArray(circuito.destinos) &&
+              circuito.destinos.some((d) =>
+                d.toLowerCase().includes(destinoLower),
+              )));
       }
 
       // Filtro por duración
@@ -59,12 +61,16 @@ export default function Circuitos() {
 
       // Filtro por precio mínimo
       if (filters.precioMin && circuito.precio) {
-        matches = matches && parseFloat(circuito.precio) >= parseFloat(filters.precioMin);
+        matches =
+          matches &&
+          parseFloat(circuito.precio) >= parseFloat(filters.precioMin);
       }
 
       // Filtro por precio máximo
       if (filters.precioMax && circuito.precio) {
-        matches = matches && parseFloat(circuito.precio) <= parseFloat(filters.precioMax);
+        matches =
+          matches &&
+          parseFloat(circuito.precio) <= parseFloat(filters.precioMax);
       }
 
       return matches;
@@ -92,11 +98,8 @@ export default function Circuitos() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Circuitos Turísticos</h1>
-      
-      <ModuleFilters 
-        module="circuitos" 
-        onFiltersChange={handleFiltersChange}
-      />
+
+      <ModuleFilters module="circuitos" onFiltersChange={handleFiltersChange} />
 
       <div className="servicios-grid">
         {circuitos.length > 0 ? (
@@ -105,7 +108,8 @@ export default function Circuitos() {
           ))
         ) : (
           <p className="no-results">
-            No se encontraron circuitos que coincidan con los filtros seleccionados
+            No se encontraron circuitos que coincidan con los filtros
+            seleccionados
           </p>
         )}
       </div>

@@ -20,13 +20,13 @@ export default function Cruceros() {
     try {
       // Construir query string desde los filtros
       const params = new URLSearchParams();
-      Object.keys(queryParams).forEach(key => {
+      Object.keys(queryParams).forEach((key) => {
         if (queryParams[key]) {
           params.append(key, queryParams[key]);
         }
       });
-      
-      const url = `${API_BASE_URL}/cruceros${params.toString() ? '?' + params.toString() : ''}`;
+
+      const url = `${API_BASE_URL}/cruceros${params.toString() ? "?" + params.toString() : ""}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Error al cargar los cruceros");
@@ -67,10 +67,7 @@ export default function Cruceros() {
     <div className="servicios-container">
       <h1 className="servicios-title">Cruceros</h1>
 
-      <ModuleFilters 
-        module="cruceros" 
-        onFiltersChange={handleFiltersChange}
-      />
+      <ModuleFilters module="cruceros" onFiltersChange={handleFiltersChange} />
 
       <div className="servicios-grid">
         {cruceros.length > 0 ? (
@@ -79,7 +76,8 @@ export default function Cruceros() {
           ))
         ) : (
           <p className="no-results">
-            No se encontraron cruceros que coincidan con los filtros seleccionados
+            No se encontraron cruceros que coincidan con los filtros
+            seleccionados
           </p>
         )}
       </div>

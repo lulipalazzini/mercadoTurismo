@@ -1,6 +1,7 @@
 # Sistema de Roles y Permisos B2B - Documentación Completa
 
 ## 📋 Índice
+
 1. [Reglas de Asignación de Roles](#reglas-de-asignación-de-roles)
 2. [Tipos de Usuarios](#tipos-de-usuarios)
 3. [Sistema de Permisos](#sistema-de-permisos)
@@ -23,6 +24,7 @@
 3. ✅ Actividad fiscal/comercial compatible con intermediación
 
 **Resultado:**
+
 - `calculatedRole` = `"agencia"`
 - `isVisibleToPassengers` = `true`
 
@@ -36,6 +38,7 @@
 4. ✅ `serviceType === "mixto"` (Intermedia Y produce)
 
 **Resultado:**
+
 - `calculatedRole` = `"operador"`
 - `isVisibleToPassengers` = `false` (⚠️ Nunca visible al pasajero, aunque venda directo)
 
@@ -48,15 +51,15 @@
 ```javascript
 {
   userType: "B2B", // "B2C" o "B2B"
-  
+
   // Campos que determinan el rol:
   businessModel: "solo_pasajeros", // o "solo_agencias" o "mixto"
   serviceType: "intermediario", // o "productor" o "mixto"
-  
+
   // Campos calculados automáticamente:
   calculatedRole: "agencia", // o "operador" (calculado en hooks)
   isVisibleToPassengers: true, // Boolean (calculado en hooks)
-  
+
   // Otros campos B2B:
   entityType: "agencia", // física, jurídica, empresa, etc
   fiscalData: {...}, // JSON con CUIT/Tax ID
@@ -90,6 +93,7 @@ User.prototype.calculateB2BRole = function () {
 ```
 
 **Se ejecuta automáticamente en:**
+
 - `beforeCreate` hook - Al crear usuario
 - `beforeUpdate` hook - Al modificar `businessModel` o `serviceType`
 
@@ -157,6 +161,7 @@ Ubicación: `backend/src/middleware/rolePermissions.js`
 ### 🔒 Regla General: OWNERSHIP ESTRICTO
 
 **Todos los usuarios B2B:**
+
 - Solo ven sus propias publicaciones
 - Solo pueden editar su propio contenido
 - Solo pueden eliminar lo suyo
@@ -251,6 +256,7 @@ const checkOwnership = (Model, idParam = "id") => {
 ### ⚠️ REGLA ESPECIAL
 
 **En el módulo "Mercado de Cupos":**
+
 - Todos los usuarios B2B pueden ver TODOS los cupos
 - NO se aplica filtro de ownership
 - Tanto agencias como operadores/proveedores tienen acceso completo
@@ -273,15 +279,17 @@ const getCuposMercado = async (req, res) => {
   // ⚠️ NO FILTRAR POR OWNERSHIP
   // Mostrar TODOS los cupos de TODOS los usuarios B2B
   const cupos = await CupoMercado.findAll({
-    include: [{
-      model: User,
-      as: "vendedor",
-      where: { userType: "B2B" }
-    }],
+    include: [
+      {
+        model: User,
+        as: "vendedor",
+        where: { userType: "B2B" },
+      },
+    ],
     where: {
       estado: "disponible",
-      cantidad: { [Op.gt]: 0 }
-    }
+      cantidad: { [Op.gt]: 0 },
+    },
   });
 
   res.json(cupos);
@@ -302,18 +310,20 @@ const allowAllForCuposMercado = (req, res, next) => {
 
 ```javascript
 // Rutas de cupos mercado - SIN filtro de ownership
-router.get("/cupos-mercado", 
-  authenticate, 
-  requireB2B, 
+router.get(
+  "/cupos-mercado",
+  authenticate,
+  requireB2B,
   allowAllForCuposMercado, // ⚠️ Excepción
-  getCuposMercado
+  getCuposMercado,
 );
 
 // Rutas de otros módulos - CON filtro de ownership
-router.get("/paquetes", 
-  authenticate, 
+router.get(
+  "/paquetes",
+  authenticate,
   filterByOwnership, // ✅ Filtrado normal
-  getPaquetes
+  getPaquetes,
 );
 ```
 
@@ -426,6 +436,7 @@ router.delete("/:id", authenticate, checkOwnership(Modelo), deleteRecurso);
 ```
 
 **Modelos a actualizar:**
+
 - ✅ Paquete.model.js
 - ⚠️ Alojamiento.model.js (PENDIENTE)
 - ⚠️ Auto.model.js (PENDIENTE)
@@ -468,34 +479,40 @@ function Dashboard() {
 const canAccessModule = (user, moduleName) => {
   const role = user.calculatedRole || user.role;
   const permissions = rolePermissions[role];
-  
+
   if (permissions.dashboardModules.includes("*")) {
     return true; // Admin
   }
-  
+
   return permissions.dashboardModules.includes(moduleName);
 };
 
 // Uso en componentes
-{canAccessModule(user, "paquetes") && (
-  <Link to="/dashboard/paquetes">Paquetes</Link>
-)}
+{
+  canAccessModule(user, "paquetes") && (
+    <Link to="/dashboard/paquetes">Paquetes</Link>
+  );
+}
 ```
 
 ### 📊 Indicadores de Rol
 
 ```jsx
 // Mostrar badge del rol calculado
-{user.userType === "B2B" && (
-  <span className={`role-badge role-${user.calculatedRole}`}>
-    {user.calculatedRole === "agencia" ? "🏢 Agencia" : "🏭 Operador"}
-  </span>
-)}
+{
+  user.userType === "B2B" && (
+    <span className={`role-badge role-${user.calculatedRole}`}>
+      {user.calculatedRole === "agencia" ? "🏢 Agencia" : "🏭 Operador"}
+    </span>
+  );
+}
 
 // Mostrar visibilidad
-{user.isVisibleToPassengers && (
-  <span className="visible-badge">👁️ Visible al público</span>
-)}
+{
+  user.isVisibleToPassengers && (
+    <span className="visible-badge">👁️ Visible al público</span>
+  );
+}
 ```
 
 ---
@@ -512,7 +529,7 @@ const canAccessModule = (user, moduleName) => {
   userType: "B2B",
   businessModel: "solo_pasajeros", // ✅ Solo vende a pasajeros
   serviceType: "intermediario", // ✅ Solo intermedia
-  
+
   // Calculado automáticamente:
   calculatedRole: "agencia",
   isVisibleToPassengers: true
@@ -536,7 +553,7 @@ const canAccessModule = (user, moduleName) => {
   userType: "B2B",
   businessModel: "mixto", // Vende a agencias Y pasajeros
   serviceType: "productor", // ✅ Presta servicios propios
-  
+
   // Calculado automáticamente:
   calculatedRole: "operador",
   isVisibleToPassengers: false // ⚠️ Nunca visible
@@ -560,7 +577,7 @@ const canAccessModule = (user, moduleName) => {
   userType: "B2B",
   businessModel: "solo_agencias", // ✅ Solo vende a agencias
   serviceType: "productor", // ✅ Presta servicios propios
-  
+
   // Calculado automáticamente:
   calculatedRole: "operador",
   isVisibleToPassengers: false
@@ -594,17 +611,16 @@ WHERE userId = 123
 
 ```javascript
 // Usuario: Operador (ID: 456)
-GET /api/cupos-mercado
+GET / api / cupos -
+  mercado[
+    // Backend NO filtra (excepción):
+    // WHERE (sin filtro de userId)
 
-// Backend NO filtra (excepción):
-// WHERE (sin filtro de userId)
-
-// Resultado: TODOS los cupos de TODOS los usuarios B2B
-[
-  { id: 1, titulo: "Cupo Hotel Norte", userId: 123 },
-  { id: 2, titulo: "Cupo Excursión Sur", userId: 456 },
-  { id: 3, titulo: "Cupo Transfer Centro", userId: 789 }
-]
+    // Resultado: TODOS los cupos de TODOS los usuarios B2B
+    ({ id: 1, titulo: "Cupo Hotel Norte", userId: 123 },
+    { id: 2, titulo: "Cupo Excursión Sur", userId: 456 },
+    { id: 3, titulo: "Cupo Transfer Centro", userId: 789 })
+  ];
 ```
 
 ---
@@ -612,6 +628,7 @@ GET /api/cupos-mercado
 ## ✅ Checklist de Implementación
 
 ### Backend
+
 - [x] Extender User model con campos B2B
 - [x] Implementar método `calculateB2BRole()`
 - [x] Crear middleware `checkOwnership.js`
@@ -623,6 +640,7 @@ GET /api/cupos-mercado
 - [ ] Aplicar middleware en todas las rutas
 
 ### Frontend
+
 - [ ] Crear utilidad `rolePermissions.js` (frontend)
 - [ ] Modificar `Dashboard.jsx` para mostrar según rol
 - [ ] Ocultar secciones no permitidas
@@ -630,6 +648,7 @@ GET /api/cupos-mercado
 - [ ] Actualizar formularios para incluir campos B2B
 
 ### Testing
+
 - [ ] Probar asignación de roles
 - [ ] Probar filtros de ownership
 - [ ] Probar excepción de Mercado de Cupos
@@ -647,6 +666,7 @@ GET /api/cupos-mercado
 5. **Frontend**: Dashboard dinámico según rol calculado
 
 **El sistema está diseñado para:**
+
 - ✅ Seguridad: Nadie ve datos ajenos (excepto cupos)
 - ✅ Claridad: Roles calculados automáticamente
 - ✅ Flexibilidad: Fácil agregar nuevos roles

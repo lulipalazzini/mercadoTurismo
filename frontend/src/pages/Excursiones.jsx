@@ -44,11 +44,11 @@ export default function Excursiones() {
       // Filtro por destino
       if (filters.destino) {
         const destinoLower = filters.destino.toLowerCase();
-        matches = matches && (
-          excursion.destino?.toLowerCase().includes(destinoLower) ||
-          excursion.nombre?.toLowerCase().includes(destinoLower) ||
-          excursion.ubicacion?.toLowerCase().includes(destinoLower)
-        );
+        matches =
+          matches &&
+          (excursion.destino?.toLowerCase().includes(destinoLower) ||
+            excursion.nombre?.toLowerCase().includes(destinoLower) ||
+            excursion.ubicacion?.toLowerCase().includes(destinoLower));
       }
 
       // Filtro por tipo
@@ -63,7 +63,9 @@ export default function Excursiones() {
 
       // Filtro por precio máximo
       if (filters.precioMax && excursion.precio) {
-        matches = matches && parseFloat(excursion.precio) <= parseFloat(filters.precioMax);
+        matches =
+          matches &&
+          parseFloat(excursion.precio) <= parseFloat(filters.precioMax);
       }
 
       return matches;
@@ -91,9 +93,9 @@ export default function Excursiones() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Excursiones</h1>
-      
-      <ModuleFilters 
-        module="excursiones" 
+
+      <ModuleFilters
+        module="excursiones"
         onFiltersChange={handleFiltersChange}
       />
 
@@ -104,7 +106,8 @@ export default function Excursiones() {
           ))
         ) : (
           <p className="no-results">
-            No se encontraron excursiones que coincidan con los filtros seleccionados
+            No se encontraron excursiones que coincidan con los filtros
+            seleccionados
           </p>
         )}
       </div>

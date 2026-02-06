@@ -29,7 +29,15 @@ const getExcursiones = async (req, res) => {
         {
           model: User,
           as: "vendedor",
-          attributes: ["id", "nombre", "email", "razonSocial", "role", "calculatedRole", "isVisibleToPassengers"],
+          attributes: [
+            "id",
+            "nombre",
+            "email",
+            "razonSocial",
+            "role",
+            "calculatedRole",
+            "isVisibleToPassengers",
+          ],
         },
       ],
     });
@@ -73,12 +81,10 @@ const createExcursion = async (req, res) => {
 
     const excursion = await Excursion.create(excursionData);
     const parsedExcursion = parseItemJsonFields(excursion, JSON_FIELDS);
-    res
-      .status(201)
-      .json({
-        message: "Excursion creada exitosamente",
-        excursion: parsedExcursion,
-      });
+    res.status(201).json({
+      message: "Excursion creada exitosamente",
+      excursion: parsedExcursion,
+    });
   } catch (error) {
     res
       .status(500)

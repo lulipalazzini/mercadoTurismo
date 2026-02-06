@@ -49,16 +49,17 @@ export default function Seguros() {
       // Filtro por destino (busca en destinos o descripción)
       if (filters.destino) {
         const destinoLower = filters.destino.toLowerCase();
-        matches = matches && (
-          seguro.destinos?.toLowerCase().includes(destinoLower) ||
-          seguro.descripcion?.toLowerCase().includes(destinoLower) ||
-          seguro.nombre?.toLowerCase().includes(destinoLower)
-        );
+        matches =
+          matches &&
+          (seguro.destinos?.toLowerCase().includes(destinoLower) ||
+            seguro.descripcion?.toLowerCase().includes(destinoLower) ||
+            seguro.nombre?.toLowerCase().includes(destinoLower));
       }
 
       // Filtro por precio máximo
       if (filters.precioMax && seguro.precio) {
-        matches = matches && parseFloat(seguro.precio) <= parseFloat(filters.precioMax);
+        matches =
+          matches && parseFloat(seguro.precio) <= parseFloat(filters.precioMax);
       }
 
       return matches;
@@ -86,18 +87,16 @@ export default function Seguros() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Seguros de Viaje</h1>
-      
-      <ModuleFilters 
-        module="seguros" 
-        onFiltersChange={handleFiltersChange}
-      />
+
+      <ModuleFilters module="seguros" onFiltersChange={handleFiltersChange} />
 
       <div className="servicios-grid">
         {seguros.length > 0 ? (
           seguros.map((seguro) => <SeguroCard key={seguro.id} item={seguro} />)
         ) : (
           <p className="no-results">
-            No se encontraron seguros que coincidan con los filtros seleccionados
+            No se encontraron seguros que coincidan con los filtros
+            seleccionados
           </p>
         )}
       </div>

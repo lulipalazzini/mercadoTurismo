@@ -24,7 +24,8 @@ const getAutos = async (req, res) => {
     // (No se aplica filtro isPublic para B2C)
 
     // Filtros de búsqueda
-    const { transmision, categoria, ubicacion, precioMin, precioMax } = req.query;
+    const { transmision, categoria, ubicacion, precioMin, precioMax } =
+      req.query;
 
     if (transmision) {
       whereClause.transmision = transmision;
@@ -60,7 +61,15 @@ const getAutos = async (req, res) => {
         {
           model: User,
           as: "vendedor",
-          attributes: ["id", "nombre", "email", "razonSocial", "role", "calculatedRole", "isVisibleToPassengers"],
+          attributes: [
+            "id",
+            "nombre",
+            "email",
+            "razonSocial",
+            "role",
+            "calculatedRole",
+            "isVisibleToPassengers",
+          ],
         },
       ],
     });

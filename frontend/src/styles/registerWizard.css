@@ -19,7 +19,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(36, 100, 235, 0.85), rgba(36, 100, 235, 0.92));
+  background: linear-gradient(
+    135deg,
+    rgba(36, 100, 235, 0.85),
+    rgba(36, 100, 235, 0.92)
+  );
   z-index: 1;
 }
 

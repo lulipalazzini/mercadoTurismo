@@ -71,7 +71,7 @@ function DashboardContent() {
 
   // Determinar sección activa inicial (primera visible para el usuario)
   const [activeSection, setActiveSection] = useState(
-    allVisibleModules.length > 0 ? allVisibleModules[0].id : "ajustes"
+    allVisibleModules.length > 0 ? allVisibleModules[0].id : "ajustes",
   );
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -184,11 +184,17 @@ function DashboardContent() {
       case "usuarios":
         return <Usuarios />;
       case "reservasB2B":
-        return <div className="coming-soon">📋 Reservas B2B - Próximamente</div>;
+        return (
+          <div className="coming-soon">📋 Reservas B2B - Próximamente</div>
+        );
       case "serviciosB2B":
-        return <div className="coming-soon">🔧 Mis Servicios - Próximamente</div>;
+        return (
+          <div className="coming-soon">🔧 Mis Servicios - Próximamente</div>
+        );
       case "clientesB2B":
-        return <div className="coming-soon">🏢 Clientes B2B - Próximamente</div>;
+        return (
+          <div className="coming-soon">🏢 Clientes B2B - Próximamente</div>
+        );
       default:
         return allVisibleModules.length > 0 ? (
           <Reservas />
@@ -249,7 +255,7 @@ function DashboardContent() {
         <nav className="sidebar-nav">
           {/* Renderizar secciones dinámicamente según rol */}
           {Object.entries(modulesBySection).map(([sectionName, modules]) =>
-            renderNavSection(sectionName, modules)
+            renderNavSection(sectionName, modules),
           )}
 
           {/* Botón de Logout siempre visible */}
@@ -299,7 +305,14 @@ function DashboardContent() {
                 <span className="user-role">
                   {userRoleBadge} {userRoleDisplay}
                   {isB2BUser(user) && (
-                    <span className="b2b-badge" style={{ marginLeft: "8px", fontSize: "0.75rem", color: "#2464eb" }}>
+                    <span
+                      className="b2b-badge"
+                      style={{
+                        marginLeft: "8px",
+                        fontSize: "0.75rem",
+                        color: "#2464eb",
+                      }}
+                    >
                       {isVisibleToPassengers(user) ? "👁️ Visible" : "🔒 B2B"}
                     </span>
                   )}

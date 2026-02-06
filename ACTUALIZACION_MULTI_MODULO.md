@@ -23,27 +23,28 @@ Esta actualización extiende y ajusta los atributos, filtros y comportamiento de
 
 ### Campos Nuevos
 
-| Campo | Tipo | Descripción | Uso |
-|-------|------|-------------|-----|
-| `mesSalida` | INTEGER (1-12) | Mes de salida del crucero | Filtro por mes específico |
-| `duracionDias` | INTEGER | Duración en DÍAS (no noches) | Filtro por rango de duración |
-| `puertosDestino` | JSON Array | Puertos destino principales | Diferente de itinerario completo |
-| `moneda` | ENUM | 'USD', 'ARS', 'EUR' | Multi-moneda para precios |
-| `importeAdulto` | DECIMAL(10,2) | Precio para pasajeros +18 años | Pricing diferenciado |
-| `importeMenor` | DECIMAL(10,2) | Precio para pasajeros 0-17 años | Pricing diferenciado |
+| Campo            | Tipo           | Descripción                     | Uso                              |
+| ---------------- | -------------- | ------------------------------- | -------------------------------- |
+| `mesSalida`      | INTEGER (1-12) | Mes de salida del crucero       | Filtro por mes específico        |
+| `duracionDias`   | INTEGER        | Duración en DÍAS (no noches)    | Filtro por rango de duración     |
+| `puertosDestino` | JSON Array     | Puertos destino principales     | Diferente de itinerario completo |
+| `moneda`         | ENUM           | 'USD', 'ARS', 'EUR'             | Multi-moneda para precios        |
+| `importeAdulto`  | DECIMAL(10,2)  | Precio para pasajeros +18 años  | Pricing diferenciado             |
+| `importeMenor`   | DECIMAL(10,2)  | Precio para pasajeros 0-17 años | Pricing diferenciado             |
 
 ### Campos Modificados
 
-| Campo | Estado | Cambio |
-|-------|--------|--------|
-| `precioDesde` | **OBSOLETO** | `allowNull: true` - Reemplazado por importeAdulto/importeMenor |
-| `puertoSalida` | Aclarado | Comentario: "DIFERENTE de puertos en itinerario" |
+| Campo          | Estado       | Cambio                                                         |
+| -------------- | ------------ | -------------------------------------------------------------- |
+| `precioDesde`  | **OBSOLETO** | `allowNull: true` - Reemplazado por importeAdulto/importeMenor |
+| `puertoSalida` | Aclarado     | Comentario: "DIFERENTE de puertos en itinerario"               |
 
 ### Lógica de Búsqueda (Controller)
 
 **Endpoint**: `GET /api/cruceros`
 
 **Query Params**:
+
 ```javascript
 {
   puertoSalida: "Miami",        // Match EXACTO en puerto de salida
@@ -55,6 +56,7 @@ Esta actualización extiende y ajusta los atributos, filtros y comportamiento de
 ```
 
 **Lógica Implementada**:
+
 ```javascript
 // Puerto de salida: EXACTO (no busca en itinerario)
 if (puertoSalida) whereClause.puertoSalida = puertoSalida;
@@ -76,7 +78,6 @@ if (moneda) whereClause.moneda = moneda;
    - `puertoSalida`: Puerto EXACTO de donde zarpa el crucero
    - `itinerario`: Todos los puertos que visita durante el viaje (JSON)
    - `puertosDestino`: Puertos principales de destino (separados de itinerario)
-   
 2. **Duración**:
    - Antes: `duracion` era ambiguo (¿días o noches?)
    - Ahora: `duracionDias` es explícito (DÍAS)
@@ -92,23 +93,24 @@ if (moneda) whereClause.moneda = moneda;
 
 ### Campos Nuevos
 
-| Campo | Tipo | Descripción | Uso |
-|-------|------|-------------|-----|
+| Campo    | Tipo    | Descripción                    | Uso                           |
+| -------- | ------- | ------------------------------ | ----------------------------- |
 | `noches` | INTEGER | Cantidad de noches del paquete | Filtro por cantidad de noches |
 
 ### Campos Modificados
 
-| Campo | Estado | Cambio |
-|-------|--------|--------|
-| `cupoMaximo` | **OBSOLETO** | `allowNull: true` - Ya no se usa |
+| Campo            | Estado       | Cambio                           |
+| ---------------- | ------------ | -------------------------------- |
+| `cupoMaximo`     | **OBSOLETO** | `allowNull: true` - Ya no se usa |
 | `cupoDisponible` | **OBSOLETO** | `allowNull: true` - Ya no se usa |
-| `duracion` | Aclarado | Comentario: "Duración en días" |
+| `duracion`       | Aclarado     | Comentario: "Duración en días"   |
 
 ### Lógica de Búsqueda (Controller)
 
 **Endpoint**: `GET /api/paquetes`
 
 **Query Params**:
+
 ```javascript
 {
   destino: "Paris",              // Búsqueda LIKE en destino
@@ -120,6 +122,7 @@ if (moneda) whereClause.moneda = moneda;
 ```
 
 **Lógica Implementada**:
+
 ```javascript
 // Destino (búsqueda flexible)
 if (destino) whereClause.destino = { [Op.like]: `%${destino}%` };
@@ -151,15 +154,15 @@ if (precioMax) whereClause.precio = { [Op.lte]: parseFloat(precioMax) };
 
 ### Campos Nuevos
 
-| Campo | Tipo | Descripción | Uso |
-|-------|------|-------------|-----|
-| `tipoServicio` | ENUM | 'privado', 'compartido' | Tipo de servicio explícito |
-| `tipoDestino` | ENUM | 'ciudad', 'hotel', 'direccion' | Tipo de destino para búsquedas |
+| Campo          | Tipo | Descripción                    | Uso                            |
+| -------------- | ---- | ------------------------------ | ------------------------------ |
+| `tipoServicio` | ENUM | 'privado', 'compartido'        | Tipo de servicio explícito     |
+| `tipoDestino`  | ENUM | 'ciudad', 'hotel', 'direccion' | Tipo de destino para búsquedas |
 
 ### Campos Modificados
 
-| Campo | Estado | Cambio |
-|-------|--------|--------|
+| Campo                | Estado       | Cambio                                           |
+| -------------------- | ------------ | ------------------------------------------------ |
 | `servicioCompartido` | **OBSOLETO** | `allowNull: true` - Reemplazado por tipoServicio |
 
 ### Lógica de Búsqueda (Controller)
@@ -167,6 +170,7 @@ if (precioMax) whereClause.precio = { [Op.lte]: parseFloat(precioMax) };
 **Endpoint**: `GET /api/transfers`
 
 **Query Params**:
+
 ```javascript
 {
   tipoServicio: "privado",       // Filtra por tipo de servicio
@@ -178,6 +182,7 @@ if (precioMax) whereClause.precio = { [Op.lte]: parseFloat(precioMax) };
 ```
 
 **Lógica Implementada**:
+
 ```javascript
 // Tipo de servicio (exacto)
 if (tipoServicio) whereClause.tipoServicio = tipoServicio;
@@ -213,8 +218,8 @@ if (precioMax) whereClause.precio = { [Op.lte]: parseFloat(precioMax) };
 
 ### Campo Existente
 
-| Campo | Tipo | Valores | Estado |
-|-------|------|---------|--------|
+| Campo         | Tipo | Valores                | Estado             |
+| ------------- | ---- | ---------------------- | ------------------ |
 | `transmision` | ENUM | 'manual', 'automatico' | ✅ Ya implementado |
 
 ### Lógica de Búsqueda (Controller) - ACTUALIZADA
@@ -222,6 +227,7 @@ if (precioMax) whereClause.precio = { [Op.lte]: parseFloat(precioMax) };
 **Endpoint**: `GET /api/autos`
 
 **Query Params**:
+
 ```javascript
 {
   transmision: "automatico",     // Filtra por tipo de transmisión
@@ -233,6 +239,7 @@ if (precioMax) whereClause.precio = { [Op.lte]: parseFloat(precioMax) };
 ```
 
 **Lógica Implementada**:
+
 ```javascript
 // Transmisión (exacto)
 if (transmision) whereClause.transmision = transmision;
@@ -298,6 +305,7 @@ if (precioMax) whereClause.precioPorDia = { [Op.lte]: parseFloat(precioMax) };
 **Archivo**: `backend/src/migrate-multi-module.js`
 
 **Funcionalidad**:
+
 - Agrega todas las nuevas columnas a las tablas
 - Modifica columnas obsoletas para permitir NULL
 - Verifica existencia de columnas antes de agregarlas (idempotente)
@@ -305,6 +313,7 @@ if (precioMax) whereClause.precioPorDia = { [Op.lte]: parseFloat(precioMax) };
 - Muestra resumen detallado al finalizar
 
 **Ejecución**:
+
 ```bash
 cd backend
 node src/migrate-multi-module.js
@@ -319,6 +328,7 @@ node src/migrate-multi-module.js
 #### 1. Cards Minorista (Vista Pública)
 
 **Cruceros** - Actualizar card:
+
 ```jsx
 // Mostrar:
 - Puerto de salida (puertoSalida)
@@ -335,6 +345,7 @@ node src/migrate-multi-module.js
 ```
 
 **Paquetes** - Actualizar card:
+
 ```jsx
 // Mostrar:
 - Cantidad de noches (noches)
@@ -347,6 +358,7 @@ node src/migrate-multi-module.js
 ```
 
 **Transfers** - Actualizar card:
+
 ```jsx
 // Mostrar:
 - Tipo de servicio (tipoServicio) - Badge "Privado" o "Compartido"
@@ -360,6 +372,7 @@ node src/migrate-multi-module.js
 ```
 
 **Autos** - Actualizar card:
+
 ```jsx
 // Mostrar:
 - Transmisión (transmision) - Badge "Manual" o "Automático"
@@ -375,10 +388,11 @@ node src/migrate-multi-module.js
 #### 2. Dashboard Mayorista (Crear/Editar)
 
 **Cruceros** - Actualizar formulario:
+
 ```jsx
 <Form>
   {/* Campos existentes... */}
-  
+
   <FormGroup>
     <Label>Mes de Salida</Label>
     <Select name="mesSalida">
@@ -420,10 +434,11 @@ node src/migrate-multi-module.js
 ```
 
 **Paquetes** - Actualizar formulario:
+
 ```jsx
 <Form>
   {/* Campos existentes... */}
-  
+
   <FormGroup>
     <Label>Cantidad de Noches</Label>
     <Input type="number" name="noches" min="1" />
@@ -438,10 +453,11 @@ node src/migrate-multi-module.js
 ```
 
 **Transfers** - Actualizar formulario:
+
 ```jsx
 <Form>
   {/* Campos existentes... */}
-  
+
   <FormGroup>
     <Label>Tipo de Servicio</Label>
     <Select name="tipoServicio">
@@ -466,6 +482,7 @@ node src/migrate-multi-module.js
 ```
 
 **Autos** - Sin cambios necesarios:
+
 ```jsx
 // El campo transmision ya existe en el formulario
 // Solo verificar que esté presente
@@ -490,12 +507,14 @@ node src/migrate-multi-module.js
 ### Script de Migración
 
 **Ejecutar**:
+
 ```bash
 cd backend
 node src/migrate-multi-module.js
 ```
 
 **Salida Esperada**:
+
 ```
 🚀 Iniciando migración multi-módulo...
 
@@ -598,10 +617,12 @@ Al crear/editar registros en el dashboard, validar:
 ### Performance
 
 Los nuevos filtros usan operadores de Sequelize:
+
 - `Op.like`: Para búsquedas flexibles (puede ser lento en tablas grandes)
 - `Op.gte` / `Op.lte`: Para rangos (muy eficiente)
 
 **Recomendaciones**:
+
 - Agregar índices en columnas filtradas frecuentemente:
   ```sql
   CREATE INDEX idx_cruceros_mes ON Cruceros(mesSalida);
@@ -618,21 +639,25 @@ Los nuevos filtros usan operadores de Sequelize:
 ### Ejemplos de Uso API
 
 **Buscar cruceros por puerto y mes**:
+
 ```javascript
 GET /api/cruceros?puertoSalida=Miami&mes=12&moneda=USD
 ```
 
 **Buscar paquetes de 3-5 noches en París**:
+
 ```javascript
 GET /api/paquetes?destino=Paris&nochesMin=3&nochesMax=5
 ```
 
 **Buscar transfers privados**:
+
 ```javascript
 GET /api/transfers?tipoServicio=privado&origen=Aeropuerto
 ```
 
 **Buscar autos automáticos en Bariloche**:
+
 ```javascript
 GET /api/autos?transmision=automatico&ubicacion=Bariloche
 ```
@@ -641,11 +666,7 @@ GET /api/autos?transmision=automatico&ubicacion=Bariloche
 
 ```json
 {
-  "puertosDestino": [
-    "Barcelona",
-    "Roma",
-    "Atenas"
-  ]
+  "puertosDestino": ["Barcelona", "Roma", "Atenas"]
 }
 ```
 
@@ -672,6 +693,7 @@ GET /api/autos?transmision=automatico&ubicacion=Bariloche
 **Breaking Changes**: Ninguno (todos los cambios son backward compatible)
 
 **Deprecations**:
+
 - `Cruceros.precioDesde` → Usar `importeAdulto` / `importeMenor`
 - `Paquetes.cupoMaximo` → Campo obsoleto
 - `Paquetes.cupoDisponible` → Campo obsoleto

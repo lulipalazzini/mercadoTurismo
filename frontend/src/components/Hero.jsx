@@ -4,7 +4,9 @@ import "../styles/hero.css";
 import "../styles/featuredServices.css";
 import heroImage from "../assets/img/paisaje_01.png";
 import heroImage2 from "../assets/img/paisaje_02.png";
-import FeaturedServiceCard from "./common/FeaturedServiceCard";import UnifiedHeroSearch from "./UnifiedHeroSearch";import { getTopServices } from "../services/stats.service";
+import FeaturedServiceCard from "./common/FeaturedServiceCard";
+import UnifiedHeroSearch from "./UnifiedHeroSearch";
+import { getTopServices } from "../services/stats.service";
 import api from "../services/api";
 
 export default function Hero() {

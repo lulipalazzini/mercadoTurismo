@@ -29,7 +29,15 @@ const getSalidasGrupales = async (req, res) => {
         {
           model: User,
           as: "vendedor",
-          attributes: ["id", "nombre", "email", "razonSocial", "role", "calculatedRole", "isVisibleToPassengers"],
+          attributes: [
+            "id",
+            "nombre",
+            "email",
+            "razonSocial",
+            "role",
+            "calculatedRole",
+            "isVisibleToPassengers",
+          ],
         },
       ],
     });
@@ -78,12 +86,10 @@ const createSalidaGrupal = async (req, res) => {
 
     const salida = await SalidaGrupal.create(salidaData);
     const parsedSalida = parseItemJsonFields(salida, JSON_FIELDS);
-    res
-      .status(201)
-      .json({
-        message: "Salida grupal creada exitosamente",
-        salida: parsedSalida,
-      });
+    res.status(201).json({
+      message: "Salida grupal creada exitosamente",
+      salida: parsedSalida,
+    });
   } catch (error) {
     res
       .status(500)

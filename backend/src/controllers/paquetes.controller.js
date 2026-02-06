@@ -51,7 +51,9 @@ const getPaquetes = async (req, res) => {
       if (nochesMax) {
         whereClause.noches[Op.lte] = parseInt(nochesMax);
       }
-      console.log(`   Filtrando por noches: ${nochesMin || 'N/A'}-${nochesMax || 'N/A'}`);
+      console.log(
+        `   Filtrando por noches: ${nochesMin || "N/A"}-${nochesMax || "N/A"}`,
+      );
     }
 
     if (precioMin || precioMax) {
@@ -62,7 +64,9 @@ const getPaquetes = async (req, res) => {
       if (precioMax) {
         whereClause.precio[Op.lte] = parseFloat(precioMax);
       }
-      console.log(`   Filtrando por precio: $${precioMin || 'N/A'}-$${precioMax || 'N/A'}`);
+      console.log(
+        `   Filtrando por precio: $${precioMin || "N/A"}-$${precioMax || "N/A"}`,
+      );
     }
 
     const paquetes = await Paquete.findAll({

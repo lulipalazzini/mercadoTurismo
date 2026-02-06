@@ -3,6 +3,7 @@
 ## 📍 Ubicación Sugerida
 
 Agregar el link al registro profesional en la página Home, típicamente en:
+
 1. **Hero section** - Botón secundario junto a "Comenzar"
 2. **Sección dedicada** - Banner para profesionales
 3. **Footer** - Link en menú
@@ -18,7 +19,7 @@ Agregar en `frontend/src/components/Home.jsx`:
   <Link to="/paquetes" className="btn-primary">
     Comenzar
   </Link>
-  
+
   {/* NUEVO: Botón B2B */}
   <Link to="/registro-profesional" className="btn-outline">
     ¿Eres agencia? Regístrate aquí
@@ -27,6 +28,7 @@ Agregar en `frontend/src/components/Home.jsx`:
 ```
 
 **CSS para `.btn-outline`:**
+
 ```css
 .btn-outline {
   padding: 1rem 2rem;
@@ -83,6 +85,7 @@ Agregar después del hero section:
 ```
 
 **CSS para banner B2B:**
+
 ```css
 .b2b-banner {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -169,7 +172,7 @@ Modificar `frontend/src/components/Navbar.jsx`:
 <nav className="navbar">
   <div className="navbar-container">
     {/* Logo y links existentes */}
-    
+
     {/* Agregar en el extremo derecho */}
     <Link to="/registro-profesional" className="nav-link-b2b">
       🏢 Registro Profesional
@@ -179,6 +182,7 @@ Modificar `frontend/src/components/Navbar.jsx`:
 ```
 
 **CSS:**
+
 ```css
 .nav-link-b2b {
   padding: 0.5rem 1rem;
@@ -233,8 +237,8 @@ function B2BModal() {
         </button>
         <h3>¿Eres Agencia de Viajes?</h3>
         <p>
-          Registra tu empresa y accede a herramientas profesionales y
-          tarifas especiales.
+          Registra tu empresa y accede a herramientas profesionales y tarifas
+          especiales.
         </p>
         <Link to="/registro-profesional" className="btn-modal">
           Registrarme como Profesional
@@ -251,6 +255,7 @@ export default B2BModal;
 ```
 
 **Incluir en Home.jsx:**
+
 ```jsx
 import B2BModal from "./B2BModal";
 
@@ -258,7 +263,7 @@ function Home() {
   return (
     <div>
       {/* Contenido existente */}
-      
+
       <B2BModal />
     </div>
   );
@@ -272,6 +277,7 @@ function Home() {
 **Para máxima conversión**, usar **Opción 2 (Banner dedicado)** + **Opción 3 (Link en navbar)**.
 
 Esto asegura:
+
 - ✅ Visibilidad prominente sin ser intrusivo
 - ✅ Acceso rápido desde navbar
 - ✅ Información suficiente para decidir

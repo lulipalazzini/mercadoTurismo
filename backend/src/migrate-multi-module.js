@@ -1,9 +1,9 @@
 /**
  * Script de migración para actualización multi-módulo
  * Agrega nuevos campos a: Cruceros, Paquetes, Transfers
- * 
+ *
  * CAMPOS NUEVOS:
- * 
+ *
  * CRUCEROS:
  * - mesSalida (INTEGER 1-12) - Mes de salida para filtros
  * - duracionDias (INTEGER) - Duración en DÍAS (reemplaza duracion que era noches)
@@ -11,14 +11,14 @@
  * - moneda (VARCHAR) - Moneda del precio (USD/ARS/EUR)
  * - importeAdulto (DECIMAL) - Precio para adultos (+18)
  * - importeMenor (DECIMAL) - Precio para menores (0-17)
- * 
+ *
  * PAQUETES:
  * - noches (INTEGER) - Cantidad de noches
- * 
+ *
  * TRANSFERS:
  * - tipoServicio (VARCHAR) - Tipo de servicio (privado/compartido)
  * - tipoDestino (VARCHAR) - Tipo de destino (ciudad/hotel/direccion)
- * 
+ *
  * NOTA: Campos marcados como OBSOLETO en models se mantienen pero pueden ser NULL
  */
 
@@ -95,13 +95,18 @@ async function runMigration() {
     }
 
     // Marcar precioDesde como nullable (OBSOLETO)
-    if (crucerosTable.precioDesde && crucerosTable.precioDesde.allowNull === false) {
+    if (
+      crucerosTable.precioDesde &&
+      crucerosTable.precioDesde.allowNull === false
+    ) {
       await queryInterface.changeColumn("Cruceros", "precioDesde", {
         type: sequelize.Sequelize.DECIMAL(10, 2),
         allowNull: true,
         comment: "OBSOLETO - Usar importeAdulto/importeMenor",
       });
-      console.log("  ✅ Actualizada columna: precioDesde (ahora nullable - OBSOLETO)");
+      console.log(
+        "  ✅ Actualizada columna: precioDesde (ahora nullable - OBSOLETO)",
+      );
     }
 
     console.log("✅ Cruceros actualizado\n");
@@ -123,22 +128,32 @@ async function runMigration() {
     }
 
     // Marcar cupoMaximo y cupoDisponible como nullable (OBSOLETO)
-    if (paquetesTable.cupoMaximo && paquetesTable.cupoMaximo.allowNull === false) {
+    if (
+      paquetesTable.cupoMaximo &&
+      paquetesTable.cupoMaximo.allowNull === false
+    ) {
       await queryInterface.changeColumn("Paquetes", "cupoMaximo", {
         type: sequelize.Sequelize.INTEGER,
         allowNull: true,
         comment: "OBSOLETO - Ya no se usa sistema de cupos",
       });
-      console.log("  ✅ Actualizada columna: cupoMaximo (ahora nullable - OBSOLETO)");
+      console.log(
+        "  ✅ Actualizada columna: cupoMaximo (ahora nullable - OBSOLETO)",
+      );
     }
 
-    if (paquetesTable.cupoDisponible && paquetesTable.cupoDisponible.allowNull === false) {
+    if (
+      paquetesTable.cupoDisponible &&
+      paquetesTable.cupoDisponible.allowNull === false
+    ) {
       await queryInterface.changeColumn("Paquetes", "cupoDisponible", {
         type: sequelize.Sequelize.INTEGER,
         allowNull: true,
         comment: "OBSOLETO - Ya no se usa sistema de cupos",
       });
-      console.log("  ✅ Actualizada columna: cupoDisponible (ahora nullable - OBSOLETO)");
+      console.log(
+        "  ✅ Actualizada columna: cupoDisponible (ahora nullable - OBSOLETO)",
+      );
     }
 
     console.log("✅ Paquetes actualizado\n");
@@ -171,13 +186,18 @@ async function runMigration() {
     }
 
     // Marcar servicioCompartido como nullable (OBSOLETO)
-    if (transfersTable.servicioCompartido && transfersTable.servicioCompartido.allowNull === false) {
+    if (
+      transfersTable.servicioCompartido &&
+      transfersTable.servicioCompartido.allowNull === false
+    ) {
       await queryInterface.changeColumn("Transfers", "servicioCompartido", {
         type: sequelize.Sequelize.BOOLEAN,
         allowNull: true,
         comment: "OBSOLETO - Usar tipoServicio",
       });
-      console.log("  ✅ Actualizada columna: servicioCompartido (ahora nullable - OBSOLETO)");
+      console.log(
+        "  ✅ Actualizada columna: servicioCompartido (ahora nullable - OBSOLETO)",
+      );
     }
 
     console.log("✅ Transfers actualizado\n");
@@ -187,13 +207,23 @@ async function runMigration() {
     // ========================================
     console.log("✨ Migración completada exitosamente!\n");
     console.log("📊 RESUMEN DE CAMBIOS:");
-    console.log("  🚢 Cruceros: 6 campos nuevos (mesSalida, duracionDias, puertosDestino, moneda, importeAdulto, importeMenor)");
-    console.log("  📦 Paquetes: 1 campo nuevo (noches), 2 campos OBSOLETOS (cupoMaximo, cupoDisponible)");
-    console.log("  🚗 Transfers: 2 campos nuevos (tipoServicio, tipoDestino), 1 campo OBSOLETO (servicioCompartido)");
+    console.log(
+      "  🚢 Cruceros: 6 campos nuevos (mesSalida, duracionDias, puertosDestino, moneda, importeAdulto, importeMenor)",
+    );
+    console.log(
+      "  📦 Paquetes: 1 campo nuevo (noches), 2 campos OBSOLETOS (cupoMaximo, cupoDisponible)",
+    );
+    console.log(
+      "  🚗 Transfers: 2 campos nuevos (tipoServicio, tipoDestino), 1 campo OBSOLETO (servicioCompartido)",
+    );
     console.log("\n⚠️  IMPORTANTE:");
-    console.log("  - Los campos marcados como OBSOLETO se mantienen por compatibilidad");
+    console.log(
+      "  - Los campos marcados como OBSOLETO se mantienen por compatibilidad",
+    );
     console.log("  - Actualizar registros existentes según sea necesario");
-    console.log("  - Verificar que los formularios del dashboard incluyan los nuevos campos");
+    console.log(
+      "  - Verificar que los formularios del dashboard incluyan los nuevos campos",
+    );
 
     process.exit(0);
   } catch (error) {

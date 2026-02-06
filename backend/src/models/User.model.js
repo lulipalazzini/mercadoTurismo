@@ -184,7 +184,8 @@ const User = sequelize.define(
         if (user.userType === "B2B") {
           user.calculatedRole = user.calculateB2BRole();
           user.isVisibleToPassengers =
-            user.calculatedRole === "agencia" && user.businessModel === "solo_pasajeros";
+            user.calculatedRole === "agencia" &&
+            user.businessModel === "solo_pasajeros";
         }
       },
       beforeUpdate: async (user) => {
@@ -203,7 +204,8 @@ const User = sequelize.define(
         ) {
           user.calculatedRole = user.calculateB2BRole();
           user.isVisibleToPassengers =
-            user.calculatedRole === "agencia" && user.businessModel === "solo_pasajeros";
+            user.calculatedRole === "agencia" &&
+            user.businessModel === "solo_pasajeros";
         }
       },
     },
@@ -223,11 +225,11 @@ User.prototype.compareAdminPassword = async function (candidatePassword) {
 
 /**
  * Calcula el rol B2B basado en las reglas de negocio
- * 
+ *
  * AGENCIA: Solo si cumple TODAS:
  * - Vende solo a pasajeros (solo_pasajeros)
  * - Es intermediario puro (intermediario)
- * 
+ *
  * OPERADOR/PROVEEDOR: Si cumple al menos UNA:
  * - Vende a agencias (solo_agencias o mixto)
  * - Produce servicios (productor o mixto)

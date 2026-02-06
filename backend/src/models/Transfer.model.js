@@ -96,7 +96,8 @@ const Transfer = sequelize.define(
         model: "Users",
         key: "id",
       },
-      comment: "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
+      comment:
+        "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
     },
     disponible: {
       type: DataTypes.BOOLEAN,

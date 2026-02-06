@@ -617,11 +617,11 @@
   .hero-section-1::after {
     height: 100px;
   }
-  
+
   .hero-section-2::before {
     height: 100px;
   }
-  
+
   .hero-section-2 {
     margin-top: -80px;
     padding-top: 100px;

@@ -88,7 +88,9 @@ export default function PaqueteCard({ item }) {
             <FaMapMarkerAlt /> {destino}
           </p>
         </div>
-        <span className="tipo-badge">{noches ? `${noches}N` : `${duracion}D`}</span>
+        <span className="tipo-badge">
+          {noches ? `${noches}N` : `${duracion}D`}
+        </span>
       </div>
 
       <div className="card-content">

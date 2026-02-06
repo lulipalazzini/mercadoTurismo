@@ -20,13 +20,13 @@ export default function Transfers() {
     try {
       // Construir query string desde los filtros
       const params = new URLSearchParams();
-      Object.keys(queryParams).forEach(key => {
+      Object.keys(queryParams).forEach((key) => {
         if (queryParams[key]) {
           params.append(key, queryParams[key]);
         }
       });
-      
-      const url = `${API_BASE_URL}/transfers${params.toString() ? '?' + params.toString() : ''}`;
+
+      const url = `${API_BASE_URL}/transfers${params.toString() ? "?" + params.toString() : ""}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Error al cargar los transfers");
@@ -66,11 +66,8 @@ export default function Transfers() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Transfers</h1>
-      
-      <ModuleFilters 
-        module="transfers" 
-        onFiltersChange={handleFiltersChange}
-      />
+
+      <ModuleFilters module="transfers" onFiltersChange={handleFiltersChange} />
 
       <div className="servicios-grid">
         {transfers.length > 0 ? (
@@ -79,7 +76,8 @@ export default function Transfers() {
           ))
         ) : (
           <p className="no-results">
-            No se encontraron transfers que coincidan con los filtros seleccionados
+            No se encontraron transfers que coincidan con los filtros
+            seleccionados
           </p>
         )}
       </div>

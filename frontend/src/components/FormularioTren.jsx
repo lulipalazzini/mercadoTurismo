@@ -157,7 +157,12 @@ export default function FormularioTren({ trenId, onSuccess, onCancel }) {
 
           <div className="form-group">
             <label>Tipo de Tren *</label>
-            <select name="tipo" value={formData.tipo} onChange={handleChange} required>
+            <select
+              name="tipo"
+              value={formData.tipo}
+              onChange={handleChange}
+              required
+            >
               <option value="alta-velocidad">Alta Velocidad</option>
               <option value="regional">Regional</option>
               <option value="turistico">Turístico</option>
@@ -168,7 +173,12 @@ export default function FormularioTren({ trenId, onSuccess, onCancel }) {
 
           <div className="form-group">
             <label>Clase *</label>
-            <select name="clase" value={formData.clase} onChange={handleChange} required>
+            <select
+              name="clase"
+              value={formData.clase}
+              onChange={handleChange}
+              required
+            >
               <option value="economica">Económica</option>
               <option value="primera">Primera Clase</option>
               <option value="ejecutiva">Ejecutiva</option>
@@ -276,7 +286,12 @@ export default function FormularioTren({ trenId, onSuccess, onCancel }) {
 
           <div className="form-group">
             <label>Moneda *</label>
-            <select name="moneda" value={formData.moneda} onChange={handleChange} required>
+            <select
+              name="moneda"
+              value={formData.moneda}
+              onChange={handleChange}
+              required
+            >
               <option value="USD">USD</option>
               <option value="EUR">EUR</option>
               <option value="ARS">ARS</option>
@@ -305,7 +320,9 @@ export default function FormularioTren({ trenId, onSuccess, onCancel }) {
               value={paradaInput}
               onChange={(e) => setParadaInput(e.target.value)}
               placeholder="Agregar parada..."
-              onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddParada())}
+              onKeyPress={(e) =>
+                e.key === "Enter" && (e.preventDefault(), handleAddParada())
+              }
             />
             <button type="button" onClick={handleAddParada} className="btn-add">
               Agregar
@@ -331,9 +348,15 @@ export default function FormularioTren({ trenId, onSuccess, onCancel }) {
               value={servicioInput}
               onChange={(e) => setServicioInput(e.target.value)}
               placeholder="Ej: WiFi gratuito, Comida, Asientos reclinables..."
-              onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddServicio())}
+              onKeyPress={(e) =>
+                e.key === "Enter" && (e.preventDefault(), handleAddServicio())
+              }
             />
-            <button type="button" onClick={handleAddServicio} className="btn-add">
+            <button
+              type="button"
+              onClick={handleAddServicio}
+              className="btn-add"
+            >
               Agregar
             </button>
           </div>
@@ -341,7 +364,10 @@ export default function FormularioTren({ trenId, onSuccess, onCancel }) {
             {formData.servicios.map((servicio, index) => (
               <span key={index} className="tag">
                 {servicio}
-                <button type="button" onClick={() => handleRemoveServicio(index)}>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveServicio(index)}
+                >
                   ×
                 </button>
               </span>
@@ -372,7 +398,12 @@ export default function FormularioTren({ trenId, onSuccess, onCancel }) {
         </div>
 
         <div className="form-actions">
-          <button type="button" onClick={onCancel} className="btn-secondary" disabled={loading}>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="btn-secondary"
+            disabled={loading}
+          >
             Cancelar
           </button>
           <button type="submit" className="btn-primary" disabled={loading}>

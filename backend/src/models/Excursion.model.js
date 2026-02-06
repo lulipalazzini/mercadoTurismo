@@ -112,7 +112,8 @@ const Excursion = sequelize.define(
         model: "Users",
         key: "id",
       },
-      comment: "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
+      comment:
+        "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
     },
     activo: {
       type: DataTypes.BOOLEAN,
