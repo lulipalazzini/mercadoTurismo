@@ -12,7 +12,7 @@ import SeguroCard from "./SeguroCard";
 import "../styles/globalSearch.css";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 
 export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false);

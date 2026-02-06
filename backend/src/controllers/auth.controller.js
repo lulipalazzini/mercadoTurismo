@@ -351,6 +351,21 @@ const login = async (req, res) => {
     }
     console.log("✅ [AUTH] Contraseña válida");
 
+    // 🔐 Verificar si el usuario está activo (solo para no-admins)
+    if (user.role !== "admin" && user.role !== "sysadmin") {
+      if (!user.activo) {
+        console.log(
+          `⚠️ [AUTH] Usuario inactivo intenta login: ${user.email}`,
+        );
+        return res.status(403).json({
+          success: false,
+          message:
+            "Tu cuenta está pendiente de activación por un administrador. Te notificaremos cuando esté lista.",
+          cuentaInactiva: true,
+        });
+      }
+    }
+
     // Verificar JWT_SECRET
     if (!process.env.JWT_SECRET) {
       console.error("❌ [AUTH] JWT_SECRET NO CONFIGURADO");

@@ -16,12 +16,11 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import { getPaquetes, deletePaquete } from "../../services/paquetes.service";
+import ServiceDetailModal from "../ServiceDetailModal";
 import PaqueteFormModal from "./PaqueteFormModal";
 import PaqueteEditModal from "./PaqueteEditModal";
 import ConfirmModal from "../common/ConfirmModal";
 import AlertModal from "../common/AlertModal";
-import PreviewModal from "../common/PreviewModal";
-import PaqueteCard from "../PaqueteCard";
 
 export default function Paquetes() {
   const [paquetes, setPaquetes] = useState([]);
@@ -169,7 +168,6 @@ export default function Paquetes() {
           </button>
           <div className="toolbar-actions">
             <div className="search-box-crm">
-              <FaSearch className="search-icon" />
               <input
                 type="text"
                 placeholder="Buscar paquetes..."
@@ -404,16 +402,17 @@ export default function Paquetes() {
         type="error"
       />
 
-      <PreviewModal
-        isOpen={showPreview}
-        onClose={() => {
-          setShowPreview(false);
-          setPaqueteToPreview(null);
-        }}
-        title="Vista Previa - Como lo ve el cliente"
-      >
-        {paqueteToPreview && <PaqueteCard paquete={paqueteToPreview} />}
-      </PreviewModal>
+      {showPreview && paqueteToPreview && (
+        <ServiceDetailModal
+          item={paqueteToPreview}
+          tipo="paquete"
+          onClose={() => {
+            setShowPreview(false);
+            setPaqueteToPreview(null);
+          }}
+          isPreview={true}
+        />
+      )}
     </>
   );
 }

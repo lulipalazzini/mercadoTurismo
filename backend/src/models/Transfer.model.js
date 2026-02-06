@@ -99,6 +99,17 @@ const Transfer = sequelize.define(
       comment:
         "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
     },
+    published_by_user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "RESTRICT",
+      comment: "ID del publicador - CONTROL ESTRICTO DE SEGURIDAD",
+    },
     disponible: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,

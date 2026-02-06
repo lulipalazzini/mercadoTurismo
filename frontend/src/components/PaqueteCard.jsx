@@ -6,7 +6,7 @@ import { abrirWhatsApp } from "../utils/whatsapp";
 import { getUser } from "../services/auth.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function PaqueteCard({ item }) {
+export default function PaqueteCard({ item, isPreview = false }) {
   const [showModal, setShowModal] = useState(false);
   const {
     nombre,
@@ -136,7 +136,7 @@ export default function PaqueteCard({ item }) {
         <button
           className="btn-primary"
           onClick={handleReservar}
-          disabled={cupoDisponible === 0}
+          disabled={cupoDisponible === 0 || isPreview}
         >
           {cupoDisponible > 0 ? "Reservar" : "Sin cupos"}
         </button>

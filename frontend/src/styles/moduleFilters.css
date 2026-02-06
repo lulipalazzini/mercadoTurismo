@@ -59,6 +59,10 @@
   color: #999;
 }
 
+.search-field-passengers {
+  grid-column: 1 / -1; /* Ocupa todo el ancho */
+}
+
 .clear-filters-footer {
   display: flex;
   justify-content: center;

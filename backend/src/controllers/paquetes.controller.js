@@ -6,7 +6,11 @@ const {
   parseItemJsonFields,
   parseRequestJsonFields,
 } = require("../utils/parseJsonFields");
-const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const {
+  isAdmin,
+  buildWhereClause,
+  verifyResourceOwnership,
+} = require("../middleware/publisherSecurity");
 
 // Campos JSON que deben parsearse
 const JSON_FIELDS = ["incluye", "imagenes"];
@@ -21,19 +25,18 @@ const getPaquetes = async (req, res) => {
   }
 
   try {
-    // APLICAR FILTROS DE OWNERSHIP
+    // ⚠️ FILTRO DE SEGURIDAD: Solo ver paquetes propios (excepto admin)
     const whereClause = {};
 
-    // Si el usuario está autenticado y debe filtrar por ownership
-    if (req.user && shouldFilterByOwnership(req.user, "paquetes")) {
-      whereClause.userId = req.user.id;
-      console.log(`   Filtrando paquetes del usuario: ${req.user.id}`);
-    } else if (req.user) {
-      console.log(`   Usuario ${req.user.role}: Ver todos los paquetes`);
+    if (req.user) {
+      // Admin ve todo, usuarios normales solo ven lo suyo
+      if (!isAdmin(req.user)) {
+        whereClause.published_by_user_id = req.user.id;
+        console.log(`   🔐 Filtrando paquetes del usuario: ${req.user.id}`);
+      } else {
+        console.log(`   👑 Admin: Ver todos los paquetes`);
+      }
     }
-
-    // Usuarios no autenticados pueden ver TODOS los paquetes
-    // (No se aplica filtro isPublic para B2C)
 
     // FILTROS DE BÚSQUEDA ESPECÍFICOS
     const { destino, nochesMin, nochesMax, precioMin, precioMax } = req.query;
@@ -117,6 +120,14 @@ const getPaquete = async (req, res) => {
       return res.status(404).json({ message: "Paquete no encontrado" });
     }
 
+    // ⚠️ VERIFICACIÓN DE SEGURIDAD: Solo el dueño o admin pueden ver detalles
+    if (req.user && !isAdmin(req.user) && paquete.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ 
+        success: false,
+        message: "No tienes permiso para ver este paquete" 
+      });
+    }
+
     // Parsear campos JSON
     const parsedPaquete = parseItemJsonFields(paquete, JSON_FIELDS);
 
@@ -138,6 +149,8 @@ const createPaquete = async (req, res) => {
       ...req.body,
       cupoDisponible: req.body.cupoMaximo,
       createdBy: req.user.id,
+      // ⚠️ SEGURIDAD: Asignar automáticamente published_by_user_id
+      published_by_user_id: req.user.id,
     };
 
     // Parsear campos JSON que vienen como strings desde FormData
@@ -177,6 +190,14 @@ const updatePaquete = async (req, res) => {
     const paquete = await Paquete.findByPk(req.params.id);
     if (!paquete) {
       return res.status(404).json({ message: "Paquete no encontrado" });
+    }
+
+    // ⚠️ VERIFICACIÓN DE SEGURIDAD: Solo el dueño o admin pueden editar
+    if (!isAdmin(req.user) && paquete.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ 
+        success: false,
+        message: "No tienes permiso para editar este paquete" 
+      });
     }
 
     const updateData = { ...req.body };
@@ -238,6 +259,15 @@ const deletePaquete = async (req, res) => {
     if (!paquete) {
       return res.status(404).json({ message: "Paquete no encontrado" });
     }
+
+    // ⚠️ VERIFICACIÓN DE SEGURIDAD: Solo el dueño o admin pueden eliminar
+    if (!isAdmin(req.user) && paquete.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ 
+        success: false,
+        message: "No tienes permiso para eliminar este paquete" 
+      });
+    }
+
     await paquete.destroy();
     res.json({ message: "Paquete eliminado exitosamente" });
   } catch (error) {

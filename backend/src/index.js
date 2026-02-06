@@ -29,6 +29,8 @@ const autosRoutes = require("./routes/autos.routes");
 const circuitosRoutes = require("./routes/circuitos.routes");
 const crucerosRoutes = require("./routes/cruceros.routes");
 const cuposMercadoRoutes = require("./routes/cuposMercado.routes");
+const reservasAnotadorRoutes = require("./routes/reservasAnotador.routes");
+const facturacionAnotadorRoutes = require("./routes/facturacionAnotador.routes");
 const excursionesRoutes = require("./routes/excursiones.routes");
 const salidasGrupalesRoutes = require("./routes/salidasGrupales.routes");
 const segurosRoutes = require("./routes/seguros.routes");
@@ -36,6 +38,7 @@ const transfersRoutes = require("./routes/transfers.routes");
 const trenesRoutes = require("./routes/trenes.routes");
 const clickStatsRoutes = require("./routes/clickStats.routes");
 const usersRoutes = require("./routes/users.routes");
+const adminRoutes = require("./routes/admin.routes");
 
 dotenv.config();
 
@@ -183,6 +186,8 @@ app.use("/api/autos", autosRoutes);
 app.use("/api/circuitos", circuitosRoutes);
 app.use("/api/cruceros", crucerosRoutes);
 app.use("/api/cupos-mercado", cuposMercadoRoutes);
+app.use("/api/reservas-anotador", reservasAnotadorRoutes);
+app.use("/api/facturacion-anotador", facturacionAnotadorRoutes);
 app.use("/api/excursiones", excursionesRoutes);
 app.use("/api/salidas-grupales", salidasGrupalesRoutes);
 app.use("/api/seguros", segurosRoutes);
@@ -190,6 +195,7 @@ app.use("/api/transfers", transfersRoutes);
 app.use("/api/trenes", trenesRoutes);
 app.use("/api/stats", clickStatsRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Ruta de prueba en /api
 app.get("/api", (req, res) => {

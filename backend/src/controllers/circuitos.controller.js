@@ -1,5 +1,6 @@
 const Circuito = require("../models/Circuito.model");
 const User = require("../models/User.model");
+const { isAdmin } = require("../middleware/publisherSecurity");
 const {
   parseItemsJsonFields,
   parseItemJsonFields,
@@ -10,8 +11,18 @@ const JSON_FIELDS = ["imagenes"];
 
 const getCircuitos = async (req, res) => {
   try {
+    const whereClause = { activo: true };
+
+    // APLICAR FILTROS DE OWNERSHIP
+    if (req.user && !isAdmin(req.user)) {
+      whereClause.published_by_user_id = req.user.id;
+      console.log(`   Filtrando circuitos del usuario: ${req.user.id}`);
+    } else if (req.user) {
+      console.log(`   Usuario ${req.user.role}: Ver todos los circuitos`);
+    }
+
     const circuitos = await Circuito.findAll({
-      where: { activo: true },
+      where: whereClause,
       order: [["createdAt", "DESC"]],
       include: [
         {
@@ -36,6 +47,10 @@ const getCircuito = async (req, res) => {
     if (!circuito) {
       return res.status(404).json({ message: "Circuito no encontrado" });
     }
+    // Verificar ownership
+    if (req.user && !isAdmin(req.user) && circuito.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para ver este circuito" });
+    }
     const parsedCircuito = parseItemJsonFields(circuito, JSON_FIELDS);
     res.json(parsedCircuito);
   } catch (error) {
@@ -49,6 +64,11 @@ const createCircuito = async (req, res) => {
   try {
     const circuitoData = { ...req.body };
     Object.assign(circuitoData, parseRequestJsonFields(req.body, JSON_FIELDS));
+
+    // Asignar publisher
+    if (req.user) {
+      circuitoData.published_by_user_id = req.user.id;
+    }
 
     if (req.uploadedImages && req.uploadedImages.length > 0) {
       circuitoData.imagenes = req.uploadedImages.map((img) => img.path);
@@ -74,6 +94,10 @@ const updateCircuito = async (req, res) => {
     const circuito = await Circuito.findByPk(req.params.id);
     if (!circuito) {
       return res.status(404).json({ message: "Circuito no encontrado" });
+    }
+    // Verificar ownership
+    if (!isAdmin(req.user) && circuito.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para editar este circuito" });
     }
 
     const updateData = { ...req.body };
@@ -122,6 +146,10 @@ const deleteCircuito = async (req, res) => {
     const circuito = await Circuito.findByPk(req.params.id);
     if (!circuito) {
       return res.status(404).json({ message: "Circuito no encontrado" });
+    }
+    // Verificar ownership
+    if (!isAdmin(req.user) && circuito.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar este circuito" });
     }
     await circuito.update({ activo: false });
     res.json({ message: "Circuito desactivado exitosamente" });

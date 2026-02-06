@@ -24,10 +24,15 @@ const rolePermissions = {
       "transfers",
       "excursiones",
       "salidasGrupales",
+      "circuitos",
       "cruceros",
       "seguros",
       "cuposMercado", // Excepción: pueden ver todos
-      "misPublicaciones",
+      "reservas",
+      "clientes",
+      "facturacion",
+      "reportes",
+      "ajustes",
     ],
   },
 
@@ -45,11 +50,21 @@ const rolePermissions = {
     canAccessB2BModules: true, // Ve productos para agencias
     visibleToPassengers: false, // Nunca visible aunque venda directo
     dashboardModules: [
-      "productosB2B", // Productos para agencias
+      "paquetes",
+      "alojamientos",
+      "autos",
+      "transfers",
+      "excursiones",
+      "salidasGrupales",
+      "circuitos",
+      "cruceros",
+      "seguros",
       "cuposMercado", // Excepción: pueden ver todos
-      "misServicios",
-      "clientesB2B",
-      "reservasB2B",
+      "reservas",
+      "clientes",
+      "facturacion",
+      "reportes",
+      "ajustes",
     ],
   },
 

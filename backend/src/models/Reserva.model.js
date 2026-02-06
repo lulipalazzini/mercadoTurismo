@@ -34,6 +34,25 @@ const Reserva = sequelize.define(
       validate: {
         min: 1,
       },
+      comment: "Total de pasajeros (adultos + menores) - campo legado",
+    },
+    adultos: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+      validate: {
+        min: 1,
+      },
+      comment: "Número de adultos (18+ años)",
+    },
+    menores: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      validate: {
+        min: 0,
+      },
+      comment: "Número de menores (0-17 años)",
     },
     precioTotal: {
       type: DataTypes.DECIMAL(10, 2),
@@ -76,6 +95,14 @@ const Reserva = sequelize.define(
   },
   {
     timestamps: true,
+    hooks: {
+      // Calcular numeroPersonas automáticamente antes de crear/actualizar
+      beforeValidate: (reserva) => {
+        if (reserva.adultos !== undefined && reserva.menores !== undefined) {
+          reserva.numeroPersonas = reserva.adultos + reserva.menores;
+        }
+      },
+    },
   }
 );
 

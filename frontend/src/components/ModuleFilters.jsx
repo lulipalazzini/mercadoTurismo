@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import PassengerSelector from "./common/PassengerSelector";
 import "../styles/moduleFilters.css";
 
 /**
@@ -9,12 +10,17 @@ import "../styles/moduleFilters.css";
 export default function ModuleFilters({ module, onFiltersChange }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState({});
+  const [passengers, setPassengers] = useState({ adults: 1, minors: 0 });
 
   // Inicializar filtros desde URL al cargar
   useEffect(() => {
     const initialFilters = {};
     for (const [key, value] of searchParams.entries()) {
-      initialFilters[key] = value;
+      if (key === "adults" || key === "minors") {
+        setPassengers((prev) => ({ ...prev, [key]: parseInt(value) || (key === "adults" ? 1 : 0) }));
+      } else {
+        initialFilters[key] = value;
+      }
     }
     setFilters(initialFilters);
   }, [searchParams]);
@@ -31,20 +37,53 @@ export default function ModuleFilters({ module, onFiltersChange }) {
 
     setFilters(newFilters);
 
+    // Actualizar URL con filtros + pasajeros
+    const params = new URLSearchParams(newFilters);
+    if (needsPassengerSelector()) {
+      params.set("adults", passengers.adults.toString());
+      params.set("minors", passengers.minors.toString());
+    }
+    setSearchParams(params);
+
+    // Notificar al padre con filtros completos
+    onFiltersChange({ ...newFilters, adults: passengers.adults, minors: passengers.minors });
+  };
+
+  const handlePassengerChange = ({ adults, minors }) => {
+    setPassengers({ adults, minors });
+
     // Actualizar URL
-    setSearchParams(newFilters);
+    const params = new URLSearchParams(filters);
+    params.set("adults", adults.toString());
+    params.set("minors", minors.toString());
+    setSearchParams(params);
 
     // Notificar al padre
-    onFiltersChange(newFilters);
+    onFiltersChange({ ...filters, adults, minors });
   };
 
   const clearFilters = () => {
     setFilters({});
+    setPassengers({ adults: 1, minors: 0 });
     setSearchParams({});
     onFiltersChange({});
   };
 
   const activeFiltersCount = Object.keys(filters).length;
+
+  // Módulos que necesitan selector de pasajeros
+  const needsPassengerSelector = () => {
+    return [
+      "paquetes",
+      "alojamientos",
+      "cruceros",
+      "excursiones",
+      "trenes",
+      "circuitos",
+      "salidas-grupales",
+      "seguros",
+    ].includes(module);
+  };
 
   // Configuración de campos por módulo
   const getModuleFields = () => {
@@ -187,7 +226,7 @@ export default function ModuleFilters({ module, onFiltersChange }) {
           },
           {
             key: "capacidad",
-            label: "Pasajeros",
+            label: "Capacidad (pasajeros)",
             type: "number",
             min: 1,
             max: 15,
@@ -434,6 +473,18 @@ export default function ModuleFilters({ module, onFiltersChange }) {
               )}
             </div>
           ))}
+
+          {/* Selector de pasajeros para m\u00f3dulos relevantes */}
+          {needsPassengerSelector() && (
+            <div className="search-field search-field-passengers">
+              <PassengerSelector
+                adults={passengers.adults}
+                minors={passengers.minors}
+                onChange={handlePassengerChange}
+                compact={true}
+              />
+            </div>
+          )}
         </div>
       </div>
 

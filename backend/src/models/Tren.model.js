@@ -153,6 +153,17 @@ const Tren = sequelize.define(
       },
       comment: "ID del usuario propietario - usado para filtrado B2B",
     },
+    published_by_user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "RESTRICT",
+      comment: "ID del publicador - CONTROL ESTRICTO DE SEGURIDAD",
+    },
     isPublic: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,

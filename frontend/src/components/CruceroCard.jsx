@@ -6,7 +6,7 @@ import { abrirWhatsApp } from "../utils/whatsapp";
 import { getUser } from "../services/auth.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function CruceroCard({ item }) {
+export default function CruceroCard({ item, isPreview = false }) {
   const {
     nombre,
     naviera,
@@ -177,7 +177,7 @@ export default function CruceroCard({ item }) {
         <button
           className="btn-primary"
           onClick={handleReservar}
-          disabled={cabinasDisponibles === 0}
+          disabled={cabinasDisponibles === 0 || isPreview}
         >
           {cabinasDisponibles > 0 ? "Reservar" : "Sin cabinas"}
         </button>

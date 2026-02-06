@@ -1,6 +1,6 @@
 const Seguro = require("../models/Seguro.model");
 const User = require("../models/User.model");
-const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const { isAdmin } = require("../middleware/publisherSecurity");
 const {
   parseItemsJsonFields,
   parseItemJsonFields,
@@ -14,8 +14,8 @@ const getSeguros = async (req, res) => {
     const whereClause = { activo: true };
 
     // Aplicar filtro de ownership para usuarios B2B
-    if (req.user && shouldFilterByOwnership(req.user, "seguros")) {
-      whereClause.userId = req.user.id;
+    if (req.user && !isAdmin(req.user)) {
+      whereClause.published_by_user_id = req.user.id;
       console.log(`🔒 Filtrando seguros del usuario: ${req.user.id}`);
     }
 
@@ -56,6 +56,12 @@ const getSeguro = async (req, res) => {
     if (!seguro) {
       return res.status(404).json({ message: "Seguro no encontrado" });
     }
+
+    // Verificar ownership
+    if (req.user && !isAdmin(req.user) && seguro.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para ver este seguro" });
+    }
+
     const parsedSeguro = parseItemJsonFields(seguro, JSON_FIELDS);
     res.json(parsedSeguro);
   } catch (error) {
@@ -74,9 +80,9 @@ const createSeguro = async (req, res) => {
       seguroData.imagenes = req.uploadedImages.map((img) => img.path);
     }
 
-    // Asignar owner (userId) automáticamente
+    // Asignar publisher automáticamente
     if (req.user) {
-      seguroData.userId = req.user.id;
+      seguroData.published_by_user_id = req.user.id;
     }
 
     const seguro = await Seguro.create(seguroData);
@@ -96,6 +102,11 @@ const updateSeguro = async (req, res) => {
     const seguro = await Seguro.findByPk(req.params.id);
     if (!seguro) {
       return res.status(404).json({ message: "Seguro no encontrado" });
+    }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && seguro.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para editar este seguro" });
     }
 
     const updateData = { ...req.body };
@@ -145,6 +156,12 @@ const deleteSeguro = async (req, res) => {
     if (!seguro) {
       return res.status(404).json({ message: "Seguro no encontrado" });
     }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && seguro.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar este seguro" });
+    }
+
     await seguro.update({ activo: false });
     res.json({ message: "Seguro desactivado exitosamente" });
   } catch (error) {

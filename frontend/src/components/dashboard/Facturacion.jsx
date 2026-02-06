@@ -115,7 +115,6 @@ export default function Facturacion() {
             <input type="text" placeholder="Buscar facturas..." />
           </div>
           <select className="filter-select">
-            <FaFilter />
             <option>Todos los estados</option>
             <option>Pagadas</option>
             <option>Pendientes</option>

@@ -3,7 +3,7 @@
  */
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 
 // Obtener base URL sin /api
 const BASE_URL = API_BASE_URL.replace("/api", "");

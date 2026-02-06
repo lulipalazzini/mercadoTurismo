@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import AlertModal from "./common/AlertModal";
 import "../styles/ImageUploader.css";
 
 export default function ImageUploader({
@@ -13,20 +14,26 @@ export default function ImageUploader({
     ),
   );
   const fileInputRef = useRef(null);
+  
+  // Estado para modal de alerta
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const handleFiles = (files) => {
     const fileArray = Array.from(files);
     const totalImages = previews.length + fileArray.length;
 
     if (totalImages > maxImages) {
-      alert(`Máximo ${maxImages} imágenes permitidas`);
+      setAlertMessage(`Máximo ${maxImages} imágenes permitidas`);
+      setShowAlert(true);
       return;
     }
 
     // Validar tipo de archivo
     const validFiles = fileArray.filter((file) => {
       if (!file.type.startsWith("image/")) {
-        alert(`${file.name} no es una imagen válida`);
+        setAlertMessage(`${file.name} no es una imagen válida`);
+        setShowAlert(true);
         return false;
       }
       return true;
@@ -144,6 +151,14 @@ export default function ImageUploader({
           ))}
         </div>
       )}
+      
+      {/* Modal de alerta */}
+      <AlertModal
+        isOpen={showAlert}
+        onClose={() => setShowAlert(false)}
+        type="error"
+        message={alertMessage}
+      />
     </div>
   );
 }

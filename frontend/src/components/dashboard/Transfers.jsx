@@ -8,10 +8,12 @@ import {
   FaUsers,
   FaEdit,
   FaTrash,
+  FaEye,
 } from "react-icons/fa";
 import { getTransfers, deleteTransfer } from "../../services/transfers.service";
 import ConfirmModal from "../common/ConfirmModal";
 import AlertModal from "../common/AlertModal";
+import ServiceDetailModal from "../ServiceDetailModal";
 import TransferFormModal from "./TransferFormModal";
 import TransferEditModal from "./TransferEditModal";
 
@@ -27,6 +29,8 @@ export default function Transfers() {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [itemToPreview, setItemToPreview] = useState(null);
 
   useEffect(() => {
     loadItems();
@@ -54,6 +58,11 @@ export default function Transfers() {
   const handleDeleteClick = (item) => {
     setItemToDelete(item);
     setShowConfirm(true);
+  };
+
+  const handlePreviewClick = (item) => {
+    setItemToPreview(item);
+    setShowPreview(true);
   };
 
   const confirmDelete = async () => {
@@ -140,7 +149,6 @@ export default function Transfers() {
           </button>
           <div className="toolbar-actions">
             <div className="search-box-crm">
-              <FaSearch className="search-icon" />
               <input
                 type="text"
                 placeholder="Buscar transfers..."
@@ -260,14 +268,12 @@ export default function Transfers() {
                 </div>
 
                 <div className="package-footer">
-                  <div className="package-price">
-                    <span className="price-label">Duración</span>
-                    <span className="price-value">
-                      {item.duracionEstimada
-                        ? `${item.duracionEstimada} min`
-                        : "N/A"}
-                    </span>
-                  </div>
+                  <button
+                    className="btn-secondary btn-block"
+                    onClick={() => handlePreviewClick(item)}
+                  >
+                    <FaEye /> Ver Detalles
+                  </button>
                 </div>
               </div>
             ))}
@@ -304,6 +310,18 @@ export default function Transfers() {
         message={alertMessage}
         type="error"
       />
+
+      {showPreview && itemToPreview && (
+        <ServiceDetailModal
+          item={itemToPreview}
+          tipo="transfer"
+          onClose={() => {
+            setShowPreview(false);
+            setItemToPreview(null);
+          }}
+          isPreview={true}
+        />
+      )}
     </>
   );
 }

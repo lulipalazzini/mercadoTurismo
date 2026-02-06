@@ -1,6 +1,6 @@
 const SalidaGrupal = require("../models/SalidaGrupal.model");
 const User = require("../models/User.model");
-const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const { isAdmin } = require("../middleware/publisherSecurity");
 const {
   parseItemsJsonFields,
   parseItemJsonFields,
@@ -14,8 +14,8 @@ const getSalidasGrupales = async (req, res) => {
     const whereClause = { activo: true };
 
     // Aplicar filtro de ownership para usuarios B2B
-    if (req.user && shouldFilterByOwnership(req.user, "salidasGrupales")) {
-      whereClause.userId = req.user.id;
+    if (req.user && !isAdmin(req.user)) {
+      whereClause.published_by_user_id = req.user.id;
       console.log(`🔒 Filtrando salidas grupales del usuario: ${req.user.id}`);
     }
 
@@ -57,6 +57,12 @@ const getSalidaGrupal = async (req, res) => {
     if (!salida) {
       return res.status(404).json({ message: "Salida grupal no encontrada" });
     }
+
+    // Verificar ownership
+    if (req.user && !isAdmin(req.user) && salida.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para ver esta salida grupal" });
+    }
+
     const parsedSalida = parseItemJsonFields(salida, JSON_FIELDS);
     res.json(parsedSalida);
   } catch (error) {
@@ -79,9 +85,9 @@ const createSalidaGrupal = async (req, res) => {
       salidaData.imagenes = req.uploadedImages.map((img) => img.path);
     }
 
-    // Asignar owner (userId) automáticamente
+    // Asignar publisher automáticamente
     if (req.user) {
-      salidaData.userId = req.user.id;
+      salidaData.published_by_user_id = req.user.id;
     }
 
     const salida = await SalidaGrupal.create(salidaData);
@@ -102,6 +108,11 @@ const updateSalidaGrupal = async (req, res) => {
     const salida = await SalidaGrupal.findByPk(req.params.id);
     if (!salida) {
       return res.status(404).json({ message: "Salida grupal no encontrada" });
+    }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && salida.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para editar esta salida grupal" });
     }
 
     const updateData = { ...req.body };
@@ -152,6 +163,12 @@ const deleteSalidaGrupal = async (req, res) => {
     if (!salida) {
       return res.status(404).json({ message: "Salida grupal no encontrada" });
     }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && salida.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar esta salida grupal" });
+    }
+
     await salida.update({ activo: false });
     res.json({ message: "Salida grupal desactivada exitosamente" });
   } catch (error) {

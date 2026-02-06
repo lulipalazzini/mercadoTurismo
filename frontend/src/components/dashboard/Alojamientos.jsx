@@ -8,6 +8,7 @@ import {
   FaDollarSign,
   FaEdit,
   FaTrash,
+  FaEye,
 } from "react-icons/fa";
 import {
   getAlojamientos,
@@ -15,6 +16,7 @@ import {
 } from "../../services/alojamientos.service";
 import ConfirmModal from "../common/ConfirmModal";
 import AlertModal from "../common/AlertModal";
+import ServiceDetailModal from "../ServiceDetailModal";
 import AlojamientoFormModal from "./AlojamientoFormModal";
 import AlojamientoEditModal from "./AlojamientoEditModal";
 
@@ -30,6 +32,8 @@ export default function Alojamientos() {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [itemToPreview, setItemToPreview] = useState(null);
 
   useEffect(() => {
     loadItems();
@@ -57,6 +61,11 @@ export default function Alojamientos() {
   const handleDeleteClick = (item) => {
     setItemToDelete(item);
     setShowConfirm(true);
+  };
+
+  const handlePreviewClick = (item) => {
+    setItemToPreview(item);
+    setShowPreview(true);
   };
 
   const confirmDelete = async () => {
@@ -264,12 +273,12 @@ export default function Alojamientos() {
                 </div>
 
                 <div className="package-footer">
-                  <div className="package-price">
-                    <span className="price-label">Dirección</span>
-                    <span className="price-value">
-                      {item.direccion || "N/A"}
-                    </span>
-                  </div>
+                  <button
+                    className="btn-secondary btn-block"
+                    onClick={() => handlePreviewClick(item)}
+                  >
+                    <FaEye /> Ver Detalles
+                  </button>
                 </div>
               </div>
             ))}
@@ -306,6 +315,18 @@ export default function Alojamientos() {
         message={alertMessage}
         type="error"
       />
+
+      {showPreview && itemToPreview && (
+        <ServiceDetailModal
+          item={itemToPreview}
+          tipo="alojamiento"
+          onClose={() => {
+            setShowPreview(false);
+            setItemToPreview(null);
+          }}
+          isPreview={true}
+        />
+      )}
     </>
   );
 }

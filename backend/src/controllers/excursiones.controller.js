@@ -1,6 +1,6 @@
 const Excursion = require("../models/Excursion.model");
 const User = require("../models/User.model");
-const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const { isAdmin } = require("../middleware/publisherSecurity");
 const {
   parseItemsJsonFields,
   parseItemJsonFields,
@@ -14,8 +14,8 @@ const getExcursiones = async (req, res) => {
     const whereClause = { activo: true };
 
     // Aplicar filtro de ownership para usuarios B2B
-    if (req.user && shouldFilterByOwnership(req.user, "excursiones")) {
-      whereClause.userId = req.user.id;
+    if (req.user && !isAdmin(req.user)) {
+      whereClause.published_by_user_id = req.user.id;
       console.log(`🔒 Filtrando excursiones del usuario: ${req.user.id}`);
     }
 
@@ -56,6 +56,12 @@ const getExcursion = async (req, res) => {
     if (!excursion) {
       return res.status(404).json({ message: "Excursion no encontrada" });
     }
+
+    // Verificar ownership
+    if (req.user && !isAdmin(req.user) && excursion.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para ver esta excursión" });
+    }
+
     const parsedExcursion = parseItemJsonFields(excursion, JSON_FIELDS);
     res.json(parsedExcursion);
   } catch (error) {
@@ -74,9 +80,9 @@ const createExcursion = async (req, res) => {
       excursionData.imagenes = req.uploadedImages.map((img) => img.path);
     }
 
-    // Asignar owner (userId) automáticamente
+    // Asignar publisher automáticamente
     if (req.user) {
-      excursionData.userId = req.user.id;
+      excursionData.published_by_user_id = req.user.id;
     }
 
     const excursion = await Excursion.create(excursionData);
@@ -97,6 +103,11 @@ const updateExcursion = async (req, res) => {
     const excursion = await Excursion.findByPk(req.params.id);
     if (!excursion) {
       return res.status(404).json({ message: "Excursion no encontrada" });
+    }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && excursion.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para editar esta excursión" });
     }
 
     const updateData = { ...req.body };
@@ -146,6 +157,12 @@ const deleteExcursion = async (req, res) => {
     if (!excursion) {
       return res.status(404).json({ message: "Excursion no encontrada" });
     }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && excursion.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar esta excursión" });
+    }
+
     await excursion.update({ activo: false });
     res.json({ message: "Excursion desactivada exitosamente" });
   } catch (error) {

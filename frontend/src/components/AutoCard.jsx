@@ -6,7 +6,7 @@ import { getUser } from "../services/auth.service";
 import { abrirWhatsApp } from "../utils/whatsapp";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function AutoCard({ item }) {
+export default function AutoCard({ item, isPreview = false }) {
   const {
     marca,
     modelo,
@@ -115,7 +115,7 @@ export default function AutoCard({ item }) {
         <button
           className="btn-primary"
           onClick={handleReservar}
-          disabled={!disponible}
+          disabled={!disponible || isPreview}
         >
           {disponible ? "Reservar" : "No disponible"}
         </button>

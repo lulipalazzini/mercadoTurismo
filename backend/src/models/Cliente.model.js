@@ -9,6 +9,14 @@ const Cliente = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
     nombre: {
       type: DataTypes.STRING,
       allowNull: false,

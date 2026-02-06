@@ -115,10 +115,18 @@ export default function ComprarCupoModal({ isOpen, onClose, onSuccess, cupo }) {
             <div className="cupo-detalle-compra">
               <div className="detalle-header">
                 <h3>{cupo.descripcion}</h3>
-                <span className="tipo-badge">{cupo.tipoProducto}</span>
+                <span className="tipo-badge">✈️ {cupo.aerolinea || "Aéreo"}</span>
               </div>
 
               <div className="detalle-info">
+                <div className="info-row">
+                  <span className="info-label">Aerolínea:</span>
+                  <span className="info-value">{cupo.aerolinea}</span>
+                </div>
+                <div className="info-row">
+                  <span className="info-label">Fecha vuelo:</span>
+                  <span className="info-value">{formatDate(cupo.fechaOrigen)}</span>
+                </div>
                 <div className="info-row">
                   <span className="info-label">Precio unitario:</span>
                   <span className="info-value precio">
@@ -130,7 +138,7 @@ export default function ComprarCupoModal({ isOpen, onClose, onSuccess, cupo }) {
                   <span className="info-value">{cupo.cantidad} unidades</span>
                 </div>
                 <div className="info-row">
-                  <span className="info-label">Vence:</span>
+                  <span className="info-label">Oferta vence:</span>
                   <span className={`info-value ${isUrgente ? "urgente" : ""}`}>
                     {formatDate(cupo.fechaVencimiento)}
                     {daysRemaining !== null && (

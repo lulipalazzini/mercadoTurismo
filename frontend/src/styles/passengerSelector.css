@@ -1,0 +1,246 @@
+/* ===================================
+   PASSENGER SELECTOR - Versión completa
+   =================================== */
+
+.passenger-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  min-width: 280px;
+}
+
+.passenger-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.passenger-icon svg {
+  color: #6366f1;
+  flex-shrink: 0;
+}
+
+.passenger-main-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.passenger-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.passenger-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.passenger-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.passenger-type {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.passenger-hint {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.passenger-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.counter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #d1d5db;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #6366f1;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.counter-btn:hover:not(:disabled) {
+  background: #6366f1;
+  color: #ffffff;
+  border-color: #6366f1;
+  transform: scale(1.05);
+}
+
+.counter-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.counter-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #f9fafb;
+  color: #9ca3af;
+}
+
+.counter-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  min-width: 24px;
+  text-align: center;
+}
+
+.passenger-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.passenger-summary svg {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+/* ===================================
+   PASSENGER SELECTOR - Versión compacta
+   =================================== */
+
+.passenger-selector-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.passenger-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.passenger-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.passenger-total {
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6366f1;
+  text-align: right;
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
+@media (max-width: 768px) {
+  .passenger-selector {
+    min-width: 100%;
+  }
+
+  .passenger-group {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .counter-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1.1rem;
+  }
+}
+
+/* ===================================
+   INTEGRACIÓN CON SEARCH FORMS
+   =================================== */
+
+.search-field .passenger-selector {
+  margin-top: 0.5rem;
+}
+
+.search-field .passenger-selector-compact {
+  margin-top: 0.5rem;
+}
+
+/* Para uso en dropdowns/popovers */
+.passenger-dropdown {
+  position: relative;
+}
+
+.passenger-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.passenger-dropdown-trigger:hover {
+  border-color: #6366f1;
+  background: #f9fafb;
+}
+
+.passenger-dropdown-trigger svg {
+  color: #6366f1;
+}
+
+.passenger-dropdown-content {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 100;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  min-width: 300px;
+}
+
+/* Animaciones */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.passenger-dropdown-content {
+  animation: slideDown 0.2s ease;
+}

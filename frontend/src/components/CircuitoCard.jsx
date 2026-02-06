@@ -6,7 +6,7 @@ import { abrirWhatsApp } from "../utils/whatsapp";
 import { getUser } from "../services/auth.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function CircuitoCard({ item }) {
+export default function CircuitoCard({ item, isPreview = false }) {
   const {
     nombre,
     descripcion,
@@ -133,7 +133,7 @@ export default function CircuitoCard({ item }) {
         <button
           className="btn-primary"
           onClick={handleReservar}
-          disabled={cupoDisponible === 0}
+          disabled={cupoDisponible === 0 || isPreview}
         >
           {cupoDisponible > 0 ? "Reservar" : "Sin cupos"}
         </button>

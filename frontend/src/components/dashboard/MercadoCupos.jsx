@@ -15,6 +15,7 @@ import {
   FaPhone,
   FaUser,
   FaFileExcel,
+  FaPlane,
 } from "react-icons/fa";
 import { getCuposMarketplace, getMisCupos } from "../../services/cupos.service";
 import PublicarCupoModal from "./PublicarCupoModal";
@@ -39,15 +40,15 @@ export default function MercadoCupos() {
   console.log("Usuario en MercadoCupos:", user);
   console.log("Rol del usuario:", user.role);
 
-  const canViewMarketplace = user.role === "agencia";
-  const canPublish = user.role === "operador" || user.role === "agencia";
+  const canViewMarketplace = true; // Todos los usuarios pueden ver el marketplace
+  const canPublish = user.role === "operador" || user.role === "agencia" || user.role === "admin" || user.role === "sysadmin";
 
   console.log("canPublish:", canPublish);
   console.log("canViewMarketplace:", canViewMarketplace);
 
-  // Operadores ven por defecto "mis-cupos", agencias ven "marketplace"
+  // Operadores/agencias ven "mis-cupos" por defecto, otros usuarios ven "marketplace"
   const [vistaActiva, setVistaActiva] = useState(
-    user.role === "operador" ? "mis-cupos" : "marketplace",
+    canPublish ? "mis-cupos" : "marketplace",
   );
 
   useEffect(() => {
@@ -64,7 +65,7 @@ export default function MercadoCupos() {
         setMisCupos(misCuposData);
       }
 
-      // Cargar marketplace si es agencia
+      // Cargar marketplace (disponible para todos)
       if (canViewMarketplace) {
         const marketplaceData = await getCuposMarketplace();
         setCupos(marketplaceData);
@@ -109,7 +110,7 @@ export default function MercadoCupos() {
 
     const telefono = cupo.vendedor.telefono.replace(/\D/g, "");
     const mensaje = encodeURIComponent(
-      `Hola, estoy interesado en el cupo de ${cupo.tipoProducto}: ${cupo.descripcion}`,
+      `Hola, estoy interesado en el cupo de ${cupo.aerolinea}: ${cupo.descripcion}`,
     );
     const whatsappUrl = `https://wa.me/${telefono}?text=${mensaje}`;
     window.open(whatsappUrl, "_blank");
@@ -161,17 +162,17 @@ export default function MercadoCupos() {
 
   const filteredCupos = cuposToDisplay.filter((cupo) => {
     const matchSearch =
-      cupo.tipoProducto?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cupo.aerolinea?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cupo.descripcion?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchCategoria =
-      !categoriaFilter || cupo.tipoProducto === categoriaFilter;
+      !categoriaFilter || cupo.aerolinea === categoriaFilter;
 
     return matchSearch && matchCategoria;
   });
 
   const categorias = [
-    ...new Set(cuposToDisplay.map((c) => c.tipoProducto)),
+    ...new Set(cuposToDisplay.map((c) => c.aerolinea)),
   ].filter(Boolean);
 
   if (loading) {
@@ -180,17 +181,6 @@ export default function MercadoCupos() {
         <div className="loading-state">
           <div className="spinner"></div>
           <p>Cargando mercado de cupos...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!canPublish) {
-    return (
-      <div className="dashboard-content">
-        <div className="error-state">
-          <FaExclamationTriangle />
-          <p>No tienes permisos para acceder al mercado de cupos</p>
         </div>
       </div>
     );
@@ -343,8 +333,8 @@ export default function MercadoCupos() {
               >
                 <div className="cupo-header">
                   <div className="cupo-tipo">
-                    <FaBox />
-                    <span>{cupo.tipoProducto || "Cupo"}</span>
+                    <FaPlane />
+                    <span>{cupo.aerolinea || "Aereo"}</span>
                   </div>
                   <span className={`cupo-badge ${estadoBadge.class}`}>
                     {estadoBadge.icon}
@@ -393,6 +383,14 @@ export default function MercadoCupos() {
                   )}
 
                   <div className="cupo-details">
+                    <div className="detail-item">
+                      <FaPlane />
+                      <span>
+                        <strong>Fecha Vuelo:</strong>{" "}
+                        {formatDate(cupo.fechaOrigen)}
+                      </span>
+                    </div>
+
                     <div className="detail-item">
                       <FaCalendarAlt />
                       <span>

@@ -8,6 +8,7 @@ import {
   FaClock,
   FaEdit,
   FaTrash,
+  FaEye,
 } from "react-icons/fa";
 import {
   getExcursiones,
@@ -15,6 +16,7 @@ import {
 } from "../../services/excursiones.service";
 import ConfirmModal from "../common/ConfirmModal";
 import AlertModal from "../common/AlertModal";
+import ServiceDetailModal from "../ServiceDetailModal";
 import ExcursionFormModal from "./ExcursionFormModal";
 import ExcursionEditModal from "./ExcursionEditModal";
 
@@ -30,6 +32,8 @@ export default function Excursiones() {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [itemToPreview, setItemToPreview] = useState(null);
 
   useEffect(() => {
     loadItems();
@@ -57,6 +61,11 @@ export default function Excursiones() {
   const handleDeleteClick = (item) => {
     setItemToDelete(item);
     setShowConfirm(true);
+  };
+
+  const handlePreviewClick = (item) => {
+    setItemToPreview(item);
+    setShowPreview(true);
   };
 
   const confirmDelete = async () => {
@@ -262,12 +271,12 @@ export default function Excursiones() {
                 </div>
 
                 <div className="package-footer">
-                  <div className="package-price">
-                    <span className="price-label">Incluye</span>
-                    <span className="price-value">
-                      {item.incluye ? "Comidas y guía" : "Consultar"}
-                    </span>
-                  </div>
+                  <button
+                    className="btn-secondary btn-block"
+                    onClick={() => handlePreviewClick(item)}
+                  >
+                    <FaEye /> Ver Detalles
+                  </button>
                 </div>
               </div>
             ))}
@@ -304,6 +313,18 @@ export default function Excursiones() {
         message={alertMessage}
         type="error"
       />
+
+      {showPreview && itemToPreview && (
+        <ServiceDetailModal
+          item={itemToPreview}
+          tipo="excursion"
+          onClose={() => {
+            setShowPreview(false);
+            setItemToPreview(null);
+          }}
+          isPreview={true}
+        />
+      )}
     </>
   );
 }

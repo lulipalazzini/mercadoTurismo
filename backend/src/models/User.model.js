@@ -51,6 +51,13 @@ const User = sequelize.define(
       comment:
         "ID de la agencia a la que pertenece (solo para operador de agencia)",
     },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+      comment:
+        "Usuario activado por admin. Los nuevos registros quedan inactivos hasta que un admin los active",
+    },
     telefono: {
       type: DataTypes.STRING,
       allowNull: true,

@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="footer-column">
             <h3 className="footer-title">Mercado Turismo</h3>
             <p className="footer-description">
-              Tu marketplace de confianza para comparar ofertas de múltiples
+              Tu marketplace de confianza para comparar servicios de múltiples
               agencias de viajes. Encontrá el mejor precio y las mejores
               experiencias en un solo lugar.
             </p>

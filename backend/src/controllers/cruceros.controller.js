@@ -1,7 +1,7 @@
 const Crucero = require("../models/Crucero.model");
 const User = require("../models/User.model");
 const { Op } = require("sequelize");
-const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const { isAdmin } = require("../middleware/publisherSecurity");
 const {
   parseItemsJsonFields,
   parseItemJsonFields,
@@ -15,8 +15,8 @@ const getCruceros = async (req, res) => {
     const whereClause = { activo: true };
 
     // Aplicar filtro de ownership para usuarios B2B
-    if (req.user && shouldFilterByOwnership(req.user, "cruceros")) {
-      whereClause.userId = req.user.id;
+    if (req.user && !isAdmin(req.user)) {
+      whereClause.published_by_user_id = req.user.id;
       console.log(`🔒 Filtrando cruceros del usuario: ${req.user.id}`);
     }
 
@@ -92,6 +92,12 @@ const getCrucero = async (req, res) => {
     if (!crucero) {
       return res.status(404).json({ message: "Crucero no encontrado" });
     }
+
+    // Verificar ownership
+    if (req.user && !isAdmin(req.user) && crucero.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para ver este crucero" });
+    }
+
     const parsedCrucero = parseItemJsonFields(crucero, JSON_FIELDS);
     res.json(parsedCrucero);
   } catch (error) {
@@ -110,9 +116,9 @@ const createCrucero = async (req, res) => {
       cruceroData.imagenes = req.uploadedImages.map((img) => img.path);
     }
 
-    // Asignar owner (userId) automáticamente
+    // Asignar publisher automáticamente
     if (req.user) {
-      cruceroData.userId = req.user.id;
+      cruceroData.published_by_user_id = req.user.id;
     }
 
     const crucero = await Crucero.create(cruceroData);
@@ -132,6 +138,11 @@ const updateCrucero = async (req, res) => {
     const crucero = await Crucero.findByPk(req.params.id);
     if (!crucero) {
       return res.status(404).json({ message: "Crucero no encontrado" });
+    }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && crucero.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para editar este crucero" });
     }
 
     const updateData = { ...req.body };
@@ -181,6 +192,12 @@ const deleteCrucero = async (req, res) => {
     if (!crucero) {
       return res.status(404).json({ message: "Crucero no encontrado" });
     }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && crucero.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar este crucero" });
+    }
+
     await crucero.update({ activo: false });
     res.json({ message: "Crucero desactivado exitosamente" });
   } catch (error) {

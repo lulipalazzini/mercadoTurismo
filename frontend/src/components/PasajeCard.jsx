@@ -6,7 +6,7 @@ import { abrirWhatsApp } from "../utils/whatsapp";
 import { getUser } from "../services/auth.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function PasajeCard({ item }) {
+export default function PasajeCard({ item, isPreview = false }) {
   const {
     tipo,
     origen,
@@ -121,7 +121,7 @@ export default function PasajeCard({ item }) {
         <button
           className="btn-primary"
           onClick={handleReservar}
-          disabled={asientosDisponibles === 0}
+          disabled={asientosDisponibles === 0 || isPreview}
         >
           {asientosDisponibles > 0 ? "Reservar" : "Sin asientos"}
         </button>

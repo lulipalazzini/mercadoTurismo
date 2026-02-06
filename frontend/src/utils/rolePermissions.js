@@ -48,7 +48,8 @@ export const rolePermissions = {
     canAccessB2BModules: false, // NO ve info interna de operadores
     visibleToPassengers: true, // Aparece en búsquedas B2C
     dashboardModules: [
-      "reservas",
+      "reservas-anotador",
+      "facturacion-anotador",
       "paquetes",
       "alojamientos",
       "autos",
@@ -57,9 +58,9 @@ export const rolePermissions = {
       "excursiones",
       "salidas-grupales",
       "transfers",
-      "cuposMercado", // ⚠️ Excepción: ven todos los cupos
-      "clientes",
-      "facturacion",
+      "trenes",
+      "seguros",
+      "mercado-cupos",
       "reportes",
       "ajustes",
     ],
@@ -78,11 +79,19 @@ export const rolePermissions = {
     canAccessB2BModules: true, // Ve productos para agencias
     visibleToPassengers: false, // ⚠️ Nunca visible aunque venda directo
     dashboardModules: [
-      "reservasB2B", // Solo reservas de agencias
-      "cuposMercado", // ⚠️ Excepción: ven todos los cupos
-      "serviciosB2B", // Sus servicios para agencias
-      "clientesB2B", // Solo clientes B2B (agencias)
-      "facturacion",
+      "reservas-anotador",
+      "facturacion-anotador",
+      "paquetes",
+      "alojamientos",
+      "autos",
+      "circuitos",
+      "cruceros",
+      "excursiones",
+      "salidas-grupales",
+      "transfers",
+      "trenes",
+      "seguros",
+      "mercado-cupos",
       "reportes",
       "ajustes",
     ],
@@ -91,16 +100,16 @@ export const rolePermissions = {
   // Usuario B2C regular (pasajero)
   user: {
     canPublish: false,
-    canSeeOthersInCuposMercado: false,
+    canSeeOthersInCuposMercado: true, // Pueden ver el mercado de cupos
     canSeeOthersInOtherModules: false,
     canEditOwn: true, // Solo sus reservas
     canDeleteOwn: false,
     canEditOthers: false,
     canDeleteOthers: false,
-    canAccessB2CModules: true, // Ve ofertas B2C
+    canAccessB2CModules: true, // Ve servicios B2C
     canAccessB2BModules: false,
     visibleToPassengers: false,
-    dashboardModules: ["misReservas", "misViajes", "perfil", "ajustes"],
+    dashboardModules: ["misReservas", "misViajes", "perfil", "ajustes", "mercado-cupos"],
   },
 };
 
@@ -260,118 +269,104 @@ export const isVisibleToPassengers = (user) => {
  * Configuración de módulos del dashboard con metadata
  */
 export const dashboardModulesConfig = {
-  // Módulos B2C (para agencias)
-  reservas: {
-    id: "reservas",
-    title: "Reservas",
-    icon: "FaClipboardList",
-    section: "principal",
-    roles: ["admin", "sysadmin", "agencia"],
-  },
+  // Módulos de productos (catálogo minorista)
   paquetes: {
     id: "paquetes",
     title: "Paquetes",
     icon: "FaBullseye",
-    section: "principal",
-    roles: ["admin", "sysadmin", "agencia"],
-  },
-  clientes: {
-    id: "clientes",
-    title: "Clientes",
-    icon: "FaUsers",
-    section: "principal",
-    roles: ["admin", "sysadmin", "agencia"],
+    section: "productos",
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
   alojamientos: {
     id: "alojamientos",
     title: "Alojamientos",
     icon: "FaHotel",
     section: "productos",
-    roles: ["admin", "sysadmin", "agencia"],
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
   autos: {
     id: "autos",
     title: "Autos",
     icon: "FaCar",
     section: "productos",
-    roles: ["admin", "sysadmin", "agencia"],
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
   circuitos: {
     id: "circuitos",
     title: "Circuitos",
     icon: "FaRoute",
     section: "productos",
-    roles: ["admin", "sysadmin", "agencia"],
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
   cruceros: {
     id: "cruceros",
     title: "Cruceros",
     icon: "FaShip",
     section: "productos",
-    roles: ["admin", "sysadmin", "agencia"],
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
   excursiones: {
     id: "excursiones",
     title: "Excursiones",
     icon: "FaHiking",
     section: "productos",
-    roles: ["admin", "sysadmin", "agencia"],
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
   "salidas-grupales": {
     id: "salidas-grupales",
     title: "Salidas Grupales",
     icon: "FaMapMarkedAlt",
     section: "productos",
-    roles: ["admin", "sysadmin", "agencia"],
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
   transfers: {
     id: "transfers",
     title: "Transfers",
     icon: "FaBus",
     section: "productos",
-    roles: ["admin", "sysadmin", "agencia"],
+    roles: ["admin", "sysadmin", "agencia", "operador"],
+  },
+  trenes: {
+    id: "trenes",
+    title: "Trenes",
+    icon: "FaTrain",
+    section: "productos",
+    roles: ["admin", "sysadmin", "agencia", "operador"],
+  },
+  seguros: {
+    id: "seguros",
+    title: "Seguros",
+    icon: "FaShieldAlt",
+    section: "productos",
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
 
-  // Módulo especial: Mercado de Cupos (todos los B2B)
+  // Módulo especial: Mercado de Cupos (todos los usuarios)
   "mercado-cupos": {
     id: "mercado-cupos",
     title: "Mercado de Cupos",
     icon: "FaStore",
     section: "mercado",
-    roles: ["admin", "sysadmin", "agencia", "operador"],
+    roles: ["admin", "sysadmin", "agencia", "operador", "user"],
   },
 
-  // Módulos B2B (para operadores)
-  reservasB2B: {
-    id: "reservasB2B",
-    title: "Reservas B2B",
-    icon: "FaClipboardList",
-    section: "principal",
-    roles: ["admin", "sysadmin", "operador"],
+  // Anotadores internos (gestión simple de registros)
+  "reservas-anotador": {
+    id: "reservas-anotador",
+    title: "Reservas (Anotador)",
+    icon: "FaBook",
+    section: "anotadores",
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
-  serviciosB2B: {
-    id: "serviciosB2B",
-    title: "Mis Servicios",
-    icon: "FaCog",
-    section: "principal",
-    roles: ["admin", "sysadmin", "operador"],
-  },
-  clientesB2B: {
-    id: "clientesB2B",
-    title: "Clientes B2B",
-    icon: "FaUsers",
-    section: "principal",
-    roles: ["admin", "sysadmin", "operador"],
+  "facturacion-anotador": {
+    id: "facturacion-anotador",
+    title: "Facturación (Anotador)",
+    icon: "FaFileInvoice",
+    section: "anotadores",
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
 
   // Módulos comunes
-  facturacion: {
-    id: "facturacion",
-    title: "Facturación",
-    icon: "FaDollarSign",
-    section: "gestion",
-    roles: ["admin", "sysadmin", "agencia", "operador"],
-  },
   reportes: {
     id: "reportes",
     title: "Reportes",

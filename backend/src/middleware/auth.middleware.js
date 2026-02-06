@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User.model");
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   console.log("\n🔐 [AUTH MIDDLEWARE] Verificando token...");
   const token = req.header("Authorization")?.replace("Bearer ", "");
   console.log(`   Token presente: ${token ? "Sí" : "No"}`);
@@ -23,6 +24,32 @@ const verifyToken = (req, res, next) => {
     console.log(
       `✅ [AUTH MIDDLEWARE] Token válido - Usuario ID: ${decoded.id}, Role: ${decoded.role}`,
     );
+
+    // 🔐 Verificar si el usuario está activo (solo para no-admins)
+    if (decoded.role !== "admin" && decoded.role !== "sysadmin") {
+      const usuario = await User.findByPk(decoded.id, {
+        attributes: ["id", "activo", "nombre", "email"],
+      });
+
+      if (!usuario) {
+        console.log("❌ [AUTH MIDDLEWARE] Usuario no encontrado en BD");
+        return res.status(401).json({ message: "Usuario no encontrado" });
+      }
+
+      if (!usuario.activo) {
+        console.log(
+          `⚠️ [AUTH MIDDLEWARE] Usuario inactivo: ${usuario.email}`,
+        );
+        return res.status(403).json({
+          message:
+            "Tu cuenta está pendiente de activación por un administrador",
+          cuentaInactiva: true,
+        });
+      }
+
+      console.log(`   Usuario activo: ${usuario.email}`);
+    }
+
     next();
   } catch (error) {
     console.error("❌ [AUTH MIDDLEWARE] Error al verificar token:");
@@ -69,6 +96,12 @@ const isAgencia = (req, res, next) => {
 };
 
 const canPublishCupos = (req, res, next) => {
+  // ADMIN tiene acceso total
+  if (req.user.role === "admin" || req.user.role === "sysadmin") {
+    return next();
+  }
+
+  // Operadores y agencias pueden publicar
   if (req.user.role !== "operador" && req.user.role !== "agencia") {
     return res
       .status(403)
@@ -78,10 +111,16 @@ const canPublishCupos = (req, res, next) => {
 };
 
 const canViewMarketplace = (req, res, next) => {
-  if (req.user.role !== "agencia") {
+  // ADMIN tiene acceso total
+  if (req.user.role === "admin" || req.user.role === "sysadmin") {
+    return next();
+  }
+
+  // Agencias y operadores pueden ver el marketplace
+  if (req.user.role !== "agencia" && req.user.role !== "operador") {
     return res
       .status(403)
-      .json({ message: "Solo agencias pueden ver el marketplace de cupos" });
+      .json({ message: "Solo agencias y operadores pueden ver el marketplace de cupos" });
   }
   next();
 };

@@ -1,7 +1,7 @@
 const Tren = require("../models/Tren.model");
 const User = require("../models/User.model");
 const { Op } = require("sequelize");
-const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const { isAdmin } = require("../middleware/publisherSecurity");
 const {
   parseItemsJsonFields,
   parseItemJsonFields,
@@ -15,8 +15,8 @@ const getTrenes = async (req, res) => {
     const whereClause = { activo: true };
 
     // Aplicar filtro de ownership para usuarios B2B
-    if (req.user && shouldFilterByOwnership(req.user, "trenes")) {
-      whereClause.userId = req.user.id;
+    if (req.user && !isAdmin(req.user)) {
+      whereClause.published_by_user_id = req.user.id;
       console.log(`🔒 Filtrando trenes del usuario: ${req.user.id}`);
     }
 
@@ -132,6 +132,11 @@ const getTren = async (req, res) => {
       return res.status(404).json({ message: "Tren no encontrado" });
     }
 
+    // Verificar ownership
+    if (req.user && !isAdmin(req.user) && tren.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para ver este tren" });
+    }
+
     const parsedTren = parseItemJsonFields(tren, JSON_FIELDS);
     res.json(parsedTren);
   } catch (error) {
@@ -152,10 +157,10 @@ const createTren = async (req, res) => {
       trenData.imagenes = req.uploadedImages.map((img) => img.path);
     }
 
-    // Asignar vendedorId y userId si hay usuario autenticado
+    // Asignar vendedorId y published_by_user_id si hay usuario autenticado
     if (req.user) {
       trenData.vendedorId = req.user.id;
-      trenData.userId = req.user.id;
+      trenData.published_by_user_id = req.user.id;
     }
 
     const tren = await Tren.create(trenData);
@@ -177,6 +182,11 @@ const updateTren = async (req, res) => {
 
     if (!tren) {
       return res.status(404).json({ message: "Tren no encontrado" });
+    }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && tren.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para editar este tren" });
     }
 
     const trenData = { ...req.body };
@@ -205,6 +215,11 @@ const deleteTren = async (req, res) => {
 
     if (!tren) {
       return res.status(404).json({ message: "Tren no encontrado" });
+    }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && tren.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar este tren" });
     }
 
     await tren.destroy();

@@ -1,10 +1,22 @@
 const Reserva = require("../models/Reserva.model");
 const Paquete = require("../models/Paquete.model");
 const Cliente = require("../models/Cliente.model");
+const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
 
 const getReservas = async (req, res) => {
   try {
+    const whereClause = {};
+
+    // APLICAR FILTROS DE OWNERSHIP
+    if (req.user && shouldFilterByOwnership(req.user, "reservas")) {
+      whereClause.createdById = req.user.id;
+      console.log(`   Filtrando reservas del usuario: ${req.user.id}`);
+    } else if (req.user) {
+      console.log(`   Usuario ${req.user.role}: Ver todas las reservas`);
+    }
+
     const reservas = await Reserva.findAll({
+      where: whereClause,
       include: [
         { model: Cliente, as: "cliente" },
         { model: Paquete, as: "paquete" },

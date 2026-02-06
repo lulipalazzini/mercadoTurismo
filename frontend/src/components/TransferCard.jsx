@@ -6,7 +6,7 @@ import { getUser } from "../services/auth.service";
 import { trackCardClick } from "../services/clickStats.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function TransferCard({ item }) {
+export default function TransferCard({ item, isPreview = false }) {
   const {
     tipo,
     origen,
@@ -110,7 +110,7 @@ export default function TransferCard({ item }) {
         <button
           className="btn-primary"
           onClick={handleReservar}
-          disabled={!disponible}
+          disabled={!disponible || isPreview}
         >
           {disponible ? "Reservar" : "No disponible"}
         </button>

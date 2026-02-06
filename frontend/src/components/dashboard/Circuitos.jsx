@@ -8,10 +8,12 @@ import {
   FaCalendarAlt,
   FaEdit,
   FaTrash,
+  FaEye,
 } from "react-icons/fa";
 import { getCircuitos, deleteCircuito } from "../../services/circuitos.service";
 import ConfirmModal from "../common/ConfirmModal";
 import AlertModal from "../common/AlertModal";
+import ServiceDetailModal from "../ServiceDetailModal";
 import CircuitoFormModal from "./CircuitoFormModal";
 import CircuitoEditModal from "./CircuitoEditModal";
 
@@ -27,6 +29,8 @@ export default function Circuitos() {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [itemToPreview, setItemToPreview] = useState(null);
 
   useEffect(() => {
     loadItems();
@@ -54,6 +58,11 @@ export default function Circuitos() {
   const handleDeleteClick = (item) => {
     setItemToDelete(item);
     setShowConfirm(true);
+  };
+
+  const handlePreviewClick = (item) => {
+    setItemToPreview(item);
+    setShowPreview(true);
   };
 
   const confirmDelete = async () => {
@@ -270,13 +279,12 @@ export default function Circuitos() {
                 </div>
 
                 <div className="package-footer">
-                  <div className="package-price">
-                    <span className="price-label">Lugares incluidos</span>
-                    <span className="price-value">
-                      {Array.isArray(item.destinos) ? item.destinos.length : 0}{" "}
-                      destinos
-                    </span>
-                  </div>
+                  <button
+                    className="btn-secondary btn-block"
+                    onClick={() => handlePreviewClick(item)}
+                  >
+                    <FaEye /> Ver Detalles
+                  </button>
                 </div>
               </div>
             ))}
@@ -313,6 +321,18 @@ export default function Circuitos() {
         message={alertMessage}
         type="error"
       />
+
+      {showPreview && itemToPreview && (
+        <ServiceDetailModal
+          item={itemToPreview}
+          tipo="circuito"
+          onClose={() => {
+            setShowPreview(false);
+            setItemToPreview(null);
+          }}
+          isPreview={true}
+        />
+      )}
     </>
   );
 }

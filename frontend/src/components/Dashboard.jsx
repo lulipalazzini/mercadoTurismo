@@ -23,6 +23,11 @@ import {
   FaMapMarkedAlt,
   FaBus,
   FaStore,
+  FaMedkit,
+  FaBook,
+  FaFileInvoice,
+  FaTrain,
+  FaShieldAlt,
 } from "react-icons/fa";
 import Reservas from "./dashboard/Reservas";
 import Paquetes from "./dashboard/Paquetes";
@@ -36,9 +41,15 @@ import Cruceros from "./dashboard/Cruceros";
 import Excursiones from "./dashboard/Excursiones";
 import SalidasGrupales from "./dashboard/SalidasGrupales";
 import Transfers from "./dashboard/Transfers";
+import Trenes from "./dashboard/Trenes";
+import Seguros from "./dashboard/Seguros";
 import MercadoCupos from "./dashboard/MercadoCupos";
+import ReservasAnotador from "./dashboard/ReservasAnotador";
+import FacturacionAnotador from "./dashboard/FacturacionAnotador";
 import Ajustes from "./dashboard/Ajustes";
 import Usuarios from "./dashboard/Usuarios";
+import UsuariosAdmin from "./dashboard/UsuariosAdmin";
+import ReportesAdmin from "./dashboard/ReportesAdmin";
 import {
   getUserRole,
   getRoleDisplayName,
@@ -110,15 +121,16 @@ function DashboardContent() {
       excursiones: "Excursiones",
       "salidas-grupales": "Salidas Grupales",
       transfers: "Transfers",
+      trenes: "Trenes",
+      seguros: "Seguros",
       "mercado-cupos": "Mercado de Cupos",
+      "reservas-anotador": "Reservas (Anotador)",
+      "facturacion-anotador": "Facturación (Anotador)",
       clientes: "Clientes",
       reportes: "Reportes",
       facturacion: "Facturación",
       ajustes: "Ajustes",
       usuarios: "Usuarios",
-      reservasB2B: "Reservas B2B",
-      serviciosB2B: "Mis Servicios",
-      clientesB2B: "Clientes B2B",
     };
     return titles[activeSection] || "Dashboard";
   };
@@ -136,6 +148,11 @@ function DashboardContent() {
     FaMapMarkedAlt: <FaMapMarkedAlt />,
     FaBus: <FaBus />,
     FaStore: <FaStore />,
+    FaMedkit: <FaMedkit />,
+    FaBook: <FaBook />,
+    FaFileInvoice: <FaFileInvoice />,
+    FaTrain: <FaTrain />,
+    FaShieldAlt: <FaShieldAlt />,
     FaDollarSign: <FaDollarSign />,
     FaChartBar: <FaChartBar />,
     FaCog: <FaCog />,
@@ -171,29 +188,35 @@ function DashboardContent() {
         return <SalidasGrupales />;
       case "transfers":
         return <Transfers />;
+      case "trenes":
+        return <Trenes />;
+      case "seguros":
+        return <Seguros />;
       case "mercado-cupos":
         return <MercadoCupos />;
+      case "reservas-anotador":
+        return <ReservasAnotador />;
+      case "facturacion-anotador":
+        return <FacturacionAnotador />;
       case "clientes":
         return <Clientes />;
       case "reportes":
-        return <Reportes />;
+        // Admin ve reportes avanzados, otros ven reportes básicos
+        return userRole === "admin" || userRole === "sysadmin" ? (
+          <ReportesAdmin />
+        ) : (
+          <Reportes />
+        );
       case "facturacion":
         return <Facturacion />;
       case "ajustes":
         return <Ajustes />;
       case "usuarios":
-        return <Usuarios />;
-      case "reservasB2B":
-        return (
-          <div className="coming-soon">📋 Reservas B2B - Próximamente</div>
-        );
-      case "serviciosB2B":
-        return (
-          <div className="coming-soon">🔧 Mis Servicios - Próximamente</div>
-        );
-      case "clientesB2B":
-        return (
-          <div className="coming-soon">🏢 Clientes B2B - Próximamente</div>
+        // Admin ve gestión completa de usuarios
+        return userRole === "admin" || userRole === "sysadmin" ? (
+          <UsuariosAdmin />
+        ) : (
+          <Usuarios />
         );
       default:
         return allVisibleModules.length > 0 ? (
@@ -214,6 +237,7 @@ function DashboardContent() {
       principal: "Principal",
       productos: "Productos y Servicios",
       mercado: "Mercado",
+      anotadores: "Anotadores Internos",
       gestion: "Gestión",
       configuracion: "Configuración",
     };
@@ -302,21 +326,7 @@ function DashboardContent() {
               </div>
               <div className="user-info">
                 <span className="user-name">{getUserDisplayName()}</span>
-                <span className="user-role">
-                  {userRoleBadge} {userRoleDisplay}
-                  {isB2BUser(user) && (
-                    <span
-                      className="b2b-badge"
-                      style={{
-                        marginLeft: "8px",
-                        fontSize: "0.75rem",
-                        color: "#2464eb",
-                      }}
-                    >
-                      {isVisibleToPassengers(user) ? "👁️ Visible" : "🔒 B2B"}
-                    </span>
-                  )}
-                </span>
+                <span className="user-role">{userRoleDisplay}</span>
               </div>
             </div>
           </div>

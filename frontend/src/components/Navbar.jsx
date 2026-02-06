@@ -114,9 +114,6 @@ export default function Navbar() {
           <Link to="/seguros" className={isActive("/seguros") ? "active" : ""}>
             Seguros
           </Link>
-          <a href="#ofertas" className="cta">
-            Ofertas
-          </a>
           <Link to="/login" className="btn-login">
             Ingresar
           </Link>

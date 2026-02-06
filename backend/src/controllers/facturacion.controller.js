@@ -3,25 +3,36 @@ const Cliente = require("../models/Cliente.model");
 const Paquete = require("../models/Paquete.model");
 const { sequelize } = require("../config/database");
 const { fn, col } = require("sequelize");
+const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
 
 const getEstadisticas = async (req, res) => {
   try {
-    const totalReservas = await Reserva.count();
+    const whereClause = {};
+
+    // APLICAR FILTROS DE OWNERSHIP
+    if (req.user && shouldFilterByOwnership(req.user, "facturacion")) {
+      whereClause.createdById = req.user.id;
+      console.log(`   Filtrando facturación del usuario: ${req.user.id}`);
+    } else if (req.user) {
+      console.log(`   Usuario ${req.user.role}: Ver toda la facturación`);
+    }
+
+    const totalReservas = await Reserva.count({ where: whereClause });
     const reservasConfirmadas = await Reserva.count({
-      where: { estado: "confirmada" },
+      where: { ...whereClause, estado: "confirmada" },
     });
     const reservasPendientes = await Reserva.count({
-      where: { estado: "pendiente" },
+      where: { ...whereClause, estado: "pendiente" },
     });
 
     const ingresosResult = await Reserva.findOne({
-      where: { pagoRealizado: true },
+      where: { ...whereClause, pagoRealizado: true },
       attributes: [[fn("SUM", col("precioTotal")), "total"]],
       raw: true,
     });
 
     const ingresosPorMes = await Reserva.findAll({
-      where: { pagoRealizado: true },
+      where: { ...whereClause, pagoRealizado: true },
       attributes: [
         [fn("STRFTIME", "%m", col("fechaReserva")), "mes"],
         [fn("STRFTIME", "%Y", col("fechaReserva")), "año"],

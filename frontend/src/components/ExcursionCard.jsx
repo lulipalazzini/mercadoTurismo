@@ -6,7 +6,7 @@ import { abrirWhatsApp } from "../utils/whatsapp";
 import { getUser } from "../services/auth.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function ExcursionCard({ item }) {
+export default function ExcursionCard({ item, isPreview = false }) {
   const {
     nombre,
     descripcion,
@@ -109,7 +109,7 @@ export default function ExcursionCard({ item }) {
         <button
           className="btn-primary"
           onClick={handleReservar}
-          disabled={cupoDisponible === 0}
+          disabled={cupoDisponible === 0 || isPreview}
         >
           {cupoDisponible > 0 ? "Reservar" : "Sin cupos"}
         </button>

@@ -1,7 +1,7 @@
 const Auto = require("../models/Auto.model");
 const User = require("../models/User.model");
 const { Op } = require("sequelize");
-const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const { isAdmin } = require("../middleware/publisherSecurity");
 const {
   parseItemsJsonFields,
   parseItemJsonFields,
@@ -15,8 +15,8 @@ const getAutos = async (req, res) => {
     const whereClause = { disponible: true };
 
     // Aplicar filtro de ownership para usuarios B2B
-    if (req.user && shouldFilterByOwnership(req.user, "autos")) {
-      whereClause.userId = req.user.id;
+    if (req.user && !isAdmin(req.user)) {
+      whereClause.published_by_user_id = req.user.id;
       console.log(`🔒 Filtrando autos del usuario: ${req.user.id}`);
     }
 
@@ -88,6 +88,12 @@ const getAuto = async (req, res) => {
     if (!auto) {
       return res.status(404).json({ message: "Auto no encontrado" });
     }
+
+    // Verificar ownership
+    if (req.user && !isAdmin(req.user) && auto.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para ver este auto" });
+    }
+
     const parsedAuto = parseItemJsonFields(auto, JSON_FIELDS);
     res.json(parsedAuto);
   } catch (error) {
@@ -106,9 +112,9 @@ const createAuto = async (req, res) => {
       autoData.imagenes = req.uploadedImages.map((img) => img.path);
     }
 
-    // Asignar owner (userId) automáticamente
+    // Asignar publisher automáticamente
     if (req.user) {
-      autoData.userId = req.user.id;
+      autoData.published_by_user_id = req.user.id;
     }
 
     const auto = await Auto.create(autoData);
@@ -128,6 +134,11 @@ const updateAuto = async (req, res) => {
     const auto = await Auto.findByPk(req.params.id);
     if (!auto) {
       return res.status(404).json({ message: "Auto no encontrado" });
+    }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && auto.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para editar este auto" });
     }
 
     const updateData = { ...req.body };
@@ -174,6 +185,12 @@ const deleteAuto = async (req, res) => {
     if (!auto) {
       return res.status(404).json({ message: "Auto no encontrado" });
     }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && auto.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar este auto" });
+    }
+
     await auto.update({ disponible: false });
     res.json({ message: "Auto desactivado exitosamente" });
   } catch (error) {

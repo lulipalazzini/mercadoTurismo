@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PassengerSelector from "./common/PassengerSelector";
 import "../styles/unifiedSearch.css";
 
 /**
@@ -15,6 +16,10 @@ export default function UnifiedHeroSearch() {
     destino: "",
     fechaInicio: "",
     fechaFin: "",
+
+    // Pasajeros (común para paquetes, alojamientos, cruceros, excursiones)
+    adults: 1,
+    minors: 0,
 
     // Paquetes específicos
     duracion: "",
@@ -61,6 +66,8 @@ export default function UnifiedHeroSearch() {
       destino: "",
       fechaInicio: "",
       fechaFin: "",
+      adults: 1,
+      minors: 0,
       duracion: "",
       precioMax: "",
       puertoSalida: "",
@@ -75,6 +82,10 @@ export default function UnifiedHeroSearch() {
 
   const handleFilterChange = (field, value) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handlePassengerChange = ({ adults, minors }) => {
+    setFilters((prev) => ({ ...prev, adults, minors }));
   };
 
   const handleSubmit = (e) => {
@@ -226,6 +237,14 @@ export default function UnifiedHeroSearch() {
                   }
                 />
               </div>
+
+              <div className="search-field search-field-full">
+                <PassengerSelector
+                  adults={filters.adults}
+                  minors={filters.minors}
+                  onChange={handlePassengerChange}
+                />
+              </div>
             </>
           )}
 
@@ -334,6 +353,14 @@ export default function UnifiedHeroSearch() {
                   <option value="resort">Resort</option>
                   <option value="cabaña">Cabaña</option>
                 </select>
+              </div>
+
+              <div className="search-field search-field-full">
+                <PassengerSelector
+                  adults={filters.adults}
+                  minors={filters.minors}
+                  onChange={handlePassengerChange}
+                />
               </div>
             </>
           )}
@@ -444,6 +471,14 @@ export default function UnifiedHeroSearch() {
                   onChange={(e) =>
                     handleFilterChange("precioMax", e.target.value)
                   }
+                />
+              </div>
+
+              <div className="search-field search-field-full">
+                <PassengerSelector
+                  adults={filters.adults}
+                  minors={filters.minors}
+                  onChange={handlePassengerChange}
                 />
               </div>
             </>
@@ -673,6 +708,14 @@ export default function UnifiedHeroSearch() {
                   onChange={(e) =>
                     handleFilterChange("precioMax", e.target.value)
                   }
+                />
+              </div>
+
+              <div className="search-field search-field-full">
+                <PassengerSelector
+                  adults={filters.adults}
+                  minors={filters.minors}
+                  onChange={handlePassengerChange}
                 />
               </div>
             </>

@@ -6,7 +6,7 @@ import { getUser } from "../services/auth.service";
 import { trackCardClick } from "../services/clickStats.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function SeguroCard({ item }) {
+export default function SeguroCard({ item, isPreview = false }) {
   const {
     nombre,
     aseguradora,
@@ -122,7 +122,7 @@ export default function SeguroCard({ item }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button className="btn-primary" onClick={handleReservar}>
+        <button className="btn-primary" onClick={handleReservar} disabled={isPreview}>
           Reservar
         </button>
       </div>

@@ -1,7 +1,7 @@
 const Transfer = require("../models/Transfer.model");
 const User = require("../models/User.model");
 const { Op } = require("sequelize");
-const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const { isAdmin } = require("../middleware/publisherSecurity");
 const {
   parseItemsJsonFields,
   parseItemJsonFields,
@@ -15,8 +15,8 @@ const getTransfers = async (req, res) => {
     const whereClause = { disponible: true };
 
     // Aplicar filtro de ownership para usuarios B2B
-    if (req.user && shouldFilterByOwnership(req.user, "transfers")) {
-      whereClause.userId = req.user.id;
+    if (req.user && !isAdmin(req.user)) {
+      whereClause.published_by_user_id = req.user.id;
       console.log(`🔒 Filtrando transfers del usuario: ${req.user.id}`);
     }
 
@@ -87,6 +87,12 @@ const getTransfer = async (req, res) => {
     if (!transfer) {
       return res.status(404).json({ message: "Transfer no encontrado" });
     }
+
+    // Verificar ownership
+    if (req.user && !isAdmin(req.user) && transfer.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para ver este transfer" });
+    }
+
     const parsedTransfer = parseItemJsonFields(transfer, JSON_FIELDS);
     res.json(parsedTransfer);
   } catch (error) {
@@ -105,9 +111,9 @@ const createTransfer = async (req, res) => {
       transferData.imagenes = req.uploadedImages.map((img) => img.path);
     }
 
-    // Asignar owner (userId) automáticamente
+    // Asignar publisher automáticamente
     if (req.user) {
-      transferData.userId = req.user.id;
+      transferData.published_by_user_id = req.user.id;
     }
 
     const transfer = await Transfer.create(transferData);
@@ -128,6 +134,11 @@ const updateTransfer = async (req, res) => {
     const transfer = await Transfer.findByPk(req.params.id);
     if (!transfer) {
       return res.status(404).json({ message: "Transfer no encontrado" });
+    }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && transfer.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para editar este transfer" });
     }
 
     const updateData = { ...req.body };
@@ -177,6 +188,12 @@ const deleteTransfer = async (req, res) => {
     if (!transfer) {
       return res.status(404).json({ message: "Transfer no encontrado" });
     }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && transfer.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar este transfer" });
+    }
+
     await transfer.update({ disponible: false });
     res.json({ message: "Transfer desactivado exitosamente" });
   } catch (error) {

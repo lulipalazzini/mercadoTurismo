@@ -1,16 +1,17 @@
 import React from "react";
 import "../styles/card.css";
-import { FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaPlane } from "react-icons/fa";
 
 export default function CupoCard({ item }) {
   if (!item) return null;
 
   const {
-    tipoProducto,
+    aerolinea,
     descripcion,
     cantidad,
     precioMinorista,
     fechaVencimiento,
+    fechaOrigen,
     estado,
     observaciones,
   } = item;
@@ -57,12 +58,15 @@ export default function CupoCard({ item }) {
     <div className="service-card">
       <div className="card-header">
         <div className="card-header-content">
-          <h3 className="card-title">{tipoProducto}</h3>
+          <h3 className="card-title">
+            <FaPlane style={{ marginRight: "0.5rem" }} />
+            {aerolinea || "Vuelo"}
+          </h3>
           <p className="empresa">
-            <FaCalendarAlt /> Válido hasta: {formatDate(fechaVencimiento)}
+            <FaCalendarAlt /> Fecha vuelo: {formatDate(fechaOrigen)}
           </p>
         </div>
-        <span className="tipo-badge">{tipoProducto}</span>
+        <span className="tipo-badge">Aéreo</span>
       </div>
 
       <div className="card-content">
@@ -78,6 +82,16 @@ export default function CupoCard({ item }) {
             <span className="info-value">{cantidad}</span>
           </div>
           <div className="info-item">
+            <span className="info-label">Vencimiento</span>
+            <span className="info-value">{formatDate(fechaVencimiento)}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">Precio</span>
+            <span className="info-value">
+              {formatCurrency(precioMinorista)}
+            </span>
+          </div>
+        </div>>
             <span className="info-label">Precio</span>
             <span className="info-value">
               {formatCurrency(precioMinorista)}

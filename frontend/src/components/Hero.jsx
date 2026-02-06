@@ -87,7 +87,7 @@ export default function Hero() {
         <div className="hero-overlay" aria-hidden="true" />
 
         <div className="hero-content">
-          <h1>Compará ofertas de agencias de viajes</h1>
+          <h1>Compará servicios de agencias de viajes</h1>
           <p className="lead">Un solo lugar, múltiples agencias. Vos elegís.</p>
 
           {/* Búsqueda Unificada */}
@@ -110,7 +110,7 @@ export default function Hero() {
                   Más buscados por viajeros
                 </h2>
                 <p className="featured-services-subtitle">
-                  Descubrí las ofertas más populares de nuestras agencias
+                  Descubrí los servicios más populares de nuestras agencias
                 </p>
               </div>
               <div className="featured-services-grid">

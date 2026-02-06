@@ -5,7 +5,7 @@ import { abrirWhatsApp } from "../utils/whatsapp";
 import { getUser } from "../services/auth.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function AlojamientoCard({ alojamiento }) {
+export default function AlojamientoCard({ alojamiento, isPreview = false }) {
   const [showModal, setShowModal] = useState(false);
 
   const {
@@ -128,7 +128,7 @@ export default function AlojamientoCard({ alojamiento }) {
             <button
               className="btn-primary"
               onClick={handleReservar}
-              disabled={habitacionesDisponibles === 0}
+              disabled={habitacionesDisponibles === 0 || isPreview}
             >
               {habitacionesDisponibles > 0 ? "Reservar" : "Sin habitaciones"}
             </button>

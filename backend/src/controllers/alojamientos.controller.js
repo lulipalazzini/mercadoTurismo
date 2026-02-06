@@ -1,6 +1,6 @@
 const Alojamiento = require("../models/Alojamiento.model");
 const User = require("../models/User.model");
-const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const { isAdmin } = require("../middleware/publisherSecurity");
 const {
   parseItemsJsonFields,
   parseItemJsonFields,
@@ -14,8 +14,8 @@ const getAlojamientos = async (req, res) => {
     const whereClause = { activo: true };
 
     // Aplicar filtro de ownership para usuarios B2B
-    if (req.user && shouldFilterByOwnership(req.user, "alojamientos")) {
-      whereClause.userId = req.user.id;
+    if (req.user && !isAdmin(req.user)) {
+      whereClause.published_by_user_id = req.user.id;
       console.log(`🔒 Filtrando alojamientos del usuario: ${req.user.id}`);
     }
 
@@ -56,6 +56,12 @@ const getAlojamiento = async (req, res) => {
     if (!alojamiento) {
       return res.status(404).json({ message: "Alojamiento no encontrado" });
     }
+
+    // Verificar ownership
+    if (req.user && !isAdmin(req.user) && alojamiento.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para ver este alojamiento" });
+    }
+
     const parsedAlojamiento = parseItemJsonFields(alojamiento, JSON_FIELDS);
     res.json(parsedAlojamiento);
   } catch (error) {
@@ -77,9 +83,9 @@ const createAlojamiento = async (req, res) => {
       alojamientoData.imagenes = req.uploadedImages.map((img) => img.path);
     }
 
-    // Asignar owner (userId) automáticamente
+    // Asignar publisher automáticamente
     if (req.user) {
-      alojamientoData.userId = req.user.id;
+      alojamientoData.published_by_user_id = req.user.id;
     }
 
     const alojamiento = await Alojamiento.create(alojamientoData);
@@ -100,6 +106,11 @@ const updateAlojamiento = async (req, res) => {
     const alojamiento = await Alojamiento.findByPk(req.params.id);
     if (!alojamiento) {
       return res.status(404).json({ message: "Alojamiento no encontrado" });
+    }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && alojamiento.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para editar este alojamiento" });
     }
 
     const updateData = { ...req.body };
@@ -150,6 +161,12 @@ const deleteAlojamiento = async (req, res) => {
     if (!alojamiento) {
       return res.status(404).json({ message: "Alojamiento no encontrado" });
     }
+
+    // Verificar ownership
+    if (!isAdmin(req.user) && alojamiento.published_by_user_id !== req.user.id) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar este alojamiento" });
+    }
+
     await alojamiento.update({ activo: false });
     res.json({ message: "Alojamiento desactivado exitosamente" });
   } catch (error) {

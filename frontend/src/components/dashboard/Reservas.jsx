@@ -91,7 +91,6 @@ export default function Reservas() {
         </button>
         <div className="toolbar-actions">
           <div className="search-box-crm">
-            <FaSearch className="search-icon" />
             <input type="text" placeholder="Buscar reservas..." />
           </div>
           <button className="btn-secondary">

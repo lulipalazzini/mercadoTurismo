@@ -5,7 +5,7 @@ import ModuleFilters from "../components/ModuleFilters";
 import "../styles/servicios.css";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 
 export default function Paquetes() {
   const [searchParams] = useSearchParams();

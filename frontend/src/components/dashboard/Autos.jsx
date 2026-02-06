@@ -9,10 +9,12 @@ import {
   FaTrash,
   FaCogs,
   FaMapMarkerAlt,
+  FaEye,
 } from "react-icons/fa";
 import { getAutos, deleteAuto } from "../../services/autos.service";
 import ConfirmModal from "../common/ConfirmModal";
 import AlertModal from "../common/AlertModal";
+import ServiceDetailModal from "../ServiceDetailModal";
 import AutoFormModal from "./AutoFormModal";
 import AutoEditModal from "./AutoEditModal";
 
@@ -28,6 +30,8 @@ export default function Autos() {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [itemToPreview, setItemToPreview] = useState(null);
 
   useEffect(() => {
     loadItems();
@@ -55,6 +59,11 @@ export default function Autos() {
   const handleDeleteClick = (item) => {
     setItemToDelete(item);
     setShowConfirm(true);
+  };
+
+  const handlePreviewClick = (item) => {
+    setItemToPreview(item);
+    setShowPreview(true);
   };
 
   const confirmDelete = async () => {
@@ -258,10 +267,12 @@ export default function Autos() {
                 </div>
 
                 <div className="package-footer">
-                  <div className="package-price">
-                    <span className="price-label">Año</span>
-                    <span className="price-value">{item.año || "N/A"}</span>
-                  </div>
+                  <button
+                    className="btn-secondary btn-block"
+                    onClick={() => handlePreviewClick(item)}
+                  >
+                    <FaEye /> Ver Detalles
+                  </button>
                 </div>
               </div>
             ))}
@@ -298,6 +309,18 @@ export default function Autos() {
         message={alertMessage}
         type="error"
       />
+
+      {showPreview && itemToPreview && (
+        <ServiceDetailModal
+          item={itemToPreview}
+          tipo="auto"
+          onClose={() => {
+            setShowPreview(false);
+            setItemToPreview(null);
+          }}
+          isPreview={true}
+        />
+      )}
     </>
   );
 }

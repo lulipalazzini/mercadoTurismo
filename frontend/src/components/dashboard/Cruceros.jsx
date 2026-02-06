@@ -10,12 +10,11 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import { getCruceros, deleteCrucero } from "../../services/cruceros.service";
+import ServiceDetailModal from "../ServiceDetailModal";
 import ConfirmModal from "../common/ConfirmModal";
 import AlertModal from "../common/AlertModal";
 import CruceroFormModal from "./CruceroFormModal";
 import CruceroEditModal from "./CruceroEditModal";
-import PreviewModal from "../common/PreviewModal";
-import CruceroCard from "../CruceroCard";
 
 export default function Cruceros() {
   const [items, setItems] = useState([]);
@@ -159,7 +158,6 @@ export default function Cruceros() {
           </button>
           <div className="toolbar-actions">
             <div className="search-box-crm">
-              <FaSearch className="search-icon" />
               <input
                 type="text"
                 placeholder="Buscar cruceros..."
@@ -348,16 +346,17 @@ export default function Cruceros() {
         type="error"
       />
 
-      <PreviewModal
-        isOpen={showPreview}
-        onClose={() => {
-          setShowPreview(false);
-          setItemToPreview(null);
-        }}
-        title="Vista Previa - Como lo ve el cliente"
-      >
-        {itemToPreview && <CruceroCard item={itemToPreview} />}
-      </PreviewModal>
+      {showPreview && itemToPreview && (
+        <ServiceDetailModal
+          item={itemToPreview}
+          tipo="crucero"
+          onClose={() => {
+            setShowPreview(false);
+            setItemToPreview(null);
+          }}
+          isPreview={true}
+        />
+      )}
     </>
   );
 }

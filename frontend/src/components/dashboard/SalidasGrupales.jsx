@@ -8,6 +8,7 @@ import {
   FaCalendarAlt,
   FaEdit,
   FaTrash,
+  FaEye,
 } from "react-icons/fa";
 import {
   getSalidasGrupales,
@@ -15,6 +16,7 @@ import {
 } from "../../services/salidasGrupales.service";
 import ConfirmModal from "../common/ConfirmModal";
 import AlertModal from "../common/AlertModal";
+import ServiceDetailModal from "../ServiceDetailModal";
 import SalidaGrupalFormModal from "./SalidaGrupalFormModal";
 import SalidaGrupalEditModal from "./SalidaGrupalEditModal";
 
@@ -30,6 +32,8 @@ export default function SalidasGrupales() {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [itemToPreview, setItemToPreview] = useState(null);
 
   useEffect(() => {
     loadItems();
@@ -57,6 +61,11 @@ export default function SalidasGrupales() {
   const handleDeleteClick = (item) => {
     setItemToDelete(item);
     setShowConfirm(true);
+  };
+
+  const handlePreviewClick = (item) => {
+    setItemToPreview(item);
+    setShowPreview(true);
   };
 
   const confirmDelete = async () => {
@@ -148,7 +157,6 @@ export default function SalidasGrupales() {
           </button>
           <div className="toolbar-actions">
             <div className="search-box-crm">
-              <FaSearch className="search-icon" />
               <input
                 type="text"
                 placeholder="Buscar salidas grupales..."
@@ -268,12 +276,12 @@ export default function SalidasGrupales() {
                 </div>
 
                 <div className="package-footer">
-                  <div className="package-price">
-                    <span className="price-label">Regreso</span>
-                    <span className="price-value">
-                      {formatDate(item.fechaRegreso)}
-                    </span>
-                  </div>
+                  <button
+                    className="btn-secondary btn-block"
+                    onClick={() => handlePreviewClick(item)}
+                  >
+                    <FaEye /> Ver Detalles
+                  </button>
                 </div>
               </div>
             ))}
@@ -310,6 +318,18 @@ export default function SalidasGrupales() {
         message={alertMessage}
         type="error"
       />
+
+      {showPreview && itemToPreview && (
+        <ServiceDetailModal
+          item={itemToPreview}
+          tipo="salidaGrupal"
+          onClose={() => {
+            setShowPreview(false);
+            setItemToPreview(null);
+          }}
+          isPreview={true}
+        />
+      )}
     </>
   );
 }

@@ -167,7 +167,6 @@ export default function Usuarios() {
           </button>
           <div className="toolbar-actions">
             <div className="search-box-crm">
-              <FaSearch className="search-icon" />
               <input
                 type="text"
                 placeholder="Buscar usuarios..."

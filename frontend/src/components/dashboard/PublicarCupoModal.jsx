@@ -6,19 +6,20 @@ import "../../styles/modal.css";
 
 export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
-    tipoProducto: "",
     descripcion: "",
     cantidad: 1,
     precioMayorista: "",
     precioMinorista: "",
     fechaVencimiento: "",
+    fechaOrigen: "",
+    aerolinea: "",
     observaciones: "",
   });
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertConfig, setAlertConfig] = useState({ type: "error", message: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,16 +34,19 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.tipoProducto.trim())
-      newErrors.tipoProducto = "El tipo de producto es requerido";
+    
     if (!formData.descripcion.trim())
       newErrors.descripcion = "La descripción es requerida";
+    
     if (!formData.cantidad || formData.cantidad < 1)
       newErrors.cantidad = "La cantidad debe ser mayor a 0";
+    
     if (!formData.precioMayorista || formData.precioMayorista <= 0)
       newErrors.precioMayorista = "El precio mayorista debe ser mayor a 0";
+    
     if (!formData.precioMinorista || formData.precioMinorista <= 0)
       newErrors.precioMinorista = "El precio minorista debe ser mayor a 0";
+    
     if (
       formData.precioMinorista &&
       formData.precioMayorista &&
@@ -51,8 +55,17 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
     )
       newErrors.precioMinorista =
         "El precio minorista debe ser mayor al mayorista";
+    
     if (!formData.fechaVencimiento)
       newErrors.fechaVencimiento = "La fecha de vencimiento es requerida";
+
+    // ✅ NUEVO: Validar fecha de origen (OBLIGATORIO)
+    if (!formData.fechaOrigen)
+      newErrors.fechaOrigen = "La fecha de origen es requerida";
+
+    // ✅ NUEVO: Validar aerolínea (OBLIGATORIO)
+    if (!formData.aerolinea || !formData.aerolinea.trim())
+      newErrors.aerolinea = "La aerolínea es requerida";
 
     // Validar que la fecha de vencimiento sea futura
     if (formData.fechaVencimiento) {
@@ -61,6 +74,14 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
       const vencimiento = new Date(formData.fechaVencimiento);
       if (vencimiento < today) {
         newErrors.fechaVencimiento = "La fecha de vencimiento debe ser futura";
+      }
+    }
+
+    // Validar que fechaOrigen sea válida
+    if (formData.fechaOrigen) {
+      const origen = new Date(formData.fechaOrigen);
+      if (isNaN(origen.getTime())) {
+        newErrors.fechaOrigen = "Fecha de origen inválida";
       }
     }
 
@@ -80,6 +101,7 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
     try {
       const dataToSend = {
         ...formData,
+        tipoProducto: "aereo", // Siempre aereo
         cantidad: parseInt(formData.cantidad),
         precioMayorista: parseFloat(formData.precioMayorista),
         precioMinorista: parseFloat(formData.precioMinorista),
@@ -91,7 +113,23 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
       handleClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertMessage("Error al publicar el cupo");
+      
+      // Mostrar error detallado del backend
+      const errorData = error.response?.data;
+      let errorMessage = "Error al publicar el cupo";
+      
+      if (errorData?.detalle) {
+        errorMessage = errorData.detalle;
+      } else if (errorData?.error) {
+        errorMessage = errorData.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      setAlertConfig({
+        type: "error",
+        message: errorMessage,
+      });
       setShowAlert(true);
     } finally {
       setSubmitting(false);
@@ -100,12 +138,13 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
 
   const handleClose = () => {
     setFormData({
-      tipoProducto: "",
       descripcion: "",
       cantidad: 1,
       precioMayorista: "",
       precioMinorista: "",
       fechaVencimiento: "",
+      fechaOrigen: "",
+      aerolinea: "",
       observaciones: "",
     });
     setErrors({});
@@ -130,34 +169,64 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
         <form onSubmit={handleSubmit}>
           <div className="modal-body">
             <div className="form-grid">
-              <div className="form-group">
-                <label htmlFor="tipoProducto">
-                  Tipo de Producto <span className="required">*</span>
+              <div className="form-group full-width">
+                <label htmlFor="descripcion">
+                  Descripción del Vuelo <span className="required">*</span>
                 </label>
-                <select
-                  id="tipoProducto"
-                  name="tipoProducto"
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  rows="3"
                   className={`form-control ${
-                    errors.tipoProducto ? "error" : ""
+                    errors.descripcion ? "error" : ""
                   }`}
-                  value={formData.tipoProducto}
+                  value={formData.descripcion}
                   onChange={handleChange}
-                >
-                  <option value="">Seleccionar tipo</option>
-                  <option value="Alojamiento">Alojamiento</option>
-                  <option value="Auto">Auto</option>
-                  <option value="Circuito">Circuito</option>
-                  <option value="Crucero">Crucero</option>
-                  <option value="Excursión">Excursión</option>
-                  <option value="Pasaje">Pasaje</option>
-                  <option value="Transfer">Transfer</option>
-                  <option value="Salida Grupal">Salida Grupal</option>
-                  <option value="Paquete">Paquete</option>
-                  <option value="Otro">Otro</option>
-                </select>
-                {errors.tipoProducto && (
-                  <span className="error-message">{errors.tipoProducto}</span>
+                  placeholder="Ej: Vuelo Buenos Aires - Miami, clase económica, con escala en Panamá"
+                />
+                {errors.descripcion && (
+                  <span className="error-message">{errors.descripcion}</span>
                 )}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="aerolinea">
+                  ✈️ Aerolínea <span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="aerolinea"
+                  name="aerolinea"
+                  className={`form-control ${errors.aerolinea ? "error" : ""}`}
+                  value={formData.aerolinea}
+                  onChange={handleChange}
+                  placeholder="Ej: American Airlines"
+                />
+                {errors.aerolinea && (
+                  <span className="error-message">{errors.aerolinea}</span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="fechaOrigen">
+                  📅 Fecha de Origen <span className="required">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="fechaOrigen"
+                  name="fechaOrigen"
+                  className={`form-control ${
+                    errors.fechaOrigen ? "error" : ""
+                  }`}
+                  value={formData.fechaOrigen}
+                  onChange={handleChange}
+                />
+                {errors.fechaOrigen && (
+                  <span className="error-message">{errors.fechaOrigen}</span>
+                )}
+                <small className="form-hint">
+                  Fecha del vuelo de ida
+                </small>
               </div>
 
               <div className="form-group">
@@ -175,26 +244,6 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                 />
                 {errors.cantidad && (
                   <span className="error-message">{errors.cantidad}</span>
-                )}
-              </div>
-
-              <div className="form-group full-width">
-                <label htmlFor="descripcion">
-                  Descripción del Cupo <span className="required">*</span>
-                </label>
-                <textarea
-                  id="descripcion"
-                  name="descripcion"
-                  rows="3"
-                  className={`form-control ${
-                    errors.descripcion ? "error" : ""
-                  }`}
-                  value={formData.descripcion}
-                  onChange={handleChange}
-                  placeholder="Ej: Hotel 4 estrellas en Bariloche, habitación doble con desayuno incluido"
-                />
-                {errors.descripcion && (
-                  <span className="error-message">{errors.descripcion}</span>
                 )}
               </div>
 
@@ -272,6 +321,9 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                     {errors.fechaVencimiento}
                   </span>
                 )}
+                <small className="form-hint">
+                  Hasta cuándo es válida la oferta
+                </small>
               </div>
 
               <div className="form-group full-width">
@@ -283,16 +335,15 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                   className="form-control"
                   value={formData.observaciones}
                   onChange={handleChange}
-                  placeholder="Información adicional relevante para el comprador"
+                  placeholder="Información adicional: clase, equipaje incluido, escalas, restricciones, etc."
                 />
               </div>
             </div>
 
             <div className="info-box">
               <p>
-                <strong>Nota:</strong> El cupo será visible para todos los
-                operadores en el mercado. Asegúrate de verificar la
-                disponibilidad antes de publicar.
+                <strong>Nota:</strong> Todos los cupos son para vuelos aéreos. El cupo será visible para todos los
+                operadores en el mercado. Asegúrate de verificar la disponibilidad antes de publicar.
               </p>
             </div>
           </div>
@@ -316,8 +367,8 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
       <AlertModal
         isOpen={showAlert}
         onClose={() => setShowAlert(false)}
-        message={alertMessage}
-        type="error"
+        type={alertConfig.type}
+        message={alertConfig.message}
       />
     </div>
   );

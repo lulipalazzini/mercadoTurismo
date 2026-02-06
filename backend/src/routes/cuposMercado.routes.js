@@ -16,8 +16,8 @@ const {
 
 const router = express.Router();
 
-// Marketplace - solo agencias pueden ver
-router.get("/marketplace", verifyToken, canViewMarketplace, getCuposMercado);
+// Marketplace - todos los usuarios autenticados pueden ver
+router.get("/marketplace", verifyToken, getCuposMercado);
 
 // Mis cupos - operadores y agencias
 router.get("/mis-cupos", verifyToken, canPublishCupos, getMisCupos);

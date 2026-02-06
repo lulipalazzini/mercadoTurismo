@@ -23,7 +23,6 @@ export default function ImportarCuposModal({
   const [showInstructions, setShowInstructions] = useState(true);
 
   const requiredColumns = [
-    { key: "tipoProducto", label: "Tipo Producto", ejemplo: "aereo" },
     { key: "origen", label: "Origen", ejemplo: "Buenos Aires, Argentina" },
     {
       key: "destino",
@@ -37,6 +36,8 @@ export default function ImportarCuposModal({
     },
     { key: "cantidad", label: "Cantidad", ejemplo: "10" },
     { key: "precioUnitario", label: "Precio Unitario", ejemplo: "45000" },
+    { key: "aerolinea", label: "Aerolínea", ejemplo: "American Airlines" },
+    { key: "fechaOrigen", label: "Fecha Origen", ejemplo: "2026-03-15" },
     {
       key: "fechaVencimiento",
       label: "Fecha Vencimiento",
@@ -45,10 +46,9 @@ export default function ImportarCuposModal({
   ];
 
   const optionalColumns = [
-    { key: "fechaViaje", label: "Fecha Viaje", ejemplo: "2026-03-15" },
-    { key: "aerolinea", label: "Aerolínea", ejemplo: "American Airlines" },
     { key: "clase", label: "Clase", ejemplo: "Económica" },
     { key: "equipaje", label: "Equipaje", ejemplo: "23kg incluido" },
+    { key: "observaciones", label: "Observaciones", ejemplo: "Sin escalas" },
   ];
 
   const handleFileChange = (e) => {
@@ -97,14 +97,40 @@ export default function ImportarCuposModal({
           return;
         }
 
-        // Validar que tipoProducto sea "aereo"
-        const invalidRows = jsonData.filter(
-          (row) => row.tipoProducto?.toLowerCase() !== "aereo",
-        );
+        // Validar campos requeridos en cada fila
+        const errors = [];
+        jsonData.forEach((row, index) => {
+          const rowErrors = [];
+          
+          if (!row.aerolinea || !row.aerolinea.trim()) {
+            rowErrors.push("falta aerolínea");
+          }
+          if (!row.fechaOrigen) {
+            rowErrors.push("falta fecha origen");
+          }
+          if (!row.descripcion || !row.descripcion.trim()) {
+            rowErrors.push("falta descripción");
+          }
+          if (!row.cantidad || row.cantidad <= 0) {
+            rowErrors.push("cantidad inválida");
+          }
+          if (!row.precioUnitario || row.precioUnitario <= 0) {
+            rowErrors.push("precio inválido");
+          }
+          if (!row.fechaVencimiento) {
+            rowErrors.push("falta fecha vencimiento");
+          }
+          
+          if (rowErrors.length > 0) {
+            errors.push(`Fila ${index + 2}: ${rowErrors.join(", ")}`);
+          }
+        });
 
-        if (invalidRows.length > 0) {
+        if (errors.length > 0) {
           setError(
-            `Error: Todos los cupos deben ser de tipo "aereo". Se encontraron ${invalidRows.length} filas con tipo diferente.`,
+            `Se encontraron errores en ${errors.length} fila(s):\n${errors.slice(0, 5).join("\n")}${
+              errors.length > 5 ? `\n... y ${errors.length - 5} errores más` : ""
+            }`,
           );
           setPreview([]);
           return;
@@ -113,7 +139,8 @@ export default function ImportarCuposModal({
         setPreview(jsonData);
         setShowInstructions(false);
         setError(null);
-      } catch (err) {
+      } catch (error) {
+        console.error("Error leyendo archivo Excel:", error);
         setError(
           "Error al leer el archivo. Asegúrate de que sea un Excel válido.",
         );
@@ -146,12 +173,30 @@ export default function ImportarCuposModal({
         },
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Error al importar cupos");
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        let errorMessage = result.error || "Error al importar cupos";
+        
+        if (result.detalle) {
+          errorMessage += `\n\n${result.detalle}`;
+        }
+        
+        if (result.errores && result.errores.length > 0) {
+          const errorDetails = result.errores
+            .slice(0, 10)
+            .map((e) => `Fila ${e.fila}: ${e.error}`)
+            .join("\n");
+          errorMessage += `\n\nErrores encontrados:\n${errorDetails}`;
+          
+          if (result.errores.length > 10) {
+            errorMessage += `\n... y ${result.errores.length - 10} errores más`;
+          }
+        }
+        
+        throw new Error(errorMessage);
       }
 
-      const result = await response.json();
       onImportSuccess(result);
       handleClose();
     } catch (err) {
@@ -172,43 +217,43 @@ export default function ImportarCuposModal({
   const downloadTemplate = () => {
     const templateData = [
       {
-        tipoProducto: "aereo",
         origen: "Buenos Aires, Argentina",
         destino: "Miami, Florida, Estados Unidos",
         descripcion: "Vuelo directo BA-MIA clase económica",
         cantidad: 10,
         precioUnitario: 45000,
-        fechaVencimiento: "2026-12-31",
-        fechaViaje: "2026-03-15",
         aerolinea: "American Airlines",
+        fechaOrigen: "2026-03-15",
+        fechaVencimiento: "2026-12-31",
         clase: "Económica",
         equipaje: "23kg incluido",
+        observaciones: "Sin escalas",
       },
       {
-        tipoProducto: "aereo",
         origen: "Buenos Aires, Argentina",
         destino: "Madrid, España",
         descripcion: "Vuelo BA-MAD vía São Paulo",
         cantidad: 5,
         precioUnitario: 75000,
-        fechaVencimiento: "2026-11-30",
-        fechaViaje: "2026-04-20",
         aerolinea: "Iberia",
+        fechaOrigen: "2026-04-20",
+        fechaVencimiento: "2026-11-30",
         clase: "Business",
         equipaje: "32kg incluido",
+        observaciones: "Escala en São Paulo",
       },
       {
-        tipoProducto: "aereo",
         origen: "Mendoza, Argentina",
         destino: "Santiago, Chile",
         descripcion: "Vuelo MDZ-SCL directo",
         cantidad: 15,
         precioUnitario: 25000,
-        fechaVencimiento: "2026-10-15",
-        fechaViaje: "2026-05-10",
         aerolinea: "LATAM",
+        fechaOrigen: "2026-05-10",
+        fechaVencimiento: "2026-10-15",
         clase: "Económica",
         equipaje: "23kg incluido",
+        observaciones: "Vuelo regional",
       },
     ];
 
@@ -275,18 +320,25 @@ export default function ImportarCuposModal({
                 <div>
                   <strong>Importante:</strong>
                   <ul>
-                    <li>Todos los cupos deben ser de tipo "aereo"</li>
+                    <li>Todos los cupos serán automáticamente de tipo "aereo"</li>
                     <li>
                       Usa el formato completo de destinos: "Ciudad,
                       Provincia/Estado, País" (Ej: "Mendoza, Argentina")
                     </li>
                     <li>
-                      Las fechas deben estar en formato AAAA-MM-DD (2026-12-31)
+                      Todas las fechas deben estar en formato AAAA-MM-DD (2026-12-31)
+                    </li>
+                    <li>
+                      La <strong>fecha origen</strong> es obligatoria (fecha del vuelo)
+                    </li>
+                    <li>
+                      La <strong>aerolínea</strong> es obligatoria
                     </li>
                     <li>
                       Los precios deben ser números sin símbolos ni puntos
                     </li>
                     <li>La cantidad debe ser un número entero positivo</li>
+                    <li>Si hay errores, NO se importará ningún cupo (todo o nada)</li>
                   </ul>
                 </div>
               </div>
@@ -355,24 +407,24 @@ export default function ImportarCuposModal({
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Tipo</th>
+                      <th>Aerolínea</th>
                       <th>Origen</th>
                       <th>Destino</th>
+                      <th>Fecha Vuelo</th>
                       <th>Cantidad</th>
                       <th>Precio</th>
-                      <th>Vencimiento</th>
                     </tr>
                   </thead>
                   <tbody>
                     {preview.slice(0, 5).map((row, index) => (
                       <tr key={index}>
                         <td>{index + 1}</td>
-                        <td>{row.tipoProducto}</td>
+                        <td>{row.aerolinea}</td>
                         <td>{row.origen}</td>
                         <td>{row.destino}</td>
+                        <td>{row.fechaOrigen}</td>
                         <td>{row.cantidad}</td>
                         <td>${row.precioUnitario?.toLocaleString()}</td>
-                        <td>{row.fechaVencimiento}</td>
                       </tr>
                     ))}
                   </tbody>

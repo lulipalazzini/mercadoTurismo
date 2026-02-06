@@ -6,7 +6,7 @@ import { getUser } from "../services/auth.service";
 import { trackCardClick } from "../services/clickStats.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
-export default function TrenCard({ item }) {
+export default function TrenCard({ item, isPreview = false }) {
   const {
     nombre,
     empresa,
@@ -175,7 +175,7 @@ export default function TrenCard({ item }) {
               {moneda !== "USD" && moneda !== "EUR" ? moneda : ""}
             </span>
           </div>
-          <button className="btn-reservar" onClick={handleReservar}>
+          <button className="btn-reservar" onClick={handleReservar} disabled={isPreview}>
             Consultar
           </button>
         </div>

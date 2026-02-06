@@ -1,7 +1,7 @@
 import api from "./api.js";
 
 /**
- * Obtiene el marketplace de cupos (solo para agencias)
+ * Obtiene el marketplace de cupos (disponible para todos los usuarios)
  */
 export const getCuposMarketplace = async () => {
   try {
