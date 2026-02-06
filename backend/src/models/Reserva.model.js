@@ -66,7 +66,7 @@ const Reserva = sequelize.define(
         "pendiente",
         "confirmada",
         "cancelada",
-        "completada"
+        "completada",
       ),
       defaultValue: "pendiente",
     },
@@ -103,7 +103,7 @@ const Reserva = sequelize.define(
         }
       },
     },
-  }
+  },
 );
 
 // Definir relaciones

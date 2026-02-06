@@ -83,7 +83,8 @@ const CupoMercado = sequelize.define(
       },
       onUpdate: "CASCADE",
       onDelete: "RESTRICT",
-      comment: "ID del publicador - CONTROL ESTRICTO (excepción: todos ven, solo dueño edita)",
+      comment:
+        "ID del publicador - CONTROL ESTRICTO (excepción: todos ven, solo dueño edita)",
     },
     usuarioCompradorId: {
       type: DataTypes.INTEGER,

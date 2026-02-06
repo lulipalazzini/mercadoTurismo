@@ -22,10 +22,13 @@ const getFacturacionAnotador = async (req, res) => {
     console.log("   Consultando base de datos...");
     const facturas = await FacturacionAnotador.findAll({
       where: whereClause,
-      order: [["fecha", "DESC"], ["createdAt", "DESC"]],
+      order: [
+        ["fecha", "DESC"],
+        ["createdAt", "DESC"],
+      ],
     });
     console.log(
-      `   Facturas encontradas: ${facturas.length} ${isAdmin ? "(TODAS - Admin)" : "(propias)"}`
+      `   Facturas encontradas: ${facturas.length} ${isAdmin ? "(TODAS - Admin)" : "(propias)"}`,
     );
 
     console.log("✅ [FACTURACION ANOTADOR] Facturas obtenidas exitosamente");
@@ -87,7 +90,9 @@ const createFacturacionAnotador = async (req, res) => {
     console.log(`✅ Factura creada con ID: ${factura.id}`);
     res.status(201).json(factura);
   } catch (error) {
-    console.error("❌ [FACTURACION ANOTADOR] Error en createFacturacionAnotador:");
+    console.error(
+      "❌ [FACTURACION ANOTADOR] Error en createFacturacionAnotador:",
+    );
     console.error("   Mensaje:", error.message);
     console.error("   Stack:", error.stack);
     res.status(500).json({
@@ -155,7 +160,9 @@ const updateFacturacionAnotador = async (req, res) => {
     console.log(`✅ Factura ${id} actualizada exitosamente`);
     res.json(factura);
   } catch (error) {
-    console.error("❌ [FACTURACION ANOTADOR] Error en updateFacturacionAnotador:");
+    console.error(
+      "❌ [FACTURACION ANOTADOR] Error en updateFacturacionAnotador:",
+    );
     console.error("   Mensaje:", error.message);
     console.error("   Stack:", error.stack);
     res.status(500).json({
@@ -197,7 +204,9 @@ const deleteFacturacionAnotador = async (req, res) => {
     console.log(`✅ Factura ${id} eliminada exitosamente`);
     res.json({ message: "Factura eliminada exitosamente" });
   } catch (error) {
-    console.error("❌ [FACTURACION ANOTADOR] Error en deleteFacturacionAnotador:");
+    console.error(
+      "❌ [FACTURACION ANOTADOR] Error en deleteFacturacionAnotador:",
+    );
     console.error("   Mensaje:", error.message);
     console.error("   Stack:", error.stack);
     res.status(500).json({

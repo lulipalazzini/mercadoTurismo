@@ -13,9 +13,9 @@ const getClientes = async (req, res) => {
       console.log(`   Usuario ${req.user.role}: Ver todos los clientes`);
     }
 
-    const clientes = await Cliente.findAll({ 
+    const clientes = await Cliente.findAll({
       where: whereClause,
-      order: [["createdAt", "DESC"]] 
+      order: [["createdAt", "DESC"]],
     });
     res.json(clientes);
   } catch (error) {
@@ -80,11 +80,10 @@ const deleteCliente = async (req, res) => {
   }
 };
 
-
 module.exports = {
   getClientes,
   getCliente,
   createCliente,
   updateCliente,
-  deleteCliente
+  deleteCliente,
 };

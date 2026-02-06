@@ -59,8 +59,14 @@ const getSalidaGrupal = async (req, res) => {
     }
 
     // Verificar ownership
-    if (req.user && !isAdmin(req.user) && salida.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para ver esta salida grupal" });
+    if (
+      req.user &&
+      !isAdmin(req.user) &&
+      salida.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para ver esta salida grupal" });
     }
 
     const parsedSalida = parseItemJsonFields(salida, JSON_FIELDS);
@@ -112,7 +118,9 @@ const updateSalidaGrupal = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && salida.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para editar esta salida grupal" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para editar esta salida grupal" });
     }
 
     const updateData = { ...req.body };
@@ -166,7 +174,11 @@ const deleteSalidaGrupal = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && salida.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para eliminar esta salida grupal" });
+      return res
+        .status(403)
+        .json({
+          message: "No tienes permiso para eliminar esta salida grupal",
+        });
     }
 
     await salida.update({ activo: false });

@@ -15,7 +15,7 @@ async function fixRemainingTables() {
 
     // Crear índices para cupos_mercado
     console.log("📋 Creando índices...");
-    
+
     try {
       await sequelize.query(`
         CREATE INDEX IF NOT EXISTS idx_cupos_mercado_published_by 

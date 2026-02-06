@@ -22,8 +22,7 @@ export default function SeguroFormModal({ isOpen, onClose, onSuccess }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({...prev, [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -32,7 +31,8 @@ export default function SeguroFormModal({ isOpen, onClose, onSuccess }) {
   const validate = () => {
     const newErrors = {};
     if (!formData.nombre.trim()) newErrors.nombre = "El nombre es requerido";
-    if (!formData.proveedor.trim()) newErrors.proveedor = "El proveedor es requerido";
+    if (!formData.proveedor.trim())
+      newErrors.proveedor = "El proveedor es requerido";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -58,7 +58,9 @@ export default function SeguroFormModal({ isOpen, onClose, onSuccess }) {
       onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertMessage("Error al crear el seguro. Por favor intenta nuevamente.");
+      setAlertMessage(
+        "Error al crear el seguro. Por favor intenta nuevamente.",
+      );
       setShowAlert(true);
     } finally {
       setSubmitting(false);
@@ -84,7 +86,10 @@ export default function SeguroFormModal({ isOpen, onClose, onSuccess }) {
   return (
     <>
       <div className="modal-overlay" onClick={handleClose}>
-        <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal-content large"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="modal-header">
             <h2>Nuevo Seguro</h2>
             <button className="btn-close" onClick={handleClose}>

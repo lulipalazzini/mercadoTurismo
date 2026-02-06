@@ -1,14 +1,14 @@
 /**
  * MIGRACIÓN: Agregar campos adultos/menores a tabla reservas
- * 
+ *
  * Este script agrega los campos separados para adultos y menores,
  * manteniendo compatibilidad con el campo existente numeroPersonas.
- * 
+ *
  * Cambios:
  * - Agregar campo: adultos INT NOT NULL DEFAULT 1
  * - Agregar campo: menores INT NOT NULL DEFAULT 0
  * - Mantener campo: numeroPersonas (para compatibilidad)
- * 
+ *
  * Estrategia de migración:
  * 1. Agregar nuevos campos con defaults
  * 2. Migrar datos existentes: adultos = numeroPersonas, menores = 0
@@ -25,29 +25,32 @@ async function migratePassengerFields() {
     // Verificar si la tabla existe
     const [tables] = await sequelize.query(
       "SELECT name FROM sqlite_master WHERE type='table' AND name='Reservas'",
-      { type: QueryTypes.SELECT }
+      { type: QueryTypes.SELECT },
     );
 
     if (!tables || tables.length === 0) {
       console.log("⚠️  Tabla Reservas no existe. Saltando migración.");
-      console.log("   (La tabla se creará con los campos correctos en el próximo sync)\n");
+      console.log(
+        "   (La tabla se creará con los campos correctos en el próximo sync)\n",
+      );
       return;
     }
 
     // Verificar columnas existentes
-    const columns = await sequelize.query(
-      "PRAGMA table_info(Reservas)",
-      { type: QueryTypes.SELECT }
-    );
+    const columns = await sequelize.query("PRAGMA table_info(Reservas)", {
+      type: QueryTypes.SELECT,
+    });
 
-    const columnNames = columns.map(col => col.name);
+    const columnNames = columns.map((col) => col.name);
     console.log("📋 Columnas existentes:", columnNames.join(", "));
 
     const hasAdultos = columnNames.includes("adultos");
     const hasMenores = columnNames.includes("menores");
 
     if (hasAdultos && hasMenores) {
-      console.log("✅ Campos adultos/menores ya existen. No se requiere migración.\n");
+      console.log(
+        "✅ Campos adultos/menores ya existen. No se requiere migración.\n",
+      );
       return;
     }
 
@@ -85,11 +88,13 @@ async function migratePassengerFields() {
     // 2. Copiar datos existentes (si hay)
     const [reservasExistentes] = await sequelize.query(
       "SELECT COUNT(*) as count FROM Reservas",
-      { type: QueryTypes.SELECT }
+      { type: QueryTypes.SELECT },
     );
 
     if (reservasExistentes.count > 0) {
-      console.log(`   📦 Migrando ${reservasExistentes.count} reservas existentes...`);
+      console.log(
+        `   📦 Migrando ${reservasExistentes.count} reservas existentes...`,
+      );
 
       await sequelize.query(`
         INSERT INTO Reservas_new (
@@ -119,7 +124,7 @@ async function migratePassengerFields() {
 
     // 4. Recrear índices si existían
     console.log("   🔗 Recreando índices...");
-    
+
     await sequelize.query(`
       CREATE INDEX idx_reservas_cliente ON Reservas(clienteId);
     `);
@@ -138,24 +143,25 @@ async function migratePassengerFields() {
     // Verificar migración
     const [result] = await sequelize.query(
       "SELECT adultos, menores FROM Reservas LIMIT 1",
-      { type: QueryTypes.SELECT }
+      { type: QueryTypes.SELECT },
     );
 
     console.log("\n✅ MIGRACIÓN COMPLETADA EXITOSAMENTE");
     console.log("   • Campo 'adultos' agregado (INT NOT NULL DEFAULT 1)");
     console.log("   • Campo 'menores' agregado (INT NOT NULL DEFAULT 0)");
     console.log("   • Campo 'numeroPersonas' mantenido para compatibilidad");
-    
-    if (reservasExistentes.count > 0) {
-      console.log(`   • ${reservasExistentes.count} reservas migradas (adultos = numeroPersonas, menores = 0)`);
-    }
-    
-    console.log("\n");
 
+    if (reservasExistentes.count > 0) {
+      console.log(
+        `   • ${reservasExistentes.count} reservas migradas (adultos = numeroPersonas, menores = 0)`,
+      );
+    }
+
+    console.log("\n");
   } catch (error) {
     console.error("\n❌ ERROR EN MIGRACIÓN:");
     console.error(error);
-    
+
     // Intentar rollback si algo salió mal
     try {
       await sequelize.query("DROP TABLE IF EXISTS Reservas_new;");
@@ -163,7 +169,7 @@ async function migratePassengerFields() {
     } catch (rollbackError) {
       console.error("⚠️  Error en rollback:", rollbackError.message);
     }
-    
+
     throw error;
   }
 }

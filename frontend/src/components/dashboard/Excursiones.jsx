@@ -90,7 +90,7 @@ export default function Excursiones() {
   };
 
   const filteredItems = items.filter((item) =>
-    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Calcular estadísticas
@@ -100,7 +100,7 @@ export default function Excursiones() {
     items.length > 0
       ? Math.round(
           items.reduce((sum, e) => sum + Number(e.precio || 0), 0) /
-            items.length
+            items.length,
         )
       : 0;
 

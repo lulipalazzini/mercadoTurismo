@@ -25,12 +25,19 @@ export default function UsuariosAdmin() {
   const [searching, setSearching] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  
+
   // Estados para modales
   const [showAlert, setShowAlert] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({ type: "error", message: "" });
+  const [alertConfig, setAlertConfig] = useState({
+    type: "error",
+    message: "",
+  });
   const [showConfirm, setShowConfirm] = useState(false);
-  const [confirmConfig, setConfirmConfig] = useState({ title: "", message: "", onConfirm: () => {} });
+  const [confirmConfig, setConfirmConfig] = useState({
+    title: "",
+    message: "",
+    onConfirm: () => {},
+  });
 
   useEffect(() => {
     loadUsuarios();
@@ -45,7 +52,7 @@ export default function UsuariosAdmin() {
       console.error("Error al cargar usuarios:", error);
       setAlertConfig({
         type: "error",
-        message: error.message || "Error al cargar usuarios"
+        message: error.message || "Error al cargar usuarios",
       });
       setShowAlert(true);
     } finally {
@@ -67,7 +74,7 @@ export default function UsuariosAdmin() {
       console.error("Error en búsqueda:", error);
       setAlertConfig({
         type: "error",
-        message: error.message || "Error en la búsqueda"
+        message: error.message || "Error en la búsqueda",
       });
       setShowAlert(true);
     } finally {
@@ -90,7 +97,7 @@ export default function UsuariosAdmin() {
     if (usuario.role === "admin" || usuario.role === "sysadmin") {
       setAlertConfig({
         type: "info",
-        message: "Los administradores siempre están activos"
+        message: "Los administradores siempre están activos",
       });
       setShowAlert(true);
       return;
@@ -101,10 +108,12 @@ export default function UsuariosAdmin() {
       message: `¿Confirmar activación de usuario?\n\nNombre: ${usuario.nombre}\nEmail: ${usuario.email}\n\nEl usuario podrá acceder a la plataforma.`,
       onConfirm: async () => {
         try {
-          await apiPut(`/admin/usuarios/${usuario.id}/estado`, { activo: true });
+          await apiPut(`/admin/usuarios/${usuario.id}/estado`, {
+            activo: true,
+          });
           setAlertConfig({
             type: "success",
-            message: `Usuario activado: ${usuario.nombre}`
+            message: `Usuario activado: ${usuario.nombre}`,
           });
           setShowAlert(true);
           loadUsuarios();
@@ -112,11 +121,11 @@ export default function UsuariosAdmin() {
           console.error("Error al activar usuario:", error);
           setAlertConfig({
             type: "error",
-            message: error.message || "Error al activar usuario"
+            message: error.message || "Error al activar usuario",
           });
           setShowAlert(true);
         }
-      }
+      },
     });
     setShowConfirm(true);
   };
@@ -125,7 +134,7 @@ export default function UsuariosAdmin() {
     if (usuario.role === "admin" || usuario.role === "sysadmin") {
       setAlertConfig({
         type: "error",
-        message: "No se puede desactivar a un administrador del sistema"
+        message: "No se puede desactivar a un administrador del sistema",
       });
       setShowAlert(true);
       return;
@@ -137,10 +146,12 @@ export default function UsuariosAdmin() {
       danger: true,
       onConfirm: async () => {
         try {
-          await apiPut(`/admin/usuarios/${usuario.id}/estado`, { activo: false });
+          await apiPut(`/admin/usuarios/${usuario.id}/estado`, {
+            activo: false,
+          });
           setAlertConfig({
             type: "success",
-            message: `Usuario desactivado: ${usuario.nombre}`
+            message: `Usuario desactivado: ${usuario.nombre}`,
           });
           setShowAlert(true);
           loadUsuarios();
@@ -148,11 +159,11 @@ export default function UsuariosAdmin() {
           console.error("Error al desactivar usuario:", error);
           setAlertConfig({
             type: "error",
-            message: error.message || "Error al desactivar usuario"
+            message: error.message || "Error al desactivar usuario",
           });
           setShowAlert(true);
         }
-      }
+      },
     });
     setShowConfirm(true);
   };
@@ -273,7 +284,7 @@ export default function UsuariosAdmin() {
             <div className="stat-value">
               {usuarios.reduce(
                 (sum, u) => sum + (parseInt(u.totalPublicaciones) || 0),
-                0
+                0,
               )}
             </div>
             <div className="stat-label">Total Publicaciones</div>
@@ -287,7 +298,7 @@ export default function UsuariosAdmin() {
             <div className="stat-value">
               {usuarios.reduce(
                 (sum, u) => sum + (parseInt(u.totalClicksRecibidos) || 0),
-                0
+                0,
               )}
             </div>
             <div className="stat-label">Total Clicks</div>
@@ -314,7 +325,10 @@ export default function UsuariosAdmin() {
           <tbody>
             {usuarios.length === 0 ? (
               <tr>
-                <td colSpan="9" style={{ textAlign: "center", padding: "2rem" }}>
+                <td
+                  colSpan="9"
+                  style={{ textAlign: "center", padding: "2rem" }}
+                >
                   {searchTerm
                     ? "No se encontraron usuarios"
                     : "No hay usuarios registrados"}
@@ -355,7 +369,9 @@ export default function UsuariosAdmin() {
                   <td className="text-muted">
                     {formatFecha(usuario.ultimaActividad)}
                   </td>
-                  <td className="text-muted">{formatFecha(usuario.createdAt)}</td>
+                  <td className="text-muted">
+                    {formatFecha(usuario.createdAt)}
+                  </td>
                   <td>
                     <div style={{ display: "flex", gap: "0.5rem" }}>
                       <button
@@ -425,7 +441,7 @@ export default function UsuariosAdmin() {
         type={alertConfig.type}
         message={alertConfig.message}
       />
-      
+
       <ConfirmModal
         isOpen={showConfirm}
         onClose={() => setShowConfirm(false)}

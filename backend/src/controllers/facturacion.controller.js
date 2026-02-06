@@ -82,8 +82,7 @@ const getFacturas = async (req, res) => {
   }
 };
 
-
 module.exports = {
   getEstadisticas,
-  getFacturas
+  getFacturas,
 };

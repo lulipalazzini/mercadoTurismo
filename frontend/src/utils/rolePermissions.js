@@ -109,7 +109,13 @@ export const rolePermissions = {
     canAccessB2CModules: true, // Ve servicios B2C
     canAccessB2BModules: false,
     visibleToPassengers: false,
-    dashboardModules: ["misReservas", "misViajes", "perfil", "ajustes", "mercado-cupos"],
+    dashboardModules: [
+      "misReservas",
+      "misViajes",
+      "perfil",
+      "ajustes",
+      "mercado-cupos",
+    ],
   },
 };
 

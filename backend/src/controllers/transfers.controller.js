@@ -89,8 +89,14 @@ const getTransfer = async (req, res) => {
     }
 
     // Verificar ownership
-    if (req.user && !isAdmin(req.user) && transfer.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para ver este transfer" });
+    if (
+      req.user &&
+      !isAdmin(req.user) &&
+      transfer.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para ver este transfer" });
     }
 
     const parsedTransfer = parseItemJsonFields(transfer, JSON_FIELDS);
@@ -138,7 +144,9 @@ const updateTransfer = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && transfer.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para editar este transfer" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para editar este transfer" });
     }
 
     const updateData = { ...req.body };
@@ -191,7 +199,9 @@ const deleteTransfer = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && transfer.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para eliminar este transfer" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para eliminar este transfer" });
     }
 
     await transfer.update({ disponible: false });

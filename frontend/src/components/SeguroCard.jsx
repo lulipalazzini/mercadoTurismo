@@ -122,7 +122,11 @@ export default function SeguroCard({ item, isPreview = false }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button className="btn-primary" onClick={handleReservar} disabled={isPreview}>
+        <button
+          className="btn-primary"
+          onClick={handleReservar}
+          disabled={isPreview}
+        >
           Reservar
         </button>
       </div>

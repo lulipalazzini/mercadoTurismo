@@ -19,7 +19,12 @@ import { abrirWhatsApp } from "../utils/whatsapp";
 import { getImageUrls } from "../utils/imageUtils";
 import "../styles/serviceDetailModal.css";
 
-export default function ServiceDetailModal({ item, tipo, onClose, isPreview = false }) {
+export default function ServiceDetailModal({
+  item,
+  tipo,
+  onClose,
+  isPreview = false,
+}) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (!item) return null;
@@ -378,7 +383,11 @@ export default function ServiceDetailModal({ item, tipo, onClose, isPreview = fa
 
           {/* Botón de reserva */}
           <div className="modal-footer">
-            <button className="btn-reservar-modal" onClick={handleReservar} disabled={isPreview}>
+            <button
+              className="btn-reservar-modal"
+              onClick={handleReservar}
+              disabled={isPreview}
+            >
               <FaWhatsapp />
               Reservar por WhatsApp
             </button>

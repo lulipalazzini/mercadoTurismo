@@ -27,11 +27,14 @@ export default function FacturacionAnotador() {
   const loadFacturas = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/api/facturacion-anotador", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await fetch(
+        "http://localhost:3000/api/facturacion-anotador",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         },
-      });
+      );
       if (response.ok) {
         const data = await response.json();
         setFacturas(data);
@@ -58,7 +61,11 @@ export default function FacturacionAnotador() {
       case "emitida":
         return { icon: <FaClock />, class: "info", text: "Emitida" };
       case "pendiente":
-        return { icon: <FaExclamationCircle />, class: "warning", text: "Pendiente" };
+        return {
+          icon: <FaExclamationCircle />,
+          class: "warning",
+          text: "Pendiente",
+        };
       default:
         return { icon: <FaClock />, class: "default", text: estado };
     }
@@ -162,7 +169,10 @@ export default function FacturacionAnotador() {
           <tbody>
             {filteredFacturas.length === 0 ? (
               <tr>
-                <td colSpan="6" style={{ textAlign: "center", padding: "2rem" }}>
+                <td
+                  colSpan="6"
+                  style={{ textAlign: "center", padding: "2rem" }}
+                >
                   No hay facturas registradas
                 </td>
               </tr>
@@ -175,7 +185,9 @@ export default function FacturacionAnotador() {
                       <strong>{factura.cliente}</strong>
                     </td>
                     <td>{factura.concepto}</td>
-                    <td>{new Date(factura.fecha).toLocaleDateString("es-ES")}</td>
+                    <td>
+                      {new Date(factura.fecha).toLocaleDateString("es-ES")}
+                    </td>
                     <td>
                       {factura.moneda} ${factura.importe?.toLocaleString()}
                     </td>

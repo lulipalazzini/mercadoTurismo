@@ -27,11 +27,14 @@ export default function ReservasAnotador() {
   const loadReservas = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/api/reservas-anotador", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await fetch(
+        "http://localhost:3000/api/reservas-anotador",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         },
-      });
+      );
       if (response.ok) {
         const data = await response.json();
         setReservas(data);
@@ -54,7 +57,11 @@ export default function ReservasAnotador() {
   const getEstadoBadge = (estado) => {
     switch (estado) {
       case "confirmada":
-        return { icon: <FaCheckCircle />, class: "success", text: "Confirmada" };
+        return {
+          icon: <FaCheckCircle />,
+          class: "success",
+          text: "Confirmada",
+        };
       case "pendiente":
         return { icon: <FaClock />, class: "warning", text: "Pendiente" };
       case "cancelada":
@@ -162,7 +169,10 @@ export default function ReservasAnotador() {
           <tbody>
             {filteredReservas.length === 0 ? (
               <tr>
-                <td colSpan="6" style={{ textAlign: "center", padding: "2rem" }}>
+                <td
+                  colSpan="6"
+                  style={{ textAlign: "center", padding: "2rem" }}
+                >
                   No hay reservas registradas
                 </td>
               </tr>
@@ -175,7 +185,9 @@ export default function ReservasAnotador() {
                       <strong>{reserva.cliente}</strong>
                     </td>
                     <td>{reserva.servicio}</td>
-                    <td>{new Date(reserva.fecha).toLocaleDateString("es-ES")}</td>
+                    <td>
+                      {new Date(reserva.fecha).toLocaleDateString("es-ES")}
+                    </td>
                     <td>
                       {reserva.moneda} ${reserva.monto?.toLocaleString()}
                     </td>

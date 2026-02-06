@@ -70,7 +70,7 @@ const ReservaAnotador = sequelize.define(
         fields: ["fecha"],
       },
     ],
-  }
+  },
 );
 
 module.exports = ReservaAnotador;

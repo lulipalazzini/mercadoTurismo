@@ -17,7 +17,10 @@ export default function ModuleFilters({ module, onFiltersChange }) {
     const initialFilters = {};
     for (const [key, value] of searchParams.entries()) {
       if (key === "adults" || key === "minors") {
-        setPassengers((prev) => ({ ...prev, [key]: parseInt(value) || (key === "adults" ? 1 : 0) }));
+        setPassengers((prev) => ({
+          ...prev,
+          [key]: parseInt(value) || (key === "adults" ? 1 : 0),
+        }));
       } else {
         initialFilters[key] = value;
       }
@@ -46,7 +49,11 @@ export default function ModuleFilters({ module, onFiltersChange }) {
     setSearchParams(params);
 
     // Notificar al padre con filtros completos
-    onFiltersChange({ ...newFilters, adults: passengers.adults, minors: passengers.minors });
+    onFiltersChange({
+      ...newFilters,
+      adults: passengers.adults,
+      minors: passengers.minors,
+    });
   };
 
   const handlePassengerChange = ({ adults, minors }) => {

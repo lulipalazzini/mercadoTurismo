@@ -19,7 +19,10 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({ type: "error", message: "" });
+  const [alertConfig, setAlertConfig] = useState({
+    type: "error",
+    message: "",
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,19 +37,19 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
 
   const validate = () => {
     const newErrors = {};
-    
+
     if (!formData.descripcion.trim())
       newErrors.descripcion = "La descripción es requerida";
-    
+
     if (!formData.cantidad || formData.cantidad < 1)
       newErrors.cantidad = "La cantidad debe ser mayor a 0";
-    
+
     if (!formData.precioMayorista || formData.precioMayorista <= 0)
       newErrors.precioMayorista = "El precio mayorista debe ser mayor a 0";
-    
+
     if (!formData.precioMinorista || formData.precioMinorista <= 0)
       newErrors.precioMinorista = "El precio minorista debe ser mayor a 0";
-    
+
     if (
       formData.precioMinorista &&
       formData.precioMayorista &&
@@ -55,7 +58,7 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
     )
       newErrors.precioMinorista =
         "El precio minorista debe ser mayor al mayorista";
-    
+
     if (!formData.fechaVencimiento)
       newErrors.fechaVencimiento = "La fecha de vencimiento es requerida";
 
@@ -113,11 +116,11 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
       handleClose();
     } catch (error) {
       console.error("Error:", error);
-      
+
       // Mostrar error detallado del backend
       const errorData = error.response?.data;
       let errorMessage = "Error al publicar el cupo";
-      
+
       if (errorData?.detalle) {
         errorMessage = errorData.detalle;
       } else if (errorData?.error) {
@@ -224,9 +227,7 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
                 {errors.fechaOrigen && (
                   <span className="error-message">{errors.fechaOrigen}</span>
                 )}
-                <small className="form-hint">
-                  Fecha del vuelo de ida
-                </small>
+                <small className="form-hint">Fecha del vuelo de ida</small>
               </div>
 
               <div className="form-group">
@@ -342,8 +343,9 @@ export default function PublicarCupoModal({ isOpen, onClose, onSuccess }) {
 
             <div className="info-box">
               <p>
-                <strong>Nota:</strong> Todos los cupos son para vuelos aéreos. El cupo será visible para todos los
-                operadores en el mercado. Asegúrate de verificar la disponibilidad antes de publicar.
+                <strong>Nota:</strong> Todos los cupos son para vuelos aéreos.
+                El cupo será visible para todos los operadores en el mercado.
+                Asegúrate de verificar la disponibilidad antes de publicar.
               </p>
             </div>
           </div>

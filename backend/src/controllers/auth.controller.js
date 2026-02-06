@@ -354,9 +354,7 @@ const login = async (req, res) => {
     // 🔐 Verificar si el usuario está activo (solo para no-admins)
     if (user.role !== "admin" && user.role !== "sysadmin") {
       if (!user.activo) {
-        console.log(
-          `⚠️ [AUTH] Usuario inactivo intenta login: ${user.email}`,
-        );
+        console.log(`⚠️ [AUTH] Usuario inactivo intenta login: ${user.email}`);
         return res.status(403).json({
           success: false,
           message:

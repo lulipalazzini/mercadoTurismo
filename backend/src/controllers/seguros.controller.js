@@ -58,8 +58,14 @@ const getSeguro = async (req, res) => {
     }
 
     // Verificar ownership
-    if (req.user && !isAdmin(req.user) && seguro.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para ver este seguro" });
+    if (
+      req.user &&
+      !isAdmin(req.user) &&
+      seguro.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para ver este seguro" });
     }
 
     const parsedSeguro = parseItemJsonFields(seguro, JSON_FIELDS);
@@ -106,7 +112,9 @@ const updateSeguro = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && seguro.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para editar este seguro" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para editar este seguro" });
     }
 
     const updateData = { ...req.body };
@@ -159,7 +167,9 @@ const deleteSeguro = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && seguro.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para eliminar este seguro" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para eliminar este seguro" });
     }
 
     await seguro.update({ activo: false });

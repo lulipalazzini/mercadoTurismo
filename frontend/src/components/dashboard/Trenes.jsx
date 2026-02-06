@@ -89,7 +89,7 @@ export default function Trenes() {
     (item) =>
       item.origen?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.destino?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.nombreServicio?.toLowerCase().includes(searchTerm.toLowerCase())
+      item.nombreServicio?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Calcular estadísticas
@@ -100,7 +100,7 @@ export default function Trenes() {
       : 0;
   const capacidadTotal = items.reduce(
     (sum, t) => sum + Number(t.capacidadPasajeros || 0),
-    0
+    0,
   );
 
   if (loading) {

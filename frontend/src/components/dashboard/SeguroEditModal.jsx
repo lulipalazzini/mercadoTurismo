@@ -4,7 +4,12 @@ import { updateSeguro } from "../../services/seguros.service";
 import AlertModal from "../common/AlertModal";
 import "../../styles/modal.css";
 
-export default function SeguroEditModal({ isOpen, onClose, onSuccess, seguro }) {
+export default function SeguroEditModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  seguro,
+}) {
   const [formData, setFormData] = useState({
     nombre: "",
     tipo: "viaje",
@@ -45,7 +50,8 @@ export default function SeguroEditModal({ isOpen, onClose, onSuccess, seguro }) 
   const validate = () => {
     const newErrors = {};
     if (!formData.nombre.trim()) newErrors.nombre = "El nombre es requerido";
-    if (!formData.proveedor.trim()) newErrors.proveedor = "El proveedor es requerido";
+    if (!formData.proveedor.trim())
+      newErrors.proveedor = "El proveedor es requerido";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -73,7 +79,10 @@ export default function SeguroEditModal({ isOpen, onClose, onSuccess, seguro }) 
   return (
     <>
       <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal-content large"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="modal-header">
             <h2>Editar Seguro</h2>
             <button className="btn-close" onClick={onClose}>

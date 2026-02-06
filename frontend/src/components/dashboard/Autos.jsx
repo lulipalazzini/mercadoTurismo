@@ -90,7 +90,7 @@ export default function Autos() {
   const filteredItems = items.filter(
     (item) =>
       item.marca.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.modelo.toLowerCase().includes(searchTerm.toLowerCase())
+      item.modelo.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   if (loading) {
@@ -195,9 +195,9 @@ export default function Autos() {
                       Math.round(
                         items.reduce(
                           (sum, a) => sum + Number(a.precio || 0),
-                          0
-                        ) / items.length
-                      )
+                          0,
+                        ) / items.length,
+                      ),
                     )
                   : "$0"}
               </h3>

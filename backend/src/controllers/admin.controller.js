@@ -396,7 +396,9 @@ const getUsuariosReport = async (req, res) => {
         "modulo",
         [sequelize.fn("COUNT", sequelize.col("id")), "total"],
       ],
-      where: activityWhere.createdAt ? { createdAt: activityWhere.createdAt } : {},
+      where: activityWhere.createdAt
+        ? { createdAt: activityWhere.createdAt }
+        : {},
       group: ["propietarioId", "modulo"],
       raw: true,
     });
@@ -407,7 +409,10 @@ const getUsuariosReport = async (req, res) => {
       clicks,
       resumen: {
         totalUsuarios: usuarios.length,
-        totalActividad: actividad.reduce((sum, a) => sum + parseInt(a.total), 0),
+        totalActividad: actividad.reduce(
+          (sum, a) => sum + parseInt(a.total),
+          0,
+        ),
         totalClicks: clicks.reduce((sum, c) => sum + parseInt(c.total), 0),
       },
     };
@@ -678,7 +683,9 @@ const cambiarEstadoUsuario = async (req, res) => {
     const { id } = req.params;
     const { activo } = req.body;
 
-    console.log(`\n🔐 [ADMIN] Cambio de estado - Usuario: ${id}, Activo: ${activo}`);
+    console.log(
+      `\n🔐 [ADMIN] Cambio de estado - Usuario: ${id}, Activo: ${activo}`,
+    );
 
     // Validar que activo sea booleano
     if (typeof activo !== "boolean") {
@@ -699,10 +706,7 @@ const cambiarEstadoUsuario = async (req, res) => {
     }
 
     // No permitir desactivar a admin o sysadmin
-    if (
-      !activo &&
-      (usuario.role === "admin" || usuario.role === "sysadmin")
-    ) {
+    if (!activo && (usuario.role === "admin" || usuario.role === "sysadmin")) {
       return res.status(403).json({
         message: "No se puede desactivar a un administrador del sistema",
       });
@@ -725,7 +729,9 @@ const cambiarEstadoUsuario = async (req, res) => {
       }),
     });
 
-    console.log(`✅ Usuario ${activo ? "activado" : "desactivado"}: ${usuario.nombre}`);
+    console.log(
+      `✅ Usuario ${activo ? "activado" : "desactivado"}: ${usuario.nombre}`,
+    );
 
     res.json({
       message: `Usuario ${activo ? "activado" : "desactivado"} exitosamente`,

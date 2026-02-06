@@ -57,7 +57,7 @@ const Cliente = sequelize.define(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = Cliente;

@@ -115,7 +115,9 @@ export default function ComprarCupoModal({ isOpen, onClose, onSuccess, cupo }) {
             <div className="cupo-detalle-compra">
               <div className="detalle-header">
                 <h3>{cupo.descripcion}</h3>
-                <span className="tipo-badge">✈️ {cupo.aerolinea || "Aéreo"}</span>
+                <span className="tipo-badge">
+                  ✈️ {cupo.aerolinea || "Aéreo"}
+                </span>
               </div>
 
               <div className="detalle-info">
@@ -125,7 +127,9 @@ export default function ComprarCupoModal({ isOpen, onClose, onSuccess, cupo }) {
                 </div>
                 <div className="info-row">
                   <span className="info-label">Fecha vuelo:</span>
-                  <span className="info-value">{formatDate(cupo.fechaOrigen)}</span>
+                  <span className="info-value">
+                    {formatDate(cupo.fechaOrigen)}
+                  </span>
                 </div>
                 <div className="info-row">
                   <span className="info-label">Precio unitario:</span>

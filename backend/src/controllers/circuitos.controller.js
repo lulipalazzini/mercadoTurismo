@@ -48,8 +48,14 @@ const getCircuito = async (req, res) => {
       return res.status(404).json({ message: "Circuito no encontrado" });
     }
     // Verificar ownership
-    if (req.user && !isAdmin(req.user) && circuito.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para ver este circuito" });
+    if (
+      req.user &&
+      !isAdmin(req.user) &&
+      circuito.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para ver este circuito" });
     }
     const parsedCircuito = parseItemJsonFields(circuito, JSON_FIELDS);
     res.json(parsedCircuito);
@@ -76,12 +82,10 @@ const createCircuito = async (req, res) => {
 
     const circuito = await Circuito.create(circuitoData);
     const parsedCircuito = parseItemJsonFields(circuito, JSON_FIELDS);
-    res
-      .status(201)
-      .json({
-        message: "Circuito creado exitosamente",
-        circuito: parsedCircuito,
-      });
+    res.status(201).json({
+      message: "Circuito creado exitosamente",
+      circuito: parsedCircuito,
+    });
   } catch (error) {
     res
       .status(500)
@@ -97,7 +101,9 @@ const updateCircuito = async (req, res) => {
     }
     // Verificar ownership
     if (!isAdmin(req.user) && circuito.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para editar este circuito" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para editar este circuito" });
     }
 
     const updateData = { ...req.body };
@@ -149,7 +155,9 @@ const deleteCircuito = async (req, res) => {
     }
     // Verificar ownership
     if (!isAdmin(req.user) && circuito.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para eliminar este circuito" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para eliminar este circuito" });
     }
     await circuito.update({ activo: false });
     res.json({ message: "Circuito desactivado exitosamente" });

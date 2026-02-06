@@ -58,8 +58,14 @@ const getExcursion = async (req, res) => {
     }
 
     // Verificar ownership
-    if (req.user && !isAdmin(req.user) && excursion.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para ver esta excursión" });
+    if (
+      req.user &&
+      !isAdmin(req.user) &&
+      excursion.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para ver esta excursión" });
     }
 
     const parsedExcursion = parseItemJsonFields(excursion, JSON_FIELDS);
@@ -107,7 +113,9 @@ const updateExcursion = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && excursion.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para editar esta excursión" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para editar esta excursión" });
     }
 
     const updateData = { ...req.body };
@@ -160,7 +168,9 @@ const deleteExcursion = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && excursion.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para eliminar esta excursión" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para eliminar esta excursión" });
     }
 
     await excursion.update({ activo: false });

@@ -133,8 +133,14 @@ const getTren = async (req, res) => {
     }
 
     // Verificar ownership
-    if (req.user && !isAdmin(req.user) && tren.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para ver este tren" });
+    if (
+      req.user &&
+      !isAdmin(req.user) &&
+      tren.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para ver este tren" });
     }
 
     const parsedTren = parseItemJsonFields(tren, JSON_FIELDS);
@@ -186,7 +192,9 @@ const updateTren = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && tren.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para editar este tren" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para editar este tren" });
     }
 
     const trenData = { ...req.body };
@@ -219,7 +227,9 @@ const deleteTren = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && tren.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para eliminar este tren" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para eliminar este tren" });
     }
 
     await tren.destroy();

@@ -89,7 +89,7 @@ export default function Transfers() {
   const filteredItems = items.filter(
     (item) =>
       item.origen.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.destino.toLowerCase().includes(searchTerm.toLowerCase())
+      item.destino.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Calcular estadísticas
@@ -97,7 +97,7 @@ export default function Transfers() {
   const vehiculosUnicos = [...new Set(items.map((t) => t.vehiculo))].length;
   const capacidadTotal = items.reduce(
     (sum, t) => sum + Number(t.capacidadPasajeros || 0),
-    0
+    0,
   );
 
   if (loading) {

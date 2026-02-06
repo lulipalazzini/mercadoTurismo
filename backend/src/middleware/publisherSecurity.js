@@ -1,12 +1,12 @@
 /**
  * MIDDLEWARE DE SEGURIDAD: Control estricto por publicador
- * 
+ *
  * Este middleware implementa seguridad real a nivel de backend:
  * - Filtra automáticamente registros por published_by_user_id
  * - Verifica ownership antes de permitir edición/eliminación
  * - Admin puede ver/editar todo
  * - Agencia/Operador solo ve/edita lo suyo
- * 
+ *
  * ⚠️ CRÍTICO: Esta es la capa de seguridad real del sistema.
  * No se puede confiar solo en el frontend.
  */
@@ -20,10 +20,10 @@ const isAdmin = (user) => {
 
 /**
  * Middleware: Agrega filtro automático de published_by_user_id
- * 
+ *
  * Uso:
  * router.get('/api/paquetes', authenticateToken, filterByPublisher, getPaquetes);
- * 
+ *
  * Excepción: Mercado de Cupos (todos ven todo)
  */
 const filterByPublisher = (req, res, next) => {
@@ -71,15 +71,15 @@ const filterByPublisherCuposMercado = (req, res, next) => {
 
 /**
  * Verifica que el usuario tenga permiso para acceder a un recurso específico
- * 
+ *
  * Uso en controladores antes de UPDATE/DELETE:
- * 
+ *
  * const canAccess = await verifyResourceOwnership(
- *   Paquete, 
- *   paqueteId, 
+ *   Paquete,
+ *   paqueteId,
  *   req.user
  * );
- * 
+ *
  * if (!canAccess) {
  *   return res.status(403).json({ message: "No autorizado" });
  * }
@@ -108,11 +108,11 @@ const verifyResourceOwnership = async (Model, resourceId, user) => {
 
 /**
  * Middleware: Verifica ownership antes de permitir modificación
- * 
+ *
  * Uso:
- * router.put('/api/paquetes/:id', 
- *   authenticateToken, 
- *   checkOwnership(Paquete), 
+ * router.put('/api/paquetes/:id',
+ *   authenticateToken,
+ *   checkOwnership(Paquete),
  *   updatePaquete
  * );
  */
@@ -133,7 +133,11 @@ const checkOwnership = (Model) => {
     }
 
     // Verificar ownership
-    const hasAccess = await verifyResourceOwnership(Model, resourceId, req.user);
+    const hasAccess = await verifyResourceOwnership(
+      Model,
+      resourceId,
+      req.user,
+    );
 
     if (!hasAccess) {
       return res.status(403).json({
@@ -166,12 +170,17 @@ const checkOwnershipCuposMercado = (Model) => {
     }
 
     // En Mercado de Cupos: verificar ownership solo para edición
-    const hasAccess = await verifyResourceOwnership(Model, resourceId, req.user);
+    const hasAccess = await verifyResourceOwnership(
+      Model,
+      resourceId,
+      req.user,
+    );
 
     if (!hasAccess) {
       return res.status(403).json({
         success: false,
-        message: "Solo puedes editar tus propios cupos. Este cupo pertenece a otro usuario.",
+        message:
+          "Solo puedes editar tus propios cupos. Este cupo pertenece a otro usuario.",
       });
     }
 
@@ -181,7 +190,7 @@ const checkOwnershipCuposMercado = (Model) => {
 
 /**
  * Helper: Construye cláusula WHERE con filtro de publicador
- * 
+ *
  * Uso en controladores:
  * const whereClause = buildWhereClause(req, { activo: true });
  */
@@ -198,11 +207,11 @@ const buildWhereClause = (req, additionalFilters = {}) => {
 
 /**
  * Intercepta creación para asignar automáticamente published_by_user_id
- * 
+ *
  * Uso:
- * router.post('/api/paquetes', 
- *   authenticateToken, 
- *   autoAssignPublisher, 
+ * router.post('/api/paquetes',
+ *   authenticateToken,
+ *   autoAssignPublisher,
  *   createPaquete
  * );
  */
@@ -235,7 +244,9 @@ const logResourceAccess = (resourceType) => {
     const userRole = req.user ? req.user.role : "guest";
     const resourceId = req.params.id || "listado";
 
-    console.log(`🔍 [${resourceType}] Usuario ${userId} (${userRole}) accediendo a recurso ${resourceId}`);
+    console.log(
+      `🔍 [${resourceType}] Usuario ${userId} (${userRole}) accediendo a recurso ${resourceId}`,
+    );
 
     next();
   };

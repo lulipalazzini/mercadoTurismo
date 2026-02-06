@@ -101,7 +101,7 @@ export default function ImportarCuposModal({
         const errors = [];
         jsonData.forEach((row, index) => {
           const rowErrors = [];
-          
+
           if (!row.aerolinea || !row.aerolinea.trim()) {
             rowErrors.push("falta aerolínea");
           }
@@ -120,7 +120,7 @@ export default function ImportarCuposModal({
           if (!row.fechaVencimiento) {
             rowErrors.push("falta fecha vencimiento");
           }
-          
+
           if (rowErrors.length > 0) {
             errors.push(`Fila ${index + 2}: ${rowErrors.join(", ")}`);
           }
@@ -129,7 +129,9 @@ export default function ImportarCuposModal({
         if (errors.length > 0) {
           setError(
             `Se encontraron errores en ${errors.length} fila(s):\n${errors.slice(0, 5).join("\n")}${
-              errors.length > 5 ? `\n... y ${errors.length - 5} errores más` : ""
+              errors.length > 5
+                ? `\n... y ${errors.length - 5} errores más`
+                : ""
             }`,
           );
           setPreview([]);
@@ -177,23 +179,23 @@ export default function ImportarCuposModal({
 
       if (!response.ok || !result.success) {
         let errorMessage = result.error || "Error al importar cupos";
-        
+
         if (result.detalle) {
           errorMessage += `\n\n${result.detalle}`;
         }
-        
+
         if (result.errores && result.errores.length > 0) {
           const errorDetails = result.errores
             .slice(0, 10)
             .map((e) => `Fila ${e.fila}: ${e.error}`)
             .join("\n");
           errorMessage += `\n\nErrores encontrados:\n${errorDetails}`;
-          
+
           if (result.errores.length > 10) {
             errorMessage += `\n... y ${result.errores.length - 10} errores más`;
           }
         }
-        
+
         throw new Error(errorMessage);
       }
 
@@ -320,16 +322,20 @@ export default function ImportarCuposModal({
                 <div>
                   <strong>Importante:</strong>
                   <ul>
-                    <li>Todos los cupos serán automáticamente de tipo "aereo"</li>
+                    <li>
+                      Todos los cupos serán automáticamente de tipo "aereo"
+                    </li>
                     <li>
                       Usa el formato completo de destinos: "Ciudad,
                       Provincia/Estado, País" (Ej: "Mendoza, Argentina")
                     </li>
                     <li>
-                      Todas las fechas deben estar en formato AAAA-MM-DD (2026-12-31)
+                      Todas las fechas deben estar en formato AAAA-MM-DD
+                      (2026-12-31)
                     </li>
                     <li>
-                      La <strong>fecha origen</strong> es obligatoria (fecha del vuelo)
+                      La <strong>fecha origen</strong> es obligatoria (fecha del
+                      vuelo)
                     </li>
                     <li>
                       La <strong>aerolínea</strong> es obligatoria
@@ -338,7 +344,9 @@ export default function ImportarCuposModal({
                       Los precios deben ser números sin símbolos ni puntos
                     </li>
                     <li>La cantidad debe ser un número entero positivo</li>
-                    <li>Si hay errores, NO se importará ningún cupo (todo o nada)</li>
+                    <li>
+                      Si hay errores, NO se importará ningún cupo (todo o nada)
+                    </li>
                   </ul>
                 </div>
               </div>

@@ -94,18 +94,18 @@ export default function SalidasGrupales() {
   };
 
   const filteredItems = items.filter((item) =>
-    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Calcular estadísticas
   const today = new Date();
   const proximasSalidas = items.filter(
-    (s) => new Date(s.fechaSalida) > today
+    (s) => new Date(s.fechaSalida) > today,
   ).length;
   const destinosUnicos = [...new Set(items.map((s) => s.destino))].length;
   const cuposDisponibles = items.reduce(
     (sum, s) => sum + (Number(s.cuposDisponibles) || 0),
-    0
+    0,
   );
 
   if (loading) {

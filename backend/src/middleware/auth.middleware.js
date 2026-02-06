@@ -37,9 +37,7 @@ const verifyToken = async (req, res, next) => {
       }
 
       if (!usuario.activo) {
-        console.log(
-          `⚠️ [AUTH MIDDLEWARE] Usuario inactivo: ${usuario.email}`,
-        );
+        console.log(`⚠️ [AUTH MIDDLEWARE] Usuario inactivo: ${usuario.email}`);
         return res.status(403).json({
           message:
             "Tu cuenta está pendiente de activación por un administrador",
@@ -120,7 +118,10 @@ const canViewMarketplace = (req, res, next) => {
   if (req.user.role !== "agencia" && req.user.role !== "operador") {
     return res
       .status(403)
-      .json({ message: "Solo agencias y operadores pueden ver el marketplace de cupos" });
+      .json({
+        message:
+          "Solo agencias y operadores pueden ver el marketplace de cupos",
+      });
   }
   next();
 };

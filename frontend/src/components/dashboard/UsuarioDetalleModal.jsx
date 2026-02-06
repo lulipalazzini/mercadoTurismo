@@ -30,7 +30,9 @@ export default function UsuarioDetalleModal({ userId, onClose }) {
       setDetalle(data);
     } catch (error) {
       console.error("Error al cargar detalle:", error);
-      setAlertMessage(error.message || "Error al cargar el detalle del usuario");
+      setAlertMessage(
+        error.message || "Error al cargar el detalle del usuario",
+      );
       setShowAlert(true);
     } finally {
       setLoading(false);
@@ -83,7 +85,11 @@ export default function UsuarioDetalleModal({ userId, onClose }) {
       login: { label: "Login", color: "#0288d1", bg: "#e1f5fe" },
       logout: { label: "Logout", color: "#616161", bg: "#f5f5f5" },
     };
-    const badge = badges[accion] || { label: accion, color: "#333", bg: "#eee" };
+    const badge = badges[accion] || {
+      label: accion,
+      color: "#333",
+      bg: "#eee",
+    };
     return (
       <span
         style={{
@@ -103,7 +109,10 @@ export default function UsuarioDetalleModal({ userId, onClose }) {
   if (loading) {
     return (
       <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content modal-lg" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal-content modal-lg"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="modal-loading">
             <div className="spinner"></div>
             <p>Cargando detalle...</p>
@@ -132,7 +141,13 @@ export default function UsuarioDetalleModal({ userId, onClose }) {
             <h2>
               <FaUser /> Detalle de Usuario
             </h2>
-            <p style={{ margin: "0.5rem 0 0", color: "#666", fontSize: "0.9rem" }}>
+            <p
+              style={{
+                margin: "0.5rem 0 0",
+                color: "#666",
+                fontSize: "0.9rem",
+              }}
+            >
               Información completa y estadísticas de actividad
             </p>
           </div>
@@ -248,31 +263,45 @@ export default function UsuarioDetalleModal({ userId, onClose }) {
                 </h3>
                 <div className="stats-grid-2">
                   <div className="stat-box">
-                    <div className="stat-icon-lg" style={{ backgroundColor: "#fff3e0" }}>
+                    <div
+                      className="stat-icon-lg"
+                      style={{ backgroundColor: "#fff3e0" }}
+                    >
                       <FaShoppingBag style={{ color: "#f57c00" }} />
                     </div>
                     <div className="stat-value-lg">{publicaciones.total}</div>
                     <div className="stat-label-lg">Publicaciones Totales</div>
                   </div>
                   <div className="stat-box">
-                    <div className="stat-icon-lg" style={{ backgroundColor: "#fce4ec" }}>
+                    <div
+                      className="stat-icon-lg"
+                      style={{ backgroundColor: "#fce4ec" }}
+                    >
                       <FaMousePointer style={{ color: "#c2185b" }} />
                     </div>
                     <div className="stat-value-lg">{clicks.total}</div>
                     <div className="stat-label-lg">Clicks Recibidos</div>
                   </div>
                   <div className="stat-box">
-                    <div className="stat-icon-lg" style={{ backgroundColor: "#e1f5fe" }}>
+                    <div
+                      className="stat-icon-lg"
+                      style={{ backgroundColor: "#e1f5fe" }}
+                    >
                       <FaUsers style={{ color: "#0288d1" }} />
                     </div>
                     <div className="stat-value-lg">{clientes}</div>
                     <div className="stat-label-lg">Clientes</div>
                   </div>
                   <div className="stat-box">
-                    <div className="stat-icon-lg" style={{ backgroundColor: "#f3e5f5" }}>
+                    <div
+                      className="stat-icon-lg"
+                      style={{ backgroundColor: "#f3e5f5" }}
+                    >
                       <FaHistory style={{ color: "#7b1fa2" }} />
                     </div>
-                    <div className="stat-value-lg">{actividad.reciente.length}</div>
+                    <div className="stat-value-lg">
+                      {actividad.reciente.length}
+                    </div>
                     <div className="stat-label-lg">Actividades Recientes</div>
                   </div>
                 </div>
@@ -372,9 +401,14 @@ export default function UsuarioDetalleModal({ userId, onClose }) {
                             <td style={{ textTransform: "capitalize" }}>
                               {item.modulo}
                             </td>
-                            <td>{item.publicacionTitulo || `ID: ${item.publicacionId}`}</td>
+                            <td>
+                              {item.publicacionTitulo ||
+                                `ID: ${item.publicacionId}`}
+                            </td>
                             <td className="text-center">
-                              <span className="stat-badge-lg">{item.clicks}</span>
+                              <span className="stat-badge-lg">
+                                {item.clicks}
+                              </span>
                             </td>
                           </tr>
                         ))}
@@ -406,10 +440,14 @@ export default function UsuarioDetalleModal({ userId, onClose }) {
                       <tbody>
                         {actividad.estadisticas.map((item, index) => (
                           <tr key={index}>
-                            <td style={{ textTransform: "capitalize" }}>{item.modulo}</td>
+                            <td style={{ textTransform: "capitalize" }}>
+                              {item.modulo}
+                            </td>
                             <td>{getAccionBadge(item.accion)}</td>
                             <td className="text-center">
-                              <span className="stat-badge-lg">{item.total}</span>
+                              <span className="stat-badge-lg">
+                                {item.total}
+                              </span>
                             </td>
                           </tr>
                         ))}
@@ -434,7 +472,9 @@ export default function UsuarioDetalleModal({ userId, onClose }) {
                         <div className="activity-content">
                           <div className="activity-header">
                             {getAccionBadge(item.accion)}
-                            <span className="activity-module">{item.modulo}</span>
+                            <span className="activity-module">
+                              {item.modulo}
+                            </span>
                           </div>
                           <div className="activity-description">
                             {item.descripcion || "-"}
@@ -463,7 +503,7 @@ export default function UsuarioDetalleModal({ userId, onClose }) {
           </button>
         </div>
       </div>
-      
+
       {/* Modal de alerta */}
       <AlertModal
         isOpen={showAlert}

@@ -18,7 +18,7 @@ const getCuposMercado = async (req, res) => {
 
     // Construir query
     const whereClause = {};
-    
+
     // Solo filtrar por estado si no es admin
     if (!isAdmin) {
       whereClause.estado = "disponible";
@@ -79,8 +79,8 @@ const getMisCupos = async (req, res) => {
 
     // ADMIN ve TODOS los cupos
     const isAdminUser = isAdmin(req.user);
-    
-    const whereClause = isAdminUser 
+
+    const whereClause = isAdminUser
       ? {} // Admin: sin filtro
       : { published_by_user_id: req.user.id }; // Otros: solo propios
 
@@ -96,7 +96,9 @@ const getMisCupos = async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
-    console.log(`   Cupos encontrados: ${cupos.length} ${isAdminUser ? "(TODOS - Admin)" : "(propios)"}`);
+    console.log(
+      `   Cupos encontrados: ${cupos.length} ${isAdminUser ? "(TODOS - Admin)" : "(propios)"}`,
+    );
     console.log("✅ [CUPOS MERCADO] Mis cupos obtenidos exitosamente");
     res.json(cupos);
   } catch (error) {
@@ -152,11 +154,18 @@ const createCupoMercado = async (req, res) => {
     } = req.body;
 
     // Validar campos obligatorios
-    if (!descripcion || !cantidad || !precioMayorista || !precioMinorista || !fechaVencimiento) {
+    if (
+      !descripcion ||
+      !cantidad ||
+      !precioMayorista ||
+      !precioMinorista ||
+      !fechaVencimiento
+    ) {
       return res.status(400).json({
         success: false,
         error: "Faltan campos obligatorios",
-        detalle: "Descripción, cantidad, precios y fecha de vencimiento son requeridos",
+        detalle:
+          "Descripción, cantidad, precios y fecha de vencimiento son requeridos",
       });
     }
 
@@ -209,7 +218,8 @@ const createCupoMercado = async (req, res) => {
         return res.status(400).json({
           success: false,
           error: "Perfil incompleto",
-          detalle: "Debes agregar un número de teléfono a tu perfil para publicar cupos",
+          detalle:
+            "Debes agregar un número de teléfono a tu perfil para publicar cupos",
         });
       }
     }
@@ -224,13 +234,13 @@ const createCupoMercado = async (req, res) => {
     res.status(201).json({ message: "Cupo publicado exitosamente", cupo });
   } catch (error) {
     console.error("❌ Error al crear cupo:", error);
-    
+
     // Errores de validación de Sequelize
     if (error.name === "SequelizeValidationError") {
       return res.status(400).json({
         success: false,
         error: "Error de validación",
-        detalle: error.errors.map(e => e.message).join(", "),
+        detalle: error.errors.map((e) => e.message).join(", "),
       });
     }
 
@@ -247,9 +257,9 @@ const updateCupoMercado = async (req, res) => {
 
     const cupo = await CupoMercado.findByPk(req.params.id);
     if (!cupo) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        error: "Cupo no encontrado" 
+        error: "Cupo no encontrado",
       });
     }
 
@@ -274,7 +284,10 @@ const updateCupoMercado = async (req, res) => {
       });
     }
 
-    if (req.body.aerolinea !== undefined && (!req.body.aerolinea || !req.body.aerolinea.trim())) {
+    if (
+      req.body.aerolinea !== undefined &&
+      (!req.body.aerolinea || !req.body.aerolinea.trim())
+    ) {
       return res.status(400).json({
         success: false,
         error: "Campo obligatorio faltante",
@@ -294,12 +307,12 @@ const updateCupoMercado = async (req, res) => {
     res.json({ message: "Cupo actualizado exitosamente", cupo });
   } catch (error) {
     console.error("❌ Error al actualizar cupo:", error);
-    
+
     if (error.name === "SequelizeValidationError") {
       return res.status(400).json({
         success: false,
         error: "Error de validación",
-        detalle: error.errors.map(e => e.message).join(", "),
+        detalle: error.errors.map((e) => e.message).join(", "),
       });
     }
 
@@ -364,7 +377,7 @@ const importarCupos = async (req, res) => {
 
     const primeraFila = cupos[0];
     const columnasFaltantes = columnasRequeridas.filter(
-      (col) => !(col in primeraFila)
+      (col) => !(col in primeraFila),
     );
 
     if (columnasFaltantes.length > 0) {
@@ -382,7 +395,8 @@ const importarCupos = async (req, res) => {
         return res.status(400).json({
           success: false,
           error: "Perfil incompleto",
-          detalle: "Debes agregar un número de teléfono a tu perfil para publicar cupos",
+          detalle:
+            "Debes agregar un número de teléfono a tu perfil para publicar cupos",
         });
       }
     }
@@ -460,7 +474,8 @@ const importarCupos = async (req, res) => {
       if (isNaN(fechaVencimiento.getTime())) {
         erroresValidacion.push({
           fila,
-          error: "La fecha de vencimiento no tiene un formato válido (esperado: YYYY-MM-DD)",
+          error:
+            "La fecha de vencimiento no tiene un formato válido (esperado: YYYY-MM-DD)",
         });
         continue;
       }
@@ -469,7 +484,8 @@ const importarCupos = async (req, res) => {
       if (isNaN(fechaOrigen.getTime())) {
         erroresValidacion.push({
           fila,
-          error: "La fecha de origen no tiene un formato válido (esperado: YYYY-MM-DD)",
+          error:
+            "La fecha de origen no tiene un formato válido (esperado: YYYY-MM-DD)",
         });
         continue;
       }
@@ -492,7 +508,9 @@ const importarCupos = async (req, res) => {
 
     // Validación 4: Si hay errores, NO insertar nada (transacción bloqueante)
     if (erroresValidacion.length > 0) {
-      console.log(`❌ Importación fallida: ${erroresValidacion.length} errores de validación`);
+      console.log(
+        `❌ Importación fallida: ${erroresValidacion.length} errores de validación`,
+      );
       return res.status(400).json({
         success: false,
         error: "El archivo contiene errores de validación",

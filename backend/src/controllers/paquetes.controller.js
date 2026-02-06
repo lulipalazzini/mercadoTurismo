@@ -121,10 +121,14 @@ const getPaquete = async (req, res) => {
     }
 
     // ⚠️ VERIFICACIÓN DE SEGURIDAD: Solo el dueño o admin pueden ver detalles
-    if (req.user && !isAdmin(req.user) && paquete.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ 
+    if (
+      req.user &&
+      !isAdmin(req.user) &&
+      paquete.published_by_user_id !== req.user.id
+    ) {
+      return res.status(403).json({
         success: false,
-        message: "No tienes permiso para ver este paquete" 
+        message: "No tienes permiso para ver este paquete",
       });
     }
 
@@ -194,9 +198,9 @@ const updatePaquete = async (req, res) => {
 
     // ⚠️ VERIFICACIÓN DE SEGURIDAD: Solo el dueño o admin pueden editar
     if (!isAdmin(req.user) && paquete.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ 
+      return res.status(403).json({
         success: false,
-        message: "No tienes permiso para editar este paquete" 
+        message: "No tienes permiso para editar este paquete",
       });
     }
 
@@ -262,9 +266,9 @@ const deletePaquete = async (req, res) => {
 
     // ⚠️ VERIFICACIÓN DE SEGURIDAD: Solo el dueño o admin pueden eliminar
     if (!isAdmin(req.user) && paquete.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ 
+      return res.status(403).json({
         success: false,
-        message: "No tienes permiso para eliminar este paquete" 
+        message: "No tienes permiso para eliminar este paquete",
       });
     }
 

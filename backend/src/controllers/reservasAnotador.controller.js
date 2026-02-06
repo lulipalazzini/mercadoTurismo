@@ -22,10 +22,13 @@ const getReservasAnotador = async (req, res) => {
     console.log("   Consultando base de datos...");
     const reservas = await ReservaAnotador.findAll({
       where: whereClause,
-      order: [["fecha", "DESC"], ["createdAt", "DESC"]],
+      order: [
+        ["fecha", "DESC"],
+        ["createdAt", "DESC"],
+      ],
     });
     console.log(
-      `   Reservas encontradas: ${reservas.length} ${isAdmin ? "(TODAS - Admin)" : "(propias)"}`
+      `   Reservas encontradas: ${reservas.length} ${isAdmin ? "(TODAS - Admin)" : "(propias)"}`,
     );
 
     console.log("✅ [RESERVAS ANOTADOR] Reservas obtenidas exitosamente");

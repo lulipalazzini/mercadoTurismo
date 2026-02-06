@@ -58,8 +58,14 @@ const getAlojamiento = async (req, res) => {
     }
 
     // Verificar ownership
-    if (req.user && !isAdmin(req.user) && alojamiento.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para ver este alojamiento" });
+    if (
+      req.user &&
+      !isAdmin(req.user) &&
+      alojamiento.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para ver este alojamiento" });
     }
 
     const parsedAlojamiento = parseItemJsonFields(alojamiento, JSON_FIELDS);
@@ -109,8 +115,13 @@ const updateAlojamiento = async (req, res) => {
     }
 
     // Verificar ownership
-    if (!isAdmin(req.user) && alojamiento.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para editar este alojamiento" });
+    if (
+      !isAdmin(req.user) &&
+      alojamiento.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para editar este alojamiento" });
     }
 
     const updateData = { ...req.body };
@@ -163,8 +174,13 @@ const deleteAlojamiento = async (req, res) => {
     }
 
     // Verificar ownership
-    if (!isAdmin(req.user) && alojamiento.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para eliminar este alojamiento" });
+    if (
+      !isAdmin(req.user) &&
+      alojamiento.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para eliminar este alojamiento" });
     }
 
     await alojamiento.update({ activo: false });

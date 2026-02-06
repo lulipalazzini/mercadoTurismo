@@ -116,7 +116,8 @@ export default function ReportesAdmin() {
   };
 
   const convertClientesToCSV = (data) => {
-    let csv = "ID Cliente,Nombre,Email,Usuario Propietario,Empresa,Fecha Alta\n";
+    let csv =
+      "ID Cliente,Nombre,Email,Usuario Propietario,Empresa,Fecha Alta\n";
     data.clientes.forEach((c) => {
       csv += `${c.id},"${c.nombre}","${c.email || ""}","${c.usuario?.nombre || ""}","${c.usuario?.razonSocial || ""}","${new Date(c.createdAt).toLocaleDateString()}"\n`;
     });
@@ -412,7 +413,9 @@ export default function ReportesAdmin() {
                   <tbody>
                     {reporte.resumen.clicksPorModulo.map((item, index) => (
                       <tr key={index}>
-                        <td style={{ textTransform: "capitalize" }}>{item.modulo}</td>
+                        <td style={{ textTransform: "capitalize" }}>
+                          {item.modulo}
+                        </td>
                         <td className="text-center">
                           <span className="stat-badge-lg">{item.total}</span>
                         </td>
@@ -440,7 +443,8 @@ export default function ReportesAdmin() {
                           {item.modulo}
                         </td>
                         <td>
-                          {item.publicacionTitulo || `ID: ${item.publicacionId}`}
+                          {item.publicacionTitulo ||
+                            `ID: ${item.publicacionId}`}
                         </td>
                         <td>{item.propietarioEmpresa || "-"}</td>
                         <td className="text-center">
@@ -480,8 +484,12 @@ export default function ReportesAdmin() {
                   <tbody>
                     {reporte.resumen.porModuloAccion.map((item, index) => (
                       <tr key={index}>
-                        <td style={{ textTransform: "capitalize" }}>{item.modulo}</td>
-                        <td style={{ textTransform: "capitalize" }}>{item.accion}</td>
+                        <td style={{ textTransform: "capitalize" }}>
+                          {item.modulo}
+                        </td>
+                        <td style={{ textTransform: "capitalize" }}>
+                          {item.accion}
+                        </td>
                         <td className="text-center">
                           <span className="stat-badge-lg">{item.total}</span>
                         </td>
@@ -530,10 +538,12 @@ export default function ReportesAdmin() {
       {!reporte && !loading && (
         <div className="no-data-message">
           <FaChartBar size={48} color="#ccc" />
-          <p>Configura los filtros y genera un reporte para ver los resultados</p>
+          <p>
+            Configura los filtros y genera un reporte para ver los resultados
+          </p>
         </div>
       )}
-      
+
       {/* Modal de alerta */}
       <AlertModal
         isOpen={showAlert}

@@ -41,7 +41,11 @@ export default function MercadoCupos() {
   console.log("Rol del usuario:", user.role);
 
   const canViewMarketplace = true; // Todos los usuarios pueden ver el marketplace
-  const canPublish = user.role === "operador" || user.role === "agencia" || user.role === "admin" || user.role === "sysadmin";
+  const canPublish =
+    user.role === "operador" ||
+    user.role === "agencia" ||
+    user.role === "admin" ||
+    user.role === "sysadmin";
 
   console.log("canPublish:", canPublish);
   console.log("canViewMarketplace:", canViewMarketplace);

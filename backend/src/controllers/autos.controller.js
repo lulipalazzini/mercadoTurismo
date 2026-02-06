@@ -90,8 +90,14 @@ const getAuto = async (req, res) => {
     }
 
     // Verificar ownership
-    if (req.user && !isAdmin(req.user) && auto.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para ver este auto" });
+    if (
+      req.user &&
+      !isAdmin(req.user) &&
+      auto.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para ver este auto" });
     }
 
     const parsedAuto = parseItemJsonFields(auto, JSON_FIELDS);
@@ -138,7 +144,9 @@ const updateAuto = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && auto.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para editar este auto" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para editar este auto" });
     }
 
     const updateData = { ...req.body };
@@ -188,7 +196,9 @@ const deleteAuto = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && auto.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para eliminar este auto" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para eliminar este auto" });
     }
 
     await auto.update({ disponible: false });

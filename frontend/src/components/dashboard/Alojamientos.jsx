@@ -90,7 +90,7 @@ export default function Alojamientos() {
   };
 
   const filteredItems = items.filter((item) =>
-    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   if (loading) {
@@ -193,9 +193,9 @@ export default function Alojamientos() {
                       Math.round(
                         items.reduce(
                           (sum, a) => sum + Number(a.precioNoche || 0),
-                          0
-                        ) / items.length
-                      )
+                          0,
+                        ) / items.length,
+                      ),
                     )
                   : "$0"}
               </h3>

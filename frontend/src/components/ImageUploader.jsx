@@ -14,7 +14,7 @@ export default function ImageUploader({
     ),
   );
   const fileInputRef = useRef(null);
-  
+
   // Estado para modal de alerta
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -151,7 +151,7 @@ export default function ImageUploader({
           ))}
         </div>
       )}
-      
+
       {/* Modal de alerta */}
       <AlertModal
         isOpen={showAlert}

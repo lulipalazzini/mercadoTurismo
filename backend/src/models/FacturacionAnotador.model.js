@@ -70,7 +70,7 @@ const FacturacionAnotador = sequelize.define(
         fields: ["fecha"],
       },
     ],
-  }
+  },
 );
 
 module.exports = FacturacionAnotador;

@@ -91,7 +91,10 @@ export default function TrenFormModal({ isOpen, onClose, onSuccess }) {
   return (
     <>
       <div className="modal-overlay" onClick={handleClose}>
-        <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal-content large"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="modal-header">
             <h2>Nuevo Servicio de Tren</h2>
             <button className="btn-close" onClick={handleClose}>
@@ -116,7 +119,9 @@ export default function TrenFormModal({ isOpen, onClose, onSuccess }) {
                     placeholder="Ej: Expreso del Sur"
                   />
                   {errors.nombreServicio && (
-                    <span className="error-message">{errors.nombreServicio}</span>
+                    <span className="error-message">
+                      {errors.nombreServicio}
+                    </span>
                   )}
                 </div>
 
@@ -200,7 +205,9 @@ export default function TrenFormModal({ isOpen, onClose, onSuccess }) {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="capacidadPasajeros">Capacidad de Pasajeros</label>
+                  <label htmlFor="capacidadPasajeros">
+                    Capacidad de Pasajeros
+                  </label>
                   <input
                     type="number"
                     id="capacidadPasajeros"

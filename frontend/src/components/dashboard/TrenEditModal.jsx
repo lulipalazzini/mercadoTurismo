@@ -77,7 +77,10 @@ export default function TrenEditModal({ isOpen, onClose, onSuccess, tren }) {
   return (
     <>
       <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal-content large"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="modal-header">
             <h2>Editar Servicio de Tren</h2>
             <button className="btn-close" onClick={onClose}>
@@ -101,7 +104,9 @@ export default function TrenEditModal({ isOpen, onClose, onSuccess, tren }) {
                     onChange={handleChange}
                   />
                   {errors.nombreServicio && (
-                    <span className="error-message">{errors.nombreServicio}</span>
+                    <span className="error-message">
+                      {errors.nombreServicio}
+                    </span>
                   )}
                 </div>
 
@@ -181,7 +186,9 @@ export default function TrenEditModal({ isOpen, onClose, onSuccess, tren }) {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="capacidadPasajeros">Capacidad de Pasajeros</label>
+                  <label htmlFor="capacidadPasajeros">
+                    Capacidad de Pasajeros
+                  </label>
                   <input
                     type="number"
                     id="capacidadPasajeros"

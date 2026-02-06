@@ -55,7 +55,9 @@ export async function apiFetch(endpoint, options = {}) {
         localStorage.removeItem("token");
         localStorage.removeItem("currentUser");
         window.location.href = "/login";
-        throw new Error("Sesión expirada. Por favor, inicia sesión nuevamente.");
+        throw new Error(
+          "Sesión expirada. Por favor, inicia sesión nuevamente.",
+        );
       }
 
       if (response.status === 403) {
@@ -90,7 +92,7 @@ export async function apiFetch(endpoint, options = {}) {
     // Manejar errores de red
     if (error.name === "TypeError" && error.message === "Failed to fetch") {
       throw new Error(
-        "Error de conexión. Verifica tu conexión a internet o que el servidor esté disponible."
+        "Error de conexión. Verifica tu conexión a internet o que el servidor esté disponible.",
       );
     }
 

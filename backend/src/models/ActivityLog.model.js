@@ -47,7 +47,8 @@ const ActivityLog = sequelize.define(
     entidadId: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      comment: "ID de la entidad afectada (publicación, usuario, cliente, etc.)",
+      comment:
+        "ID de la entidad afectada (publicación, usuario, cliente, etc.)",
     },
     entidadTitulo: {
       type: DataTypes.STRING,

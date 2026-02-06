@@ -147,11 +147,10 @@ const cancelReserva = async (req, res) => {
   }
 };
 
-
 module.exports = {
   getReservas,
   getReserva,
   createReserva,
   updateReserva,
-  cancelReserva
+  cancelReserva,
 };

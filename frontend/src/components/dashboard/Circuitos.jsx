@@ -87,20 +87,20 @@ export default function Circuitos() {
   };
 
   const filteredItems = items.filter((item) =>
-    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Calcular estadísticas
   const destinosUnicos = [
     ...new Set(
-      items.flatMap((c) => (Array.isArray(c.destinos) ? c.destinos : []))
+      items.flatMap((c) => (Array.isArray(c.destinos) ? c.destinos : [])),
     ),
   ].length;
   const duracionPromedio =
     items.length > 0
       ? Math.round(
           items.reduce((sum, c) => sum + Number(c.duracion || 0), 0) /
-            items.length
+            items.length,
         )
       : 0;
   const circuitosCortos = items.filter((c) => Number(c.duracion) <= 3).length;

@@ -175,7 +175,11 @@ export default function TrenCard({ item, isPreview = false }) {
               {moneda !== "USD" && moneda !== "EUR" ? moneda : ""}
             </span>
           </div>
-          <button className="btn-reservar" onClick={handleReservar} disabled={isPreview}>
+          <button
+            className="btn-reservar"
+            onClick={handleReservar}
+            disabled={isPreview}
+          >
             Consultar
           </button>
         </div>

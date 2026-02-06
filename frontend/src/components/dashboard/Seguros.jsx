@@ -88,14 +88,14 @@ export default function Seguros() {
     (item) =>
       item.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.tipo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.proveedor?.toLowerCase().includes(searchTerm.toLowerCase())
+      item.proveedor?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Calcular estadísticas
   const tiposUnicos = [...new Set(items.map((s) => s.tipo))].length;
   const coberturaTotal = items.reduce(
     (sum, s) => sum + Number(s.montoCobertura || 0),
-    0
+    0,
   );
   const precioPromedio =
     items.length > 0
@@ -248,9 +248,7 @@ export default function Seguros() {
                       <span className="info-icon">
                         <FaCalendarAlt />
                       </span>
-                      <span>
-                        {item.duracionDias} días de cobertura
-                      </span>
+                      <span>{item.duracionDias} días de cobertura</span>
                     </div>
                     <div className="info-item">
                       <span className="info-icon">

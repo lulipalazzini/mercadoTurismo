@@ -2,7 +2,7 @@ const { sequelize } = require("../src/config/database");
 
 /**
  * MIGRACIÓN: Agregar columna published_by_user_id a todas las tablas publicables
- * 
+ *
  * Esta migración implementa control estricto por publicador:
  * - Cada registro tiene un dueño (published_by_user_id)
  * - Solo el dueño o admin puede ver/editar
@@ -34,7 +34,7 @@ async function addPublishedByColumn() {
 
       // 1. Verificar si la columna ya existe
       const tableDescription = await queryInterface.describeTable(tableName);
-      
+
       if (tableDescription.published_by_user_id) {
         console.log(`   ⚠️  Columna ya existe, saltando...`);
         continue;
@@ -55,7 +55,7 @@ async function addPublishedByColumn() {
 
       // 3. Buscar el primer admin para asignar registros huérfanos
       const [adminUsers] = await sequelize.query(
-        `SELECT id FROM Users WHERE role IN ('admin', 'sysadmin') LIMIT 1`
+        `SELECT id FROM Users WHERE role IN ('admin', 'sysadmin') LIMIT 1`,
       );
 
       const defaultUserId = adminUsers.length > 0 ? adminUsers[0].id : 1;
@@ -98,7 +98,6 @@ async function addPublishedByColumn() {
       }
 
       console.log(`   ✅ ${tableName} completado\n`);
-
     } catch (error) {
       console.error(`   ❌ Error en ${tableName}:`, error.message);
       // Continuar con la siguiente tabla
@@ -118,7 +117,7 @@ async function rollback() {
       console.log(`📋 Procesando tabla: ${tableName}`);
 
       const tableDescription = await queryInterface.describeTable(tableName);
-      
+
       if (!tableDescription.published_by_user_id) {
         console.log(`   ⚠️  Columna no existe, saltando...`);
         continue;
@@ -136,7 +135,6 @@ async function rollback() {
       // Eliminar columna
       await queryInterface.removeColumn(tableName, "published_by_user_id");
       console.log(`   ✅ Columna eliminada\n`);
-
     } catch (error) {
       console.error(`   ❌ Error en ${tableName}:`, error.message);
     }

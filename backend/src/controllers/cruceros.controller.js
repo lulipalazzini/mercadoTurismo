@@ -94,8 +94,14 @@ const getCrucero = async (req, res) => {
     }
 
     // Verificar ownership
-    if (req.user && !isAdmin(req.user) && crucero.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para ver este crucero" });
+    if (
+      req.user &&
+      !isAdmin(req.user) &&
+      crucero.published_by_user_id !== req.user.id
+    ) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para ver este crucero" });
     }
 
     const parsedCrucero = parseItemJsonFields(crucero, JSON_FIELDS);
@@ -142,7 +148,9 @@ const updateCrucero = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && crucero.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para editar este crucero" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para editar este crucero" });
     }
 
     const updateData = { ...req.body };
@@ -195,7 +203,9 @@ const deleteCrucero = async (req, res) => {
 
     // Verificar ownership
     if (!isAdmin(req.user) && crucero.published_by_user_id !== req.user.id) {
-      return res.status(403).json({ message: "No tienes permiso para eliminar este crucero" });
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para eliminar este crucero" });
     }
 
     await crucero.update({ activo: false });

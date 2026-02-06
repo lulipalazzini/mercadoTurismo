@@ -54,7 +54,9 @@ const trackClick = async (req, res, next) => {
 const logClick = async (data) => {
   try {
     await ClickTracking.create(data);
-    console.log(`✅ [TRACKING] Click registrado: ${data.modulo}/${data.publicacionId}`);
+    console.log(
+      `✅ [TRACKING] Click registrado: ${data.modulo}/${data.publicacionId}`,
+    );
   } catch (error) {
     console.error("❌ [TRACKING] Error al registrar click:", error);
   }
@@ -73,7 +75,8 @@ const trackActivity = (modulo) => {
       // Determinar la acción según el método HTTP
       let accion = null;
       if (req.method === "POST") accion = "create";
-      else if (req.method === "PUT" || req.method === "PATCH") accion = "update";
+      else if (req.method === "PUT" || req.method === "PATCH")
+        accion = "update";
       else if (req.method === "DELETE") accion = "delete";
 
       // Solo registrar si es una acción relevante y fue exitosa
