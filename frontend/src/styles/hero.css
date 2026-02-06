@@ -1,14 +1,12 @@
 /* Hero Section - Identidad Mercado Turismo */
 .hero {
   position: relative;
-  height: 100vh;
-  max-height: 100vh;
+  min-height: calc(100vh - 70px); /* Mínimo altura pantalla menos navbar */
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   text-align: center;
   color: var(--text-primary);
-  overflow: hidden;
   padding: 0;
   background: linear-gradient(
     135deg,
@@ -17,15 +15,77 @@
   );
 }
 
+/* Primera sección del hero con searchbox */
+.hero-section-1 {
+  margin-top: 70px; /* Espacio para el navbar */
+  padding-bottom: 0;
+  position: relative;
+}
+
+/* Fade suave en la parte inferior de la primera sección */
+.hero-section-1::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 40%,
+    rgba(255, 255, 255, 0.8) 70%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Segunda sección del hero con servicios destacados */
+.hero-section-2 {
+  margin-top: -120px; /* Mayor overlap para transición más suave */
+  padding-top: 150px;
+  padding-bottom: 4rem;
+  min-height: 90vh;
+  position: relative;
+}
+
+/* Fade suave en la parte superior de la segunda sección */
+.hero-section-2::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.8) 30%,
+    rgba(255, 255, 255, 0.4) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  z-index: 3;
+  pointer-events: none;
+}
+
 .hero-video,
 .hero-image {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center center;
   z-index: 0;
   opacity: 0.3;
+}
+
+/* Imagen más prominente en la segunda sección */
+.hero-section-2 .hero-image {
+  opacity: 0.5;
+  object-position: center center;
 }
 
 .hero-overlay {
@@ -35,20 +95,37 @@
     180deg,
     rgba(255, 255, 255, 0.1) 0%,
     rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0.6) 100%
+    rgba(255, 255, 255, 0.7) 90%,
+    rgba(255, 255, 255, 0.95) 100%
   );
   z-index: 1;
+}
+
+/* Overlay más sutil en la segunda sección */
+.hero-section-2 .hero-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.7) 10%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 800px;
-  padding: 2rem 1.5rem;
+  padding: 8rem 2rem 4rem;
   animation: fadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   width: 100%;
-  max-height: 100vh;
-  overflow-y: auto;
+  max-width: 1400px; /* Ancho máximo más generoso para desktop */
+  margin: 0 auto;
+  /* Sin restricciones de altura - crece naturalmente */
+}
+
+/* Ajustar padding para la segunda sección */
+.hero-section-2 .hero-content {
+  padding-top: 4rem;
 }
 
 .hero-content h1 {
@@ -126,14 +203,14 @@
 }
 
 /* Formulario de Búsqueda */
-.search-box {
+.hero .search-box {
   background: var(--bg-white);
   border-radius: 12px;
   padding: 1.5rem 1.75rem;
   box-shadow: var(--shadow-lg);
   margin: 1.5rem auto 1rem;
-  max-width: 900px;
-  width: 92%;
+  max-width: 1100px; /* Más ancho para desktop */
+  width: 85%; /* Más ancho pero no al 100% */
   animation: fadeIn 1s ease-out 1s forwards;
   opacity: 0;
   border: 1px solid var(--border-color);
@@ -331,8 +408,8 @@
 
 @media (max-width: 992px) {
   .hero {
-    min-height: 100vh;
-    padding-top: 70px;
+    min-height: auto;
+    padding-top: 0;
   }
 
   .hero-content {
@@ -349,8 +426,9 @@
     margin-bottom: 1.25rem;
   }
 
-  .search-box {
+  .hero .search-box {
     padding: 1.35rem 1.35rem;
+    width: 90%;
   }
 
   .search-grid {
@@ -370,8 +448,8 @@
 
 @media (max-width: 768px) {
   .hero {
-    min-height: 100vh;
-    padding-top: 65px;
+    min-height: auto;
+    padding-top: 0;
   }
 
   .hero-content {
@@ -388,7 +466,7 @@
     margin-bottom: 1rem;
   }
 
-  .search-box {
+  .hero .search-box {
     padding: 1.15rem;
     margin: 1.15rem auto 0.75rem;
     width: 92%;
@@ -445,7 +523,7 @@
     margin-bottom: 0.875rem;
   }
 
-  .search-box {
+  .hero .search-box {
     padding: 1rem;
     border-radius: 14px;
     width: 90%;
@@ -499,17 +577,22 @@
 /* Optimización para pantallas muy grandes */
 @media (min-width: 1920px) {
   .hero {
-    padding-top: 90px;
+    padding-top: 0;
   }
 
   .hero-content {
-    max-width: 850px;
+    max-width: 1600px;
     padding: 3.5rem 2rem 3.5rem;
   }
 
-  .search-box {
-    max-width: 950px;
+  .hero-section-2 .hero-content {
+    padding-top: 5rem;
+  }
+
+  .hero .search-box {
+    max-width: 1200px;
     padding: 1.75rem 2.25rem;
+    width: 80%;
   }
 
   .search-grid {
@@ -526,5 +609,25 @@
     padding: 0.8rem 2rem;
     font-size: 1rem;
     min-height: 50px;
+  }
+}
+
+/* Mobile: Ajustar transición entre secciones */
+@media (max-width: 768px) {
+  .hero-section-1::after {
+    height: 100px;
+  }
+  
+  .hero-section-2::before {
+    height: 100px;
+  }
+  
+  .hero-section-2 {
+    margin-top: -80px;
+    padding-top: 100px;
+  }
+
+  .hero-section-2 .hero-content {
+    padding-top: 2rem;
   }
 }

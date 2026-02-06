@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateCrucero } from "../../services/cruceros.service";
 import AlertModal from "../common/AlertModal";
+import DragDropImageUpload from "../common/DragDropImageUpload";
+import { getImageUrls } from "../../utils/imageUtils";
 import "../../styles/modal.css";
 
 export default function CruceroEditModal({
@@ -25,6 +27,8 @@ export default function CruceroEditModal({
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [imagenes, setImagenes] = useState([]);
+  const [imagenesExistentes, setImagenesExistentes] = useState([]);
 
   useEffect(() => {
     if (crucero) {
@@ -42,6 +46,19 @@ export default function CruceroEditModal({
           : "",
         precio: crucero.precio || "",
       });
+
+      // Cargar imágenes existentes
+      if (crucero.imagenes && Array.isArray(crucero.imagenes)) {
+        const imageUrls = getImageUrls(crucero.imagenes);
+        const existingImgs = imageUrls.map((url, index) => ({
+          preview: url,
+          name: `Imagen ${index + 1}`,
+          existing: true,
+          originalPath: crucero.imagenes[index],
+        }));
+        setImagenesExistentes(existingImgs);
+        setImagenes(existingImgs);
+      }
     }
   }, [crucero]);
 
@@ -74,15 +91,40 @@ export default function CruceroEditModal({
 
     setSubmitting(true);
     try {
-      const dataToSend = {
-        ...formData,
-        itinerario: formData.itinerario
-          .split(",")
-          .map((i) => i.trim())
-          .filter((i) => i),
-      };
+      const formDataToSend = new FormData();
 
-      await updateCrucero(crucero.id, dataToSend);
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("naviera", formData.naviera);
+      formDataToSend.append("barco", formData.barco);
+      formDataToSend.append("descripcion", formData.descripcion);
+      formDataToSend.append("duracion", formData.duracion);
+      formDataToSend.append("fechaSalida", formData.fechaSalida);
+      formDataToSend.append("precio", formData.precio);
+
+      const itinerario = formData.itinerario
+        .split(",")
+        .map((i) => i.trim())
+        .filter((i) => i);
+      formDataToSend.append("itinerario", JSON.stringify(itinerario));
+
+      imagenes.forEach((imagen) => {
+        if (imagen.file instanceof File) {
+          formDataToSend.append("imagenes", imagen.file);
+        }
+      });
+
+      const imagenesAMantener = imagenes
+        .filter((img) => img.existing && img.originalPath)
+        .map((img) => img.originalPath);
+
+      if (imagenesAMantener.length > 0) {
+        formDataToSend.append(
+          "imagenesExistentes",
+          JSON.stringify(imagenesAMantener),
+        );
+      }
+
+      await updateCrucero(crucero.id, formDataToSend);
       onSuccess();
       handleClose();
     } catch (error) {
@@ -244,6 +286,17 @@ export default function CruceroEditModal({
                   onChange={handleChange}
                   min="0"
                   step="0.01"
+                />
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes</label>
+                <DragDropImageUpload
+                  onChange={setImagenes}
+                  maxFiles={6}
+                  maxSizeMB={5}
+                  existingImages={imagenesExistentes}
                 />
               </div>
             </div>

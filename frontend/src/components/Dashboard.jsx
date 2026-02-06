@@ -39,11 +39,18 @@ import Transfers from "./dashboard/Transfers";
 import MercadoCupos from "./dashboard/MercadoCupos";
 import Ajustes from "./dashboard/Ajustes";
 import Usuarios from "./dashboard/Usuarios";
+import {
+  getUserRole,
+  getRoleDisplayName,
+  getRoleBadge,
+  canAccessModule,
+  getModulesBySection,
+  isB2BUser,
+  isVisibleToPassengers,
+} from "../utils/rolePermissions";
 import "../styles/dashboard.css";
 
 function DashboardContent() {
-  const [activeSection, setActiveSection] = useState("reservas");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
   // Obtener información del usuario del localStorage
@@ -53,19 +60,35 @@ function DashboardContent() {
     role: "user",
   };
 
+  // Obtener rol calculado del usuario
+  const userRole = getUserRole(user);
+  const userRoleDisplay = getRoleDisplayName(user);
+  const userRoleBadge = getRoleBadge(user);
+
+  // Obtener módulos visibles según el rol
+  const modulesBySection = getModulesBySection(user);
+  const allVisibleModules = Object.values(modulesBySection).flat();
+
+  // Determinar sección activa inicial (primera visible para el usuario)
+  const [activeSection, setActiveSection] = useState(
+    allVisibleModules.length > 0 ? allVisibleModules[0].id : "ajustes"
+  );
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Validar que el usuario tenga un rol válido
+  const validRoles = ["admin", "sysadmin", "agencia", "operador", "user"];
+  if (!validRoles.includes(userRole)) {
+    console.error("Rol de usuario inválido:", userRole);
+    // Redirigir al login si el rol no es válido
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("token");
+    navigate("/login");
+    return null;
+  }
+
   // Determinar el nombre completo y rol a mostrar
   const getUserDisplayName = () => {
     return user.nombre || "Usuario";
-  };
-
-  const getUserRole = () => {
-    const roles = {
-      admin: "Administrador",
-      sysadmin: "Super Administrador",
-      agencia: "Agencia",
-      operador: "Operador",
-    };
-    return roles[user.role] || "Operador";
   };
 
   const handleLogout = () => {
@@ -93,11 +116,42 @@ function DashboardContent() {
       facturacion: "Facturación",
       ajustes: "Ajustes",
       usuarios: "Usuarios",
+      reservasB2B: "Reservas B2B",
+      serviciosB2B: "Mis Servicios",
+      clientesB2B: "Clientes B2B",
     };
     return titles[activeSection] || "Dashboard";
   };
 
+  // Mapeo de iconos por nombre de icono (string)
+  const iconMap = {
+    FaClipboardList: <FaClipboardList />,
+    FaBullseye: <FaBullseye />,
+    FaUsers: <FaUsers />,
+    FaHotel: <FaHotel />,
+    FaCar: <FaCar />,
+    FaRoute: <FaRoute />,
+    FaShip: <FaShip />,
+    FaHiking: <FaHiking />,
+    FaMapMarkedAlt: <FaMapMarkedAlt />,
+    FaBus: <FaBus />,
+    FaStore: <FaStore />,
+    FaDollarSign: <FaDollarSign />,
+    FaChartBar: <FaChartBar />,
+    FaCog: <FaCog />,
+  };
+
   const renderContent = () => {
+    // Verificar que el usuario tenga acceso al módulo actual
+    if (!canAccessModule(user, activeSection)) {
+      return (
+        <div className="access-denied">
+          <h2>⚠️ Acceso Denegado</h2>
+          <p>No tienes permisos para acceder a este módulo.</p>
+        </div>
+      );
+    }
+
     switch (activeSection) {
       case "reservas":
         return <Reservas />;
@@ -129,9 +183,50 @@ function DashboardContent() {
         return <Ajustes />;
       case "usuarios":
         return <Usuarios />;
+      case "reservasB2B":
+        return <div className="coming-soon">📋 Reservas B2B - Próximamente</div>;
+      case "serviciosB2B":
+        return <div className="coming-soon">🔧 Mis Servicios - Próximamente</div>;
+      case "clientesB2B":
+        return <div className="coming-soon">🏢 Clientes B2B - Próximamente</div>;
       default:
-        return <Reservas />;
+        return allVisibleModules.length > 0 ? (
+          <Reservas />
+        ) : (
+          <div className="no-modules">
+            <p>No hay módulos disponibles para tu perfil.</p>
+          </div>
+        );
     }
+  };
+
+  // Renderizar secciones de navegación dinámicamente
+  const renderNavSection = (sectionName, modules) => {
+    if (modules.length === 0) return null;
+
+    const sectionTitles = {
+      principal: "Principal",
+      productos: "Productos y Servicios",
+      mercado: "Mercado",
+      gestion: "Gestión",
+      configuracion: "Configuración",
+    };
+
+    return (
+      <div className="nav-section" key={sectionName}>
+        <h3>{sectionTitles[sectionName] || sectionName}</h3>
+        {modules.map((module) => (
+          <button
+            key={module.id}
+            className={`nav-item ${activeSection === module.id ? "active" : ""}`}
+            onClick={() => setActiveSection(module.id)}
+          >
+            <span className="nav-icon">{iconMap[module.icon]}</span>
+            <span className="nav-label">{module.title}</span>
+          </button>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -152,191 +247,13 @@ function DashboardContent() {
         </div>
 
         <nav className="sidebar-nav">
-          <div className="nav-section">
-            <h3>Principal</h3>
-            <button
-              className={`nav-item ${
-                activeSection === "reservas" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("reservas")}
-            >
-              <span className="nav-icon">
-                <FaClipboardList />
-              </span>
-              <span className="nav-label">Reservas</span>
-            </button>
-            <button
-              className={`nav-item ${
-                activeSection === "paquetes" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("paquetes")}
-            >
-              <span className="nav-icon">
-                <FaBullseye />
-              </span>
-              <span className="nav-label">Paquetes</span>
-            </button>
-            <button
-              className={`nav-item ${
-                activeSection === "clientes" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("clientes")}
-            >
-              <span className="nav-icon">
-                <FaUsers />
-              </span>
-              <span className="nav-label">Clientes</span>
-            </button>
-          </div>
+          {/* Renderizar secciones dinámicamente según rol */}
+          {Object.entries(modulesBySection).map(([sectionName, modules]) =>
+            renderNavSection(sectionName, modules)
+          )}
 
+          {/* Botón de Logout siempre visible */}
           <div className="nav-section">
-            <h3>Productos y Servicios</h3>
-            <button
-              className={`nav-item ${
-                activeSection === "alojamientos" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("alojamientos")}
-            >
-              <span className="nav-icon">
-                <FaHotel />
-              </span>
-              <span className="nav-label">Alojamientos</span>
-            </button>
-            <button
-              className={`nav-item ${
-                activeSection === "autos" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("autos")}
-            >
-              <span className="nav-icon">
-                <FaCar />
-              </span>
-              <span className="nav-label">Autos</span>
-            </button>
-            <button
-              className={`nav-item ${
-                activeSection === "circuitos" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("circuitos")}
-            >
-              <span className="nav-icon">
-                <FaRoute />
-              </span>
-              <span className="nav-label">Circuitos</span>
-            </button>
-            <button
-              className={`nav-item ${
-                activeSection === "cruceros" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("cruceros")}
-            >
-              <span className="nav-icon">
-                <FaShip />
-              </span>
-              <span className="nav-label">Cruceros</span>
-            </button>
-            <button
-              className={`nav-item ${
-                activeSection === "excursiones" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("excursiones")}
-            >
-              <span className="nav-icon">
-                <FaHiking />
-              </span>
-              <span className="nav-label">Excursiones</span>
-            </button>
-            <button
-              className={`nav-item ${
-                activeSection === "salidas-grupales" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("salidas-grupales")}
-            >
-              <span className="nav-icon">
-                <FaMapMarkedAlt />
-              </span>
-              <span className="nav-label">Salidas Grupales</span>
-            </button>
-            <button
-              className={`nav-item ${
-                activeSection === "transfers" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("transfers")}
-            >
-              <span className="nav-icon">
-                <FaBus />
-              </span>
-              <span className="nav-label">Transfers</span>
-            </button>
-          </div>
-
-          <div className="nav-section">
-            <h3>Mercado</h3>
-            <button
-              className={`nav-item ${
-                activeSection === "mercado-cupos" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("mercado-cupos")}
-            >
-              <span className="nav-icon">
-                <FaStore />
-              </span>
-              <span className="nav-label">Mercado de Cupos</span>
-            </button>
-          </div>
-
-          <div className="nav-section">
-            <h3>Gestión</h3>
-            <button
-              className={`nav-item ${
-                activeSection === "facturacion" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("facturacion")}
-            >
-              <span className="nav-icon">
-                <FaDollarSign />
-              </span>
-              <span className="nav-label">Facturación</span>
-            </button>
-            <button
-              className={`nav-item ${
-                activeSection === "reportes" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("reportes")}
-            >
-              <span className="nav-icon">
-                <FaChartBar />
-              </span>
-              <span className="nav-label">Reportes</span>
-            </button>
-          </div>
-
-          <div className="nav-section">
-            <h3>Configuración</h3>
-            {user.role === "admin" && (
-              <button
-                className={`nav-item ${
-                  activeSection === "usuarios" ? "active" : ""
-                }`}
-                onClick={() => setActiveSection("usuarios")}
-              >
-                <span className="nav-icon">
-                  <FaUsers />
-                </span>
-                <span className="nav-label">Usuarios</span>
-              </button>
-            )}
-            <button
-              className={`nav-item ${
-                activeSection === "ajustes" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("ajustes")}
-            >
-              <span className="nav-icon">
-                <FaCog />
-              </span>
-              <span className="nav-label">Ajustes</span>
-            </button>
             <button className="nav-item" onClick={handleLogout}>
               <span className="nav-icon">
                 <FaSignOutAlt />
@@ -379,7 +296,14 @@ function DashboardContent() {
               </div>
               <div className="user-info">
                 <span className="user-name">{getUserDisplayName()}</span>
-                <span className="user-role">{getUserRole()}</span>
+                <span className="user-role">
+                  {userRoleBadge} {userRoleDisplay}
+                  {isB2BUser(user) && (
+                    <span className="b2b-badge" style={{ marginLeft: "8px", fontSize: "0.75rem", color: "#2464eb" }}>
+                      {isVisibleToPassengers(user) ? "👁️ Visible" : "🔒 B2B"}
+                    </span>
+                  )}
+                </span>
               </div>
             </div>
           </div>

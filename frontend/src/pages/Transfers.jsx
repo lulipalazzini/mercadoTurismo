@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import TransferCard from "../components/TransferCard";
-import SearchBox from "../components/SearchBox";
+import ModuleFilters from "../components/ModuleFilters";
 import "../styles/servicios.css";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
 
 export default function Transfers() {
   const [transfers, setTransfers] = useState([]);
@@ -16,9 +16,18 @@ export default function Transfers() {
     fetchTransfers();
   }, []);
 
-  const fetchTransfers = async () => {
+  const fetchTransfers = async (queryParams = {}) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/transfers`);
+      // Construir query string desde los filtros
+      const params = new URLSearchParams();
+      Object.keys(queryParams).forEach(key => {
+        if (queryParams[key]) {
+          params.append(key, queryParams[key]);
+        }
+      });
+      
+      const url = `${API_BASE_URL}/transfers${params.toString() ? '?' + params.toString() : ''}`;
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Error al cargar los transfers");
       }
@@ -32,23 +41,10 @@ export default function Transfers() {
     }
   };
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm.trim()) {
-      setTransfers(allTransfers);
-      return;
-    }
-
-    const filtered = allTransfers.filter((transfer) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        transfer.origen?.toLowerCase().includes(searchLower) ||
-        transfer.destino?.toLowerCase().includes(searchLower) ||
-        transfer.tipoVehiculo?.toLowerCase().includes(searchLower) ||
-        transfer.descripcion?.toLowerCase().includes(searchLower)
-      );
-    });
-
-    setTransfers(filtered);
+  const handleFiltersChange = (filters) => {
+    // Usar filtros del backend
+    setLoading(true);
+    fetchTransfers(filters);
   };
 
   if (loading) {
@@ -69,18 +65,22 @@ export default function Transfers() {
 
   return (
     <div className="servicios-container">
-      <h1 className="servicios-title">Transfers</h1>{" "}
-      <SearchBox
-        onSearch={handleSearch}
-        placeholder="Buscar transfers por origen o destino..."
-      />{" "}
+      <h1 className="servicios-title">Transfers</h1>
+      
+      <ModuleFilters 
+        module="transfers" 
+        onFiltersChange={handleFiltersChange}
+      />
+
       <div className="servicios-grid">
         {transfers.length > 0 ? (
           transfers.map((transfer) => (
             <TransferCard key={transfer.id} item={transfer} />
           ))
         ) : (
-          <p className="no-results">No hay transfers disponibles</p>
+          <p className="no-results">
+            No se encontraron transfers que coincidan con los filtros seleccionados
+          </p>
         )}
       </div>
     </div>

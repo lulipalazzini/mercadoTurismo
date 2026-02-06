@@ -3,6 +3,7 @@ import { FaTimes, FaPlus, FaTrash } from "react-icons/fa";
 import { createSalidaGrupal } from "../../services/salidasGrupales.service";
 import AlertModal from "../common/AlertModal";
 import DestinoAutocomplete from "../common/DestinoAutocomplete";
+import ImageUploader from "../ImageUploader";
 import "../../styles/modal.css";
 
 export default function SalidaGrupalFormModal({ isOpen, onClose, onSuccess }) {
@@ -18,6 +19,7 @@ export default function SalidaGrupalFormModal({ isOpen, onClose, onSuccess }) {
 
   const [incluye, setIncluye] = useState([]);
   const [nuevoIncluye, setNuevoIncluye] = useState("");
+  const [imagenes, setImagenes] = useState([]);
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -75,12 +77,27 @@ export default function SalidaGrupalFormModal({ isOpen, onClose, onSuccess }) {
     try {
       setSubmitting(true);
 
-      const dataToSend = {
-        ...formData,
-        incluye: incluye,
-      };
+      const formDataToSend = new FormData();
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("descripcion", formData.descripcion);
+      formDataToSend.append("destino", formData.destino);
+      if (formData.fechaSalida)
+        formDataToSend.append("fechaSalida", formData.fechaSalida);
+      if (formData.fechaRegreso)
+        formDataToSend.append("fechaRegreso", formData.fechaRegreso);
+      if (formData.duracion)
+        formDataToSend.append("duracion", parseInt(formData.duracion));
+      if (formData.precio)
+        formDataToSend.append("precio", parseFloat(formData.precio));
+      formDataToSend.append("incluye", JSON.stringify(incluye));
 
-      await createSalidaGrupal(dataToSend);
+      imagenes.forEach((imagen) => {
+        if (imagen instanceof File) {
+          formDataToSend.append("imagenes", imagen);
+        }
+      });
+
+      await createSalidaGrupal(formDataToSend);
 
       setFormData({
         nombre: "",
@@ -92,6 +109,7 @@ export default function SalidaGrupalFormModal({ isOpen, onClose, onSuccess }) {
         precio: "",
       });
       setIncluye([]);
+      setImagenes([]);
       setErrors({});
 
       onSuccess && onSuccess();
@@ -291,6 +309,16 @@ export default function SalidaGrupalFormModal({ isOpen, onClose, onSuccess }) {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes de la Salida Grupal</label>
+                <ImageUploader
+                  images={imagenes}
+                  onChange={setImagenes}
+                  maxImages={6}
+                />
               </div>
             </div>
           </div>

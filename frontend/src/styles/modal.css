@@ -647,6 +647,35 @@ textarea.form-control {
   }
 }
 
+/* Preview Modal Styles */
+.preview-modal-content {
+  max-width: 480px;
+  max-height: 95vh;
+}
+
+.preview-modal-body {
+  padding: 0;
+  overflow-y: auto;
+  background: #f9fafb;
+}
+
+.preview-modal-body > * {
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+/* Ajustar card dentro del modal para mejor visualización */
+.preview-modal-body .service-card,
+.preview-modal-body .paquete-card,
+.preview-modal-body .crucero-card,
+.preview-modal-body .transfer-card,
+.preview-modal-body .auto-card,
+.preview-modal-body .alojamiento-card {
+  box-shadow: none;
+  border-radius: 0;
+  height: auto;
+}
+
 @media (max-width: 768px) {
   .columns-grid {
     grid-template-columns: 1fr;
@@ -665,5 +694,10 @@ textarea.form-control {
   .preview-table th,
   .preview-table td {
     padding: 0.5rem 0.75rem;
+  }
+
+  .preview-modal-content {
+    max-width: 95%;
+    margin: 0;
   }
 }

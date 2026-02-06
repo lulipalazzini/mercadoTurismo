@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import CruceroCard from "../components/CruceroCard";
-import SearchBox from "../components/SearchBox";
+import ModuleFilters from "../components/ModuleFilters";
 import "../styles/servicios.css";
+
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
+
 export default function Cruceros() {
   const [cruceros, setCruceros] = useState([]);
   const [allCruceros, setAllCruceros] = useState([]);
@@ -14,9 +16,18 @@ export default function Cruceros() {
     fetchCruceros();
   }, []);
 
-  const fetchCruceros = async () => {
+  const fetchCruceros = async (queryParams = {}) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/cruceros`);
+      // Construir query string desde los filtros
+      const params = new URLSearchParams();
+      Object.keys(queryParams).forEach(key => {
+        if (queryParams[key]) {
+          params.append(key, queryParams[key]);
+        }
+      });
+      
+      const url = `${API_BASE_URL}/cruceros${params.toString() ? '?' + params.toString() : ''}`;
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Error al cargar los cruceros");
       }
@@ -30,23 +41,10 @@ export default function Cruceros() {
     }
   };
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm.trim()) {
-      setCruceros(allCruceros);
-      return;
-    }
-
-    const filtered = allCruceros.filter((crucero) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        crucero.nombre?.toLowerCase().includes(searchLower) ||
-        crucero.naviera?.toLowerCase().includes(searchLower) ||
-        crucero.itinerario?.toLowerCase().includes(searchLower) ||
-        crucero.descripcion?.toLowerCase().includes(searchLower)
-      );
-    });
-
-    setCruceros(filtered);
+  const handleFiltersChange = (filters) => {
+    // Usar filtros del backend
+    setLoading(true);
+    fetchCruceros(filters);
   };
 
   if (loading) {
@@ -68,17 +66,21 @@ export default function Cruceros() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Cruceros</h1>
-      <SearchBox
-        onSearch={handleSearch}
-        placeholder="Buscar cruceros por naviera o itinerario..."
+
+      <ModuleFilters 
+        module="cruceros" 
+        onFiltersChange={handleFiltersChange}
       />
+
       <div className="servicios-grid">
         {cruceros.length > 0 ? (
           cruceros.map((crucero) => (
             <CruceroCard key={crucero.id} item={crucero} />
           ))
         ) : (
-          <p className="no-results">No hay cruceros disponibles</p>
+          <p className="no-results">
+            No se encontraron cruceros que coincidan con los filtros seleccionados
+          </p>
         )}
       </div>
     </div>

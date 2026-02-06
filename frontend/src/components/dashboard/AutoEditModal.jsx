@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateAuto } from "../../services/autos.service";
 import AlertModal from "../common/AlertModal";
+import DragDropImageUpload from "../common/DragDropImageUpload";
+import { getImageUrls } from "../../utils/imageUtils";
 import "../../styles/modal.css";
 
 export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
@@ -16,6 +18,8 @@ export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
     descripcion: "",
   });
 
+  const [imagenes, setImagenes] = useState([]);
+  const [imagenesExistentes, setImagenesExistentes] = useState([]);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -33,6 +37,19 @@ export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
         precio: auto.precio || "",
         descripcion: auto.descripcion || "",
       });
+
+      // Cargar imágenes existentes
+      if (auto.imagenes && Array.isArray(auto.imagenes)) {
+        const imageUrls = getImageUrls(auto.imagenes);
+        const existingImgs = imageUrls.map((url, index) => ({
+          preview: url,
+          name: `Imagen ${index + 1}`,
+          existing: true,
+          originalPath: auto.imagenes[index],
+        }));
+        setImagenesExistentes(existingImgs);
+        setImagenes(existingImgs);
+      }
     }
   }, [auto]);
 
@@ -71,14 +88,39 @@ export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
 
     try {
       setSubmitting(true);
-      await updateAuto(auto.id, formData);
+
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach((key) => {
+        formDataToSend.append(key, formData[key]);
+      });
+
+      // Agregar imágenes nuevas
+      imagenes.forEach((imagen) => {
+        if (imagen.file instanceof File) {
+          formDataToSend.append("imagenes", imagen.file);
+        }
+      });
+
+      // Mantener imágenes existentes
+      const imagenesAMantener = imagenes
+        .filter((img) => img.existing && img.originalPath)
+        .map((img) => img.originalPath);
+
+      if (imagenesAMantener.length > 0) {
+        formDataToSend.append(
+          "imagenesExistentes",
+          JSON.stringify(imagenesAMantener),
+        );
+      }
+
+      await updateAuto(auto.id, formDataToSend);
 
       onSuccess && onSuccess();
       onClose();
     } catch (error) {
       console.error("Error:", error);
       setAlertMessage(
-        "Error al actualizar el auto. Por favor intenta nuevamente."
+        "Error al actualizar el auto. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -231,6 +273,17 @@ export default function AutoEditModal({ isOpen, onClose, onSuccess, auto }) {
                   className="form-control"
                   value={formData.descripcion}
                   onChange={handleChange}
+                />
+              </div>
+
+              {/* Imágenes con Drag & Drop */}
+              <div className="form-group full-width">
+                <label>Imágenes del Auto</label>
+                <DragDropImageUpload
+                  onChange={setImagenes}
+                  maxFiles={6}
+                  maxSizeMB={5}
+                  existingImages={imagenesExistentes}
                 />
               </div>
             </div>

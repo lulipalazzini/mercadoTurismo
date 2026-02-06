@@ -23,11 +23,7 @@ export const trackCardClick = async (
       payload.serviceName = serviceName;
     }
 
-    const response = await api.post("/stats/increment", payload, {
-      headers: {
-        "x-sec-origin": "mercado-turismo-app",
-      },
-    });
+    const response = await api.post("/stats/increment", payload);
 
     if (!response.ok) {
       console.warn(`No se pudo trackear el click en ${cardType}`);

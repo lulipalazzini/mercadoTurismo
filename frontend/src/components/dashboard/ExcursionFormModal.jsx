@@ -3,6 +3,7 @@ import { FaTimes } from "react-icons/fa";
 import { createExcursion } from "../../services/excursiones.service";
 import AlertModal from "../common/AlertModal";
 import DestinoAutocomplete from "../common/DestinoAutocomplete";
+import ImageUploader from "../ImageUploader";
 import "../../styles/modal.css";
 
 export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
@@ -15,6 +16,7 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
     precio: "",
   });
 
+  const [imagenes, setImagenes] = useState([]);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -59,7 +61,24 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
 
     try {
       setSubmitting(true);
-      await createExcursion(formData);
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("descripcion", formData.descripcion);
+      formDataToSend.append("destino", formData.destino);
+      formDataToSend.append("tipo", formData.tipo);
+      if (formData.duracion)
+        formDataToSend.append("duracion", parseInt(formData.duracion));
+      if (formData.precio)
+        formDataToSend.append("precio", parseFloat(formData.precio));
+
+      imagenes.forEach((imagen) => {
+        if (imagen instanceof File) {
+          formDataToSend.append("imagenes", imagen);
+        }
+      });
+
+      await createExcursion(formDataToSend);
 
       setFormData({
         nombre: "",
@@ -69,6 +88,7 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
         duracion: "",
         precio: "",
       });
+      setImagenes([]);
       setErrors({});
 
       onSuccess && onSuccess();
@@ -76,7 +96,8 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error:", error);
       setAlertMessage(
-        "Error al crear la excursión. Por favor intenta nuevamente.",
+        error.message ||
+          "Error al crear la excursión. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -93,6 +114,7 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
       duracion: "",
       precio: "",
     });
+    setImagenes([]);
     setErrors({});
     onClose();
   };
@@ -217,6 +239,16 @@ export default function ExcursionFormModal({ isOpen, onClose, onSuccess }) {
                 {errors.descripcion && (
                   <span className="error-message">{errors.descripcion}</span>
                 )}
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes de la Excursión (máximo 6)</label>
+                <ImageUploader
+                  images={imagenes}
+                  onChange={setImagenes}
+                  maxImages={6}
+                />
               </div>
             </div>
           </div>

@@ -109,9 +109,23 @@ const SalidaGrupal = sequelize.define(
       },
       comment: "ID del vendedor que publicó esta salida grupal",
     },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      comment: "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
+    },
     activo: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
+    },
+    isPublic: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      comment: "Si true, visible para usuarios B2C no autenticados",
     },
   },
   {

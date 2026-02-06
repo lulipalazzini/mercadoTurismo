@@ -30,6 +30,15 @@ const Paquete = sequelize.define(
       validate: {
         min: 1,
       },
+      comment: "Duración en días",
+    },
+    noches: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 0,
+      },
+      comment: "Cantidad de noches del paquete",
     },
     precio: {
       type: DataTypes.DECIMAL(10, 2),
@@ -40,17 +49,19 @@ const Paquete = sequelize.define(
     },
     cupoMaximo: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       validate: {
         min: 1,
       },
+      comment: "[OBSOLETO] Campo legacy, no usar en nuevos paquetes",
     },
     cupoDisponible: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       validate: {
         min: 0,
       },
+      comment: "[OBSOLETO] Campo legacy, no usar en nuevos paquetes",
     },
     fechaInicio: {
       type: DataTypes.DATE,
@@ -64,8 +75,10 @@ const Paquete = sequelize.define(
       type: DataTypes.JSON,
       defaultValue: [],
     },
-    imagen: {
-      type: DataTypes.STRING,
+    imagenes: {
+      type: DataTypes.JSON,
+      defaultValue: [],
+      comment: "Array de URLs de imágenes del paquete",
     },
     vendedorId: {
       type: DataTypes.INTEGER,
@@ -75,6 +88,15 @@ const Paquete = sequelize.define(
         key: "id",
       },
       comment: "ID del vendedor que publicó este paquete",
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      comment: "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
     },
     activo: {
       type: DataTypes.BOOLEAN,

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateSalidaGrupal } from "../../services/salidasGrupales.service";
 import AlertModal from "../common/AlertModal";
+import DragDropImageUpload from "../common/DragDropImageUpload";
+import { getImageUrls } from "../../utils/imageUtils";
 import "../../styles/modal.css";
 
 export default function SalidaGrupalEditModal({
@@ -25,6 +27,8 @@ export default function SalidaGrupalEditModal({
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [imagenes, setImagenes] = useState([]);
+  const [imagenesExistentes, setImagenesExistentes] = useState([]);
 
   useEffect(() => {
     if (salidaGrupal) {
@@ -44,6 +48,19 @@ export default function SalidaGrupalEditModal({
           ? salidaGrupal.incluye.join(", ")
           : "",
       });
+
+      // Cargar imágenes existentes
+      if (salidaGrupal.imagenes && Array.isArray(salidaGrupal.imagenes)) {
+        const imageUrls = getImageUrls(salidaGrupal.imagenes);
+        const existingImgs = imageUrls.map((url, index) => ({
+          preview: url,
+          name: `Imagen ${index + 1}`,
+          existing: true,
+          originalPath: salidaGrupal.imagenes[index],
+        }));
+        setImagenesExistentes(existingImgs);
+        setImagenes(existingImgs);
+      }
     }
   }, [salidaGrupal]);
 
@@ -76,15 +93,40 @@ export default function SalidaGrupalEditModal({
 
     setSubmitting(true);
     try {
-      const dataToSend = {
-        ...formData,
-        incluye: formData.incluye
-          .split(",")
-          .map((i) => i.trim())
-          .filter((i) => i),
-      };
+      const formDataToSend = new FormData();
 
-      await updateSalidaGrupal(salidaGrupal.id, dataToSend);
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("descripcion", formData.descripcion);
+      formDataToSend.append("destino", formData.destino);
+      formDataToSend.append("fechaSalida", formData.fechaSalida);
+      formDataToSend.append("fechaRegreso", formData.fechaRegreso);
+      formDataToSend.append("duracion", formData.duracion);
+      formDataToSend.append("precio", formData.precio);
+
+      const incluye = formData.incluye
+        .split(",")
+        .map((i) => i.trim())
+        .filter((i) => i);
+      formDataToSend.append("incluye", JSON.stringify(incluye));
+
+      imagenes.forEach((imagen) => {
+        if (imagen.file instanceof File) {
+          formDataToSend.append("imagenes", imagen.file);
+        }
+      });
+
+      const imagenesAMantener = imagenes
+        .filter((img) => img.existing && img.originalPath)
+        .map((img) => img.originalPath);
+
+      if (imagenesAMantener.length > 0) {
+        formDataToSend.append(
+          "imagenesExistentes",
+          JSON.stringify(imagenesAMantener),
+        );
+      }
+
+      await updateSalidaGrupal(salidaGrupal.id, formDataToSend);
       onSuccess();
       handleClose();
     } catch (error) {
@@ -244,6 +286,17 @@ export default function SalidaGrupalEditModal({
                   value={formData.incluye}
                   onChange={handleChange}
                   placeholder="Alojamiento, Desayuno, Guía"
+                />
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes</label>
+                <DragDropImageUpload
+                  onChange={setImagenes}
+                  maxFiles={6}
+                  maxSizeMB={5}
+                  existingImages={imagenesExistentes}
                 />
               </div>
             </div>

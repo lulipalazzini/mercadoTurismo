@@ -8,10 +8,9 @@
 .alojamientos-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--primary);
   margin: 30px;
   text-align: center;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .loading,
@@ -128,6 +127,7 @@
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -176,6 +176,7 @@
   margin: 12px 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

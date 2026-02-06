@@ -77,6 +77,15 @@ const Alojamiento = sequelize.define(
       },
       comment: "ID del vendedor que publicó este alojamiento",
     },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      comment: "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
+    },
     activo: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,

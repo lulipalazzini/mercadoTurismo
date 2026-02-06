@@ -3,6 +3,7 @@ import AlojamientoCard from "./AlojamientoCard";
 import PaqueteCard from "./PaqueteCard";
 import AutoCard from "./AutoCard";
 import TransferCard from "./TransferCard";
+import TrenCard from "./TrenCard";
 import CircuitoCard from "./CircuitoCard";
 import ExcursionCard from "./ExcursionCard";
 import SalidaGrupalCard from "./SalidaGrupalCard";
@@ -10,7 +11,8 @@ import CruceroCard from "./CruceroCard";
 import SeguroCard from "./SeguroCard";
 import "../styles/globalSearch.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
 
 export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +22,7 @@ export default function GlobalSearch() {
     paquetes: [],
     autos: [],
     transfers: [],
+    trenes: [],
     circuitos: [],
     excursiones: [],
     salidasGrupales: [],
@@ -37,6 +40,7 @@ export default function GlobalSearch() {
         { key: "alojamientos", url: `${API_BASE_URL}/alojamientos` },
         { key: "paquetes", url: `${API_BASE_URL}/paquetes` },
         { key: "autos", url: `${API_BASE_URL}/autos` },
+        { key: "trenes", url: `${API_BASE_URL}/trenes` },
         { key: "transfers", url: `${API_BASE_URL}/transfers` },
         { key: "circuitos", url: `${API_BASE_URL}/circuitos` },
         { key: "excursiones", url: `${API_BASE_URL}/excursiones` },
@@ -310,6 +314,19 @@ export default function GlobalSearch() {
                       <div className="results-grid">
                         {results.transfers.map((item) => (
                           <TransferCard key={item.id} item={item} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {results.trenes.length > 0 && (
+                    <div className="result-section">
+                      <h2 className="section-title">
+                        Trenes ({results.trenes.length})
+                      </h2>
+                      <div className="results-grid">
+                        {results.trenes.map((item) => (
+                          <TrenCard key={item.id} item={item} />
                         ))}
                       </div>
                     </div>

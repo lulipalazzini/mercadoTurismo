@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import CircuitoCard from "../components/CircuitoCard";
-import SearchBox from "../components/SearchBox";
+import ModuleFilters from "../components/ModuleFilters";
 import "../styles/servicios.css";
+
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
+
 export default function Circuitos() {
   const [circuitos, setCircuitos] = useState([]);
   const [allCircuitos, setAllCircuitos] = useState([]);
@@ -30,20 +32,42 @@ export default function Circuitos() {
     }
   };
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm.trim()) {
+  const handleFiltersChange = (filters) => {
+    if (Object.keys(filters).length === 0) {
       setCircuitos(allCircuitos);
       return;
     }
 
     const filtered = allCircuitos.filter((circuito) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        circuito.nombre?.toLowerCase().includes(searchLower) ||
-        circuito.destinos?.toLowerCase().includes(searchLower) ||
-        circuito.descripcion?.toLowerCase().includes(searchLower) ||
-        circuito.incluye?.toLowerCase().includes(searchLower)
-      );
+      let matches = true;
+
+      // Filtro por destino (busca en nombre, descripción y destinos JSON)
+      if (filters.destino) {
+        const destinoLower = filters.destino.toLowerCase();
+        matches = matches && (
+          circuito.nombre?.toLowerCase().includes(destinoLower) ||
+          circuito.descripcion?.toLowerCase().includes(destinoLower) ||
+          (Array.isArray(circuito.destinos) && 
+            circuito.destinos.some(d => d.toLowerCase().includes(destinoLower)))
+        );
+      }
+
+      // Filtro por duración
+      if (filters.duracion && circuito.duracion) {
+        matches = matches && circuito.duracion >= parseInt(filters.duracion);
+      }
+
+      // Filtro por precio mínimo
+      if (filters.precioMin && circuito.precio) {
+        matches = matches && parseFloat(circuito.precio) >= parseFloat(filters.precioMin);
+      }
+
+      // Filtro por precio máximo
+      if (filters.precioMax && circuito.precio) {
+        matches = matches && parseFloat(circuito.precio) <= parseFloat(filters.precioMax);
+      }
+
+      return matches;
     });
 
     setCircuitos(filtered);
@@ -68,17 +92,21 @@ export default function Circuitos() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Circuitos Turísticos</h1>
-      <SearchBox
-        onSearch={handleSearch}
-        placeholder="Buscar circuitos por destino..."
+      
+      <ModuleFilters 
+        module="circuitos" 
+        onFiltersChange={handleFiltersChange}
       />
+
       <div className="servicios-grid">
         {circuitos.length > 0 ? (
           circuitos.map((circuito) => (
             <CircuitoCard key={circuito.id} item={circuito} />
           ))
         ) : (
-          <p className="no-results">No hay circuitos disponibles</p>
+          <p className="no-results">
+            No se encontraron circuitos que coincidan con los filtros seleccionados
+          </p>
         )}
       </div>
     </div>

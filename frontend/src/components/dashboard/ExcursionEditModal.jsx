@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateExcursion } from "../../services/excursiones.service";
 import AlertModal from "../common/AlertModal";
+import DragDropImageUpload from "../common/DragDropImageUpload";
+import { getImageUrls } from "../../utils/imageUtils";
 import "../../styles/modal.css";
 
 export default function ExcursionEditModal({
@@ -23,6 +25,8 @@ export default function ExcursionEditModal({
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [imagenes, setImagenes] = useState([]);
+  const [imagenesExistentes, setImagenesExistentes] = useState([]);
 
   useEffect(() => {
     if (excursion) {
@@ -34,6 +38,19 @@ export default function ExcursionEditModal({
         duracion: excursion.duracion || "",
         precio: excursion.precio || "",
       });
+
+      // Cargar imágenes existentes
+      if (excursion.imagenes && Array.isArray(excursion.imagenes)) {
+        const imageUrls = getImageUrls(excursion.imagenes);
+        const existingImgs = imageUrls.map((url, index) => ({
+          preview: url,
+          name: `Imagen ${index + 1}`,
+          existing: true,
+          originalPath: excursion.imagenes[index],
+        }));
+        setImagenesExistentes(existingImgs);
+        setImagenes(existingImgs);
+      }
     }
   }, [excursion]);
 
@@ -66,7 +83,29 @@ export default function ExcursionEditModal({
 
     setSubmitting(true);
     try {
-      await updateExcursion(excursion.id, formData);
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach((key) => {
+        formDataToSend.append(key, formData[key]);
+      });
+
+      imagenes.forEach((imagen) => {
+        if (imagen.file instanceof File) {
+          formDataToSend.append("imagenes", imagen.file);
+        }
+      });
+
+      const imagenesAMantener = imagenes
+        .filter((img) => img.existing && img.originalPath)
+        .map((img) => img.originalPath);
+
+      if (imagenesAMantener.length > 0) {
+        formDataToSend.append(
+          "imagenesExistentes",
+          JSON.stringify(imagenesAMantener),
+        );
+      }
+
+      await updateExcursion(excursion.id, formDataToSend);
       onSuccess();
       handleClose();
     } catch (error) {
@@ -204,6 +243,17 @@ export default function ExcursionEditModal({
                   className="form-control"
                   value={formData.descripcion}
                   onChange={handleChange}
+                />
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes</label>
+                <DragDropImageUpload
+                  onChange={setImagenes}
+                  maxFiles={6}
+                  maxSizeMB={5}
+                  existingImages={imagenesExistentes}
                 />
               </div>
             </div>

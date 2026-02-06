@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import AutoCard from "../components/AutoCard";
-import SearchBox from "../components/SearchBox";
+import ModuleFilters from "../components/ModuleFilters";
 import "../styles/servicios.css";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
 
 export default function Autos() {
   const [autos, setAutos] = useState([]);
@@ -16,9 +16,18 @@ export default function Autos() {
     fetchAutos();
   }, []);
 
-  const fetchAutos = async () => {
+  const fetchAutos = async (queryParams = {}) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/autos`);
+      // Construir query string desde los filtros
+      const params = new URLSearchParams();
+      Object.keys(queryParams).forEach(key => {
+        if (queryParams[key]) {
+          params.append(key, queryParams[key]);
+        }
+      });
+      
+      const url = `${API_BASE_URL}/autos${params.toString() ? '?' + params.toString() : ''}`;
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Error al cargar los autos");
       }
@@ -32,23 +41,10 @@ export default function Autos() {
     }
   };
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm.trim()) {
-      setAutos(allAutos);
-      return;
-    }
-
-    const filtered = allAutos.filter((auto) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        auto.modelo?.toLowerCase().includes(searchLower) ||
-        auto.marca?.toLowerCase().includes(searchLower) ||
-        auto.ubicacion?.toLowerCase().includes(searchLower) ||
-        auto.descripcion?.toLowerCase().includes(searchLower)
-      );
-    });
-
-    setAutos(filtered);
+  const handleFiltersChange = (filters) => {
+    // Usar filtros del backend
+    setLoading(true);
+    fetchAutos(filters);
   };
 
   if (loading) {
@@ -70,15 +66,19 @@ export default function Autos() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Renta de Autos</h1>
-      <SearchBox
-        onSearch={handleSearch}
-        placeholder="Buscar autos por marca, modelo o ubicación..."
+      
+      <ModuleFilters 
+        module="autos" 
+        onFiltersChange={handleFiltersChange}
       />
+
       <div className="servicios-grid">
         {autos.length > 0 ? (
           autos.map((auto) => <AutoCard key={auto.id} item={auto} />)
         ) : (
-          <p className="no-results">No hay autos disponibles</p>
+          <p className="no-results">
+            No se encontraron autos que coincidan con los filtros seleccionados
+          </p>
         )}
       </div>
     </div>

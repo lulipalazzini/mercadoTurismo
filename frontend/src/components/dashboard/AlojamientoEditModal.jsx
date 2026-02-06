@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateAlojamiento } from "../../services/alojamientos.service";
 import AlertModal from "../common/AlertModal";
+import DragDropImageUpload from "../common/DragDropImageUpload";
+import { getImageUrls } from "../../utils/imageUtils";
 import "../../styles/modal.css";
 
 export default function AlojamientoEditModal({
@@ -24,6 +26,8 @@ export default function AlojamientoEditModal({
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [imagenes, setImagenes] = useState([]);
+  const [imagenesExistentes, setImagenesExistentes] = useState([]);
 
   useEffect(() => {
     if (alojamiento) {
@@ -36,6 +40,19 @@ export default function AlojamientoEditModal({
         descripcion: alojamiento.descripcion || "",
         precioNoche: alojamiento.precioNoche || "",
       });
+
+      // Cargar imágenes existentes
+      if (alojamiento.imagenes && Array.isArray(alojamiento.imagenes)) {
+        const imageUrls = getImageUrls(alojamiento.imagenes);
+        const existingImgs = imageUrls.map((url, index) => ({
+          preview: url,
+          name: `Imagen ${index + 1}`,
+          existing: true,
+          originalPath: alojamiento.imagenes[index],
+        }));
+        setImagenesExistentes(existingImgs);
+        setImagenes(existingImgs);
+      }
     }
   }, [alojamiento]);
 
@@ -78,14 +95,37 @@ export default function AlojamientoEditModal({
 
     try {
       setSubmitting(true);
-      await updateAlojamiento(alojamiento.id, formData);
+
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach((key) => {
+        formDataToSend.append(key, formData[key]);
+      });
+
+      imagenes.forEach((imagen) => {
+        if (imagen.file instanceof File) {
+          formDataToSend.append("imagenes", imagen.file);
+        }
+      });
+
+      const imagenesAMantener = imagenes
+        .filter((img) => img.existing && img.originalPath)
+        .map((img) => img.originalPath);
+
+      if (imagenesAMantener.length > 0) {
+        formDataToSend.append(
+          "imagenesExistentes",
+          JSON.stringify(imagenesAMantener),
+        );
+      }
+
+      await updateAlojamiento(alojamiento.id, formDataToSend);
 
       onSuccess && onSuccess();
       onClose();
     } catch (error) {
       console.error("Error al actualizar alojamiento:", error);
       setAlertMessage(
-        "Error al actualizar el alojamiento. Por favor intenta nuevamente."
+        "Error al actualizar el alojamiento. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -233,6 +273,17 @@ export default function AlojamientoEditModal({
                   className="form-control"
                   value={formData.descripcion}
                   onChange={handleChange}
+                />
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes</label>
+                <DragDropImageUpload
+                  onChange={setImagenes}
+                  maxFiles={6}
+                  maxSizeMB={5}
+                  existingImages={imagenesExistentes}
                 />
               </div>
             </div>

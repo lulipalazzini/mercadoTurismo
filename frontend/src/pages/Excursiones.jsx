@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ExcursionCard from "../components/ExcursionCard";
-import SearchBox from "../components/SearchBox";
+import ModuleFilters from "../components/ModuleFilters";
 import "../styles/servicios.css";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
 
 export default function Excursiones() {
   const [excursiones, setExcursiones] = useState([]);
@@ -32,20 +32,41 @@ export default function Excursiones() {
     }
   };
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm.trim()) {
+  const handleFiltersChange = (filters) => {
+    if (Object.keys(filters).length === 0) {
       setExcursiones(allExcursiones);
       return;
     }
 
     const filtered = allExcursiones.filter((excursion) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        excursion.nombre?.toLowerCase().includes(searchLower) ||
-        excursion.ubicacion?.toLowerCase().includes(searchLower) ||
-        excursion.descripcion?.toLowerCase().includes(searchLower) ||
-        excursion.incluye?.toLowerCase().includes(searchLower)
-      );
+      let matches = true;
+
+      // Filtro por destino
+      if (filters.destino) {
+        const destinoLower = filters.destino.toLowerCase();
+        matches = matches && (
+          excursion.destino?.toLowerCase().includes(destinoLower) ||
+          excursion.nombre?.toLowerCase().includes(destinoLower) ||
+          excursion.ubicacion?.toLowerCase().includes(destinoLower)
+        );
+      }
+
+      // Filtro por tipo
+      if (filters.tipo && excursion.tipo) {
+        matches = matches && excursion.tipo === filters.tipo;
+      }
+
+      // Filtro por duración
+      if (filters.duracion && excursion.duracion) {
+        matches = matches && excursion.duracion >= parseInt(filters.duracion);
+      }
+
+      // Filtro por precio máximo
+      if (filters.precioMax && excursion.precio) {
+        matches = matches && parseFloat(excursion.precio) <= parseFloat(filters.precioMax);
+      }
+
+      return matches;
     });
 
     setExcursiones(filtered);
@@ -70,17 +91,21 @@ export default function Excursiones() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Excursiones</h1>
-      <SearchBox
-        onSearch={handleSearch}
-        placeholder="Buscar excursiones por ubicación o actividad..."
+      
+      <ModuleFilters 
+        module="excursiones" 
+        onFiltersChange={handleFiltersChange}
       />
+
       <div className="servicios-grid">
         {excursiones.length > 0 ? (
           excursiones.map((excursion) => (
             <ExcursionCard key={excursion.id} item={excursion} />
           ))
         ) : (
-          <p className="no-results">No hay excursiones disponibles</p>
+          <p className="no-results">
+            No se encontraron excursiones que coincidan con los filtros seleccionados
+          </p>
         )}
       </div>
     </div>

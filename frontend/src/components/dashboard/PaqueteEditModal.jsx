@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaTimes, FaPlus, FaTrash } from "react-icons/fa";
 import { updatePaquete } from "../../services/paquetes.service";
 import AlertModal from "../common/AlertModal";
+import DragDropImageUpload from "../common/DragDropImageUpload";
+import { getImageUrls } from "../../utils/imageUtils";
 import "../../styles/modal.css";
 
 export default function PaqueteEditModal({
@@ -19,9 +21,10 @@ export default function PaqueteEditModal({
     cupoMaximo: "",
     fechaInicio: "",
     fechaFin: "",
-    imagen: "",
   });
 
+  const [imagenes, setImagenes] = useState([]);
+  const [imagenesExistentes, setImagenesExistentes] = useState([]);
   const [incluye, setIncluye] = useState([]);
   const [nuevoItem, setNuevoItem] = useState("");
   const [errors, setErrors] = useState({});
@@ -43,9 +46,21 @@ export default function PaqueteEditModal({
           ? paquete.fechaInicio.split("T")[0]
           : "",
         fechaFin: paquete.fechaFin ? paquete.fechaFin.split("T")[0] : "",
-        imagen: paquete.imagen || "",
       });
       setIncluye(paquete.incluye || []);
+
+      // Cargar imágenes existentes como objetos para preview
+      if (paquete.imagenes && Array.isArray(paquete.imagenes)) {
+        const imageUrls = getImageUrls(paquete.imagenes);
+        const existingImgs = imageUrls.map((url, index) => ({
+          preview: url,
+          name: `Imagen ${index + 1}`,
+          existing: true,
+          originalPath: paquete.imagenes[index],
+        }));
+        setImagenesExistentes(existingImgs);
+        setImagenes(existingImgs);
+      }
     }
   }, [paquete, isOpen]);
 
@@ -127,27 +142,45 @@ export default function PaqueteEditModal({
     try {
       setSubmitting(true);
 
-      const paqueteData = {
-        nombre: formData.nombre,
-        descripcion: formData.descripcion,
-        destino: formData.destino,
-        duracion: parseInt(formData.duracion),
-        precio: parseFloat(formData.precio),
-        cupoMaximo: parseInt(formData.cupoMaximo),
-        fechaInicio: formData.fechaInicio,
-        fechaFin: formData.fechaFin,
-        incluye: incluye,
-        imagen: formData.imagen || null,
-      };
+      // Usar FormData para enviar archivos
+      const formDataToSend = new FormData();
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("descripcion", formData.descripcion);
+      formDataToSend.append("destino", formData.destino);
+      formDataToSend.append("duracion", parseInt(formData.duracion));
+      formDataToSend.append("precio", parseFloat(formData.precio));
+      formDataToSend.append("cupoMaximo", parseInt(formData.cupoMaximo));
+      formDataToSend.append("fechaInicio", formData.fechaInicio);
+      formDataToSend.append("fechaFin", formData.fechaFin);
+      formDataToSend.append("incluye", JSON.stringify(incluye));
 
-      await updatePaquete(paquete.id, paqueteData);
+      // Agregar imágenes nuevas
+      imagenes.forEach((imagen) => {
+        if (imagen.file instanceof File) {
+          formDataToSend.append("imagenes", imagen.file);
+        }
+      });
+
+      // Si hay imágenes existentes que se mantienen, enviarlas también
+      const imagenesAMantener = imagenes
+        .filter((img) => img.existing && img.originalPath)
+        .map((img) => img.originalPath);
+
+      if (imagenesAMantener.length > 0) {
+        formDataToSend.append(
+          "imagenesExistentes",
+          JSON.stringify(imagenesAMantener),
+        );
+      }
+
+      await updatePaquete(paquete.id, formDataToSend);
 
       onSuccess && onSuccess();
       onClose();
     } catch (error) {
       console.error("Error al actualizar paquete:", error);
       setAlertMessage(
-        "Error al actualizar el paquete. Por favor intenta nuevamente."
+        "Error al actualizar el paquete. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -327,17 +360,14 @@ export default function PaqueteEditModal({
                 )}
               </div>
 
-              {/* URL de Imagen */}
+              {/* Imágenes con Drag & Drop */}
               <div className="form-group full-width">
-                <label htmlFor="imagen">URL de Imagen</label>
-                <input
-                  type="url"
-                  id="imagen"
-                  name="imagen"
-                  className="form-control"
-                  placeholder="https://ejemplo.com/imagen.jpg"
-                  value={formData.imagen}
-                  onChange={handleChange}
+                <label>Imágenes del Paquete</label>
+                <DragDropImageUpload
+                  onChange={setImagenes}
+                  maxFiles={6}
+                  maxSizeMB={5}
+                  existingImages={imagenesExistentes}
                 />
               </div>
 

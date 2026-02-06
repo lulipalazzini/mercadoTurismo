@@ -20,6 +20,8 @@ import PaqueteFormModal from "./PaqueteFormModal";
 import PaqueteEditModal from "./PaqueteEditModal";
 import ConfirmModal from "../common/ConfirmModal";
 import AlertModal from "../common/AlertModal";
+import PreviewModal from "../common/PreviewModal";
+import PaqueteCard from "../PaqueteCard";
 
 export default function Paquetes() {
   const [paquetes, setPaquetes] = useState([]);
@@ -34,6 +36,8 @@ export default function Paquetes() {
   const [paqueteToDelete, setPaqueteToDelete] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [paqueteToPreview, setPaqueteToPreview] = useState(null);
 
   useEffect(() => {
     loadPaquetes();
@@ -69,6 +73,11 @@ export default function Paquetes() {
   const handleDeleteClick = (paquete) => {
     setPaqueteToDelete(paquete);
     setShowConfirm(true);
+  };
+
+  const handlePreviewClick = (paquete) => {
+    setPaqueteToPreview(paquete);
+    setShowPreview(true);
   };
 
   const confirmDelete = async () => {
@@ -345,7 +354,10 @@ export default function Paquetes() {
                 </div>
 
                 <div className="package-footer">
-                  <button className="btn-secondary btn-block">
+                  <button 
+                    className="btn-secondary btn-block"
+                    onClick={() => handlePreviewClick(paquete)}
+                  >
                     <FaEye /> Ver Detalles
                   </button>
                   <button className="btn-primary btn-block">
@@ -391,6 +403,17 @@ export default function Paquetes() {
         message={alertMessage}
         type="error"
       />
+
+      <PreviewModal
+        isOpen={showPreview}
+        onClose={() => {
+          setShowPreview(false);
+          setPaqueteToPreview(null);
+        }}
+        title="Vista Previa - Como lo ve el cliente"
+      >
+        {paqueteToPreview && <PaqueteCard paquete={paqueteToPreview} />}
+      </PreviewModal>
     </>
   );
 }

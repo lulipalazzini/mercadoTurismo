@@ -1,5 +1,10 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.model");
+const {
+  validateCUIT,
+  validateEmail,
+  validateInternationalPhone,
+} = require("../services/validation.service");
 
 const register = async (req, res) => {
   try {
@@ -80,48 +85,293 @@ const register = async (req, res) => {
   }
 };
 
+/**
+ * Registro profesional B2B (nuevo flujo)
+ * POST /api/auth/register-b2b
+ */
+const registerB2B = async (req, res) => {
+  try {
+    console.log("\n🏢 [AUTH B2B] Intentando registrar usuario profesional...");
+
+    const {
+      // Paso 1: Datos básicos
+      email,
+      telefono,
+      password,
+      countryCode,
+      acceptedTerms,
+
+      // Paso 2: Identidad fiscal/comercial
+      entityType,
+      nombre,
+      razonSocial,
+
+      // Argentina
+      cuit,
+      condicionIVA,
+
+      // Exterior
+      taxId,
+      taxType,
+
+      // Paso 3: Datos del negocio
+      provincia,
+      ciudad,
+      codigoPostal,
+      domicilioFiscal,
+      domicilioFisico,
+      oficinaVirtual,
+      whatsapp,
+      nombreComercial,
+    } = req.body;
+
+    console.log(`   Email: ${email}`);
+    console.log(`   País: ${countryCode}`);
+    console.log(`   Tipo: ${entityType}`);
+
+    // ========== VALIDACIONES OBLIGATORIAS ==========
+
+    // Validar campos básicos
+    if (!email || !password || !telefono || !countryCode) {
+      return res.status(400).json({
+        message:
+          "Email, contraseña, teléfono y país son campos obligatorios",
+      });
+    }
+
+    if (!acceptedTerms) {
+      return res.status(400).json({
+        message: "Debe aceptar los términos y condiciones",
+      });
+    }
+
+    // Validar email
+    if (!validateEmail(email)) {
+      return res.status(400).json({
+        message: "Email inválido",
+      });
+    }
+
+    // Validar teléfono internacional
+    const phoneValidation = validateInternationalPhone(telefono);
+    if (!phoneValidation.valid) {
+      return res.status(400).json({
+        message: phoneValidation.error,
+      });
+    }
+
+    // Validar contraseña
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "La contraseña debe tener al menos 6 caracteres",
+      });
+    }
+
+    // Verificar que el email no exista
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({
+        message: "El email ya está registrado",
+      });
+    }
+
+    // ========== VALIDACIONES ESPECÍFICAS POR PAÍS ==========
+
+    let fiscalData = {};
+    let validationStatus = "pending";
+
+    if (countryCode === "AR") {
+      // ARGENTINA - Validación estricta
+      if (!cuit || !entityType || !condicionIVA) {
+        return res.status(400).json({
+          message: "CUIT, tipo de persona y condición IVA son obligatorios",
+        });
+      }
+
+      // Validar CUIT
+      const cuitValidation = validateCUIT(cuit);
+      if (!cuitValidation.valid) {
+        return res.status(400).json({
+          message: cuitValidation.error,
+        });
+      }
+
+      fiscalData = {
+        cuit: cuitValidation.formatted,
+        condicionIVA,
+        validated: true,
+      };
+
+      validationStatus = "validated";
+    } else {
+      // EXTERIOR - Validación declarativa
+      if (!taxId || !taxType) {
+        return res.status(400).json({
+          message:
+            "Número fiscal y tipo de identificación son obligatorios para usuarios del exterior",
+        });
+      }
+
+      fiscalData = {
+        taxId,
+        taxType,
+        validated: false, // No validamos contra entidades extranjeras
+      };
+
+      validationStatus = "incomplete"; // Requiere revisión manual
+    }
+
+    // ========== CREAR USUARIO B2B ==========
+
+    const businessData = {
+      provincia,
+      ciudad,
+      codigoPostal,
+      domicilioFiscal,
+      domicilioFisico,
+      oficinaVirtual: oficinaVirtual || false,
+      whatsapp,
+      nombreComercial,
+    };
+
+    const newUser = await User.create({
+      nombre: nombre || razonSocial,
+      email,
+      password,
+      telefono: phoneValidation.formatted,
+      razonSocial,
+      userType: "B2B",
+      countryCode,
+      entityType,
+      fiscalData,
+      businessData,
+      validationStatus,
+      role: "agencia", // Rol por defecto para B2B
+    });
+
+    console.log(`✅ [AUTH B2B] Usuario B2B creado: ID ${newUser.id}`);
+
+    // Generar token
+    const token = jwt.sign(
+      { id: newUser.id, role: newUser.role, userType: "B2B" },
+      process.env.JWT_SECRET || "secret_key_default",
+      { expiresIn: "7d" },
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Registro profesional completado exitosamente",
+      token,
+      user: {
+        id: newUser.id,
+        nombre: newUser.nombre,
+        email: newUser.email,
+        role: newUser.role,
+        userType: newUser.userType,
+        countryCode: newUser.countryCode,
+        validationStatus: newUser.validationStatus,
+      },
+    });
+  } catch (error) {
+    console.error("❌ [AUTH B2B] Error en registerB2B:");
+    console.error("   Mensaje:", error.message);
+    console.error("   Stack:", error.stack);
+
+    if (error.name === "SequelizeValidationError") {
+      return res.status(400).json({
+        message: "Error de validación",
+        errors: error.errors.map((e) => e.message),
+      });
+    }
+
+    res.status(500).json({
+      message: "Error al registrar usuario profesional",
+      error: error.message,
+    });
+  }
+};
+
 const login = async (req, res) => {
+  // Asegurar que SIEMPRE devolvemos JSON, incluso en errores críticos
+  res.setHeader("Content-Type", "application/json");
+
   try {
     console.log("\n🔑 [AUTH] Intentando login...");
+    console.log(`   Timestamp: ${new Date().toISOString()}`);
+    console.log(`   IP: ${req.ip}`);
+
     const { email, password } = req.body;
     console.log(`   Email: ${email}`);
+    console.log(`   Body recibido:`, {
+      email: email ? "✓" : "✗",
+      password: password ? "✓" : "✗",
+    });
 
     // Validaciones
     if (!email || !password) {
       console.log("❌ [AUTH] Faltan credenciales");
       return res.status(400).json({
+        success: false,
         message: "Email y contraseña son requeridos",
+      });
+    }
+
+    // Validar formato de email básico
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      console.log("❌ [AUTH] Email inválido");
+      return res.status(400).json({
+        success: false,
+        message: "Formato de email inválido",
       });
     }
 
     // Buscar usuario
     console.log("   Buscando usuario en BD...");
     const user = await User.findOne({ where: { email } });
+
     if (!user) {
       console.log("❌ [AUTH] Usuario no encontrado");
-      return res.status(401).json({ message: "Credenciales inválidas" });
+      return res.status(401).json({
+        success: false,
+        message: "Credenciales inválidas",
+      });
     }
-    console.log(`   Usuario encontrado: ID ${user.id}`);
+    console.log(`   Usuario encontrado: ID ${user.id}, Role: ${user.role}`);
 
     // Verificar password
     console.log("   Verificando contraseña...");
     const isMatch = await user.comparePassword(password);
+
     if (!isMatch) {
       console.log("❌ [AUTH] Contraseña incorrecta");
-      return res.status(401).json({ message: "Credenciales inválidas" });
+      return res.status(401).json({
+        success: false,
+        message: "Credenciales inválidas",
+      });
     }
     console.log("✅ [AUTH] Contraseña válida");
+
+    // Verificar JWT_SECRET
+    if (!process.env.JWT_SECRET) {
+      console.error("❌ [AUTH] JWT_SECRET NO CONFIGURADO");
+      return res.status(500).json({
+        success: false,
+        message: "Error de configuración del servidor",
+      });
+    }
 
     // Generar token
     console.log("   Generando token JWT...");
     const token = jwt.sign(
       { id: user.id, role: user.role },
-      process.env.JWT_SECRET || "secret_key_default",
+      process.env.JWT_SECRET,
       { expiresIn: "7d" },
     );
-    console.log("✅ [AUTH] Login exitoso");
+    console.log("✅ [AUTH] Login exitoso - Token generado");
 
-    res.json({
+    const response = {
+      success: true,
       message: "Login exitoso",
       token,
       user: {
@@ -131,15 +381,49 @@ const login = async (req, res) => {
         role: user.role,
         fotoPerfil: user.fotoPerfil,
       },
-    });
+    };
+
+    console.log("   Enviando respuesta exitosa");
+    return res.status(200).json(response);
   } catch (error) {
-    console.error("❌ [AUTH] Error en login:");
+    console.error("\n" + "❌".repeat(30));
+    console.error("❌ [AUTH] ERROR CRÍTICO EN LOGIN");
+    console.error("❌".repeat(30));
     console.error("   Tipo:", error.name);
     console.error("   Mensaje:", error.message);
     console.error("   Stack:", error.stack);
-    res
-      .status(500)
-      .json({ message: "Error al iniciar sesión", error: error.message });
+    console.error("❌".repeat(30) + "\n");
+
+    // CRÍTICO: Asegurar que SIEMPRE devolvemos JSON
+    res.setHeader("Content-Type", "application/json");
+
+    // Identificar tipo de error
+    if (error.name === "SequelizeDatabaseError") {
+      console.error("   Error de base de datos:", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Error de base de datos",
+        error:
+          process.env.NODE_ENV === "production" ? undefined : error.message,
+      });
+    }
+
+    if (error.name === "JsonWebTokenError") {
+      console.error("   Error de JWT:", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Error al generar token de autenticación",
+        error:
+          process.env.NODE_ENV === "production" ? undefined : error.message,
+      });
+    }
+
+    // Error genérico
+    return res.status(500).json({
+      success: false,
+      message: "Error al iniciar sesión",
+      error: process.env.NODE_ENV === "production" ? undefined : error.message,
+    });
   }
 };
 
@@ -274,6 +558,7 @@ const verifyAdminPassword = async (req, res) => {
 
 module.exports = {
   register,
+  registerB2B, // Nuevo endpoint B2B
   login,
   getProfile,
   updateUser,

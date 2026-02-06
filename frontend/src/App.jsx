@@ -7,15 +7,17 @@ import {
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import GlobalSearch from "./components/GlobalSearch";
+import Footer from "./components/Footer";
 import Home from "./components/Home";
 import Login from "./components/Login";
-import Register from "./components/Register";
+import RegisterB2BWizard from "./components/RegisterB2BWizard";
 import RecoverPassword from "./components/RecoverPassword";
 import Dashboard from "./components/Dashboard";
 import Alojamientos from "./pages/Alojamientos";
 import Paquetes from "./pages/Paquetes";
 import Autos from "./pages/Autos";
 import Transfers from "./pages/Transfers";
+import Trenes from "./pages/Trenes";
 import Circuitos from "./pages/Circuitos";
 import Excursiones from "./pages/Excursiones";
 import SalidasGrupales from "./pages/SalidasGrupales";
@@ -42,19 +44,21 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/registro" element={<Register />} />
+        <Route path="/registro" element={<RegisterB2BWizard />} />
         <Route path="/recuperar-contrasena" element={<RecoverPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/paquetes" element={<Paquetes />} />
         <Route path="/alojamientos" element={<Alojamientos />} />
         <Route path="/autos" element={<Autos />} />
         <Route path="/transfers" element={<Transfers />} />
+        <Route path="/trenes" element={<Trenes />} />
         <Route path="/circuitos" element={<Circuitos />} />
         <Route path="/excursiones" element={<Excursiones />} />
         <Route path="/salidas-grupales" element={<SalidasGrupales />} />
         <Route path="/cruceros" element={<Cruceros />} />
         <Route path="/seguros" element={<Seguros />} />
       </Routes>
+      {!hideNavbar && <Footer />}
     </>
   );
 }

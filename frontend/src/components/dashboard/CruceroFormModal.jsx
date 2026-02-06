@@ -3,6 +3,7 @@ import { FaTimes, FaPlus, FaTrash } from "react-icons/fa";
 import { createCrucero } from "../../services/cruceros.service";
 import AlertModal from "../common/AlertModal";
 import DestinoAutocomplete from "../common/DestinoAutocomplete";
+import ImageUploader from "../ImageUploader";
 import "../../styles/modal.css";
 
 export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
@@ -18,6 +19,7 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
 
   const [itinerario, setItinerario] = useState([]);
   const [nuevoItinerario, setNuevoItinerario] = useState("");
+  const [imagenes, setImagenes] = useState([]);
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -75,12 +77,27 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
     try {
       setSubmitting(true);
 
-      const dataToSend = {
-        ...formData,
-        itinerario: itinerario,
-      };
+      const formDataToSend = new FormData();
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("naviera", formData.naviera);
+      formDataToSend.append("barco", formData.barco);
+      if (formData.descripcion)
+        formDataToSend.append("descripcion", formData.descripcion);
+      if (formData.duracion)
+        formDataToSend.append("duracion", parseInt(formData.duracion));
+      if (formData.fechaSalida)
+        formDataToSend.append("fechaSalida", formData.fechaSalida);
+      if (formData.precio)
+        formDataToSend.append("precio", parseFloat(formData.precio));
+      formDataToSend.append("itinerario", JSON.stringify(itinerario));
 
-      await createCrucero(dataToSend);
+      imagenes.forEach((imagen) => {
+        if (imagen instanceof File) {
+          formDataToSend.append("imagenes", imagen);
+        }
+      });
+
+      await createCrucero(formDataToSend);
 
       setFormData({
         nombre: "",
@@ -92,6 +109,7 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
         precio: "",
       });
       setItinerario([]);
+      setImagenes([]);
       setErrors({});
 
       onSuccess && onSuccess();
@@ -99,7 +117,8 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error:", error);
       setAlertMessage(
-        "Error al crear el crucero. Por favor intenta nuevamente.",
+        error.message ||
+          "Error al crear el crucero. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -118,6 +137,7 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
       precio: "",
     });
     setItinerario([]);
+    setImagenes([]);
     setErrors({});
     onClose();
   };
@@ -294,6 +314,16 @@ export default function CruceroFormModal({ isOpen, onClose, onSuccess }) {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes del Crucero (máximo 6)</label>
+                <ImageUploader
+                  images={imagenes}
+                  onChange={setImagenes}
+                  maxImages={6}
+                />
               </div>
             </div>
           </div>

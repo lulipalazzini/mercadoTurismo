@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
 const API_URL = `${API_BASE_URL}/auth`;
 
 // Guardar token en localStorage
@@ -37,6 +37,10 @@ export const isAuthenticated = () => {
 // Registrar nuevo usuario
 export const register = async (userData) => {
   try {
+    console.log("📝 Intentando registrar usuario...", {
+      email: userData.email,
+    });
+
     const response = await fetch(`${API_URL}/register`, {
       method: "POST",
       headers: {
@@ -45,21 +49,50 @@ export const register = async (userData) => {
       body: JSON.stringify(userData),
     });
 
-    const data = await response.json();
+    console.log("📡 Respuesta recibida:", {
+      status: response.status,
+      contentType: response.headers.get("content-type"),
+    });
+
+    // Verificar si la respuesta es JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      console.error("❌ Respuesta no es JSON:", contentType);
+      const text = await response.text();
+      console.error("Contenido recibido:", text.substring(0, 200));
+      throw new Error("El servidor no devolvió una respuesta JSON válida.");
+    }
+
+    // Parsear JSON
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      console.error("❌ Error al parsear JSON:", parseError);
+      throw new Error("Error al procesar la respuesta del servidor.");
+    }
 
     if (!response.ok) {
+      console.error("❌ Registro fallido:", data.message);
       throw new Error(data.message || "Error al registrar usuario");
     }
 
-    // Guardar token y usuario
+    // Guardar token y usuario si están presentes
     if (data.token) {
+      console.log("✅ Registro exitoso, guardando datos...");
       setToken(data.token);
       setUser(data.user);
     }
 
+    console.log("✅ Registro completado");
     return data;
   } catch (error) {
-    console.error("Error en register:", error);
+    console.error("❌ Error en register:", error);
+    if (error instanceof TypeError && error.message.includes("fetch")) {
+      throw new Error(
+        "No se pudo conectar con el servidor. Verifica tu conexión a internet.",
+      );
+    }
     throw error;
   }
 };
@@ -67,6 +100,8 @@ export const register = async (userData) => {
 // Iniciar sesión
 export const login = async (email, password) => {
   try {
+    console.log("🔑 Intentando login...", { email });
+
     const response = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: {
@@ -75,21 +110,74 @@ export const login = async (email, password) => {
       body: JSON.stringify({ email, password }),
     });
 
-    const data = await response.json();
+    console.log("📡 Respuesta recibida:", {
+      status: response.status,
+      statusText: response.statusText,
+      contentType: response.headers.get("content-type"),
+    });
 
+    // Verificar si la respuesta es JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      console.error("❌ Respuesta no es JSON:", contentType);
+      // Intentar leer como texto para debug
+      const text = await response.text();
+      console.error("Contenido recibido:", text.substring(0, 200));
+      throw new Error(
+        "El servidor no devolvió una respuesta JSON válida. Puede que el servidor esté caído o mal configurado.",
+      );
+    }
+
+    // Parsear JSON
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      console.error("❌ Error al parsear JSON:", parseError);
+      throw new Error(
+        "Error al procesar la respuesta del servidor. El servidor puede estar devolviendo HTML en lugar de JSON.",
+      );
+    }
+
+    console.log("📦 Data parseada:", {
+      success: data.success,
+      hasToken: !!data.token,
+    });
+
+    // Verificar si hubo error
     if (!response.ok) {
+      console.error("❌ Login fallido:", data.message);
       throw new Error(data.message || "Error al iniciar sesión");
     }
 
-    // Guardar token y usuario
-    if (data.token) {
-      setToken(data.token);
-      setUser(data.user);
+    // Verificar que tenemos los datos necesarios
+    if (!data.token) {
+      console.error("❌ Respuesta sin token");
+      throw new Error("Respuesta del servidor inválida: falta token");
     }
 
+    if (!data.user) {
+      console.error("❌ Respuesta sin datos de usuario");
+      throw new Error(
+        "Respuesta del servidor inválida: faltan datos de usuario",
+      );
+    }
+
+    // Guardar token y usuario
+    console.log("✅ Login exitoso, guardando datos...");
+    setToken(data.token);
+    setUser(data.user);
+
+    console.log("✅ Login completado");
     return data;
   } catch (error) {
-    console.error("Error en login:", error);
+    console.error("❌ Error en login:", error);
+    // Re-lanzar el error con un mensaje claro
+    if (error instanceof TypeError && error.message.includes("fetch")) {
+      throw new Error(
+        "No se pudo conectar con el servidor. Verifica tu conexión a internet.",
+      );
+    }
     throw error;
   }
 };

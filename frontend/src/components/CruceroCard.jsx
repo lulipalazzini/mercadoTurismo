@@ -13,11 +13,17 @@ export default function CruceroCard({ item }) {
     barco,
     descripcion,
     duracion,
+    duracionDias,
+    mesSalida: _mesSalida,
     fechaSalida,
     fechaRegreso,
     puertoSalida,
     puertoLlegada,
     precioDesde,
+    importeAdulto,
+    importeMenor,
+    moneda,
+    puertosDestino: _puertosDestino,
     cabinasDisponibles,
     itinerario,
     serviciosABordo,
@@ -41,7 +47,7 @@ export default function CruceroCard({ item }) {
         month: "short",
         year: "numeric",
       });
-    } catch (error) {
+    } catch {
       return "Fecha no disponible";
     }
   };
@@ -90,7 +96,7 @@ export default function CruceroCard({ item }) {
             <FaShip /> {naviera} • {barco}
           </p>
         </div>
-        <span className="tipo-badge tipo-crucero">{duracion}N</span>
+        <span className="tipo-badge tipo-crucero">{duracionDias || duracion}D</span>
       </div>
 
       <div className="card-content">
@@ -144,8 +150,22 @@ export default function CruceroCard({ item }) {
 
       <div className="card-footer">
         <div className="precio-info">
-          <span className="precio-label">Desde</span>
-          <span className="precio">${precioDesde}</span>
+          {importeAdulto ? (
+            <>
+              <span className="precio-label">Adulto</span>
+              <span className="precio">{moneda || 'USD'} {importeAdulto}</span>
+              {importeMenor && (
+                <span className="precio-menor" style={{ fontSize: '0.75rem', color: '#666' }}>
+                  Menor: {moneda || 'USD'} {importeMenor}
+                </span>
+              )}
+            </>
+          ) : (
+            <>
+              <span className="precio-label">Desde</span>
+              <span className="precio">${precioDesde}</span>
+            </>
+          )}
         </div>
         <button
           className="btn-primary"

@@ -3,6 +3,7 @@ import { FaTimes, FaPlus, FaTrash } from "react-icons/fa";
 import { createPaquete } from "../../services/paquetes.service";
 import AlertModal from "../common/AlertModal";
 import DestinoAutocomplete from "../common/DestinoAutocomplete";
+import DragDropImageUpload from "../common/DragDropImageUpload";
 import "../../styles/modal.css";
 
 export default function PaqueteFormModal({ isOpen, onClose, onSuccess }) {
@@ -15,9 +16,9 @@ export default function PaqueteFormModal({ isOpen, onClose, onSuccess }) {
     cupoMaximo: "",
     fechaInicio: "",
     fechaFin: "",
-    imagen: "",
   });
 
+  const [imagenes, setImagenes] = useState([]);
   const [incluye, setIncluye] = useState([]);
   const [nuevoItem, setNuevoItem] = useState("");
   const [errors, setErrors] = useState({});
@@ -104,22 +105,29 @@ export default function PaqueteFormModal({ isOpen, onClose, onSuccess }) {
     try {
       setSubmitting(true);
 
-      const paqueteData = {
-        nombre: formData.nombre,
-        descripcion: formData.descripcion,
-        destino: formData.destino,
-        duracion: parseInt(formData.duracion),
-        precio: parseFloat(formData.precio),
-        cupoMaximo: parseInt(formData.cupoMaximo),
-        cupoDisponible: parseInt(formData.cupoMaximo),
-        fechaInicio: formData.fechaInicio,
-        fechaFin: formData.fechaFin,
-        incluye: incluye,
-        imagen: formData.imagen || null,
-        activo: true,
-      };
+      // Usar FormData para enviar archivos (compatible con backend nativo)
+      const formDataToSend = new FormData();
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("descripcion", formData.descripcion);
+      formDataToSend.append("destino", formData.destino);
+      formDataToSend.append("duracion", parseInt(formData.duracion));
+      formDataToSend.append("precio", parseFloat(formData.precio));
+      formDataToSend.append("cupoMaximo", parseInt(formData.cupoMaximo));
+      formDataToSend.append("cupoDisponible", parseInt(formData.cupoMaximo));
+      formDataToSend.append("fechaInicio", formData.fechaInicio);
+      formDataToSend.append("fechaFin", formData.fechaFin);
+      formDataToSend.append("incluye", JSON.stringify(incluye));
+      formDataToSend.append("activo", true);
 
-      await createPaquete(paqueteData);
+      // Agregar imágenes desde el componente DragDrop
+      // El backend nativo espera archivos con el nombre "imagenes"
+      imagenes.forEach((imagen) => {
+        if (imagen instanceof File) {
+          formDataToSend.append("imagenes", imagen);
+        }
+      });
+
+      await createPaquete(formDataToSend);
 
       // Reset form
       setFormData({
@@ -131,8 +139,8 @@ export default function PaqueteFormModal({ isOpen, onClose, onSuccess }) {
         cupoMaximo: "",
         fechaInicio: "",
         fechaFin: "",
-        imagen: "",
       });
+      setImagenes([]);
       setIncluye([]);
       setNuevoItem("");
       setErrors({});
@@ -143,7 +151,8 @@ export default function PaqueteFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error al crear paquete:", error);
       setAlertMessage(
-        "Error al crear el paquete. Por favor intenta nuevamente.",
+        error.message ||
+          "Error al crear el paquete. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -161,8 +170,8 @@ export default function PaqueteFormModal({ isOpen, onClose, onSuccess }) {
       cupoMaximo: "",
       fechaInicio: "",
       fechaFin: "",
-      imagen: "",
     });
+    setImagenes([]);
     setIncluye([]);
     setNuevoItem("");
     setErrors({});
@@ -329,17 +338,14 @@ export default function PaqueteFormModal({ isOpen, onClose, onSuccess }) {
                 )}
               </div>
 
-              {/* URL de Imagen */}
+              {/* DragDropImageUpload - Sistema nativo sin librerías */}
               <div className="form-group full-width">
-                <label htmlFor="imagen">URL de Imagen</label>
-                <input
-                  type="url"
-                  id="imagen"
-                  name="imagen"
-                  className="form-control"
-                  placeholder="https://ejemplo.com/imagen.jpg"
-                  value={formData.imagen}
-                  onChange={handleChange}
+                <label>Imágenes del Paquete</label>
+                <DragDropImageUpload
+                  onChange={setImagenes}
+                  maxFiles={6}
+                  maxSizeMB={5}
+                  existingImages={imagenes}
                 />
               </div>
 

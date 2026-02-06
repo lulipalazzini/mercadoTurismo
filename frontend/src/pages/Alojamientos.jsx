@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import AlojamientoCard from "../components/AlojamientoCard";
-import SearchBox from "../components/SearchBox";
+import ModuleFilters from "../components/ModuleFilters";
 import "../styles/alojamientos.css";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
 
 export default function Alojamientos() {
   const [alojamientos, setAlojamientos] = useState([]);
@@ -32,21 +32,54 @@ export default function Alojamientos() {
     }
   };
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm.trim()) {
+  const handleFiltersChange = (filters) => {
+    if (Object.keys(filters).length === 0) {
       setAlojamientos(allAlojamientos);
       return;
     }
 
     const filtered = allAlojamientos.filter((alojamiento) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        alojamiento.nombre?.toLowerCase().includes(searchLower) ||
-        alojamiento.ubicacion?.toLowerCase().includes(searchLower) ||
-        alojamiento.ciudad?.toLowerCase().includes(searchLower) ||
-        alojamiento.pais?.toLowerCase().includes(searchLower) ||
-        alojamiento.descripcion?.toLowerCase().includes(searchLower)
-      );
+      let matches = true;
+
+      // Filtro por ubicación
+      if (filters.ubicacion) {
+        const ubicacionLower = filters.ubicacion.toLowerCase();
+        matches = matches && (
+          alojamiento.ubicacion?.toLowerCase().includes(ubicacionLower) ||
+          alojamiento.nombre?.toLowerCase().includes(ubicacionLower)
+        );
+      }
+
+      // Filtro por fecha de inicio
+      if (filters.fechaInicio && alojamiento.fechaDisponibilidad) {
+        const fechaAlojamiento = new Date(alojamiento.fechaDisponibilidad);
+        const fechaFiltro = new Date(filters.fechaInicio);
+        matches = matches && fechaAlojamiento >= fechaFiltro;
+      }
+
+      // Filtro por fecha fin (check-out)
+      if (filters.fechaFin && alojamiento.fechaDisponibilidad) {
+        const fechaAlojamiento = new Date(alojamiento.fechaDisponibilidad);
+        const fechaFiltro = new Date(filters.fechaFin);
+        matches = matches && fechaAlojamiento <= fechaFiltro;
+      }
+
+      // Filtro por tipo
+      if (filters.tipo && alojamiento.tipo) {
+        matches = matches && alojamiento.tipo === filters.tipo;
+      }
+
+      // Filtro por estrellas
+      if (filters.estrellas && alojamiento.estrellas) {
+        matches = matches && alojamiento.estrellas >= parseInt(filters.estrellas);
+      }
+
+      // Filtro por precio máximo
+      if (filters.precioMax && alojamiento.precioNoche) {
+        matches = matches && parseFloat(alojamiento.precioNoche) <= parseFloat(filters.precioMax);
+      }
+
+      return matches;
     });
 
     setAlojamientos(filtered);
@@ -71,17 +104,21 @@ export default function Alojamientos() {
   return (
     <div className="alojamientos-container">
       <h1 className="alojamientos-title">Alojamientos Disponibles</h1>
-      <SearchBox
-        onSearch={handleSearch}
-        placeholder="Buscar alojamientos por ciudad o destino..."
+
+      <ModuleFilters 
+        module="alojamientos" 
+        onFiltersChange={handleFiltersChange}
       />
+
       <div className="alojamientos-grid">
         {alojamientos.length > 0 ? (
           alojamientos.map((alojamiento) => (
             <AlojamientoCard key={alojamiento.id} alojamiento={alojamiento} />
           ))
         ) : (
-          <p className="no-results">No hay alojamientos disponibles</p>
+          <p className="no-results">
+            No se encontraron alojamientos que coincidan con los filtros seleccionados
+          </p>
         )}
       </div>
     </div>

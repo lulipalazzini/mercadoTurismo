@@ -16,12 +16,16 @@ import {
   FaRoute,
 } from "react-icons/fa";
 import { abrirWhatsApp } from "../utils/whatsapp";
+import { getImageUrls } from "../utils/imageUtils";
 import "../styles/serviceDetailModal.css";
 
 export default function ServiceDetailModal({ item, tipo, onClose }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (!item) return null;
+
+  // Convertir rutas de imágenes a URLs completas
+  const imageUrls = getImageUrls(item.imagenes);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("es-AR", {
@@ -69,15 +73,15 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
   };
 
   const nextImage = () => {
-    if (item.imagenes && item.imagenes.length > 0) {
-      setCurrentImageIndex((prev) => (prev + 1) % item.imagenes.length);
+    if (imageUrls && imageUrls.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % imageUrls.length);
     }
   };
 
   const prevImage = () => {
-    if (item.imagenes && item.imagenes.length > 0) {
+    if (imageUrls && imageUrls.length > 0) {
       setCurrentImageIndex((prev) =>
-        prev === 0 ? item.imagenes.length - 1 : prev - 1,
+        prev === 0 ? imageUrls.length - 1 : prev - 1,
       );
     }
   };
@@ -135,14 +139,14 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
 
         {/* Galería de imágenes */}
         <div className="modal-gallery">
-          {item.imagenes && item.imagenes.length > 0 ? (
+          {imageUrls && imageUrls.length > 0 ? (
             <>
               <img
-                src={item.imagenes[currentImageIndex]}
+                src={imageUrls[currentImageIndex]}
                 alt={item.nombre || item.modelo || "Servicio"}
                 className="gallery-main-image"
               />
-              {item.imagenes.length > 1 && (
+              {imageUrls.length > 1 && (
                 <>
                   <button className="gallery-btn prev" onClick={prevImage}>
                     ‹
@@ -151,7 +155,7 @@ export default function ServiceDetailModal({ item, tipo, onClose }) {
                     ›
                   </button>
                   <div className="gallery-indicators">
-                    {item.imagenes.map((_, idx) => (
+                    {imageUrls.map((_, idx) => (
                       <span
                         key={idx}
                         className={`indicator ${idx === currentImageIndex ? "active" : ""}`}

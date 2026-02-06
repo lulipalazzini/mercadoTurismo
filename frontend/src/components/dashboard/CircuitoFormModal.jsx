@@ -3,6 +3,7 @@ import { FaTimes, FaPlus, FaTrash } from "react-icons/fa";
 import { createCircuito } from "../../services/circuitos.service";
 import AlertModal from "../common/AlertModal";
 import DestinoAutocomplete from "../common/DestinoAutocomplete";
+import ImageUploader from "../ImageUploader";
 import "../../styles/modal.css";
 
 export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
@@ -19,6 +20,7 @@ export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
   const [nuevoIncluye, setNuevoIncluye] = useState("");
   const [noIncluye, setNoIncluye] = useState([]);
   const [nuevoNoIncluye, setNuevoNoIncluye] = useState("");
+  const [imagenes, setImagenes] = useState([]);
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -102,14 +104,22 @@ export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
     try {
       setSubmitting(true);
 
-      const dataToSend = {
-        ...formData,
-        destinos: destinos,
-        incluye: incluye,
-        noIncluye: noIncluye,
-      };
+      const formDataToSend = new FormData();
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("descripcion", formData.descripcion);
+      formDataToSend.append("duracion", parseInt(formData.duracion));
+      formDataToSend.append("precio", parseFloat(formData.precio));
+      formDataToSend.append("destinos", JSON.stringify(destinos));
+      formDataToSend.append("incluye", JSON.stringify(incluye));
+      formDataToSend.append("noIncluye", JSON.stringify(noIncluye));
 
-      await createCircuito(dataToSend);
+      imagenes.forEach((imagen) => {
+        if (imagen instanceof File) {
+          formDataToSend.append("imagenes", imagen);
+        }
+      });
+
+      await createCircuito(formDataToSend);
 
       setFormData({
         nombre: "",
@@ -120,6 +130,7 @@ export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
       setDestinos([]);
       setIncluye([]);
       setNoIncluye([]);
+      setImagenes([]);
       setErrors({});
 
       onSuccess && onSuccess();
@@ -127,7 +138,8 @@ export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error:", error);
       setAlertMessage(
-        "Error al crear el circuito. Por favor intenta nuevamente.",
+        error.message ||
+          "Error al crear el circuito. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -145,6 +157,7 @@ export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
     setDestinos([]);
     setIncluye([]);
     setNoIncluye([]);
+    setImagenes([]);
     setErrors({});
     onClose();
   };
@@ -361,6 +374,16 @@ export default function CircuitoFormModal({ isOpen, onClose, onSuccess }) {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes del Circuito</label>
+                <ImageUploader
+                  images={imagenes}
+                  onChange={setImagenes}
+                  maxImages={6}
+                />
               </div>
             </div>
           </div>

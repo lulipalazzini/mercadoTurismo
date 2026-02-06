@@ -7,7 +7,6 @@ const {
   deleteTransfer,
 } = require("../controllers/transfers.controller");
 const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
-
 const router = express.Router();
 
 router.get("/", getTransfers);

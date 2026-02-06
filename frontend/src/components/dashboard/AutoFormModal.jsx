@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { createAuto } from "../../services/autos.service";
 import AlertModal from "../common/AlertModal";
+import ImageUploader from "../ImageUploader";
 import "../../styles/modal.css";
 
 export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
@@ -16,6 +17,7 @@ export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
     descripcion: "",
   });
 
+  const [imagenes, setImagenes] = useState([]);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -56,7 +58,26 @@ export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
 
     try {
       setSubmitting(true);
-      await createAuto(formData);
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("marca", formData.marca);
+      formDataToSend.append("modelo", formData.modelo);
+      formDataToSend.append("categoria", formData.categoria);
+      formDataToSend.append("año", formData.año);
+      formDataToSend.append("capacidadPasajeros", formData.capacidadPasajeros);
+      formDataToSend.append("transmision", formData.transmision);
+      if (formData.precio)
+        formDataToSend.append("precio", parseFloat(formData.precio));
+      if (formData.descripcion)
+        formDataToSend.append("descripcion", formData.descripcion);
+
+      imagenes.forEach((imagen) => {
+        if (imagen instanceof File) {
+          formDataToSend.append("imagenes", imagen);
+        }
+      });
+
+      await createAuto(formDataToSend);
 
       setFormData({
         marca: "",
@@ -68,13 +89,17 @@ export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
         precio: "",
         descripcion: "",
       });
+      setImagenes([]);
       setErrors({});
 
       onSuccess && onSuccess();
       onClose();
     } catch (error) {
       console.error("Error:", error);
-      setAlertMessage("Error al crear el auto. Por favor intenta nuevamente.");
+      setAlertMessage(
+        error.message ||
+          "Error al crear el auto. Por favor intenta nuevamente.",
+      );
       setShowAlert(true);
     } finally {
       setSubmitting(false);
@@ -92,6 +117,7 @@ export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
       precio: "",
       descripcion: "",
     });
+    setImagenes([]);
     setErrors({});
     onClose();
   };
@@ -234,6 +260,16 @@ export default function AutoFormModal({ isOpen, onClose, onSuccess }) {
                   placeholder="Precio"
                   min="0"
                   step="0.01"
+                />
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes del Auto</label>
+                <ImageUploader
+                  images={imagenes}
+                  onChange={setImagenes}
+                  maxImages={6}
                 />
               </div>
 

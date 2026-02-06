@@ -51,9 +51,22 @@ const Transfer = sequelize.define(
       type: DataTypes.INTEGER,
       comment: "Duración en minutos",
     },
+    tipoServicio: {
+      type: DataTypes.ENUM("privado", "compartido"),
+      allowNull: false,
+      defaultValue: "privado",
+      comment: "Tipo de servicio: privado o compartido",
+    },
     servicioCompartido: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+      comment: "[OBSOLETO] Usar tipoServicio en su lugar",
+    },
+    tipoDestino: {
+      type: DataTypes.ENUM("ciudad", "hotel", "direccion"),
+      allowNull: false,
+      defaultValue: "ciudad",
+      comment: "Tipo de destino para filtrado",
     },
     descripcion: {
       type: DataTypes.TEXT,
@@ -61,6 +74,11 @@ const Transfer = sequelize.define(
     incluye: {
       type: DataTypes.JSON,
       defaultValue: [],
+    },
+    imagenes: {
+      type: DataTypes.JSON,
+      defaultValue: [],
+      comment: "Array de URLs de imágenes del transfer",
     },
     vendedorId: {
       type: DataTypes.INTEGER,
@@ -70,6 +88,15 @@ const Transfer = sequelize.define(
         key: "id",
       },
       comment: "ID del vendedor que publicó este transfer",
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      comment: "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
     },
     disponible: {
       type: DataTypes.BOOLEAN,

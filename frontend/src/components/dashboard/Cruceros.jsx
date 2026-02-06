@@ -14,6 +14,8 @@ import ConfirmModal from "../common/ConfirmModal";
 import AlertModal from "../common/AlertModal";
 import CruceroFormModal from "./CruceroFormModal";
 import CruceroEditModal from "./CruceroEditModal";
+import PreviewModal from "../common/PreviewModal";
+import CruceroCard from "../CruceroCard";
 
 export default function Cruceros() {
   const [items, setItems] = useState([]);
@@ -27,6 +29,8 @@ export default function Cruceros() {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const [itemToPreview, setItemToPreview] = useState(null);
 
   useEffect(() => {
     loadItems();
@@ -54,6 +58,11 @@ export default function Cruceros() {
   const handleDeleteClick = (item) => {
     setItemToDelete(item);
     setShowConfirm(true);
+  };
+
+  const handlePreviewClick = (item) => {
+    setItemToPreview(item);
+    setShowPreview(true);
   };
 
   const confirmDelete = async () => {
@@ -270,6 +279,29 @@ export default function Cruceros() {
                 </div>
 
                 <div className="package-footer">
+                  <div className="package-actions">
+                    <button 
+                      className="btn-icon-action"
+                      onClick={() => handlePreviewClick(item)}
+                      title="Ver vista previa"
+                    >
+                      <FaShip />
+                    </button>
+                    <button 
+                      className="btn-icon-action"
+                      onClick={() => handleEditClick(item)}
+                      title="Editar"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button 
+                      className="btn-icon-action danger"
+                      onClick={() => handleDeleteClick(item)}
+                      title="Eliminar"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
                   <div className="package-price">
                     <span className="price-label">Itinerario</span>
                     <span className="price-value">
@@ -315,6 +347,17 @@ export default function Cruceros() {
         message={alertMessage}
         type="error"
       />
+
+      <PreviewModal
+        isOpen={showPreview}
+        onClose={() => {
+          setShowPreview(false);
+          setItemToPreview(null);
+        }}
+        title="Vista Previa - Como lo ve el cliente"
+      >
+        {itemToPreview && <CruceroCard item={itemToPreview} />}
+      </PreviewModal>
     </>
   );
 }

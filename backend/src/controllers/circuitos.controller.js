@@ -1,5 +1,12 @@
 const Circuito = require("../models/Circuito.model");
 const User = require("../models/User.model");
+const {
+  parseItemsJsonFields,
+  parseItemJsonFields,
+  parseRequestJsonFields,
+} = require("../utils/parseJsonFields");
+
+const JSON_FIELDS = ["imagenes"];
 
 const getCircuitos = async (req, res) => {
   try {
@@ -14,7 +21,8 @@ const getCircuitos = async (req, res) => {
         },
       ],
     });
-    res.json(circuitos);
+    const parsedCircuitos = parseItemsJsonFields(circuitos, JSON_FIELDS);
+    res.json(parsedCircuitos);
   } catch (error) {
     res
       .status(500)
@@ -28,7 +36,8 @@ const getCircuito = async (req, res) => {
     if (!circuito) {
       return res.status(404).json({ message: "Circuito no encontrado" });
     }
-    res.json(circuito);
+    const parsedCircuito = parseItemJsonFields(circuito, JSON_FIELDS);
+    res.json(parsedCircuito);
   } catch (error) {
     res
       .status(500)
@@ -38,8 +47,21 @@ const getCircuito = async (req, res) => {
 
 const createCircuito = async (req, res) => {
   try {
-    const circuito = await Circuito.create(req.body);
-    res.status(201).json({ message: "Circuito creado exitosamente", circuito });
+    const circuitoData = { ...req.body };
+    Object.assign(circuitoData, parseRequestJsonFields(req.body, JSON_FIELDS));
+
+    if (req.uploadedImages && req.uploadedImages.length > 0) {
+      circuitoData.imagenes = req.uploadedImages.map((img) => img.path);
+    }
+
+    const circuito = await Circuito.create(circuitoData);
+    const parsedCircuito = parseItemJsonFields(circuito, JSON_FIELDS);
+    res
+      .status(201)
+      .json({
+        message: "Circuito creado exitosamente",
+        circuito: parsedCircuito,
+      });
   } catch (error) {
     res
       .status(500)
@@ -53,8 +75,41 @@ const updateCircuito = async (req, res) => {
     if (!circuito) {
       return res.status(404).json({ message: "Circuito no encontrado" });
     }
-    await circuito.update(req.body);
-    res.json({ message: "Circuito actualizado exitosamente", circuito });
+
+    const updateData = { ...req.body };
+    Object.assign(updateData, parseRequestJsonFields(req.body, JSON_FIELDS));
+
+    // Manejar imágenes
+    if (req.uploadedImages && req.uploadedImages.length > 0) {
+      const nuevasImagenes = req.uploadedImages.map((img) => img.path);
+      if (req.body.imagenesExistentes) {
+        try {
+          const existentes =
+            typeof req.body.imagenesExistentes === "string"
+              ? JSON.parse(req.body.imagenesExistentes)
+              : req.body.imagenesExistentes;
+          updateData.imagenes = [...existentes, ...nuevasImagenes];
+        } catch (e) {
+          updateData.imagenes = nuevasImagenes;
+        }
+      } else {
+        updateData.imagenes = nuevasImagenes;
+      }
+    } else if (req.body.imagenesExistentes) {
+      try {
+        updateData.imagenes =
+          typeof req.body.imagenesExistentes === "string"
+            ? JSON.parse(req.body.imagenesExistentes)
+            : req.body.imagenesExistentes;
+      } catch (e) {}
+    }
+
+    await circuito.update(updateData);
+    const parsedCircuito = parseItemJsonFields(circuito, JSON_FIELDS);
+    res.json({
+      message: "Circuito actualizado exitosamente",
+      circuito: parsedCircuito,
+    });
   } catch (error) {
     res
       .status(500)
@@ -77,11 +132,10 @@ const deleteCircuito = async (req, res) => {
   }
 };
 
-
 module.exports = {
   getCircuitos,
   getCircuito,
   createCircuito,
   updateCircuito,
-  deleteCircuito
+  deleteCircuito,
 };

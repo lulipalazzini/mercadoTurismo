@@ -3,6 +3,7 @@ import { FaTimes } from "react-icons/fa";
 import { createAlojamiento } from "../../services/alojamientos.service";
 import AlertModal from "../common/AlertModal";
 import DestinoAutocomplete from "../common/DestinoAutocomplete";
+import ImageUploader from "../ImageUploader";
 import "../../styles/modal.css";
 
 export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
@@ -16,6 +17,7 @@ export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
     precioNoche: "",
   });
 
+  const [imagenes, setImagenes] = useState([]);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -60,7 +62,25 @@ export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
 
     try {
       setSubmitting(true);
-      await createAlojamiento(formData);
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("tipo", formData.tipo);
+      formDataToSend.append("ubicacion", formData.ubicacion);
+      if (formData.direccion)
+        formDataToSend.append("direccion", formData.direccion);
+      formDataToSend.append("estrellas", formData.estrellas);
+      if (formData.descripcion)
+        formDataToSend.append("descripcion", formData.descripcion);
+      formDataToSend.append("precioNoche", parseFloat(formData.precioNoche));
+
+      imagenes.forEach((imagen) => {
+        if (imagen instanceof File) {
+          formDataToSend.append("imagenes", imagen);
+        }
+      });
+
+      await createAlojamiento(formDataToSend);
 
       setFormData({
         nombre: "",
@@ -71,6 +91,7 @@ export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
         descripcion: "",
         precioNoche: "",
       });
+      setImagenes([]);
       setErrors({});
 
       onSuccess && onSuccess();
@@ -78,7 +99,8 @@ export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error al crear alojamiento:", error);
       setAlertMessage(
-        "Error al crear el alojamiento. Por favor intenta nuevamente.",
+        error.message ||
+          "Error al crear el alojamiento. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -96,6 +118,7 @@ export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
       descripcion: "",
       precioNoche: "",
     });
+    setImagenes([]);
     setErrors({});
     onClose();
   };
@@ -232,6 +255,16 @@ export default function AlojamientoFormModal({ isOpen, onClose, onSuccess }) {
                   value={formData.descripcion}
                   onChange={handleChange}
                   placeholder="Descripción del alojamiento"
+                />
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes del Alojamiento (máximo 6)</label>
+                <ImageUploader
+                  images={imagenes}
+                  onChange={setImagenes}
+                  maxImages={6}
                 />
               </div>
             </div>

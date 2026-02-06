@@ -7,7 +7,6 @@ const {
   deleteSeguro,
 } = require("../controllers/seguros.controller");
 const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
-
 const router = express.Router();
 
 router.get("/", getSeguros);

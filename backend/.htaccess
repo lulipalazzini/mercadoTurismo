@@ -2,36 +2,21 @@
 PassengerEnabled On
 PassengerAppType node
 PassengerStartupFile app.js
-PassengerAppRoot /home/USERNAME/PATH_TO_YOUR_BACKEND
 
-# Variables de entorno
+# Variables de entorno (ajusta estos valores según tu servidor)
 SetEnv NODE_ENV production
+SetEnv PORT 3001
 
-# Asegurar que todas las respuestas tengan Content-Type correcto
+# Headers de seguridad y CORS
 <IfModule mod_headers.c>
-    # Forzar Content-Type JSON para respuestas API
-    <FilesMatch "\.(json)$">
-        Header set Content-Type "application/json; charset=utf-8"
-    </FilesMatch>
-    
-    # Headers de seguridad
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
     Header set X-Content-Type-Options "nosniff"
-    Header set X-Frame-Options "DENY"
+    Header set X-Frame-Options "SAMEORIGIN"
     Header set X-XSS-Protection "1; mode=block"
 </IfModule>
 
-# Reescritura de URLs para API
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    
-    # No reescribir archivos que existen físicamente
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    
-    # Redirigir todo al app de Node.js
-    RewriteRule ^(.*)$ http://127.0.0.1:3001/$1 [P,L]
-</IfModule>
-
-# Logging de errores
-php_flag display_errors Off
-php_flag log_errors On
+# Logging
+ErrorLog logs/error_log
+CustomLog logs/access_log combined

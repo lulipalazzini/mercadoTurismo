@@ -13,7 +13,6 @@ const router = express.Router();
 router.get("/", getAlojamientos);
 router.get("/:id", getAlojamiento);
 
-// Rutas protegidas - requieren autenticación
 router.post("/", verifyToken, createAlojamiento);
 router.put("/:id", verifyToken, updateAlojamiento);
 router.delete("/:id", verifyToken, deleteAlojamiento);

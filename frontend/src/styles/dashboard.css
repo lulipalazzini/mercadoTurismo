@@ -1014,8 +1014,48 @@
   padding: 0.75rem 1rem;
   display: flex;
   gap: 0.75rem;
+  justify-content: space-between;
+  align-items: center;
   border-top: 1px solid #e1e4e8;
   font-size: 0.8125rem;
+}
+
+.package-footer .package-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn-icon-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #e1e4e8;
+  background: white;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.btn-icon-action:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+  color: #2d3748;
+  transform: translateY(-1px);
+}
+
+.btn-icon-action.danger {
+  color: #e53e3e;
+}
+
+.btn-icon-action.danger:hover {
+  background: #fff5f5;
+  border-color: #fc8181;
+  color: #c53030;
 }
 
 .package-footer .package-price {

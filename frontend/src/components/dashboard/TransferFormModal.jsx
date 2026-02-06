@@ -3,6 +3,7 @@ import { FaTimes } from "react-icons/fa";
 import { createTransfer } from "../../services/transfers.service";
 import AlertModal from "../common/AlertModal";
 import DestinoAutocomplete from "../common/DestinoAutocomplete";
+import ImageUploader from "../ImageUploader";
 import "../../styles/modal.css";
 
 export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
@@ -15,6 +16,8 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
     precio: "",
     duracionEstimada: "",
   });
+
+  const [imagenes, setImagenes] = useState([]);
 
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -56,7 +59,25 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
 
     try {
       setSubmitting(true);
-      await createTransfer(formData);
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("tipo", formData.tipo);
+      formDataToSend.append("origen", formData.origen);
+      formDataToSend.append("destino", formData.destino);
+      formDataToSend.append("vehiculo", formData.vehiculo);
+      formDataToSend.append("capacidadPasajeros", formData.capacidadPasajeros);
+      if (formData.precio)
+        formDataToSend.append("precio", parseFloat(formData.precio));
+      if (formData.duracionEstimada)
+        formDataToSend.append("duracionEstimada", formData.duracionEstimada);
+
+      imagenes.forEach((imagen) => {
+        if (imagen instanceof File) {
+          formDataToSend.append("imagenes", imagen);
+        }
+      });
+
+      await createTransfer(formDataToSend);
 
       setFormData({
         tipo: "aeropuerto-hotel",
@@ -67,6 +88,7 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
         precio: "",
         duracionEstimada: "",
       });
+      setImagenes([]);
       setErrors({});
 
       onSuccess && onSuccess();
@@ -74,7 +96,8 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       console.error("Error:", error);
       setAlertMessage(
-        "Error al crear el transfer. Por favor intenta nuevamente.",
+        error.message ||
+          "Error al crear el transfer. Por favor intenta nuevamente.",
       );
       setShowAlert(true);
     } finally {
@@ -92,6 +115,7 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
       precio: "",
       duracionEstimada: "",
     });
+    setImagenes([]);
     setErrors({});
     onClose();
   };
@@ -220,6 +244,16 @@ export default function TransferFormModal({ isOpen, onClose, onSuccess }) {
                   value={formData.precio}
                   onChange={handleChange}
                   placeholder="Precio"
+                />
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes del Transfer</label>
+                <ImageUploader
+                  images={imagenes}
+                  onChange={setImagenes}
+                  maxImages={6}
                 />
               </div>
             </div>

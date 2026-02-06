@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import SalidaGrupalCard from "../components/SalidaGrupalCard";
-import SearchBox from "../components/SearchBox";
+import ModuleFilters from "../components/ModuleFilters";
 import "../styles/servicios.css";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
 
 export default function SalidasGrupales() {
   const [salidas, setSalidas] = useState([]);
@@ -32,20 +32,42 @@ export default function SalidasGrupales() {
     }
   };
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm.trim()) {
+  const handleFiltersChange = (filters) => {
+    if (Object.keys(filters).length === 0) {
       setSalidas(allSalidas);
       return;
     }
 
     const filtered = allSalidas.filter((salida) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        salida.nombre?.toLowerCase().includes(searchLower) ||
-        salida.destino?.toLowerCase().includes(searchLower) ||
-        salida.descripcion?.toLowerCase().includes(searchLower) ||
-        salida.incluye?.toLowerCase().includes(searchLower)
-      );
+      let matches = true;
+
+      // Filtro por destino
+      if (filters.destino) {
+        const destinoLower = filters.destino.toLowerCase();
+        matches = matches && (
+          salida.destino?.toLowerCase().includes(destinoLower) ||
+          salida.nombre?.toLowerCase().includes(destinoLower)
+        );
+      }
+
+      // Filtro por fecha de salida
+      if (filters.fechaSalida && salida.fechaSalida) {
+        const fechaSalida = new Date(salida.fechaSalida);
+        const fechaFiltro = new Date(filters.fechaSalida);
+        matches = matches && fechaSalida >= fechaFiltro;
+      }
+
+      // Filtro por duración
+      if (filters.duracion && salida.duracion) {
+        matches = matches && salida.duracion >= parseInt(filters.duracion);
+      }
+
+      // Filtro por precio máximo
+      if (filters.precioMax && salida.precio) {
+        matches = matches && parseFloat(salida.precio) <= parseFloat(filters.precioMax);
+      }
+
+      return matches;
     });
 
     setSalidas(filtered);
@@ -70,17 +92,21 @@ export default function SalidasGrupales() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Salidas Grupales</h1>
-      <SearchBox
-        onSearch={handleSearch}
-        placeholder="Buscar salidas grupales por destino..."
+      
+      <ModuleFilters 
+        module="salidas-grupales" 
+        onFiltersChange={handleFiltersChange}
       />
+
       <div className="servicios-grid">
         {salidas.length > 0 ? (
           salidas.map((salida) => (
             <SalidaGrupalCard key={salida.id} item={salida} />
           ))
         ) : (
-          <p className="no-results">No hay salidas grupales disponibles</p>
+          <p className="no-results">
+            No se encontraron salidas grupales que coincidan con los filtros seleccionados
+          </p>
         )}
       </div>
     </div>

@@ -1,14 +1,17 @@
 import { getToken, removeToken } from "./auth.service";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
 
 // Función helper para hacer peticiones con token
 export const fetchWithAuth = async (url, options = {}) => {
   const token = getToken();
 
+  // No agregar Content-Type si es FormData (el browser lo hace automáticamente con boundary)
+  const isFormData = options.body instanceof FormData;
+
   const headers = {
-    "Content-Type": "application/json",
+    ...(isFormData ? {} : { "Content-Type": "application/json" }),
     ...options.headers,
   };
 
@@ -44,19 +47,23 @@ export const fetchWithAuth = async (url, options = {}) => {
 export const api = {
   get: (url, options = {}) => fetchWithAuth(url, { method: "GET", ...options }),
 
-  post: (url, data, options = {}) =>
-    fetchWithAuth(url, {
+  post: (url, data, options = {}) => {
+    const body = data instanceof FormData ? data : JSON.stringify(data);
+    return fetchWithAuth(url, {
       method: "POST",
-      body: JSON.stringify(data),
+      body,
       ...options,
-    }),
+    });
+  },
 
-  put: (url, data, options = {}) =>
-    fetchWithAuth(url, {
+  put: (url, data, options = {}) => {
+    const body = data instanceof FormData ? data : JSON.stringify(data);
+    return fetchWithAuth(url, {
       method: "PUT",
-      body: JSON.stringify(data),
+      body,
       ...options,
-    }),
+    });
+  },
 
   delete: (url, options = {}) =>
     fetchWithAuth(url, { method: "DELETE", ...options }),

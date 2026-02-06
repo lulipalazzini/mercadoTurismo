@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateCircuito } from "../../services/circuitos.service";
 import AlertModal from "../common/AlertModal";
+import DragDropImageUpload from "../common/DragDropImageUpload";
+import { getImageUrls } from "../../utils/imageUtils";
 import "../../styles/modal.css";
 
 export default function CircuitoEditModal({
@@ -24,6 +26,8 @@ export default function CircuitoEditModal({
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [imagenes, setImagenes] = useState([]);
+  const [imagenesExistentes, setImagenesExistentes] = useState([]);
 
   useEffect(() => {
     if (circuito) {
@@ -42,6 +46,19 @@ export default function CircuitoEditModal({
           ? circuito.noIncluye.join(", ")
           : "",
       });
+
+      // Cargar imágenes existentes
+      if (circuito.imagenes && Array.isArray(circuito.imagenes)) {
+        const imageUrls = getImageUrls(circuito.imagenes);
+        const existingImgs = imageUrls.map((url, index) => ({
+          preview: url,
+          name: `Imagen ${index + 1}`,
+          existing: true,
+          originalPath: circuito.imagenes[index],
+        }));
+        setImagenesExistentes(existingImgs);
+        setImagenes(existingImgs);
+      }
     }
   }, [circuito]);
 
@@ -75,23 +92,49 @@ export default function CircuitoEditModal({
 
     setSubmitting(true);
     try {
-      const dataToSend = {
-        ...formData,
-        destinos: formData.destinos
-          .split(",")
-          .map((d) => d.trim())
-          .filter((d) => d),
-        incluye: formData.incluye
-          .split(",")
-          .map((i) => i.trim())
-          .filter((i) => i),
-        noIncluye: formData.noIncluye
-          .split(",")
-          .map((i) => i.trim())
-          .filter((i) => i),
-      };
+      const formDataToSend = new FormData();
 
-      await updateCircuito(circuito.id, dataToSend);
+      formDataToSend.append("nombre", formData.nombre);
+      formDataToSend.append("descripcion", formData.descripcion);
+      formDataToSend.append("duracion", formData.duracion);
+      formDataToSend.append("precio", formData.precio);
+
+      const destinos = formData.destinos
+        .split(",")
+        .map((d) => d.trim())
+        .filter((d) => d);
+      formDataToSend.append("destinos", JSON.stringify(destinos));
+
+      const incluye = formData.incluye
+        .split(",")
+        .map((i) => i.trim())
+        .filter((i) => i);
+      formDataToSend.append("incluye", JSON.stringify(incluye));
+
+      const noIncluye = formData.noIncluye
+        .split(",")
+        .map((i) => i.trim())
+        .filter((i) => i);
+      formDataToSend.append("noIncluye", JSON.stringify(noIncluye));
+
+      imagenes.forEach((imagen) => {
+        if (imagen.file instanceof File) {
+          formDataToSend.append("imagenes", imagen.file);
+        }
+      });
+
+      const imagenesAMantener = imagenes
+        .filter((img) => img.existing && img.originalPath)
+        .map((img) => img.originalPath);
+
+      if (imagenesAMantener.length > 0) {
+        formDataToSend.append(
+          "imagenesExistentes",
+          JSON.stringify(imagenesAMantener),
+        );
+      }
+
+      await updateCircuito(circuito.id, formDataToSend);
       onSuccess();
       handleClose();
     } catch (error) {
@@ -238,6 +281,17 @@ export default function CircuitoEditModal({
                   value={formData.noIncluye}
                   onChange={handleChange}
                   placeholder="Vuelos, Comidas extras"
+                />
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes</label>
+                <DragDropImageUpload
+                  onChange={setImagenes}
+                  maxFiles={6}
+                  maxSizeMB={5}
+                  existingImages={imagenesExistentes}
                 />
               </div>
             </div>

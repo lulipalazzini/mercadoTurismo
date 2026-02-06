@@ -2,31 +2,45 @@ const CupoMercado = require("../models/CupoMercado.model");
 const User = require("../models/User.model");
 const { Op } = require("sequelize");
 
-// Obtener cupos del marketplace (solo para agencias)
+// Obtener cupos del marketplace
+// ⚠️ EXCEPCIÓN: Todos los usuarios B2B pueden ver TODOS los cupos (sin filtro de ownership)
 const getCuposMercado = async (req, res) => {
   try {
     console.log("\n💰 [CUPOS MERCADO] Obteniendo cupos del marketplace...");
     console.log(`   Usuario ID: ${req.user.id}`);
     console.log(`   Role: ${req.user.role}`);
+    console.log(`   Calculated Role: ${req.user.calculatedRole}`);
 
-    // Solo las agencias pueden ver el marketplace
-    if (req.user.role !== "agencia") {
-      console.log("❌ [CUPOS MERCADO] Acceso denegado - No es agencia");
+    // Verificar que el usuario sea B2B
+    if (req.user.userType !== "B2B") {
+      console.log("❌ [CUPOS MERCADO] Acceso denegado - No es usuario B2B");
       return res.status(403).json({
-        message: "Solo las agencias pueden ver el marketplace de cupos",
+        message: "Solo los usuarios B2B pueden ver el marketplace de cupos",
       });
     }
 
-    // Obtener cupos de operadores, con información del vendedor
+    // ⚠️ EXCEPCIÓN: NO FILTRAR POR OWNERSHIP
+    // Tanto agencias como operadores/proveedores ven TODOS los cupos
+    console.log("   ⚠️ MODO GLOBAL: Mostrando TODOS los cupos (sin filtro de ownership)");
+    
+    // Obtener cupos de todos los usuarios B2B, con información del vendedor
     console.log("   Consultando base de datos...");
     const cupos = await CupoMercado.findAll({
       include: [
         {
           model: User,
           as: "vendedor",
-          attributes: ["id", "nombre", "email", "telefono", "razonSocial"],
+          attributes: [
+            "id",
+            "nombre",
+            "email",
+            "telefono",
+            "razonSocial",
+            "calculatedRole",
+            "businessModel",
+          ],
           where: {
-            role: "operador",
+            userType: "B2B", // Solo cupos de usuarios B2B
           },
         },
       ],

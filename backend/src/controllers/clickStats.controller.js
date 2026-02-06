@@ -5,10 +5,15 @@ const incrementClickCount = async (req, res) => {
   try {
     const { cardType, serviceId, serviceName } = req.body;
 
-    // Validación de header de seguridad
-    if (req.headers["x-sec-origin"] !== "mercado-turismo-app") {
-      return res.status(403).json({ error: "Acceso no autorizado" });
-    }
+    console.log("📊 [STATS] Request recibido:", {
+      method: req.method,
+      path: req.path,
+      body: req.body,
+      headers: {
+        origin: req.headers.origin,
+        "content-type": req.headers["content-type"],
+      },
+    });
 
     // Validar que el tipo de card sea válido
     const validCardTypes = [
@@ -25,6 +30,7 @@ const incrementClickCount = async (req, res) => {
     ];
 
     if (!cardType || !validCardTypes.includes(cardType)) {
+      console.warn("⚠️  [STATS] Tipo de card inválido:", cardType);
       return res.status(400).json({
         error: "Tipo de card inválido",
         validTypes: validCardTypes,
@@ -46,6 +52,9 @@ const incrementClickCount = async (req, res) => {
         serviceName: serviceName || null,
         clicks: 1,
       });
+      console.log(
+        `✅ [STATS] Nuevo registro creado: ${stat.cardType} - Clicks: 1`,
+      );
     } else {
       stat.clicks += 1;
       // Actualizar el nombre si cambió
@@ -53,18 +62,35 @@ const incrementClickCount = async (req, res) => {
         stat.serviceName = serviceName;
       }
       await stat.save();
+      console.log(
+        `✅ [STATS] Click incrementado: ${stat.cardType} - Total: ${stat.clicks}`,
+      );
     }
 
-    res.json({
+    const response = {
       success: true,
       cardType: stat.cardType,
       serviceId: stat.serviceId,
       serviceName: stat.serviceName,
       count: stat.clicks,
-    });
+    };
+
+    console.log("📤 [STATS] Enviando respuesta:", response);
+
+    return res.status(200).json(response);
   } catch (error) {
-    console.error("Error incrementando contador:", error);
-    res.status(500).json({ error: "Error en la base de datos" });
+    console.error("❌ [STATS] Error incrementando contador:");
+    console.error("   Mensaje:", error.message);
+    console.error("   Stack:", error.stack);
+
+    // Asegurar que SIEMPRE devolvemos JSON
+    res.setHeader("Content-Type", "application/json");
+    return res.status(500).json({
+      success: false,
+      error: "Error al registrar click",
+      message: error.message,
+      timestamp: new Date().toISOString(),
+    });
   }
 };
 
@@ -151,9 +177,8 @@ const getStatByType = async (req, res) => {
   }
 };
 
-
 module.exports = {
   incrementClickCount,
   getAllStats,
-  getStatByType
+  getStatByType,
 };

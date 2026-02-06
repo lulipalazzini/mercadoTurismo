@@ -1,20 +1,40 @@
 const Seguro = require("../models/Seguro.model");
 const User = require("../models/User.model");
+const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const {
+  parseItemsJsonFields,
+  parseItemJsonFields,
+  parseRequestJsonFields,
+} = require("../utils/parseJsonFields");
+
+const JSON_FIELDS = ["imagenes"];
 
 const getSeguros = async (req, res) => {
   try {
+    const whereClause = { activo: true };
+
+    // Aplicar filtro de ownership para usuarios B2B
+    if (req.user && shouldFilterByOwnership(req.user, "seguros")) {
+      whereClause.userId = req.user.id;
+      console.log(`🔒 Filtrando seguros del usuario: ${req.user.id}`);
+    }
+
+    // Usuarios no autenticados pueden ver TODOS los seguros
+    // (No se aplica filtro isPublic para B2C)
+
     const seguros = await Seguro.findAll({
-      where: { activo: true },
+      where: whereClause,
       order: [["createdAt", "DESC"]],
       include: [
         {
           model: User,
           as: "vendedor",
-          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+          attributes: ["id", "nombre", "email", "razonSocial", "role", "calculatedRole", "isVisibleToPassengers"],
         },
       ],
     });
-    res.json(seguros);
+    const parsedSeguros = parseItemsJsonFields(seguros, JSON_FIELDS);
+    res.json(parsedSeguros);
   } catch (error) {
     res
       .status(500)
@@ -28,7 +48,8 @@ const getSeguro = async (req, res) => {
     if (!seguro) {
       return res.status(404).json({ message: "Seguro no encontrado" });
     }
-    res.json(seguro);
+    const parsedSeguro = parseItemJsonFields(seguro, JSON_FIELDS);
+    res.json(parsedSeguro);
   } catch (error) {
     res
       .status(500)
@@ -38,8 +59,23 @@ const getSeguro = async (req, res) => {
 
 const createSeguro = async (req, res) => {
   try {
-    const seguro = await Seguro.create(req.body);
-    res.status(201).json({ message: "Seguro creado exitosamente", seguro });
+    const seguroData = { ...req.body };
+    Object.assign(seguroData, parseRequestJsonFields(req.body, JSON_FIELDS));
+
+    if (req.uploadedImages && req.uploadedImages.length > 0) {
+      seguroData.imagenes = req.uploadedImages.map((img) => img.path);
+    }
+
+    // Asignar owner (userId) automáticamente
+    if (req.user) {
+      seguroData.userId = req.user.id;
+    }
+
+    const seguro = await Seguro.create(seguroData);
+    const parsedSeguro = parseItemJsonFields(seguro, JSON_FIELDS);
+    res
+      .status(201)
+      .json({ message: "Seguro creado exitosamente", seguro: parsedSeguro });
   } catch (error) {
     res
       .status(500)
@@ -53,8 +89,41 @@ const updateSeguro = async (req, res) => {
     if (!seguro) {
       return res.status(404).json({ message: "Seguro no encontrado" });
     }
-    await seguro.update(req.body);
-    res.json({ message: "Seguro actualizado exitosamente", seguro });
+
+    const updateData = { ...req.body };
+    Object.assign(updateData, parseRequestJsonFields(req.body, JSON_FIELDS));
+
+    // Manejar imágenes
+    if (req.uploadedImages && req.uploadedImages.length > 0) {
+      const nuevasImagenes = req.uploadedImages.map((img) => img.path);
+      if (req.body.imagenesExistentes) {
+        try {
+          const existentes =
+            typeof req.body.imagenesExistentes === "string"
+              ? JSON.parse(req.body.imagenesExistentes)
+              : req.body.imagenesExistentes;
+          updateData.imagenes = [...existentes, ...nuevasImagenes];
+        } catch (e) {
+          updateData.imagenes = nuevasImagenes;
+        }
+      } else {
+        updateData.imagenes = nuevasImagenes;
+      }
+    } else if (req.body.imagenesExistentes) {
+      try {
+        updateData.imagenes =
+          typeof req.body.imagenesExistentes === "string"
+            ? JSON.parse(req.body.imagenesExistentes)
+            : req.body.imagenesExistentes;
+      } catch (e) {}
+    }
+
+    await seguro.update(updateData);
+    const parsedSeguro = parseItemJsonFields(seguro, JSON_FIELDS);
+    res.json({
+      message: "Seguro actualizado exitosamente",
+      seguro: parsedSeguro,
+    });
   } catch (error) {
     res
       .status(500)
@@ -77,11 +146,10 @@ const deleteSeguro = async (req, res) => {
   }
 };
 
-
 module.exports = {
   getSeguros,
   getSeguro,
   createSeguro,
   updateSeguro,
-  deleteSeguro
+  deleteSeguro,
 };

@@ -13,10 +13,11 @@ export default function PaqueteCard({ item }) {
     descripcion,
     destino,
     duracion,
+    noches,
     precio,
     cupoDisponible,
     fechaInicio,
-    fechaFin,
+    fechaFin: _fechaFin,
     incluye,
     imagen,
     vendedor,
@@ -37,7 +38,7 @@ export default function PaqueteCard({ item }) {
         month: "short",
         year: "numeric",
       });
-    } catch (error) {
+    } catch {
       return "Fecha no disponible";
     }
   };
@@ -87,7 +88,7 @@ export default function PaqueteCard({ item }) {
             <FaMapMarkerAlt /> {destino}
           </p>
         </div>
-        <span className="tipo-badge">{duracion}D</span>
+        <span className="tipo-badge">{noches ? `${noches}N` : `${duracion}D`}</span>
       </div>
 
       <div className="card-content">

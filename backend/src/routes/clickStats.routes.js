@@ -11,7 +11,7 @@ const router = express.Router();
 // Rate limiting específico para el contador de clicks
 const clickLimiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutos
-  max: 10, // Máximo 10 clics por IP cada 10 minutos
+  max: 100, // Máximo 100 clics por IP cada 10 minutos
   message: { error: "Demasiados clics. Por favor intenta más tarde." },
   standardHeaders: true,
   legacyHeaders: false,

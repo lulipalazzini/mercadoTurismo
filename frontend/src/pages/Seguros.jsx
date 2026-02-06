@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import SeguroCard from "../components/SeguroCard";
-import SearchBox from "../components/SearchBox";
+import ModuleFilters from "../components/ModuleFilters";
 import "../styles/servicios.css";
+
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3003/api";
+
 export default function Seguros() {
   const [seguros, setSeguros] = useState([]);
   const [allSeguros, setAllSeguros] = useState([]);
@@ -30,20 +32,36 @@ export default function Seguros() {
     }
   };
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm.trim()) {
+  const handleFiltersChange = (filters) => {
+    if (Object.keys(filters).length === 0) {
       setSeguros(allSeguros);
       return;
     }
 
     const filtered = allSeguros.filter((seguro) => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        seguro.nombre?.toLowerCase().includes(searchLower) ||
-        seguro.cobertura?.toLowerCase().includes(searchLower) ||
-        seguro.descripcion?.toLowerCase().includes(searchLower) ||
-        seguro.incluye?.toLowerCase().includes(searchLower)
-      );
+      let matches = true;
+
+      // Filtro por tipo
+      if (filters.tipo && seguro.tipo) {
+        matches = matches && seguro.tipo === filters.tipo;
+      }
+
+      // Filtro por destino (busca en destinos o descripción)
+      if (filters.destino) {
+        const destinoLower = filters.destino.toLowerCase();
+        matches = matches && (
+          seguro.destinos?.toLowerCase().includes(destinoLower) ||
+          seguro.descripcion?.toLowerCase().includes(destinoLower) ||
+          seguro.nombre?.toLowerCase().includes(destinoLower)
+        );
+      }
+
+      // Filtro por precio máximo
+      if (filters.precioMax && seguro.precio) {
+        matches = matches && parseFloat(seguro.precio) <= parseFloat(filters.precioMax);
+      }
+
+      return matches;
     });
 
     setSeguros(filtered);
@@ -68,15 +86,19 @@ export default function Seguros() {
   return (
     <div className="servicios-container">
       <h1 className="servicios-title">Seguros de Viaje</h1>
-      <SearchBox
-        onSearch={handleSearch}
-        placeholder="Buscar seguros por cobertura o destino..."
+      
+      <ModuleFilters 
+        module="seguros" 
+        onFiltersChange={handleFiltersChange}
       />
+
       <div className="servicios-grid">
         {seguros.length > 0 ? (
           seguros.map((seguro) => <SeguroCard key={seguro.id} item={seguro} />)
         ) : (
-          <p className="no-results">No hay seguros disponibles</p>
+          <p className="no-results">
+            No se encontraron seguros que coincidan con los filtros seleccionados
+          </p>
         )}
       </div>
     </div>

@@ -7,7 +7,6 @@ const {
   deleteSalidaGrupal,
 } = require("../controllers/salidasGrupales.controller");
 const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
-
 const router = express.Router();
 
 router.get("/", getSalidasGrupales);

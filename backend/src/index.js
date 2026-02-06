@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const path = require("path");
 const connectDB = require("./config/database");
 
 console.log("=".repeat(60));
@@ -32,6 +33,7 @@ const excursionesRoutes = require("./routes/excursiones.routes");
 const salidasGrupalesRoutes = require("./routes/salidasGrupales.routes");
 const segurosRoutes = require("./routes/seguros.routes");
 const transfersRoutes = require("./routes/transfers.routes");
+const trenesRoutes = require("./routes/trenes.routes");
 const clickStatsRoutes = require("./routes/clickStats.routes");
 const usersRoutes = require("./routes/users.routes");
 
@@ -87,23 +89,55 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-app.use(limiter);
+// app.use(limiter); // Comentado temporalmente para testing
 
-// Middlewares básicos
+// Middlewares básicos - CORS con soporte para múltiples orígenes
+/* CORS COMENTADO TEMPORALMENTE PARA TESTING
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://mercadoturismo.ar",
+  "https://www.mercadoturismo.ar",
+  process.env.FRONTEND_URL,
+].filter(Boolean); // Eliminar valores undefined
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  origin: function (origin, callback) {
+    // Permitir requests sin origin (como mobile apps o curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn(`⚠️  CORS: Origin no permitido: ${origin}`);
+      callback(null, true); // En producción, podrías cambiarlo a false para mayor seguridad
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+*/
+
+// CORS simple para testing - PERMITIR TODO
+app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Asegurar que todas las respuestas sean JSON
-app.use((req, res, next) => {
-  res.setHeader("Content-Type", "application/json");
-  next();
-});
+// Servir archivos estáticos (imágenes subidas) con CORS
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    res.header("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+  },
+  express.static(path.join(__dirname, "../uploads")),
+);
+console.log(`📁 Directorio de uploads: ${path.join(__dirname, "../uploads")}`);
 
 // Middleware de logging para todas las requests
 app.use((req, res, next) => {
@@ -117,6 +151,25 @@ app.use((req, res, next) => {
   }
   console.log(`${"=".repeat(60)}`);
   next();
+});
+
+// Middleware para forzar JSON en rutas de API (después de logging, antes de rutas)
+app.use("/api", (req, res, next) => {
+  res.setHeader("Content-Type", "application/json");
+  next();
+});
+
+// Health check endpoint (DEBE estar ANTES de las otras rutas)
+app.get("/api/health", (req, res) => {
+  res.json({
+    success: true,
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development",
+    database: "SQLite",
+    jwt: process.env.JWT_SECRET ? "Configurado" : "NO CONFIGURADO",
+    cors: process.env.FRONTEND_URL || "http://localhost:5173",
+  });
 });
 
 // Rutas - Con prefijo /api explícito (Passenger NO lo agrega automáticamente)
@@ -134,6 +187,7 @@ app.use("/api/excursiones", excursionesRoutes);
 app.use("/api/salidas-grupales", salidasGrupalesRoutes);
 app.use("/api/seguros", segurosRoutes);
 app.use("/api/transfers", transfersRoutes);
+app.use("/api/trenes", trenesRoutes);
 app.use("/api/stats", clickStatsRoutes);
 app.use("/api/users", usersRoutes);
 
@@ -161,6 +215,7 @@ app.get("/", (req, res) => {
 app.use((req, res) => {
   console.log(`⚠️  [404] Ruta no encontrada: ${req.method} ${req.path}`);
   res.status(404).json({
+    success: false,
     message: "Ruta no encontrada",
     path: req.path,
     method: req.method,
@@ -168,7 +223,7 @@ app.use((req, res) => {
   });
 });
 
-// Manejo de errores
+// Manejo de errores - SIEMPRE devolver JSON
 app.use((err, req, res, next) => {
   console.error("\n" + "❌".repeat(30));
   console.error("❌ ERROR EN EL SERVIDOR:");
@@ -178,39 +233,74 @@ app.use((err, req, res, next) => {
   console.error("📚 Stack:", err.stack);
   console.error("❌".repeat(30) + "\n");
 
+  // Asegurar que la respuesta sea JSON incluso en caso de error
+  res.setHeader("Content-Type", "application/json");
+
   res.status(err.status || 500).json({
-    message: "Error del servidor",
-    error: err.message,
+    success: false,
+    message: err.message || "Error del servidor",
+    error: process.env.NODE_ENV === "production" ? undefined : err.stack,
     path: req.path,
     timestamp: new Date().toISOString(),
   });
 });
 
-// Para Phusion Passenger (WNPower), el puerto lo asigna el sistema automáticamente
-// Si no hay PORT definido, usa 3001 para desarrollo local
-const server = app.listen(PORT, () => {
+// IMPORTANTE: Para Phusion Passenger (WNPower), NO llamar a app.listen()
+// Passenger maneja el puerto automáticamente
+// Solo escuchar en desarrollo local
+
+if (require.main === module) {
+  // Solo si se ejecuta directamente (desarrollo local)
+  const server = app.listen(PORT, () => {
+    console.log("\n" + "✅".repeat(30));
+    console.log("✅ SERVIDOR INICIADO CORRECTAMENTE (DESARROLLO)");
+    console.log("✅".repeat(30));
+    console.log(`🚀 Puerto: ${PORT}`);
+    console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
+    console.log(
+      `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
+    );
+    console.log(`🔗 API disponible en: http://localhost:${PORT}/api`);
+    console.log("✅".repeat(30) + "\n");
+  });
+
+  // Manejo de errores no capturados (solo en desarrollo)
+  process.on("uncaughtException", (error) => {
+    console.error("\n💥 UNCAUGHT EXCEPTION:", error);
+    console.error("Stack:", error.stack);
+    process.exit(1);
+  });
+
+  process.on("unhandledRejection", (reason, promise) => {
+    console.error("\n💥 UNHANDLED REJECTION:", reason);
+    console.error("Promise:", promise);
+  });
+} else {
+  // Ejecutándose bajo Passenger
   console.log("\n" + "✅".repeat(30));
-  console.log("✅ SERVIDOR INICIADO CORRECTAMENTE");
+  console.log("✅ APLICACIÓN CARGADA PARA PASSENGER");
   console.log("✅".repeat(30));
-  console.log(`🚀 Puerto: ${PORT}`);
   console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
   console.log(
     `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
   );
-  console.log(`🔗 API disponible en: http://localhost:${PORT}/api`);
+  console.log(
+    `🔒 JWT: ${process.env.JWT_SECRET ? "Configurado" : "NO CONFIGURADO"}`,
+  );
   console.log("✅".repeat(30) + "\n");
-});
 
-// Manejo de errores no capturados
-process.on("uncaughtException", (error) => {
-  console.error("\n💥 UNCAUGHT EXCEPTION:", error);
-  console.error("Stack:", error.stack);
-  process.exit(1);
-});
+  // En producción, loguear errores pero no matar el proceso
+  process.on("uncaughtException", (error) => {
+    console.error("\n💥 UNCAUGHT EXCEPTION (producción):", error);
+    console.error("Stack:", error.stack);
+    // NO llamar a process.exit() en producción
+  });
 
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("\n💥 UNHANDLED REJECTION:", reason);
-  console.error("Promise:", promise);
-});
+  process.on("unhandledRejection", (reason, promise) => {
+    console.error("\n💥 UNHANDLED REJECTION (producción):", reason);
+    console.error("Promise:", promise);
+  });
+}
 
+// CRÍTICO: Exportar la app para Passenger
 module.exports = app;

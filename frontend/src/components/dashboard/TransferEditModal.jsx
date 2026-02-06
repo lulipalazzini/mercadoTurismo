@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateTransfer } from "../../services/transfers.service";
 import AlertModal from "../common/AlertModal";
+import DragDropImageUpload from "../common/DragDropImageUpload";
+import { getImageUrls } from "../../utils/imageUtils";
 import "../../styles/modal.css";
 
 export default function TransferEditModal({
@@ -24,6 +26,8 @@ export default function TransferEditModal({
   const [submitting, setSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [imagenes, setImagenes] = useState([]);
+  const [imagenesExistentes, setImagenesExistentes] = useState([]);
 
   useEffect(() => {
     if (transfer) {
@@ -36,6 +40,19 @@ export default function TransferEditModal({
         precio: transfer.precio || "",
         duracionEstimada: transfer.duracionEstimada || "",
       });
+
+      // Cargar imágenes existentes
+      if (transfer.imagenes && Array.isArray(transfer.imagenes)) {
+        const imageUrls = getImageUrls(transfer.imagenes);
+        const existingImgs = imageUrls.map((url, index) => ({
+          preview: url,
+          name: `Imagen ${index + 1}`,
+          existing: true,
+          originalPath: transfer.imagenes[index],
+        }));
+        setImagenesExistentes(existingImgs);
+        setImagenes(existingImgs);
+      }
     }
   }, [transfer]);
 
@@ -68,7 +85,29 @@ export default function TransferEditModal({
 
     setSubmitting(true);
     try {
-      await updateTransfer(transfer.id, formData);
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach((key) => {
+        formDataToSend.append(key, formData[key]);
+      });
+
+      imagenes.forEach((imagen) => {
+        if (imagen.file instanceof File) {
+          formDataToSend.append("imagenes", imagen.file);
+        }
+      });
+
+      const imagenesAMantener = imagenes
+        .filter((img) => img.existing && img.originalPath)
+        .map((img) => img.originalPath);
+
+      if (imagenesAMantener.length > 0) {
+        formDataToSend.append(
+          "imagenesExistentes",
+          JSON.stringify(imagenesAMantener),
+        );
+      }
+
+      await updateTransfer(transfer.id, formDataToSend);
       onSuccess();
       handleClose();
     } catch (error) {
@@ -224,6 +263,17 @@ export default function TransferEditModal({
                   onChange={handleChange}
                   min="0"
                   step="0.01"
+                />
+              </div>
+
+              {/* Imágenes */}
+              <div className="form-group full-width">
+                <label>Imágenes</label>
+                <DragDropImageUpload
+                  onChange={setImagenes}
+                  maxFiles={6}
+                  maxSizeMB={5}
+                  existingImages={imagenesExistentes}
                 />
               </div>
             </div>

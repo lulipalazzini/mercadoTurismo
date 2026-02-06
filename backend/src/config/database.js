@@ -26,7 +26,14 @@ const connectDB = async () => {
     console.error(`   Mensaje: ${error.message}`);
     console.error(`   Stack: ${error.stack}`);
     console.error("❌".repeat(30) + "\n");
-    process.exit(1);
+
+    // En producción, NO matar el proceso - dejar que Passenger lo maneje
+    if (process.env.NODE_ENV !== "production") {
+      process.exit(1);
+    } else {
+      // En producción, lanzar error pero no exit
+      throw error;
+    }
   }
 };
 

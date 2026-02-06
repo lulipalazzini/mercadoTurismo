@@ -1,20 +1,40 @@
 const Excursion = require("../models/Excursion.model");
 const User = require("../models/User.model");
+const { shouldFilterByOwnership } = require("../middleware/rolePermissions");
+const {
+  parseItemsJsonFields,
+  parseItemJsonFields,
+  parseRequestJsonFields,
+} = require("../utils/parseJsonFields");
+
+const JSON_FIELDS = ["imagenes"];
 
 const getExcursiones = async (req, res) => {
   try {
+    const whereClause = { activo: true };
+
+    // Aplicar filtro de ownership para usuarios B2B
+    if (req.user && shouldFilterByOwnership(req.user, "excursiones")) {
+      whereClause.userId = req.user.id;
+      console.log(`🔒 Filtrando excursiones del usuario: ${req.user.id}`);
+    }
+
+    // Usuarios no autenticados pueden ver TODAS las excursiones
+    // (No se aplica filtro isPublic para B2C)
+
     const excursiones = await Excursion.findAll({
-      where: { activo: true },
+      where: whereClause,
       order: [["createdAt", "DESC"]],
       include: [
         {
           model: User,
           as: "vendedor",
-          attributes: ["id", "nombre", "email", "razonSocial", "role"],
+          attributes: ["id", "nombre", "email", "razonSocial", "role", "calculatedRole", "isVisibleToPassengers"],
         },
       ],
     });
-    res.json(excursiones);
+    const parsedExcursiones = parseItemsJsonFields(excursiones, JSON_FIELDS);
+    res.json(parsedExcursiones);
   } catch (error) {
     res
       .status(500)
@@ -28,7 +48,8 @@ const getExcursion = async (req, res) => {
     if (!excursion) {
       return res.status(404).json({ message: "Excursion no encontrada" });
     }
-    res.json(excursion);
+    const parsedExcursion = parseItemJsonFields(excursion, JSON_FIELDS);
+    res.json(parsedExcursion);
   } catch (error) {
     res
       .status(500)
@@ -38,10 +59,26 @@ const getExcursion = async (req, res) => {
 
 const createExcursion = async (req, res) => {
   try {
-    const excursion = await Excursion.create(req.body);
+    const excursionData = { ...req.body };
+    Object.assign(excursionData, parseRequestJsonFields(req.body, JSON_FIELDS));
+
+    if (req.uploadedImages && req.uploadedImages.length > 0) {
+      excursionData.imagenes = req.uploadedImages.map((img) => img.path);
+    }
+
+    // Asignar owner (userId) automáticamente
+    if (req.user) {
+      excursionData.userId = req.user.id;
+    }
+
+    const excursion = await Excursion.create(excursionData);
+    const parsedExcursion = parseItemJsonFields(excursion, JSON_FIELDS);
     res
       .status(201)
-      .json({ message: "Excursion creada exitosamente", excursion });
+      .json({
+        message: "Excursion creada exitosamente",
+        excursion: parsedExcursion,
+      });
   } catch (error) {
     res
       .status(500)
@@ -55,8 +92,41 @@ const updateExcursion = async (req, res) => {
     if (!excursion) {
       return res.status(404).json({ message: "Excursion no encontrada" });
     }
-    await excursion.update(req.body);
-    res.json({ message: "Excursion actualizada exitosamente", excursion });
+
+    const updateData = { ...req.body };
+    Object.assign(updateData, parseRequestJsonFields(req.body, JSON_FIELDS));
+
+    // Manejar imágenes
+    if (req.uploadedImages && req.uploadedImages.length > 0) {
+      const nuevasImagenes = req.uploadedImages.map((img) => img.path);
+      if (req.body.imagenesExistentes) {
+        try {
+          const existentes =
+            typeof req.body.imagenesExistentes === "string"
+              ? JSON.parse(req.body.imagenesExistentes)
+              : req.body.imagenesExistentes;
+          updateData.imagenes = [...existentes, ...nuevasImagenes];
+        } catch (e) {
+          updateData.imagenes = nuevasImagenes;
+        }
+      } else {
+        updateData.imagenes = nuevasImagenes;
+      }
+    } else if (req.body.imagenesExistentes) {
+      try {
+        updateData.imagenes =
+          typeof req.body.imagenesExistentes === "string"
+            ? JSON.parse(req.body.imagenesExistentes)
+            : req.body.imagenesExistentes;
+      } catch (e) {}
+    }
+
+    await excursion.update(updateData);
+    const parsedExcursion = parseItemJsonFields(excursion, JSON_FIELDS);
+    res.json({
+      message: "Excursion actualizada exitosamente",
+      excursion: parsedExcursion,
+    });
   } catch (error) {
     res
       .status(500)
@@ -79,11 +149,10 @@ const deleteExcursion = async (req, res) => {
   }
 };
 
-
 module.exports = {
   getExcursiones,
   getExcursion,
   createExcursion,
   updateExcursion,
-  deleteExcursion
+  deleteExcursion,
 };

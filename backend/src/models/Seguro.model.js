@@ -95,6 +95,11 @@ const Seguro = sequelize.define(
       type: DataTypes.STRING,
       comment: "Número o referencia de póliza",
     },
+    imagenes: {
+      type: DataTypes.JSON,
+      defaultValue: [],
+      comment: "Array de URLs de imágenes del seguro",
+    },
     vendedorId: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -103,6 +108,15 @@ const Seguro = sequelize.define(
         key: "id",
       },
       comment: "ID del vendedor que publicó este seguro",
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      comment: "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
     },
     activo: {
       type: DataTypes.BOOLEAN,
