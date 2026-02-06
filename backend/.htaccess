@@ -2,10 +2,11 @@
 PassengerEnabled On
 PassengerAppType node
 PassengerStartupFile app.js
+PassengerAppRoot /home/mercadoturismo/backend
 
 # Variables de entorno (ajusta estos valores según tu servidor)
 SetEnv NODE_ENV production
-SetEnv PORT 3001
+# NO especificar PORT - Passenger lo asigna automáticamente
 
 # Headers de seguridad y CORS
 <IfModule mod_headers.c>
@@ -17,6 +18,16 @@ SetEnv PORT 3001
     Header set X-XSS-Protection "1; mode=block"
 </IfModule>
 
-# Logging
-ErrorLog logs/error_log
-CustomLog logs/access_log combined
+# Logging para debug
+PassengerLogLevel 3
+
+# Proteger archivos sensibles
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Comprimir respuestas
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
