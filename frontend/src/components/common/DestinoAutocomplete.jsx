@@ -9,6 +9,7 @@ export default function DestinoAutocomplete({
   placeholder = "Ingresa un destino...",
   error,
   required = false,
+  hideLabel = false,
 }) {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -124,10 +125,12 @@ export default function DestinoAutocomplete({
 
   return (
     <div className="form-group" ref={containerRef}>
-      <label htmlFor={name}>
-        {label}
-        {required && <span className="required">*</span>}
-      </label>
+      {!hideLabel && label && (
+        <label htmlFor={name}>
+          {label}
+          {required && <span className="required">*</span>}
+        </label>
+      )}
       <div className="autocomplete-container">
         <input
           type="text"

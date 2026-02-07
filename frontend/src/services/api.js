@@ -1,7 +1,5 @@
 import { getToken, removeToken } from "./auth.service";
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+import { API_URL as API_BASE_URL } from '../config/api.config.js';
 
 // Función helper para hacer peticiones con token
 export const fetchWithAuth = async (url, options = {}) => {

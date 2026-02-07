@@ -7,6 +7,7 @@ import {
   FaClock,
   FaExclamationCircle,
 } from "react-icons/fa";
+import { API_URL } from '../../config/api.config.js';
 import "../../styles/dashboard.css";
 
 export default function FacturacionAnotador() {
@@ -28,7 +29,7 @@ export default function FacturacionAnotador() {
     try {
       setLoading(true);
       const response = await fetch(
-        "http://localhost:3000/api/facturacion-anotador",
+        `${API_URL}/facturacion-anotador`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -258,8 +259,8 @@ function FacturaModal({ isOpen, onClose, onSave, editingItem }) {
 
     try {
       const url = editingItem
-        ? `http://localhost:3000/api/facturacion-anotador/${editingItem.id}`
-        : "http://localhost:3000/api/facturacion-anotador";
+        ? `${API_URL}/facturacion-anotador/${editingItem.id}`
+        : `${API_URL}/facturacion-anotador`;
 
       const response = await fetch(url, {
         method: editingItem ? "PUT" : "POST",

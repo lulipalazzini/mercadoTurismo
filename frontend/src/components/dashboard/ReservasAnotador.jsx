@@ -7,6 +7,7 @@ import {
   FaTimesCircle,
   FaClock,
 } from "react-icons/fa";
+import { API_URL } from '../../config/api.config.js';
 import "../../styles/dashboard.css";
 
 export default function ReservasAnotador() {
@@ -28,7 +29,7 @@ export default function ReservasAnotador() {
     try {
       setLoading(true);
       const response = await fetch(
-        "http://localhost:3000/api/reservas-anotador",
+        `${API_URL}/reservas-anotador`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -258,8 +259,8 @@ function ReservaModal({ isOpen, onClose, onSave, editingItem }) {
 
     try {
       const url = editingItem
-        ? `http://localhost:3000/api/reservas-anotador/${editingItem.id}`
-        : "http://localhost:3000/api/reservas-anotador";
+        ? `${API_URL}/reservas-anotador/${editingItem.id}`
+        : `${API_URL}/reservas-anotador`;
 
       const response = await fetch(url, {
         method: editingItem ? "PUT" : "POST",

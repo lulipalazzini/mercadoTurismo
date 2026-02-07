@@ -73,12 +73,30 @@
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.25rem;
   margin-bottom: 1.5rem;
+  transition: all 0.3s ease-out;
 }
 
 .search-field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+/* Transiciones suaves para campos dinámicos */
+.search-field-animated {
+  animation: slideIn 0.3s ease-out forwards;
+  transform-origin: top;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .search-field-full {
@@ -98,6 +116,14 @@
 .search-field label svg {
   color: var(--primary);
   flex-shrink: 0;
+}
+
+.search-field label i {
+  color: var(--primary);
+  flex-shrink: 0;
+  font-size: 1rem;
+  width: 18px;
+  text-align: center;
 }
 
 .search-field input,
@@ -121,6 +147,44 @@
 
 .search-field input::placeholder {
   color: var(--text-muted);
+}
+
+/* Search Type Input (select) - Estilos especiales */
+.search-type-input {
+  padding: 0.875rem 2.5rem 0.875rem 1rem;
+  border: 2px solid var(--primary);
+  background: white;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232464eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+}
+
+.search-type-input:hover {
+  border-color: var(--primary-dark);
+  box-shadow: 0 2px 8px rgba(36, 100, 235, 0.15);
+}
+
+.search-type-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(36, 100, 235, 0.15);
+}
+
+/* Ajuste para DestinoAutocomplete dentro de search-field */
+.search-field .form-group {
+  margin: 0;
+}
+
+.search-field .form-group .autocomplete-container {
+  width: 100%;
+}
+
+.search-field .form-group input {
+  width: 100%;
 }
 
 .search-submit-btn {
@@ -153,6 +217,11 @@
 
 .search-submit-btn svg {
   flex-shrink: 0;
+}
+
+.search-submit-btn i {
+  flex-shrink: 0;
+  font-size: 1.125rem;
 }
 
 /* Responsive */

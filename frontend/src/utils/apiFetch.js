@@ -3,7 +3,7 @@
  * Reemplaza axios con fetch nativo del navegador
  */
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+import { API_URL } from '../config/api.config.js';
 
 /**
  * Realizar una petición HTTP usando fetch con manejo de autenticación y errores

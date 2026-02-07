@@ -9,6 +9,7 @@ import {
   FaDownload,
 } from "react-icons/fa";
 import * as XLSX from "xlsx";
+import { API_URL } from '../../config/api.config.js';
 import "../../styles/modal.css";
 
 export default function ImportarCuposModal({
@@ -164,7 +165,7 @@ export default function ImportarCuposModal({
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/cupos-mercado/importar",
+        `${API_URL}/cupos-mercado/importar`,
         {
           method: "POST",
           headers: {

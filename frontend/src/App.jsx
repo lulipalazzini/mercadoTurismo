@@ -9,6 +9,7 @@ import Navbar from "./components/Navbar";
 import GlobalSearch from "./components/GlobalSearch";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
+import HomeMarketplace from "./components/HomeMarketplace";
 import Login from "./components/Login";
 import RegisterB2BWizard from "./components/RegisterB2BWizard";
 import RecoverPassword from "./components/RecoverPassword";
@@ -42,7 +43,8 @@ function AppContent() {
       {!hideNavbar && <Navbar />}
       {showGlobalSearch && <GlobalSearch />}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomeMarketplace />} />
+        <Route path="/home-old" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<RegisterB2BWizard />} />
         <Route path="/recuperar-contrasena" element={<RecoverPassword />} />

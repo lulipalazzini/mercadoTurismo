@@ -1,5 +1,5 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
+import { API_URL as API_BASE_URL } from '../config/api.config.js';
+
 const API_URL = `${API_BASE_URL}/auth`;
 
 // Guardar token en localStorage
