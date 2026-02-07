@@ -29,7 +29,6 @@ export default function HeroMarketplace() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Navegar a página de resultados con los parámetros
     const params = new URLSearchParams();
     if (searchForm.origin) params.append('origin', searchForm.origin);
     if (searchForm.destination) params.append('destination', searchForm.destination);
@@ -41,14 +40,14 @@ export default function HeroMarketplace() {
 
   return (
     <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-sky-50">
-      {/* Imagen de fondo con overlay */}
+      {/* Imagen de fondo con overlay de baja opacidad para mayor nitidez */}
       <div className="absolute inset-0 z-0">
         <img 
           src={heroImage} 
           alt="Destinos turísticos" 
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover opacity-40"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/80 to-white"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/40 to-white/60"></div>
       </div>
 
       {/* Contenido principal */}
@@ -79,11 +78,10 @@ export default function HeroMarketplace() {
           </p>
         </div>
 
-        {/* Buscador Card */}
-        <div className="max-w-5xl mx-auto">
+        {/* Formulario de búsqueda */}
+        <div className="max-w-5xl mx-auto mb-12">
           <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100">
             <form onSubmit={handleSearch} className="space-y-6">
-              {/* Grid de inputs */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* Origen */}
                 <div className="space-y-2">
@@ -183,7 +181,6 @@ export default function HeroMarketplace() {
                 </div>
               </div>
 
-              {/* Texto helper */}
               <p className="text-sm text-gray-500 text-center">
                 Compará precios y servicios de diferentes agencias de viaje en un solo lugar
               </p>

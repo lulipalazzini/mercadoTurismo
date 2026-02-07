@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import SearchBar from "./SearchBar";
 import "../styles/navbar.css";
 import logo from "../assets/logo/MT_marca_01.webp";
 
@@ -7,6 +8,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   const isActive = (path) => location.pathname === path;
 
@@ -19,6 +21,13 @@ export default function Navbar() {
         <Link to="/" className="brand">
           <img src={logo} alt="Mercado Turismo" style={{ height: "40px" }} />
         </Link>
+
+        {/* Barra de búsqueda inline - Solo visible en home */}
+        {isHomePage && (
+          <div className="navbar-search">
+            <SearchBar compact={true} />
+          </div>
+        )}
 
         <button
           className="nav-toggle"

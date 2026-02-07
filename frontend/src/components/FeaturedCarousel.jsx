@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 // Importar imágenes
 import paisaje01 from "../assets/img/paisaje_01.png";
+import backgroundImage from "../assets/img/paisaje_02.png";
 import paisaje02 from "../assets/img/paisaje_02.png";
 import paisaje03 from "../assets/img/paisaje_03.png";
 import paisaje04 from "../assets/img/paisaje_04.png";
@@ -150,8 +151,18 @@ export default function FeaturedCarousel() {
   const visibleCards = getVisibleCards();
 
   return (
-    <section className="py-16 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-16 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-sky-50">
+      {/* Imagen de fondo con overlay */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src={backgroundImage} 
+          alt="Fondo destinos turísticos" 
+          className="w-full h-full object-cover opacity-40"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/70 to-white/80"></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-10">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
