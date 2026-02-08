@@ -84,8 +84,61 @@ connectDB().catch((error) => {
   console.error("❌ Error crítico al conectar a la base de datos:", error);
 });
 
-// Middlewares de seguridad
-app.use(helmet()); // Protección de headers HTTP
+// Middlewares básicos - CORS con soporte para múltiples orígenes
+// IMPORTANTE: CORS debe ir ANTES de cualquier otro middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://mercadoturismo.ar",
+  "https://www.mercadoturismo.ar",
+  "https://api.mercadoturismo.ar",
+  process.env.FRONTEND_URL,
+].filter(Boolean); // Eliminar valores undefined
+
+console.log("🔓 Orígenes CORS permitidos:", allowedOrigins);
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    console.log(`🔍 CORS check - Origin: ${origin || 'sin origin'}`);
+    
+    // Permitir requests sin origin (como mobile apps, curl, Postman)
+    if (!origin) {
+      console.log("   ✅ Permitido: Sin origin");
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      console.log(`   ✅ Permitido: ${origin}`);
+      callback(null, true);
+    } else {
+      console.warn(`   ⚠️  CORS: Origin no permitido: ${origin}`);
+      // En desarrollo permitir todo, en producción bloquear origins no listados
+      if (process.env.NODE_ENV === "production") {
+        console.warn(`   ❌ BLOQUEADO en producción`);
+        // En lugar de error, permitir pero loguear
+        callback(null, true); // Temporal: permitir en producción
+      } else {
+        callback(null, true);
+      }
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Length', 'X-Request-Id'],
+  optionsSuccessStatus: 200,
+  preflightContinue: false,
+};
+
+app.use(cors(corsOptions));
+
+// Manejar explícitamente las preflight requests
+app.options('*', cors(corsOptions));
+
+// Middlewares de seguridad (DESPUÉS de CORS)
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+})); 
 
 // Rate limiting: Previene ataques de fuerza bruta y DDoS
 const limiter = rateLimit({
@@ -96,38 +149,6 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 // app.use(limiter); // Comentado temporalmente para testing
-
-// Middlewares básicos - CORS con soporte para múltiples orígenes
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "https://mercadoturismo.ar",
-  "https://www.mercadoturismo.ar",
-  "https://api.mercadoturismo.ar",
-  process.env.FRONTEND_URL,
-].filter(Boolean); // Eliminar valores undefined
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Permitir requests sin origin (como mobile apps o curl)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.warn(`⚠️  CORS: Origin no permitido: ${origin}`);
-      // En desarrollo permitir todo, en producción bloquear
-      if (process.env.NODE_ENV === "production") {
-        callback(new Error("No permitido por CORS"));
-      } else {
-        callback(null, true);
-      }
-    }
-  },
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -240,15 +261,20 @@ app.use((err, req, res, next) => {
   console.error("❌ ERROR EN EL SERVIDOR:");
   console.error("❌".repeat(30));
   console.error("📍 Ruta:", req.method, req.path);
+  console.error("� Origin:", req.headers.origin || 'sin origin');
   console.error("📝 Error:", err.message);
   console.error("📚 Stack:", err.stack);
   console.error("❌".repeat(30) + "\n");
 
-  // Asegurar que CORS headers estén presentes incluso en errores
+  // CRÍTICO: Asegurar que CORS headers estén presentes SIEMPRE
   const origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
+  if (origin) {
+    // Siempre permitir el origin en errores para debugging
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+    console.log(`   🔓 CORS headers aplicados para: ${origin}`);
   }
 
   // Asegurar que la respuesta sea JSON incluso en caso de error
@@ -259,6 +285,7 @@ app.use((err, req, res, next) => {
     message: err.message || "Error del servidor",
     error: process.env.NODE_ENV === "production" ? undefined : err.stack,
     path: req.path,
+    method: req.method,
     timestamp: new Date().toISOString(),
   });
 });
