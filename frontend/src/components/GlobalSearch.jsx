@@ -9,10 +9,8 @@ import ExcursionCard from "./ExcursionCard";
 import SalidaGrupalCard from "./SalidaGrupalCard";
 import CruceroCard from "./CruceroCard";
 import SeguroCard from "./SeguroCard";
+import { API_URL as API_BASE_URL } from '../config/api.config.js';
 import "../styles/globalSearch.css";
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
 
 export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false);

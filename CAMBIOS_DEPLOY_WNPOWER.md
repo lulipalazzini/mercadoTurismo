@@ -3,6 +3,7 @@
 ## 📅 Fecha: 6 de Febrero, 2026
 
 ## 🎯 Objetivo
+
 Configurar el proyecto para deploy en WNPower usando Node.js + Passenger, eliminando la necesidad de especificar puerto manualmente.
 
 ## 🔧 Cambios Realizados
@@ -10,6 +11,7 @@ Configurar el proyecto para deploy en WNPower usando Node.js + Passenger, elimin
 ### 1. Backend
 
 #### `.htaccess` actualizado
+
 - ✅ Eliminada la línea `SetEnv PORT 3001` (Passenger asigna puerto automáticamente)
 - ✅ Agregado `PassengerAppRoot` con ruta del servidor
 - ✅ Configurado `PassengerLogLevel 3` para debug
@@ -17,35 +19,42 @@ Configurar el proyecto para deploy en WNPower usando Node.js + Passenger, elimin
 - ✅ Configurada compresión con mod_deflate
 
 #### `.env` actualizado
+
 - ✅ Comentado el `PORT` para producción
 - ✅ Documentado que PORT solo es para desarrollo local
 - ✅ Configurado FRONTEND_URL para desarrollo
 
-#### `.env.example` actualizado  
+#### `.env.example` actualizado
+
 - ✅ Agregada documentación clara sobre PORT
 - ✅ Agregadas instrucciones para generar JWT_SECRET seguro
 - ✅ Sección de configuración de producción bien documentada
 
 #### `.env.production` creado
+
 - ✅ Template para configuración de producción
 - ✅ Sin PORT especificado (correcto para Passenger)
 - ✅ Variables de entorno para WNPower
 
 #### `app.js` (sin cambios)
+
 - ✅ Ya estaba correctamente configurado para Passenger
 - ✅ Exporta la app sin hacer listen()
 
 #### `src/index.js` (sin cambios)
+
 - ✅ Ya detecta correctamente si corre bajo Passenger
 - ✅ Solo hace listen() si se ejecuta directamente (desarrollo)
 
 ### 2. Frontend
 
 #### `.env.production` actualizado
+
 - ✅ Corregida variable de `VITE_API_BASE_URL` a `VITE_API_URL` (consistencia)
 - ✅ URL apunta a `https://mercadoturismo.ar/api`
 
 #### `.htaccess` actualizado
+
 - ✅ Mantenida regla para no tocar peticiones a `/api/`
 - ✅ Agregados headers de seguridad (X-Content-Type-Options, X-Frame-Options, etc.)
 - ✅ Configurada compresión gzip
@@ -56,6 +65,7 @@ Configurar el proyecto para deploy en WNPower usando Node.js + Passenger, elimin
 ### 3. Documentación
 
 #### `DEPLOY_WNPOWER.md` creado
+
 - ✅ Guía completa paso a paso para deploy
 - ✅ Requisitos previos
 - ✅ Configuración de backend
@@ -65,6 +75,7 @@ Configurar el proyecto para deploy en WNPower usando Node.js + Passenger, elimin
 - ✅ Consideraciones de seguridad
 
 #### `prepare-deploy.sh` creado
+
 - ✅ Script bash para preparar archivos para deploy
 - ✅ Instala dependencias
 - ✅ Build del frontend
@@ -135,11 +146,13 @@ Ver instrucciones detalladas en [DEPLOY_WNPOWER.md](DEPLOY_WNPOWER.md)
 **IMPORTANTE antes de subir a producción:**
 
 1. **Generar JWT_SECRET seguro:**
+
    ```bash
    node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
    ```
 
 2. **Verificar permisos en servidor:**
+
    ```bash
    chmod 644 .env .htaccess
    chmod 755 uploads/

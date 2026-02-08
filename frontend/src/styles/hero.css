@@ -129,14 +129,22 @@
 }
 
 .hero-content h1 {
-  font-size: clamp(2rem, 5vw, 3.25rem);
-  font-weight: 700;
-  margin: 0 0 1rem;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+  font-size: clamp(2.75rem, 7vw, 4.5rem);
+  font-weight: 800;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   color: var(--primary);
+  background: linear-gradient(135deg, #1a56db 0%, #2464eb 50%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 10px rgba(36, 100, 235, 0.2);
   animation: fadeIn 1s ease-out 0.3s forwards;
   opacity: 0;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @keyframes fadeIn {

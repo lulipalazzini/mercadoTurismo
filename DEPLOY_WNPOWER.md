@@ -11,6 +11,7 @@
 ### 1. Subir archivos al servidor
 
 Subir la carpeta `backend/` completa al directorio del hosting:
+
 ```
 /home/mercadoturismo/backend/
 ```
@@ -33,6 +34,7 @@ nano .env
 ```
 
 Contenido del `.env`:
+
 ```env
 # JWT Secret (cambiar por uno seguro)
 JWT_SECRET=tu_secreto_jwt_muy_seguro_cambiar_aqui
@@ -101,6 +103,7 @@ Subir el contenido de `frontend/dist/` al directorio raíz del dominio:
 ```
 
 **Estructura esperada:**
+
 ```
 /home/mercadoturismo/
 ├── backend/          # Backend Node.js
@@ -188,6 +191,7 @@ touch tmp/restart.txt  # Reiniciar Passenger
 ### Frontend:
 
 En local:
+
 ```bash
 cd frontend
 npm run build
@@ -200,11 +204,13 @@ Luego subir el contenido de `dist/` al servidor, reemplazando archivos existente
 ### La API no responde
 
 1. Verificar que Passenger está habilitado:
+
    ```bash
    cat /home/mercadoturismo/backend/.htaccess
    ```
 
 2. Verificar logs:
+
    ```bash
    tail -f /home/mercadoturismo/backend/log/passenger.log
    ```
@@ -218,6 +224,7 @@ Luego subir el contenido de `dist/` al servidor, reemplazando archivos existente
 ### Error CORS
 
 Verificar que `.env` tiene:
+
 ```
 FRONTEND_URL=https://mercadoturismo.ar
 ```

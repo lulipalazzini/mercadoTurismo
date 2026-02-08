@@ -2,11 +2,7 @@
  * Helper para construir URLs de imágenes desde el backend
  */
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
-
-// Obtener base URL sin /api
-const BASE_URL = API_BASE_URL.replace("/api", "");
+import { BASE_URL } from '../config/api.config.js';
 
 /**
  * Convierte una ruta de imagen relativa a URL completa
