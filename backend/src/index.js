@@ -78,6 +78,12 @@ console.log(
   `   FRONTEND_URL: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
 );
 
+// Conectar a la base de datos (inicia en background para Passenger)
+console.log("\n🔌 Conectando a la base de datos...");
+connectDB().catch((error) => {
+  console.error("❌ Error crítico al conectar a la base de datos:", error);
+});
+
 // Middlewares de seguridad
 app.use(helmet()); // Protección de headers HTTP
 
@@ -253,77 +259,58 @@ app.use((err, req, res, next) => {
 // Passenger maneja el puerto automáticamente
 // Solo escuchar en desarrollo local
 
-// Función async para inicializar la app con la BD
-const initializeApp = async () => {
-  try {
-    // Conectar a la base de datos ANTES de manejar requests
-    console.log("\n🔌 Conectando a la base de datos...");
-    await connectDB();
-    console.log("✅ Base de datos lista\n");
+if (require.main === module) {
+  // Solo si se ejecuta directamente (desarrollo local)
+  const server = app.listen(PORT, () => {
+    console.log("\n" + "✅".repeat(30));
+    console.log("✅ SERVIDOR INICIADO CORRECTAMENTE (DESARROLLO)");
+    console.log("✅".repeat(30));
+    console.log(`🚀 Puerto: ${PORT}`);
+    console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
+    console.log(
+      `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
+    );
+    console.log(`🔗 API disponible en: http://localhost:${PORT}/api`);
+    console.log("✅".repeat(30) + "\n");
+  });
 
-    if (require.main === module) {
-      // Solo si se ejecuta directamente (desarrollo local)
-      const server = app.listen(PORT, () => {
-        console.log("\n" + "✅".repeat(30));
-        console.log("✅ SERVIDOR INICIADO CORRECTAMENTE (DESARROLLO)");
-        console.log("✅".repeat(30));
-        console.log(`🚀 Puerto: ${PORT}`);
-        console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
-        console.log(
-          `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
-        );
-        console.log(`🔗 API disponible en: http://localhost:${PORT}/api`);
-        console.log("✅".repeat(30) + "\n");
-      });
+  // Manejo de errores no capturados (solo en desarrollo)
+  process.on("uncaughtException", (error) => {
+    console.error("\n💥 UNCAUGHT EXCEPTION:", error);
+    console.error("Stack:", error.stack);
+    process.exit(1);
+  });
 
-      // Manejo de errores no capturados (solo en desarrollo)
-      process.on("uncaughtException", (error) => {
-        console.error("\n💥 UNCAUGHT EXCEPTION:", error);
-        console.error("Stack:", error.stack);
-        process.exit(1);
-      });
+  process.on("unhandledRejection", (reason, promise) => {
+    console.error("\n💥 UNHANDLED REJECTION:", reason);
+    console.error("Promise:", promise);
+  });
+} else {
+  // Ejecutándose bajo Passenger
+  console.log("\n" + "✅".repeat(30));
+  console.log("✅ APLICACIÓN CARGADA PARA PASSENGER");
+  console.log("✅".repeat(30));
+  console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
+  console.log(
+    `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
+  );
+  console.log(
+    `🔒 JWT: ${process.env.JWT_SECRET ? "Configurado" : "NO CONFIGURADO"}`,
+  );
+  console.log("✅".repeat(30) + "\n");
 
-      process.on("unhandledRejection", (reason, promise) => {
-        console.error("\n💥 UNHANDLED REJECTION:", reason);
-        console.error("Promise:", promise);
-      });
-    } else {
-      // Ejecutándose bajo Passenger
-      console.log("\n" + "✅".repeat(30));
-      console.log("✅ APLICACIÓN CARGADA PARA PASSENGER");
-      console.log("✅".repeat(30));
-      console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
-      console.log(
-        `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
-      );
-      console.log(
-        `🔒 JWT: ${process.env.JWT_SECRET ? "Configurado" : "NO CONFIGURADO"}`,
-      );
-      console.log("✅".repeat(30) + "\n");
+  // En producción, loguear errores pero no matar el proceso
+  process.on("uncaughtException", (error) => {
+    console.error("\n💥 UNCAUGHT EXCEPTION (producción):", error);
+    console.error("Stack:", error.stack);
+    // NO llamar a process.exit() en producción
+  });
 
-      // En producción, loguear errores pero no matar el proceso
-      process.on("uncaughtException", (error) => {
-        console.error("\n💥 UNCAUGHT EXCEPTION (producción):", error);
-        console.error("Stack:", error.stack);
-        // NO llamar a process.exit() en producción
-      });
-
-      process.on("unhandledRejection", (reason, promise) => {
-        console.error("\n💥 UNHANDLED REJECTION (producción):", reason);
-        console.error("Promise:", promise);
-      });
-    }
-  } catch (error) {
-    console.error("\n❌ ERROR FATAL AL INICIALIZAR LA APLICACIÓN:");
-    console.error(error);
-    if (process.env.NODE_ENV !== "production") {
-      process.exit(1);
-    }
-  }
-};
-
-// Inicializar la aplicación
-initializeApp();
+  process.on("unhandledRejection", (reason, promise) => {
+    console.error("\n💥 UNHANDLED REJECTION (producción):", reason);
+    console.error("Promise:", promise);
+  });
+}
 
 // CRÍTICO: Exportar la app para Passenger
 module.exports = app;
