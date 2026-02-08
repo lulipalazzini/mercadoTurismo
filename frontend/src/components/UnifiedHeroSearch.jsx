@@ -28,27 +28,31 @@ export default function UnifiedHeroSearch() {
     const loadTiposServicios = async () => {
       try {
         setLoadingTypes(true);
-        const response = await fetch(`${API_URL}/publicaciones-destacadas/tipos-servicios`);
-        
+        const response = await fetch(
+          `${API_URL}/publicaciones-destacadas/tipos-servicios`,
+        );
+
         if (!response.ok) {
           throw new Error("Error al cargar tipos de servicios");
         }
 
         const data = await response.json();
-        
+
         // Mapear los tipos de la API al formato esperado
-        const tiposFormateados = data.tipos.map(tipo => ({
+        const tiposFormateados = data.tipos.map((tipo) => ({
           id: tipo.id,
           label: tipo.label,
           route: tipo.route,
           count: tipo.count,
-          available: tipo.available
+          available: tipo.available,
         }));
 
         setSearchTypes(tiposFormateados);
-        
+
         // Si el tipo actual no está disponible, seleccionar el primero disponible
-        const tipoActualDisponible = tiposFormateados.find(t => t.id === searchType);
+        const tipoActualDisponible = tiposFormateados.find(
+          (t) => t.id === searchType,
+        );
         if (!tipoActualDisponible && tiposFormateados.length > 0) {
           setSearchType(tiposFormateados[0].id);
         }
@@ -56,9 +60,24 @@ export default function UnifiedHeroSearch() {
         console.error("Error loading service types:", error);
         // Fallback a tipos por defecto en caso de error
         setSearchTypes([
-          { id: "paquetes", label: "Paquetes", route: "/paquetes", available: true },
-          { id: "alojamientos", label: "Alojamientos", route: "/alojamientos", available: true },
-          { id: "cruceros", label: "Cruceros", route: "/cruceros", available: true },
+          {
+            id: "paquetes",
+            label: "Paquetes",
+            route: "/paquetes",
+            available: true,
+          },
+          {
+            id: "alojamientos",
+            label: "Alojamientos",
+            route: "/alojamientos",
+            available: true,
+          },
+          {
+            id: "cruceros",
+            label: "Cruceros",
+            route: "/cruceros",
+            available: true,
+          },
         ]);
       } finally {
         setLoadingTypes(false);

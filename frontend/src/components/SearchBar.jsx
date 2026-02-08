@@ -11,7 +11,7 @@ import SalidaGrupalCard from "./SalidaGrupalCard";
 import CruceroCard from "./CruceroCard";
 import SeguroCard from "./SeguroCard";
 import DestinoAutocomplete from "./common/DestinoAutocomplete";
-import { API_URL as API_BASE_URL } from '../config/api.config.js';
+import { API_URL as API_BASE_URL } from "../config/api.config.js";
 
 export default function SearchBar({ compact = false }) {
   const navigate = useNavigate();
@@ -84,15 +84,20 @@ export default function SearchBar({ compact = false }) {
   // Cerrar popup al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target) && 
-          inputRef.current && !inputRef.current.contains(event.target)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target) &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target)
+      ) {
         handleCloseGlobalSearch();
       }
     };
 
     if (isGlobalSearchOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isGlobalSearchOpen]);
 
@@ -101,104 +106,110 @@ export default function SearchBar({ compact = false }) {
     return String(text).toLowerCase().includes(term.toLowerCase());
   }, []);
 
-  const performGlobalSearch = useCallback((term) => {
-    if (!term.trim() || !allData) {
-      setGlobalResults({
-        alojamientos: [],
-        paquetes: [],
-        autos: [],
-        transfers: [],
-        circuitos: [],
-        excursiones: [],
-        salidasGrupales: [],
-        cruceros: [],
-        seguros: [],
-        trenes: [],
-      });
-      return;
-    }
+  const performGlobalSearch = useCallback(
+    (term) => {
+      if (!term.trim() || !allData) {
+        setGlobalResults({
+          alojamientos: [],
+          paquetes: [],
+          autos: [],
+          transfers: [],
+          circuitos: [],
+          excursiones: [],
+          salidasGrupales: [],
+          cruceros: [],
+          seguros: [],
+          trenes: [],
+        });
+        return;
+      }
 
-    setLoadingGlobal(true);
+      setLoadingGlobal(true);
 
-    const newResults = {
-      alojamientos: allData.alojamientos.filter(
-        (item) =>
-          searchInText(item.nombre, term) ||
-          searchInText(item.ubicacion, term) ||
-          searchInText(item.descripcion, term) ||
-          searchInText(item.ciudad, term) ||
-          searchInText(item.pais, term),
-      ),
-      paquetes: allData.paquetes.filter(
-        (item) =>
-          searchInText(item.nombre, term) ||
-          searchInText(item.destino, term) ||
-          searchInText(item.descripcion, term) ||
-          searchInText(item.incluye, term),
-      ),
-      autos: allData.autos.filter(
-        (item) =>
-          searchInText(item.modelo, term) ||
-          searchInText(item.marca, term) ||
-          searchInText(item.ubicacion, term) ||
-          searchInText(item.descripcion, term),
-      ),
-      transfers: allData.transfers.filter(
-        (item) =>
-          searchInText(item.origen, term) ||
-          searchInText(item.destino, term) ||
-          searchInText(item.tipoVehiculo, term) ||
-          searchInText(item.descripcion, term),
-      ),
-      trenes: allData.trenes.filter(
-        (item) =>
-          searchInText(item.nombre, term) ||
-          searchInText(item.ruta, term) ||
-          searchInText(item.descripcion, term),
-      ),
-      circuitos: allData.circuitos.filter(
-        (item) =>
-          searchInText(item.nombre, term) ||
-          searchInText(item.destinos, term) ||
-          searchInText(item.descripcion, term) ||
-          searchInText(item.incluye, term),
-      ),
-      excursiones: allData.excursiones.filter(
-        (item) =>
-          searchInText(item.nombre, term) ||
-          searchInText(item.ubicacion, term) ||
-          searchInText(item.descripcion, term) ||
-          searchInText(item.incluye, term),
-      ),
-      salidasGrupales: allData.salidasGrupales.filter(
-        (item) =>
-          searchInText(item.nombre, term) ||
-          searchInText(item.destino, term) ||
-          searchInText(item.descripcion, term) ||
-          searchInText(item.incluye, term),
-      ),
-      cruceros: allData.cruceros.filter(
-        (item) =>
-          searchInText(item.nombre, term) ||
-          searchInText(item.naviera, term) ||
-          searchInText(item.itinerario, term) ||
-          searchInText(item.descripcion, term),
-      ),
-      seguros: allData.seguros.filter(
-        (item) =>
-          searchInText(item.nombre, term) ||
-          searchInText(item.cobertura, term) ||
-          searchInText(item.descripcion, term) ||
-          searchInText(item.incluye, term),
-      ),
-    };
+      const newResults = {
+        alojamientos: allData.alojamientos.filter(
+          (item) =>
+            searchInText(item.nombre, term) ||
+            searchInText(item.ubicacion, term) ||
+            searchInText(item.descripcion, term) ||
+            searchInText(item.ciudad, term) ||
+            searchInText(item.pais, term),
+        ),
+        paquetes: allData.paquetes.filter(
+          (item) =>
+            searchInText(item.nombre, term) ||
+            searchInText(item.destino, term) ||
+            searchInText(item.descripcion, term) ||
+            searchInText(item.incluye, term),
+        ),
+        autos: allData.autos.filter(
+          (item) =>
+            searchInText(item.modelo, term) ||
+            searchInText(item.marca, term) ||
+            searchInText(item.ubicacion, term) ||
+            searchInText(item.descripcion, term),
+        ),
+        transfers: allData.transfers.filter(
+          (item) =>
+            searchInText(item.origen, term) ||
+            searchInText(item.destino, term) ||
+            searchInText(item.tipoVehiculo, term) ||
+            searchInText(item.descripcion, term),
+        ),
+        trenes: allData.trenes.filter(
+          (item) =>
+            searchInText(item.nombre, term) ||
+            searchInText(item.ruta, term) ||
+            searchInText(item.descripcion, term),
+        ),
+        circuitos: allData.circuitos.filter(
+          (item) =>
+            searchInText(item.nombre, term) ||
+            searchInText(item.destinos, term) ||
+            searchInText(item.descripcion, term) ||
+            searchInText(item.incluye, term),
+        ),
+        excursiones: allData.excursiones.filter(
+          (item) =>
+            searchInText(item.nombre, term) ||
+            searchInText(item.ubicacion, term) ||
+            searchInText(item.descripcion, term) ||
+            searchInText(item.incluye, term),
+        ),
+        salidasGrupales: allData.salidasGrupales.filter(
+          (item) =>
+            searchInText(item.nombre, term) ||
+            searchInText(item.destino, term) ||
+            searchInText(item.descripcion, term) ||
+            searchInText(item.incluye, term),
+        ),
+        cruceros: allData.cruceros.filter(
+          (item) =>
+            searchInText(item.nombre, term) ||
+            searchInText(item.naviera, term) ||
+            searchInText(item.itinerario, term) ||
+            searchInText(item.descripcion, term),
+        ),
+        seguros: allData.seguros.filter(
+          (item) =>
+            searchInText(item.nombre, term) ||
+            searchInText(item.cobertura, term) ||
+            searchInText(item.descripcion, term) ||
+            searchInText(item.incluye, term),
+        ),
+      };
 
-    setGlobalResults(newResults);
-    setLoadingGlobal(false);
-  }, [allData, searchInText]);
+      setGlobalResults(newResults);
+      setLoadingGlobal(false);
+    },
+    [allData, searchInText],
+  );
 
   const getTotalResults = () => {
-    return Object.values(globalResults).reduce((total, arr) => total + arr.length, 0);
+    return Object.values(globalResults).reduce(
+      (total, arr) => total + arr.length,
+      0,
+    );
   };
 
   const handleCloseGlobalSearch = () => {
@@ -222,7 +233,7 @@ export default function SearchBar({ compact = false }) {
     const { name, value } = e.target;
     setSearchForm((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const handleBudgetChange = (e) => {
     let value = e.target.value;
     // Eliminar TODOS los caracteres que no sean dígitos (0-9)
@@ -230,39 +241,47 @@ export default function SearchBar({ compact = false }) {
     const cleanValue = value.replace(/\D/g, "");
     setSearchForm((prev) => ({ ...prev, budget: cleanValue }));
   };
-  
+
   const handleBudgetKeyDown = (e) => {
     // Lista de teclas permitidas
     const allowedKeys = [
-      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
-      'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
-      'Home', 'End'
+      "Backspace",
+      "Delete",
+      "Tab",
+      "Escape",
+      "Enter",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Home",
+      "End",
     ];
-    
+
     // Permitir Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
     if (e.ctrlKey || e.metaKey) {
       return;
     }
-    
+
     // Si es una tecla permitida, dejar pasar
     if (allowedKeys.includes(e.key)) {
       return;
     }
-    
+
     // Solo permitir números del 0 al 9
     if (!/^[0-9]$/.test(e.key)) {
       e.preventDefault();
     }
   };
-  
+
   const handleBudgetPaste = (e) => {
     // Obtener el texto pegado
-    const pasteData = e.clipboardData.getData('text');
+    const pasteData = e.clipboardData.getData("text");
     // Si contiene algo que no sea número, prevenir el pegado
     if (/\D/.test(pasteData)) {
       e.preventDefault();
       // Extraer solo los números y pegarlos
-      const numbers = pasteData.replace(/\D/g, '');
+      const numbers = pasteData.replace(/\D/g, "");
       if (numbers) {
         setSearchForm((prev) => ({ ...prev, budget: prev.budget + numbers }));
       }
@@ -281,24 +300,24 @@ export default function SearchBar({ compact = false }) {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    
+
     // Si no hay destino, no hacer nada
     if (!searchForm.destination.trim()) return;
-    
+
     // Cerrar popup si está abierto
     handleCloseGlobalSearch();
-    
+
     // Navegación a paquetes con filtros explícitos
     const params = new URLSearchParams();
-    
+
     // Destino es obligatorio para búsqueda de paquetes
     params.append("destino", searchForm.destination);
-    
+
     // Origen opcional (si el backend lo soporta en el futuro)
     if (searchForm.origin) {
       params.append("origen", searchForm.origin);
     }
-    
+
     // Presupuesto máximo se mapea a precioMax
     if (searchForm.budget) {
       params.append("precioMax", searchForm.budget);
@@ -387,8 +406,18 @@ export default function SearchBar({ compact = false }) {
                   className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
                   aria-label="Cerrar búsqueda"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -397,9 +426,24 @@ export default function SearchBar({ compact = false }) {
               <div className="flex-1 overflow-y-auto p-6">
                 {loadingGlobal ? (
                   <div className="text-center py-12 text-gray-500">
-                    <svg className="animate-spin h-8 w-8 mx-auto mb-4 text-primary" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin h-8 w-8 mx-auto mb-4 text-primary"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Buscando...
                   </div>
@@ -424,7 +468,10 @@ export default function SearchBar({ compact = false }) {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {globalResults.alojamientos.map((item) => (
-                            <div key={item.id} onClick={handleCloseGlobalSearch}>
+                            <div
+                              key={item.id}
+                              onClick={handleCloseGlobalSearch}
+                            >
                               <AlojamientoCard alojamiento={item} />
                             </div>
                           ))}
@@ -439,7 +486,10 @@ export default function SearchBar({ compact = false }) {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {globalResults.paquetes.map((item) => (
-                            <div key={item.id} onClick={handleCloseGlobalSearch}>
+                            <div
+                              key={item.id}
+                              onClick={handleCloseGlobalSearch}
+                            >
                               <PaqueteCard item={item} />
                             </div>
                           ))}
@@ -454,7 +504,10 @@ export default function SearchBar({ compact = false }) {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {globalResults.autos.map((item) => (
-                            <div key={item.id} onClick={handleCloseGlobalSearch}>
+                            <div
+                              key={item.id}
+                              onClick={handleCloseGlobalSearch}
+                            >
                               <AutoCard item={item} />
                             </div>
                           ))}
@@ -469,7 +522,10 @@ export default function SearchBar({ compact = false }) {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {globalResults.transfers.map((item) => (
-                            <div key={item.id} onClick={handleCloseGlobalSearch}>
+                            <div
+                              key={item.id}
+                              onClick={handleCloseGlobalSearch}
+                            >
                               <TransferCard item={item} />
                             </div>
                           ))}
@@ -484,7 +540,10 @@ export default function SearchBar({ compact = false }) {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {globalResults.trenes.map((item) => (
-                            <div key={item.id} onClick={handleCloseGlobalSearch}>
+                            <div
+                              key={item.id}
+                              onClick={handleCloseGlobalSearch}
+                            >
                               <TrenCard item={item} />
                             </div>
                           ))}
@@ -499,7 +558,10 @@ export default function SearchBar({ compact = false }) {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {globalResults.circuitos.map((item) => (
-                            <div key={item.id} onClick={handleCloseGlobalSearch}>
+                            <div
+                              key={item.id}
+                              onClick={handleCloseGlobalSearch}
+                            >
                               <CircuitoCard item={item} />
                             </div>
                           ))}
@@ -514,7 +576,10 @@ export default function SearchBar({ compact = false }) {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {globalResults.excursiones.map((item) => (
-                            <div key={item.id} onClick={handleCloseGlobalSearch}>
+                            <div
+                              key={item.id}
+                              onClick={handleCloseGlobalSearch}
+                            >
                               <ExcursionCard item={item} />
                             </div>
                           ))}
@@ -525,11 +590,15 @@ export default function SearchBar({ compact = false }) {
                     {globalResults.salidasGrupales.length > 0 && (
                       <div className="mb-8">
                         <h2 className="text-xl font-bold text-gray-800 mb-4">
-                          Salidas Grupales ({globalResults.salidasGrupales.length})
+                          Salidas Grupales (
+                          {globalResults.salidasGrupales.length})
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {globalResults.salidasGrupales.map((item) => (
-                            <div key={item.id} onClick={handleCloseGlobalSearch}>
+                            <div
+                              key={item.id}
+                              onClick={handleCloseGlobalSearch}
+                            >
                               <SalidaGrupalCard item={item} />
                             </div>
                           ))}
@@ -544,7 +613,10 @@ export default function SearchBar({ compact = false }) {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {globalResults.cruceros.map((item) => (
-                            <div key={item.id} onClick={handleCloseGlobalSearch}>
+                            <div
+                              key={item.id}
+                              onClick={handleCloseGlobalSearch}
+                            >
                               <CruceroCard item={item} />
                             </div>
                           ))}
@@ -559,7 +631,10 @@ export default function SearchBar({ compact = false }) {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {globalResults.seguros.map((item) => (
-                            <div key={item.id} onClick={handleCloseGlobalSearch}>
+                            <div
+                              key={item.id}
+                              onClick={handleCloseGlobalSearch}
+                            >
                               <SeguroCard item={item} />
                             </div>
                           ))}

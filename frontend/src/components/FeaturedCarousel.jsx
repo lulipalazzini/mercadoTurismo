@@ -37,7 +37,7 @@ export default function FeaturedCarousel() {
       try {
         setLoading(true);
         const response = await fetch(`${API_URL}/publicaciones-destacadas`);
-        
+
         if (!response.ok) {
           throw new Error("Error al cargar publicaciones destacadas");
         }
@@ -77,7 +77,7 @@ export default function FeaturedCarousel() {
   const getVisibleCards = () => {
     const visible = [];
     const maxVisible = Math.min(4, publicacionesDestacadas.length);
-    
+
     for (let i = 0; i < maxVisible; i++) {
       const index = (currentIndex + i) % publicacionesDestacadas.length;
       visible.push(publicacionesDestacadas[index]);
@@ -91,11 +91,11 @@ export default function FeaturedCarousel() {
   };
 
   const formatPrice = (price, currency) => {
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
       currency: currency,
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+      maximumFractionDigits: 0,
     }).format(price);
   };
 
@@ -122,14 +122,14 @@ export default function FeaturedCarousel() {
     <section className="relative py-16 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-sky-50">
       {/* Imagen de fondo con overlay y difuminado */}
       <div className="absolute inset-0 z-0">
-        <img 
-          src={backgroundImage1} 
-          alt="Fondo destinos turísticos" 
+        <img
+          src={backgroundImage1}
+          alt="Fondo destinos turísticos"
           className="w-full h-full object-cover opacity-40 absolute inset-0"
         />
-        <img 
-          src={backgroundImage2} 
-          alt="Fondo destinos turísticos" 
+        <img
+          src={backgroundImage2}
+          alt="Fondo destinos turísticos"
           className="w-full h-full object-cover opacity-40 absolute inset-0 animate-fade-cross"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/70 to-white/80"></div>
@@ -147,7 +147,7 @@ export default function FeaturedCarousel() {
         </div>
 
         {/* Carrusel */}
-        <div 
+        <div
           className="relative overflow-hidden"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -155,9 +155,10 @@ export default function FeaturedCarousel() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {visibleCards.map((publicacion, idx) => {
               const imageUrl = getFirstImageUrl(publicacion.imagenes);
-              const categoryLabel = TIPO_LABELS[publicacion.tipo] || publicacion.tipo;
-              const agencyName = publicacion.User?.empresaNombre || 'Agencia';
-              
+              const categoryLabel =
+                TIPO_LABELS[publicacion.tipo] || publicacion.tipo;
+              const agencyName = publicacion.User?.empresaNombre || "Agencia";
+
               return (
                 <div
                   key={`${publicacion.id}-${currentIndex}-${idx}`}
@@ -188,7 +189,10 @@ export default function FeaturedCarousel() {
                       {/* Nombre de la Agencia - Esquina superior derecha */}
                       <div className="flex justify-end">
                         <div className="bg-white rounded-lg shadow-lg px-3 py-2 transform transition-transform group-hover:scale-105">
-                          <span className="text-xs font-semibold text-gray-700" title={agencyName}>
+                          <span
+                            className="text-xs font-semibold text-gray-700"
+                            title={agencyName}
+                          >
                             {agencyName}
                           </span>
                         </div>
@@ -203,8 +207,16 @@ export default function FeaturedCarousel() {
                           </h3>
                           {publicacion.destino && (
                             <div className="flex items-center text-white/90 text-sm">
-                              <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                              <svg
+                                className="w-4 h-4 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                  clipRule="evenodd"
+                                />
                               </svg>
                               {publicacion.destino}
                             </div>
@@ -218,7 +230,10 @@ export default function FeaturedCarousel() {
                               Desde
                             </div>
                             <div className="text-white text-2xl font-bold">
-                              {formatPrice(parseFloat(publicacion.precio), 'ARS')}
+                              {formatPrice(
+                                parseFloat(publicacion.precio),
+                                "ARS",
+                              )}
                             </div>
                             <div className="text-white/70 text-xs mt-0.5">
                               por persona
@@ -229,9 +244,17 @@ export default function FeaturedCarousel() {
                         {/* Badge de categoría */}
                         <div className="flex gap-2">
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-sm text-white border border-white/30">
-                            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <svg
+                              className="w-3 h-3 mr-1"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
                               <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                              <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                              <path
+                                fillRule="evenodd"
+                                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                clipRule="evenodd"
+                              />
                             </svg>
                             {categoryLabel}
                           </span>
@@ -259,27 +282,29 @@ export default function FeaturedCarousel() {
             <div className="flex flex-col items-center gap-3 mt-8">
               {/* Contador de posición */}
               <div className="text-sm text-gray-600 font-medium">
-                Mostrando {currentIndex + 1} - {Math.min(currentIndex + 4, publicacionesDestacadas.length)} de {publicacionesDestacadas.length} ofertas
+                Mostrando {currentIndex + 1} -{" "}
+                {Math.min(currentIndex + 4, publicacionesDestacadas.length)} de{" "}
+                {publicacionesDestacadas.length} ofertas
               </div>
-              
+
               {/* Indicadores de progreso - Máximo 12 puntos visibles */}
               <div className="flex justify-center gap-2">
-                {Array.from({ 
-                  length: Math.min(publicacionesDestacadas.length - 3, 12) 
+                {Array.from({
+                  length: Math.min(publicacionesDestacadas.length - 3, 12),
                 }).map((_, idx) => {
                   const isActive = idx === currentIndex;
                   const isNearActive = Math.abs(idx - currentIndex) <= 2;
-                  
+
                   return (
                     <button
                       key={idx}
                       onClick={() => setCurrentIndex(idx)}
                       className={`rounded-full transition-all duration-300 ${
                         isActive
-                          ? 'w-8 h-2 bg-primary'
+                          ? "w-8 h-2 bg-primary"
                           : isNearActive
-                          ? 'w-3 h-2 bg-gray-400 hover:bg-gray-500'
-                          : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
+                            ? "w-3 h-2 bg-gray-400 hover:bg-gray-500"
+                            : "w-2 h-2 bg-gray-300 hover:bg-gray-400"
                       }`}
                       aria-label={`Ir a posición ${idx + 1}`}
                       title={`Ver desde publicación ${idx + 1}`}
@@ -299,29 +324,59 @@ export default function FeaturedCarousel() {
           {publicacionesDestacadas.length > 4 && (
             <div className="flex justify-center gap-3 mt-4">
               <button
-                onClick={() => setCurrentIndex((prev) => {
-                  const maxIndex = Math.max(0, publicacionesDestacadas.length - 4);
-                  return prev === 0 ? maxIndex : prev - 1;
-                })}
+                onClick={() =>
+                  setCurrentIndex((prev) => {
+                    const maxIndex = Math.max(
+                      0,
+                      publicacionesDestacadas.length - 4,
+                    );
+                    return prev === 0 ? maxIndex : prev - 1;
+                  })
+                }
                 className="p-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 hover:border-primary transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Anterior"
                 title="Ver publicaciones anteriores"
               >
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <svg
+                  className="w-5 h-5 text-gray-700"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
               <button
-                onClick={() => setCurrentIndex((prev) => {
-                  const maxIndex = Math.max(0, publicacionesDestacadas.length - 4);
-                  return prev >= maxIndex ? 0 : prev + 1;
-                })}
+                onClick={() =>
+                  setCurrentIndex((prev) => {
+                    const maxIndex = Math.max(
+                      0,
+                      publicacionesDestacadas.length - 4,
+                    );
+                    return prev >= maxIndex ? 0 : prev + 1;
+                  })
+                }
                 className="p-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 hover:border-primary transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Siguiente"
                 title="Ver publicaciones siguientes"
               >
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-5 h-5 text-gray-700"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             </div>
@@ -330,12 +385,22 @@ export default function FeaturedCarousel() {
           {/* CTA Ver todas las ofertas */}
           <div className="text-center mt-10">
             <button
-              onClick={() => navigate('/ofertas-destacadas')}
+              onClick={() => navigate("/ofertas-destacadas")}
               className="inline-flex items-center gap-2 px-8 py-4 bg-primary hover:bg-primary-dark text-white font-bold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
             >
               Ver todas las ofertas destacadas
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
               </svg>
             </button>
           </div>

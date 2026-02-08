@@ -114,8 +114,8 @@ const corsOptions = {
     } else {
       console.warn(`⚠️  CORS: Origin no permitido: ${origin}`);
       // En desarrollo permitir todo, en producción bloquear
-      if (process.env.NODE_ENV === 'production') {
-        callback(new Error('No permitido por CORS'));
+      if (process.env.NODE_ENV === "production") {
+        callback(new Error("No permitido por CORS"));
       } else {
         callback(null, true);
       }

@@ -67,7 +67,8 @@ export default function Hero() {
             <div className="featured-services">
               <div className="featured-services-header">
                 <h2 className="featured-services-title">
-                  <FaStar className="inline-block mr-2 text-yellow-500" /> Ofertas Destacadas
+                  <FaStar className="inline-block mr-2 text-yellow-500" />{" "}
+                  Ofertas Destacadas
                 </h2>
                 <p className="featured-services-subtitle">
                   Descubrí las mejores ofertas seleccionadas por nuestro equipo

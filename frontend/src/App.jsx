@@ -41,7 +41,10 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<HomeMarketplace />} />
         <Route path="/home-old" element={<Home />} />
-        <Route path="/ofertas-destacadas" element={<PublicacionesDestacadasPage />} />
+        <Route
+          path="/ofertas-destacadas"
+          element={<PublicacionesDestacadasPage />}
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<RegisterB2BWizard />} />
         <Route path="/recuperar-contrasena" element={<RecoverPassword />} />

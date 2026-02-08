@@ -30,8 +30,8 @@ const getPaquetes = async (req, res) => {
 
     // Si se especifica ?myPaquetes=true, filtrar por usuario (vista dashboard)
     const { myPaquetes } = req.query;
-    
-    if (myPaquetes === 'true' && req.user) {
+
+    if (myPaquetes === "true" && req.user) {
       // Vista de dashboard: mostrar paquetes del usuario
       if (!isAdmin(req.user)) {
         whereClause.published_by_user_id = req.user.id;
@@ -45,7 +45,16 @@ const getPaquetes = async (req, res) => {
     }
 
     // FILTROS DE BÚSQUEDA ESPECÍFICOS
-    const { destino, destination, nochesMin, nochesMax, precioMin, precioMax, budget, currency } = req.query;
+    const {
+      destino,
+      destination,
+      nochesMin,
+      nochesMax,
+      precioMin,
+      precioMax,
+      budget,
+      currency,
+    } = req.query;
 
     // Manejo de destino (soporta ambos parámetros: destino y destination)
     const destinoFiltro = destino || destination;

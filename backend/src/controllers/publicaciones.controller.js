@@ -38,19 +38,19 @@ const getPublicacionesDestacadas = async (req, res) => {
     for (const { model, tipo } of modelsConfig) {
       try {
         const items = await model.findAll({
-          where: { 
-            activo: true, 
-            destacado: true 
+          where: {
+            activo: true,
+            destacado: true,
           },
           attributes: [
-            "id", 
-            "nombre", 
-            "descripcion", 
-            "precio", 
-            "imagenes", 
-            "destacado", 
+            "id",
+            "nombre",
+            "descripcion",
+            "precio",
+            "imagenes",
+            "destacado",
             "createdAt",
-            "destino" // Algunos modelos tienen este campo
+            "destino", // Algunos modelos tienen este campo
           ],
           include: [
             {
@@ -96,7 +96,9 @@ const getPublicacionesDestacadas = async (req, res) => {
     // Limitar a las primeras 10 destacadas en total
     const destacadasLimitadas = destacadas.slice(0, 10);
 
-    console.log(`✅ Publicaciones destacadas encontradas: ${destacadasLimitadas.length}`);
+    console.log(
+      `✅ Publicaciones destacadas encontradas: ${destacadasLimitadas.length}`,
+    );
 
     res.json({
       total: destacadasLimitadas.length,
@@ -122,65 +124,65 @@ const getTiposServicios = async (req, res) => {
 
     // Configuración de tipos de servicios
     const tiposConfig = [
-      { 
-        id: "paquetes", 
-        label: "Paquetes", 
+      {
+        id: "paquetes",
+        label: "Paquetes",
         route: "/paquetes",
-        model: Paquete 
+        model: Paquete,
       },
-      { 
-        id: "alojamientos", 
-        label: "Alojamientos", 
+      {
+        id: "alojamientos",
+        label: "Alojamientos",
         route: "/alojamientos",
-        model: Alojamiento 
+        model: Alojamiento,
       },
-      { 
-        id: "cruceros", 
-        label: "Cruceros", 
+      {
+        id: "cruceros",
+        label: "Cruceros",
         route: "/cruceros",
-        model: Crucero 
+        model: Crucero,
       },
-      { 
-        id: "autos", 
-        label: "Autos", 
+      {
+        id: "autos",
+        label: "Autos",
         route: "/autos",
-        model: Auto 
+        model: Auto,
       },
-      { 
-        id: "excursiones", 
-        label: "Excursiones", 
+      {
+        id: "excursiones",
+        label: "Excursiones",
         route: "/excursiones",
-        model: Excursion 
+        model: Excursion,
       },
-      { 
-        id: "salidas-grupales", 
-        label: "Salidas Grupales", 
+      {
+        id: "salidas-grupales",
+        label: "Salidas Grupales",
         route: "/salidas-grupales",
-        model: SalidaGrupal 
+        model: SalidaGrupal,
       },
-      { 
-        id: "seguros", 
-        label: "Seguros", 
+      {
+        id: "seguros",
+        label: "Seguros",
         route: "/seguros",
-        model: Seguro 
+        model: Seguro,
       },
-      { 
-        id: "transfers", 
-        label: "Transfers", 
+      {
+        id: "transfers",
+        label: "Transfers",
         route: "/transfers",
-        model: Transfer 
+        model: Transfer,
       },
-      { 
-        id: "circuitos", 
-        label: "Circuitos", 
+      {
+        id: "circuitos",
+        label: "Circuitos",
         route: "/circuitos",
-        model: Circuito 
+        model: Circuito,
       },
-      { 
-        id: "trenes", 
-        label: "Trenes", 
+      {
+        id: "trenes",
+        label: "Trenes",
         route: "/trenes",
-        model: Tren 
+        model: Tren,
       },
     ];
 
@@ -190,7 +192,7 @@ const getTiposServicios = async (req, res) => {
     for (const tipo of tiposConfig) {
       try {
         const count = await tipo.model.count({
-          where: { activo: true }
+          where: { activo: true },
         });
 
         tiposDisponibles.push({
@@ -198,7 +200,7 @@ const getTiposServicios = async (req, res) => {
           label: tipo.label,
           route: tipo.route,
           count: count,
-          available: count > 0
+          available: count > 0,
         });
       } catch (error) {
         console.error(`⚠️ Error al contar ${tipo.label}:`, error.message);
@@ -207,7 +209,7 @@ const getTiposServicios = async (req, res) => {
           label: tipo.label,
           route: tipo.route,
           count: 0,
-          available: false
+          available: false,
         });
       }
     }
@@ -215,7 +217,9 @@ const getTiposServicios = async (req, res) => {
     // Ordenar por label alfabéticamente
     tiposDisponibles.sort((a, b) => a.label.localeCompare(b.label));
 
-    console.log(`✅ Tipos de servicios encontrados: ${tiposDisponibles.length}`);
+    console.log(
+      `✅ Tipos de servicios encontrados: ${tiposDisponibles.length}`,
+    );
 
     res.json({
       total: tiposDisponibles.length,
@@ -274,7 +278,7 @@ const getDestinos = async (req, res) => {
 
     // Convertir Set a Array y ordenar alfabéticamente
     const destinos = Array.from(destinosSet).sort((a, b) =>
-      a.localeCompare(b, "es", { sensitivity: "base" })
+      a.localeCompare(b, "es", { sensitivity: "base" }),
     );
 
     console.log(`✅ Destinos únicos encontrados: ${destinos.length}`);
@@ -332,7 +336,7 @@ const getOrigenes = async (req, res) => {
 
     // Convertir Set a Array y ordenar alfabéticamente
     const origenes = Array.from(origenesSet).sort((a, b) =>
-      a.localeCompare(b, "es", { sensitivity: "base" })
+      a.localeCompare(b, "es", { sensitivity: "base" }),
     );
 
     console.log(`✅ Orígenes únicos encontrados: ${origenes.length}`);

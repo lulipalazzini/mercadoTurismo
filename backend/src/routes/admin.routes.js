@@ -31,6 +31,11 @@ router.get("/reportes/actividad", verifyToken, isAdmin, getActivityReport);
 
 // 🌟 Publicaciones Destacadas
 router.get("/publicaciones", verifyToken, isAdmin, getAllPublicaciones);
-router.post("/publicaciones-destacadas", verifyToken, isAdmin, updatePublicacionesDestacadas);
+router.post(
+  "/publicaciones-destacadas",
+  verifyToken,
+  isAdmin,
+  updatePublicacionesDestacadas,
+);
 
 module.exports = router;

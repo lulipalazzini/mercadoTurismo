@@ -2,9 +2,9 @@ import React, { useState } from "react";
 
 /**
  * COMPONENTE DE PRUEBA - Budget Input
- * 
+ *
  * Este componente demuestra la validación del input de presupuesto.
- * 
+ *
  * PRUEBAS QUE PUEDES HACER:
  * 1. Intentar escribir letras (a, b, c, etc.) -> NO PERMITE
  * 2. Intentar escribir signo negativo (-) -> NO PERMITE
@@ -13,7 +13,7 @@ import React, { useState } from "react";
  * 5. Intentar pegar texto con letras -> SOLO EXTRAE NÚMEROS
  * 6. Escribir solo números (0-9) -> FUNCIONA ✓
  * 7. Usar Backspace, Delete, flechas -> FUNCIONA ✓
- * 
+ *
  * USO: Importa este componente en cualquier página para probarlo
  * import TEST_BudgetInput from "./components/TEST_BudgetInput";
  * <TEST_BudgetInput />
@@ -25,53 +25,61 @@ export default function TEST_BudgetInput() {
   const handleBudgetChange = (e) => {
     const value = e.target.value;
     const cleanValue = value.replace(/\D/g, "");
-    
+
     // Log para ver qué se intentó ingresar vs qué se guardó
     if (value !== cleanValue) {
-      setTestResults(prev => [
+      setTestResults((prev) => [
         ...prev,
-        `❌ BLOQUEADO: Intentaste "${value}" -> Guardado: "${cleanValue}"`
+        `❌ BLOQUEADO: Intentaste "${value}" -> Guardado: "${cleanValue}"`,
       ]);
     }
-    
+
     setBudget(cleanValue);
   };
 
   const handleBudgetKeyDown = (e) => {
     const allowedKeys = [
-      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
-      'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
-      'Home', 'End'
+      "Backspace",
+      "Delete",
+      "Tab",
+      "Escape",
+      "Enter",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Home",
+      "End",
     ];
-    
+
     if (e.ctrlKey || e.metaKey) {
       return;
     }
-    
+
     if (allowedKeys.includes(e.key)) {
       return;
     }
-    
+
     if (!/^[0-9]$/.test(e.key)) {
       e.preventDefault();
-      setTestResults(prev => [
+      setTestResults((prev) => [
         ...prev,
-        `🚫 TECLA BLOQUEADA: "${e.key}" (código: ${e.keyCode})`
+        `🚫 TECLA BLOQUEADA: "${e.key}" (código: ${e.keyCode})`,
       ]);
     }
   };
 
   const handleBudgetPaste = (e) => {
-    const pasteData = e.clipboardData.getData('text');
+    const pasteData = e.clipboardData.getData("text");
     if (/\D/.test(pasteData)) {
       e.preventDefault();
-      const numbers = pasteData.replace(/\D/g, '');
-      setTestResults(prev => [
+      const numbers = pasteData.replace(/\D/g, "");
+      setTestResults((prev) => [
         ...prev,
-        `📋 PASTE FILTRADO: "${pasteData}" -> Solo números: "${numbers}"`
+        `📋 PASTE FILTRADO: "${pasteData}" -> Solo números: "${numbers}"`,
       ]);
       if (numbers) {
-        setBudget(prev => prev + numbers);
+        setBudget((prev) => prev + numbers);
       }
     }
   };
@@ -85,10 +93,12 @@ export default function TEST_BudgetInput() {
       { input: "12,34", expected: "1234", result: "✓" },
       { input: "  12  ", expected: "12", result: "✓" },
     ];
-    
+
     setTestResults([
       "🧪 PRUEBAS AUTOMÁTICAS:",
-      ...tests.map(t => `${t.result} Input: "${t.input}" -> Esperado: "${t.expected}"`)
+      ...tests.map(
+        (t) => `${t.result} Input: "${t.input}" -> Esperado: "${t.expected}"`,
+      ),
     ]);
   };
 
@@ -97,7 +107,7 @@ export default function TEST_BudgetInput() {
       <h2 className="text-2xl font-bold mb-4 text-gray-800">
         🧪 Test: Validación de Presupuesto
       </h2>
-      
+
       <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded">
         <h3 className="font-semibold text-yellow-800 mb-2">Instrucciones:</h3>
         <ul className="text-sm text-yellow-700 space-y-1">
@@ -124,7 +134,8 @@ export default function TEST_BudgetInput() {
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
         <p className="mt-2 text-sm text-gray-600">
-          Valor actual: <strong className="text-green-600">{budget || "(vacío)"}</strong>
+          Valor actual:{" "}
+          <strong className="text-green-600">{budget || "(vacío)"}</strong>
         </p>
       </div>
 
@@ -153,7 +164,9 @@ export default function TEST_BudgetInput() {
       </div>
 
       <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded">
-        <h3 className="font-semibold text-green-800 mb-2">✓ Validaciones Activas:</h3>
+        <h3 className="font-semibold text-green-800 mb-2">
+          ✓ Validaciones Activas:
+        </h3>
         <ul className="text-sm text-green-700 space-y-1">
           <li>✓ onChange: Elimina caracteres no numéricos con regex /\D/g</li>
           <li>✓ onKeyDown: Bloquea teclas antes de que se escriban</li>

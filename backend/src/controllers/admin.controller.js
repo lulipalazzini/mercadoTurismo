@@ -783,7 +783,15 @@ const getAllPublicaciones = async (req, res) => {
       try {
         const items = await model.findAll({
           where: { activo: true }, // Solo publicaciones activas
-          attributes: ["id", "nombre", "descripcion", "precio", "imagenes", "destacado", "createdAt"],
+          attributes: [
+            "id",
+            "nombre",
+            "descripcion",
+            "precio",
+            "imagenes",
+            "destacado",
+            "createdAt",
+          ],
           include: [
             {
               model: User,
@@ -820,7 +828,9 @@ const getAllPublicaciones = async (req, res) => {
       }
     }
 
-    console.log(`✅ Total de publicaciones encontradas: ${todasPublicaciones.length}`);
+    console.log(
+      `✅ Total de publicaciones encontradas: ${todasPublicaciones.length}`,
+    );
 
     res.json({
       total: todasPublicaciones.length,
@@ -847,7 +857,9 @@ const updatePublicacionesDestacadas = async (req, res) => {
       });
     }
 
-    console.log(`\n🌟 [ADMIN] Actualizando publicaciones destacadas (${destacadas.length} seleccionadas)...`);
+    console.log(
+      `\n🌟 [ADMIN] Actualizando publicaciones destacadas (${destacadas.length} seleccionadas)...`,
+    );
 
     const modelsMap = {
       paquete: Paquete,
@@ -864,10 +876,7 @@ const updatePublicacionesDestacadas = async (req, res) => {
 
     // Paso 1: Desmarcar TODAS las publicaciones destacadas actuales
     for (const [tipo, Model] of Object.entries(modelsMap)) {
-      await Model.update(
-        { destacado: false },
-        { where: { destacado: true } }
-      );
+      await Model.update({ destacado: false }, { where: { destacado: true } });
     }
 
     console.log("✅ Todas las publicaciones desmarcadas");
@@ -884,13 +893,16 @@ const updatePublicacionesDestacadas = async (req, res) => {
       try {
         const [updated] = await Model.update(
           { destacado: true },
-          { where: { id: item.id } }
+          { where: { id: item.id } },
         );
         if (updated) {
           actualizadas++;
         }
       } catch (error) {
-        console.error(`⚠️ Error al actualizar ${item.tipo} #${item.id}:`, error.message);
+        console.error(
+          `⚠️ Error al actualizar ${item.tipo} #${item.id}:`,
+          error.message,
+        );
       }
     }
 

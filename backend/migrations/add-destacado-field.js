@@ -27,7 +27,7 @@ module.exports = {
       try {
         // Verificar si la columna ya existe
         const tableDescription = await queryInterface.describeTable(tabla);
-        
+
         if (!tableDescription.destacado) {
           await queryInterface.addColumn(tabla, "destacado", {
             type: DataTypes.BOOLEAN,

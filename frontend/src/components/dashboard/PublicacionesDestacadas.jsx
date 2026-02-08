@@ -91,15 +91,15 @@ export default function PublicacionesDestacadas() {
 
   const handleToggleDestacada = (publicacion) => {
     const existe = destacadasSeleccionadas.some(
-      (d) => d.tipo === publicacion.tipo && d.id === publicacion.id
+      (d) => d.tipo === publicacion.tipo && d.id === publicacion.id,
     );
 
     if (existe) {
       // Remover
       setDestacadasSeleccionadas(
         destacadasSeleccionadas.filter(
-          (d) => !(d.tipo === publicacion.tipo && d.id === publicacion.id)
-        )
+          (d) => !(d.tipo === publicacion.tipo && d.id === publicacion.id),
+        ),
       );
     } else {
       // Agregar
@@ -112,7 +112,7 @@ export default function PublicacionesDestacadas() {
 
   const isDestacada = (publicacion) => {
     return destacadasSeleccionadas.some(
-      (d) => d.tipo === publicacion.tipo && d.id === publicacion.id
+      (d) => d.tipo === publicacion.tipo && d.id === publicacion.id,
     );
   };
 
@@ -125,16 +125,19 @@ export default function PublicacionesDestacadas() {
         throw new Error("No se encontró token de autenticación");
       }
 
-      const response = await fetch(`${API_URL}/admin/publicaciones-destacadas`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${API_URL}/admin/publicaciones-destacadas`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            destacadas: destacadasSeleccionadas,
+          }),
         },
-        body: JSON.stringify({
-          destacadas: destacadasSeleccionadas,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Error al guardar publicaciones destacadas");
@@ -144,7 +147,7 @@ export default function PublicacionesDestacadas() {
 
       setAlertType("success");
       setAlertMessage(
-        `✅ Publicaciones destacadas actualizadas correctamente (${data.actualizadas} publicaciones)`
+        `✅ Publicaciones destacadas actualizadas correctamente (${data.actualizadas} publicaciones)`,
       );
       setShowAlert(true);
 
@@ -169,9 +172,8 @@ export default function PublicacionesDestacadas() {
       const filteredKeys = filtradas.map((p) => ({ tipo: p.tipo, id: p.id }));
       setDestacadasSeleccionadas(
         destacadasSeleccionadas.filter(
-          (d) =>
-            !filteredKeys.some((f) => f.tipo === d.tipo && f.id === d.id)
-        )
+          (d) => !filteredKeys.some((f) => f.tipo === d.tipo && f.id === d.id),
+        ),
       );
     } else {
       // Marcar todas las filtradas
@@ -265,7 +267,8 @@ export default function PublicacionesDestacadas() {
             Publicaciones Destacadas
           </h2>
           <p className="section-subtitle">
-            Selecciona las publicaciones que se mostrarán destacadas en el Hero principal
+            Selecciona las publicaciones que se mostrarán destacadas en el Hero
+            principal
           </p>
         </div>
         <button
@@ -409,7 +412,9 @@ export default function PublicacionesDestacadas() {
                 key={`${pub.tipo}-${pub.id}`}
                 onClick={() => handleToggleDestacada(pub)}
                 style={{
-                  border: esDestacada ? "3px solid #f59e0b" : "1px solid #e5e7eb",
+                  border: esDestacada
+                    ? "3px solid #f59e0b"
+                    : "1px solid #e5e7eb",
                   borderRadius: "0.75rem",
                   overflow: "hidden",
                   cursor: "pointer",
@@ -530,8 +535,8 @@ export default function PublicacionesDestacadas() {
                         fontWeight: 600,
                       }}
                     >
-                      <FaDollarSign />
-                      ${parseFloat(pub.precio || 0).toLocaleString("es-AR")}
+                      <FaDollarSign />$
+                      {parseFloat(pub.precio || 0).toLocaleString("es-AR")}
                     </div>
                     {pub.vendedor && (
                       <div

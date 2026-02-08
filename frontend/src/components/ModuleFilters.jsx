@@ -33,7 +33,7 @@ export default function ModuleFilters({ module, onFiltersChange }) {
   }, [searchParams]);
 
   const handleFilterChange = (key, value) => {
-    console.log('🔄 Filter changed:', key, '=', value);
+    console.log("🔄 Filter changed:", key, "=", value);
     const newFilters = { ...filters, [key]: value };
 
     // Remover filtros vacíos
@@ -52,7 +52,7 @@ export default function ModuleFilters({ module, onFiltersChange }) {
       params.set("adults", passengers.adults.toString());
       params.set("minors", passengers.minors.toString());
     }
-    console.log('📤 Setting search params:', params.toString());
+    console.log("📤 Setting search params:", params.toString());
     setSearchParams(params);
 
     // Notificar al padre con filtros completos
@@ -62,7 +62,7 @@ export default function ModuleFilters({ module, onFiltersChange }) {
       adults: passengers.adults,
       minors: passengers.minors,
     };
-    console.log('🔔 Notifying parent with filters:', fullFilters);
+    console.log("🔔 Notifying parent with filters:", fullFilters);
     onFiltersChange(fullFilters);
   };
 
@@ -97,7 +97,12 @@ export default function ModuleFilters({ module, onFiltersChange }) {
       params.set("minors", passengers.minors.toString());
     }
     setSearchParams(params);
-    onFiltersChange({ ...filters, currency: newCurrency, adults: passengers.adults, minors: passengers.minors });
+    onFiltersChange({
+      ...filters,
+      currency: newCurrency,
+      adults: passengers.adults,
+      minors: passengers.minors,
+    });
   };
 
   const activeFiltersCount = Object.keys(filters).length;
@@ -133,12 +138,12 @@ export default function ModuleFilters({ module, onFiltersChange }) {
             type: "autocomplete",
             placeholder: "¿A dónde quieres ir?",
           },
-          { 
-            key: "budget", 
-            label: "Presupuesto Máximo", 
-            type: "budget", 
+          {
+            key: "budget",
+            label: "Presupuesto Máximo",
+            type: "budget",
             min: 0,
-            placeholder: "Ej: 500000"
+            placeholder: "Ej: 500000",
           },
         ];
 
@@ -487,7 +492,9 @@ export default function ModuleFilters({ module, onFiltersChange }) {
                 <DestinoAutocomplete
                   name={field.key}
                   value={filters[field.key] || ""}
-                  onChange={(e) => handleFilterChange(field.key, e.target.value)}
+                  onChange={(e) =>
+                    handleFilterChange(field.key, e.target.value)
+                  }
                   placeholder={field.placeholder}
                   hideLabel={true}
                 />
@@ -499,7 +506,9 @@ export default function ModuleFilters({ module, onFiltersChange }) {
                     placeholder={field.placeholder}
                     min={field.min}
                     value={filters[field.key] || ""}
-                    onChange={(e) => handleFilterChange(field.key, e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange(field.key, e.target.value)
+                    }
                     className="budget-number-input"
                   />
                   <select

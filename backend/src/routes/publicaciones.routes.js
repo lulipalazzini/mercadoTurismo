@@ -1,9 +1,9 @@
 const express = require("express");
-const { 
+const {
   getPublicacionesDestacadas,
   getTiposServicios,
   getDestinos,
-  getOrigenes 
+  getOrigenes,
 } = require("../controllers/publicaciones.controller");
 
 const router = express.Router();

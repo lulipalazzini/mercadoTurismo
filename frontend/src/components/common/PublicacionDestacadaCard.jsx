@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { getFirstImageUrl } from "../../utils/imageUtils";
 import ServiceDetailModal from "../ServiceDetailModal";
-import { 
-  FaBox, 
-  FaHotel, 
-  FaCar, 
-  FaShuttleVan, 
-  FaShip, 
-  FaMountain, 
-  FaUsers, 
-  FaMap, 
-  FaTrain, 
-  FaShieldAlt, 
-  FaStar, 
-  FaMapMarkerAlt 
+import {
+  FaBox,
+  FaHotel,
+  FaCar,
+  FaShuttleVan,
+  FaShip,
+  FaMountain,
+  FaUsers,
+  FaMap,
+  FaTrain,
+  FaShieldAlt,
+  FaStar,
+  FaMapMarkerAlt,
 } from "react-icons/fa";
 import "../../styles/featuredServices.css";
 

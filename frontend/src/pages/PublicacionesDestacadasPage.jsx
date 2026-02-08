@@ -3,19 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config/api.config";
 import { getFirstImageUrl } from "../utils/imageUtils";
 import ServiceDetailModal from "../components/ServiceDetailModal";
-import { 
-  FaBox, 
-  FaHotel, 
-  FaCar, 
-  FaShuttleVan, 
-  FaShip, 
-  FaMountain, 
-  FaUsers, 
-  FaMap, 
-  FaTrain, 
-  FaShieldAlt, 
-  FaStar, 
-  FaMapMarkerAlt 
+import {
+  FaBox,
+  FaHotel,
+  FaCar,
+  FaShuttleVan,
+  FaShip,
+  FaMountain,
+  FaUsers,
+  FaMap,
+  FaTrain,
+  FaShieldAlt,
+  FaStar,
+  FaMapMarkerAlt,
 } from "react-icons/fa";
 
 const TIPO_LABELS = {
@@ -220,7 +220,8 @@ export default function PublicacionesDestacadasPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {publicacionesFiltradas.map((publicacion) => {
             const imageUrl = getFirstImageUrl(publicacion.imagenes);
-            const categoryLabel = TIPO_LABELS[publicacion.tipo] || publicacion.tipo;
+            const categoryLabel =
+              TIPO_LABELS[publicacion.tipo] || publicacion.tipo;
             const CategoryIcon = TIPO_ICONS[publicacion.tipo] || FaMapMarkerAlt;
             const agencyName = publicacion.User?.empresaNombre || "Agencia";
 
