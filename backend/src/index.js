@@ -103,6 +103,7 @@ const allowedOrigins = [
   "http://localhost:5174",
   "https://mercadoturismo.ar",
   "https://www.mercadoturismo.ar",
+  "https://api.mercadoturismo.ar",
   process.env.FRONTEND_URL,
 ].filter(Boolean); // Eliminar valores undefined
 
@@ -233,7 +234,7 @@ app.use((req, res) => {
   });
 });
 
-// Manejo de errores - SIEMPRE devolver JSON
+// Manejo de errores - SIEMPRE devolver JSON con CORS headers
 app.use((err, req, res, next) => {
   console.error("\n" + "❌".repeat(30));
   console.error("❌ ERROR EN EL SERVIDOR:");
@@ -242,6 +243,13 @@ app.use((err, req, res, next) => {
   console.error("📝 Error:", err.message);
   console.error("📚 Stack:", err.stack);
   console.error("❌".repeat(30) + "\n");
+
+  // Asegurar que CORS headers estén presentes incluso en errores
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+  }
 
   // Asegurar que la respuesta sea JSON incluso en caso de error
   res.setHeader("Content-Type", "application/json");
