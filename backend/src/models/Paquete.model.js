@@ -114,6 +114,11 @@ const Paquete = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    destacado: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      comment: "Indica si la publicación está destacada en el Hero",
+    },
     createdBy: {
       type: DataTypes.INTEGER,
       allowNull: true,

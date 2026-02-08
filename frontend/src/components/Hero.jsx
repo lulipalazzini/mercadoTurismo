@@ -1,81 +1,41 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaStar } from "react-icons/fa";
 import "../styles/hero.css";
 import "../styles/featuredServices.css";
 import heroImage from "../assets/img/paisaje_01.png";
 import heroImage2 from "../assets/img/paisaje_02.png";
-import FeaturedServiceCard from "./common/FeaturedServiceCard";
+import PublicacionDestacadaCard from "./common/PublicacionDestacadaCard";
 import UnifiedHeroSearch from "./UnifiedHeroSearch";
-import { getTopServices } from "../services/stats.service";
-import api from "../services/api";
+import { API_URL } from "../config/api.config";
 
 export default function Hero() {
-  // Estados para servicios destacados
-  const [featuredServices, setFeaturedServices] = useState([]);
-  const [servicesDetails, setServicesDetails] = useState({});
-  const [loadingFeatured, setLoadingFeatured] = useState(true);
+  // Estados para publicaciones destacadas
+  const [publicacionesDestacadas, setPublicacionesDestacadas] = useState([]);
+  const [loadingDestacadas, setLoadingDestacadas] = useState(true);
 
-  // Cargar servicios destacados
+  // Cargar publicaciones destacadas
   useEffect(() => {
-    const loadFeaturedServices = async () => {
+    const loadPublicacionesDestacadas = async () => {
       try {
-        setLoadingFeatured(true);
-        const topServices = await getTopServices(5);
+        setLoadingDestacadas(true);
 
-        // Si no hay servicios con clicks, no mostrar nada
-        if (!topServices || topServices.length === 0) {
-          setFeaturedServices([]);
-          setLoadingFeatured(false);
-          return;
+        const response = await fetch(`${API_URL}/publicaciones-destacadas`);
+        if (!response.ok) {
+          throw new Error("Error al cargar publicaciones destacadas");
         }
 
-        setFeaturedServices(topServices);
-
-        // Cargar detalles de cada servicio
-        const details = {};
-        const categoryEndpoints = {
-          alojamiento: "alojamientos",
-          auto: "autos",
-          circuito: "circuitos",
-          crucero: "cruceros",
-          excursion: "excursiones",
-          paquete: "paquetes",
-          pasaje: "pasajes",
-          salidaGrupal: "salidas-grupales",
-          seguro: "seguros",
-          transfer: "transfers",
-        };
-
-        await Promise.all(
-          topServices.map(async (service) => {
-            try {
-              const endpoint = categoryEndpoints[service.category];
-              if (endpoint && service.serviceId) {
-                const response = await api.get(
-                  `/${endpoint}/${service.serviceId}`,
-                );
-                const data = await response.json();
-                details[`${service.category}-${service.serviceId}`] = data;
-              }
-            } catch (error) {
-              console.error(
-                `Error loading details for ${service.category}-${service.serviceId}:`,
-                error,
-              );
-            }
-          }),
-        );
-
-        setServicesDetails(details);
+        const data = await response.json();
+        setPublicacionesDestacadas(data.publicaciones || []);
       } catch (error) {
-        console.error("Error loading featured services:", error);
-        setFeaturedServices([]);
+        console.error("Error loading featured publications:", error);
+        setPublicacionesDestacadas([]);
       } finally {
-        setLoadingFeatured(false);
+        setLoadingDestacadas(false);
       }
     };
 
-    loadFeaturedServices();
+    loadPublicacionesDestacadas();
   }, []);
 
   return (
@@ -102,27 +62,22 @@ export default function Hero() {
         <div className="hero-overlay" aria-hidden="true" />
 
         <div className="hero-content">
-          {/* Servicios Destacados - Solo mostrar si hay datos */}
-          {!loadingFeatured && featuredServices.length > 0 && (
+          {/* Publicaciones Destacadas - Solo mostrar si hay datos */}
+          {!loadingDestacadas && publicacionesDestacadas.length > 0 && (
             <div className="featured-services">
               <div className="featured-services-header">
                 <h2 className="featured-services-title">
-                  Más buscados por viajeros
+                  <FaStar className="inline-block mr-2 text-yellow-500" /> Ofertas Destacadas
                 </h2>
                 <p className="featured-services-subtitle">
-                  Descubrí los servicios más populares de nuestras agencias
+                  Descubrí las mejores ofertas seleccionadas por nuestro equipo
                 </p>
               </div>
               <div className="featured-services-grid">
-                {featuredServices.map((service, index) => (
-                  <FeaturedServiceCard
-                    key={`${service.category}-${service.serviceId}-${index}`}
-                    service={service}
-                    detailData={
-                      servicesDetails[
-                        `${service.category}-${service.serviceId}`
-                      ]
-                    }
+                {publicacionesDestacadas.map((publicacion, index) => (
+                  <PublicacionDestacadaCard
+                    key={`${publicacion.tipo}-${publicacion.id}-${index}`}
+                    publicacion={publicacion}
                   />
                 ))}
               </div>

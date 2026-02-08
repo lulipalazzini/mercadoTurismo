@@ -380,6 +380,13 @@ export const dashboardModulesConfig = {
     section: "gestion",
     roles: ["admin", "sysadmin", "agencia", "operador"],
   },
+  "publicaciones-destacadas": {
+    id: "publicaciones-destacadas",
+    title: "Publicaciones Destacadas",
+    icon: "FaStar",
+    section: "gestion",
+    roles: ["admin", "sysadmin"],
+  },
   usuarios: {
     id: "usuarios",
     title: "Usuarios",

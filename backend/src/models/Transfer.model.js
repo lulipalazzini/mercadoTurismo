@@ -114,6 +114,11 @@ const Transfer = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    destacado: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      comment: "Indica si la publicación está destacada en el Hero",
+    },
   },
   {
     tableName: "transfers",

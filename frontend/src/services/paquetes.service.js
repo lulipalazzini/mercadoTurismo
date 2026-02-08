@@ -2,10 +2,12 @@ import api from "./api.js";
 
 /**
  * Obtiene todos los paquetes
+ * @param {boolean} myPaquetes - Si es true, filtra solo los paquetes del usuario autenticado
  */
-export const getPaquetes = async () => {
+export const getPaquetes = async (myPaquetes = false) => {
   try {
-    const response = await api.get("/paquetes");
+    const url = myPaquetes ? "/paquetes?myPaquetes=true" : "/paquetes";
+    const response = await api.get(url);
     if (!response.ok) throw new Error("Error al obtener paquetes");
     const data = await response.json();
     return data;

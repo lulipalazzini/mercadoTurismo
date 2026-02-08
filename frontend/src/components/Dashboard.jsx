@@ -28,6 +28,7 @@ import {
   FaFileInvoice,
   FaTrain,
   FaShieldAlt,
+  FaStar,
 } from "react-icons/fa";
 import Reservas from "./dashboard/Reservas";
 import Paquetes from "./dashboard/Paquetes";
@@ -50,6 +51,7 @@ import Ajustes from "./dashboard/Ajustes";
 import Usuarios from "./dashboard/Usuarios";
 import UsuariosAdmin from "./dashboard/UsuariosAdmin";
 import ReportesAdmin from "./dashboard/ReportesAdmin";
+import PublicacionesDestacadas from "./dashboard/PublicacionesDestacadas";
 import {
   getUserRole,
   getRoleDisplayName,
@@ -128,6 +130,7 @@ function DashboardContent() {
       "facturacion-anotador": "Facturación (Anotador)",
       clientes: "Clientes",
       reportes: "Reportes",
+      "publicaciones-destacadas": "Publicaciones Destacadas",
       facturacion: "Facturación",
       ajustes: "Ajustes",
       usuarios: "Usuarios",
@@ -155,6 +158,7 @@ function DashboardContent() {
     FaShieldAlt: <FaShieldAlt />,
     FaDollarSign: <FaDollarSign />,
     FaChartBar: <FaChartBar />,
+    FaStar: <FaStar />,
     FaCog: <FaCog />,
   };
 
@@ -207,6 +211,8 @@ function DashboardContent() {
         ) : (
           <Reportes />
         );
+      case "publicaciones-destacadas":
+        return <PublicacionesDestacadas />;
       case "facturacion":
         return <Facturacion />;
       case "ajustes":

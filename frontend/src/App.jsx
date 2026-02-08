@@ -6,7 +6,6 @@ import {
   useLocation,
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import GlobalSearch from "./components/GlobalSearch";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
 import HomeMarketplace from "./components/HomeMarketplace";
@@ -24,6 +23,7 @@ import Excursiones from "./pages/Excursiones";
 import SalidasGrupales from "./pages/SalidasGrupales";
 import Cruceros from "./pages/Cruceros";
 import Seguros from "./pages/Seguros";
+import PublicacionesDestacadasPage from "./pages/PublicacionesDestacadasPage";
 import "./App.css";
 
 function AppContent() {
@@ -35,16 +35,13 @@ function AppContent() {
     "/dashboard",
   ].includes(location.pathname);
 
-  // Mostrar búsqueda global solo en páginas minoristas
-  const showGlobalSearch = !hideNavbar;
-
   return (
     <>
       {!hideNavbar && <Navbar />}
-      {showGlobalSearch && <GlobalSearch />}
       <Routes>
         <Route path="/" element={<HomeMarketplace />} />
         <Route path="/home-old" element={<Home />} />
+        <Route path="/ofertas-destacadas" element={<PublicacionesDestacadasPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<RegisterB2BWizard />} />
         <Route path="/recuperar-contrasena" element={<RecoverPassword />} />

@@ -39,6 +39,7 @@ const trenesRoutes = require("./routes/trenes.routes");
 const clickStatsRoutes = require("./routes/clickStats.routes");
 const usersRoutes = require("./routes/users.routes");
 const adminRoutes = require("./routes/admin.routes");
+const publicacionesRoutes = require("./routes/publicaciones.routes");
 
 dotenv.config();
 
@@ -95,7 +96,6 @@ const limiter = rateLimit({
 // app.use(limiter); // Comentado temporalmente para testing
 
 // Middlewares básicos - CORS con soporte para múltiples orígenes
-/* CORS COMENTADO TEMPORALMENTE PARA TESTING
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
@@ -113,17 +113,18 @@ const corsOptions = {
       callback(null, true);
     } else {
       console.warn(`⚠️  CORS: Origin no permitido: ${origin}`);
-      callback(null, true); // En producción, podrías cambiarlo a false para mayor seguridad
+      // En desarrollo permitir todo, en producción bloquear
+      if (process.env.NODE_ENV === 'production') {
+        callback(new Error('No permitido por CORS'));
+      } else {
+        callback(null, true);
+      }
     }
   },
   credentials: true,
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
-*/
-
-// CORS simple para testing - PERMITIR TODO
-app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -196,6 +197,7 @@ app.use("/api/trenes", trenesRoutes);
 app.use("/api/stats", clickStatsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/publicaciones-destacadas", publicacionesRoutes);
 
 // Ruta de prueba en /api
 app.get("/api", (req, res) => {

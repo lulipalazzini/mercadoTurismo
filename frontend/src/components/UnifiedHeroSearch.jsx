@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PassengerSelector from "./common/PassengerSelector";
 import DestinoAutocomplete from "./common/DestinoAutocomplete";
+import { API_URL } from "../config/api.config";
 import "../styles/unifiedSearch.css";
 
 /**
@@ -12,6 +13,8 @@ export default function UnifiedHeroSearch() {
   const navigate = useNavigate();
 
   const [searchType, setSearchType] = useState("paquetes");
+  const [searchTypes, setSearchTypes] = useState([]);
+  const [loadingTypes, setLoadingTypes] = useState(true);
   const [filters, setFilters] = useState({
     origen: "",
     destino: "",
@@ -20,31 +23,50 @@ export default function UnifiedHeroSearch() {
     minors: 0,
   });
 
-  const searchTypes = [
-    { id: "paquetes", label: "Paquetes", icon: "🎒", route: "/paquetes" },
-    {
-      id: "alojamientos",
-      label: "Alojamientos",
-      icon: "🏨",
-      route: "/alojamientos",
-    },
-    { id: "cruceros", label: "Cruceros", icon: "🚢", route: "/cruceros" },
-    { id: "autos", label: "Autos", icon: "🚗", route: "/autos" },
-    {
-      id: "excursiones",
-      label: "Excursiones",
-      icon: "🎭",
-      route: "/excursiones",
-    },
-    {
-      id: "salidas-grupales",
-      label: "Salidas Grupales",
-      icon: "👥",
-      route: "/salidas-grupales",
-    },
-    { id: "seguros", label: "Seguros", icon: "🛡️", route: "/seguros" },
-    { id: "transfers", label: "Transfers", icon: "🚕", route: "/transfers" },
-  ];
+  // Cargar tipos de servicios desde la API
+  useEffect(() => {
+    const loadTiposServicios = async () => {
+      try {
+        setLoadingTypes(true);
+        const response = await fetch(`${API_URL}/publicaciones-destacadas/tipos-servicios`);
+        
+        if (!response.ok) {
+          throw new Error("Error al cargar tipos de servicios");
+        }
+
+        const data = await response.json();
+        
+        // Mapear los tipos de la API al formato esperado
+        const tiposFormateados = data.tipos.map(tipo => ({
+          id: tipo.id,
+          label: tipo.label,
+          route: tipo.route,
+          count: tipo.count,
+          available: tipo.available
+        }));
+
+        setSearchTypes(tiposFormateados);
+        
+        // Si el tipo actual no está disponible, seleccionar el primero disponible
+        const tipoActualDisponible = tiposFormateados.find(t => t.id === searchType);
+        if (!tipoActualDisponible && tiposFormateados.length > 0) {
+          setSearchType(tiposFormateados[0].id);
+        }
+      } catch (error) {
+        console.error("Error loading service types:", error);
+        // Fallback a tipos por defecto en caso de error
+        setSearchTypes([
+          { id: "paquetes", label: "Paquetes", route: "/paquetes", available: true },
+          { id: "alojamientos", label: "Alojamientos", route: "/alojamientos", available: true },
+          { id: "cruceros", label: "Cruceros", route: "/cruceros", available: true },
+        ]);
+      } finally {
+        setLoadingTypes(false);
+      }
+    };
+
+    loadTiposServicios();
+  }, []);
 
   const handleTypeChange = (type) => {
     setSearchType(type);
@@ -110,12 +132,17 @@ export default function UnifiedHeroSearch() {
               value={searchType}
               onChange={(e) => handleTypeChange(e.target.value)}
               className="search-type-input"
+              disabled={loadingTypes}
             >
-              {searchTypes.map((type) => (
-                <option key={type.id} value={type.id}>
-                  {type.label}
-                </option>
-              ))}
+              {loadingTypes ? (
+                <option>Cargando...</option>
+              ) : (
+                searchTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.label} {type.count > 0 ? `(${type.count})` : ""}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 

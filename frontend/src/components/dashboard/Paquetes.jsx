@@ -45,7 +45,7 @@ export default function Paquetes() {
   const loadPaquetes = async () => {
     try {
       setLoading(true);
-      const data = await getPaquetes();
+      const data = await getPaquetes(true); // true = solo mis paquetes
       setPaquetes(data);
       setError(null);
     } catch (err) {

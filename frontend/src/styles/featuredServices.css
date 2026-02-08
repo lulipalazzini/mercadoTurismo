@@ -79,6 +79,13 @@
 .placeholder-icon {
   font-size: 4rem;
   opacity: 0.9;
+  color: white;
+}
+
+/* Ajustes para iconos de Font Awesome */
+.placeholder-icon svg {
+  width: 4rem;
+  height: 4rem;
 }
 
 .featured-service-badge {
@@ -100,6 +107,12 @@
 
 .badge-icon {
   font-size: 1rem;
+  color: #fbbf24;
+}
+
+.badge-icon svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .badge-text {
@@ -127,6 +140,12 @@
 
 .category-icon {
   font-size: 1rem;
+  color: #667eea;
+}
+
+.category-icon svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .featured-service-title {

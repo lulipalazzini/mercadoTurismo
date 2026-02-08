@@ -222,12 +222,28 @@ button:active {
   }
 }
 
+@keyframes fadeCross {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .fade-in {
   animation: fadeIn 0.8s ease-out forwards;
 }
 
 .fade-in-up {
   animation: fadeInUp 1s ease-out forwards;
+}
+
+.animate-fade-cross {
+  animation: fadeCross 8s ease-in-out infinite;
 }
 
 /* Scroll suave */
@@ -257,4 +273,16 @@ button:focus,
 button:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
+}
+
+/* Animación para popup de búsqueda global integrado en SearchBar */
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

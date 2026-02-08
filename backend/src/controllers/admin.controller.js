@@ -11,6 +11,8 @@ const Excursion = require("../models/Excursion.model");
 const SalidaGrupal = require("../models/SalidaGrupal.model");
 const Circuito = require("../models/Circuito.model");
 const CupoMercado = require("../models/CupoMercado.model");
+const Tren = require("../models/Tren.model");
+const Seguro = require("../models/Seguro.model");
 const { Op } = require("sequelize");
 const { sequelize } = require("../config/database");
 
@@ -751,6 +753,173 @@ const cambiarEstadoUsuario = async (req, res) => {
   }
 };
 
+/**
+ * 🌟 GESTIÓN DE PUBLICACIONES DESTACADAS - ADMIN ONLY
+ */
+
+// Obtener TODAS las publicaciones de todos los tipos para selección de destacadas
+const getAllPublicaciones = async (req, res) => {
+  try {
+    console.log("\n📋 [ADMIN] Obteniendo todas las publicaciones...");
+
+    // Modelos a consultar con sus mapeos
+    const modelsConfig = [
+      { model: Paquete, tipo: "paquete", table: "Paquetes" },
+      { model: Alojamiento, tipo: "alojamiento", table: "alojamientos" },
+      { model: Auto, tipo: "auto", table: "autos" },
+      { model: Transfer, tipo: "transfer", table: "transfers" },
+      { model: Crucero, tipo: "crucero", table: "cruceros" },
+      { model: Excursion, tipo: "excursion", table: "excursiones" },
+      { model: SalidaGrupal, tipo: "salidaGrupal", table: "salidas_grupales" },
+      { model: Circuito, tipo: "circuito", table: "circuitos" },
+      { model: Tren, tipo: "tren", table: "trenes" },
+      { model: Seguro, tipo: "seguro", table: "seguros" },
+    ];
+
+    const todasPublicaciones = [];
+
+    // Consultar cada modelo
+    for (const { model, tipo, table } of modelsConfig) {
+      try {
+        const items = await model.findAll({
+          where: { activo: true }, // Solo publicaciones activas
+          attributes: ["id", "nombre", "descripcion", "precio", "imagenes", "destacado", "createdAt"],
+          include: [
+            {
+              model: User,
+              as: "vendedor",
+              attributes: ["id", "nombre", "email"],
+            },
+          ],
+          order: [["createdAt", "DESC"]],
+        });
+
+        // Agregar tipo y formatear
+        items.forEach((item) => {
+          todasPublicaciones.push({
+            id: item.id,
+            tipo,
+            nombre: item.nombre || `${tipo} #${item.id}`,
+            descripcion: item.descripcion || "",
+            precio: item.precio || 0,
+            imagenes: item.imagenes || [],
+            destacado: item.destacado || false,
+            createdAt: item.createdAt,
+            vendedor: item.vendedor
+              ? {
+                  id: item.vendedor.id,
+                  nombre: item.vendedor.nombre,
+                  email: item.vendedor.email,
+                }
+              : null,
+          });
+        });
+      } catch (error) {
+        console.error(`⚠️ Error al obtener ${tipo}:`, error.message);
+        // Continuar con el siguiente modelo
+      }
+    }
+
+    console.log(`✅ Total de publicaciones encontradas: ${todasPublicaciones.length}`);
+
+    res.json({
+      total: todasPublicaciones.length,
+      publicaciones: todasPublicaciones,
+    });
+  } catch (error) {
+    console.error("❌ Error al obtener publicaciones:", error);
+    res.status(500).json({
+      message: "Error al obtener publicaciones",
+      error: error.message,
+    });
+  }
+};
+
+// Actualizar publicaciones destacadas (marcar/desmarcar)
+const updatePublicacionesDestacadas = async (req, res) => {
+  try {
+    const { destacadas } = req.body;
+    // destacadas es un array de objetos: [{ tipo: 'paquete', id: 1 }, { tipo: 'alojamiento', id: 5 }]
+
+    if (!Array.isArray(destacadas)) {
+      return res.status(400).json({
+        message: "El campo 'destacadas' debe ser un array",
+      });
+    }
+
+    console.log(`\n🌟 [ADMIN] Actualizando publicaciones destacadas (${destacadas.length} seleccionadas)...`);
+
+    const modelsMap = {
+      paquete: Paquete,
+      alojamiento: Alojamiento,
+      auto: Auto,
+      transfer: Transfer,
+      crucero: Crucero,
+      excursion: Excursion,
+      salidaGrupal: SalidaGrupal,
+      circuito: Circuito,
+      tren: Tren,
+      seguro: Seguro,
+    };
+
+    // Paso 1: Desmarcar TODAS las publicaciones destacadas actuales
+    for (const [tipo, Model] of Object.entries(modelsMap)) {
+      await Model.update(
+        { destacado: false },
+        { where: { destacado: true } }
+      );
+    }
+
+    console.log("✅ Todas las publicaciones desmarcadas");
+
+    // Paso 2: Marcar las nuevas destacadas
+    let actualizadas = 0;
+    for (const item of destacadas) {
+      const Model = modelsMap[item.tipo];
+      if (!Model) {
+        console.warn(`⚠️ Tipo no válido: ${item.tipo}`);
+        continue;
+      }
+
+      try {
+        const [updated] = await Model.update(
+          { destacado: true },
+          { where: { id: item.id } }
+        );
+        if (updated) {
+          actualizadas++;
+        }
+      } catch (error) {
+        console.error(`⚠️ Error al actualizar ${item.tipo} #${item.id}:`, error.message);
+      }
+    }
+
+    // Registrar en activity_log
+    await ActivityLog.create({
+      userId: req.user.id,
+      accion: "PUBLICACIONES_DESTACADAS_ACTUALIZADAS",
+      modulo: "admin",
+      detalles: JSON.stringify({
+        cantidadDestacadas: actualizadas,
+        destacadas: destacadas,
+      }),
+    });
+
+    console.log(`✅ Publicaciones destacadas actualizadas: ${actualizadas}`);
+
+    res.json({
+      message: "Publicaciones destacadas actualizadas correctamente",
+      actualizadas,
+    });
+  } catch (error) {
+    console.error("❌ Error al actualizar publicaciones destacadas:", error);
+    res.status(500).json({
+      message: "Error al actualizar publicaciones destacadas",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getAllUsersWithStats,
   getUserDetail,
@@ -760,4 +929,6 @@ module.exports = {
   getClicksReport,
   getActivityReport,
   cambiarEstadoUsuario,
+  getAllPublicaciones,
+  updatePublicacionesDestacadas,
 };

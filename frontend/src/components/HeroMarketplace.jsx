@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import DestinoAutocomplete from "./common/DestinoAutocomplete";
 import heroImage from "../assets/img/paisaje_01.png";
-
-const DESTINATIONS = [
-  "Buenos Aires", "Bariloche", "Mendoza", "Ushuaia", "Salta", "Iguazú",
-  "Mar del Plata", "Córdoba", "El Calafate", "Puerto Madryn", "Villa La Angostura",
-  "Miami", "Nueva York", "Cancún", "Punta Cana", "Europa", "Caribe", "Brasil"
-];
-
-const ORIGINS = [
-  "Buenos Aires", "Córdoba", "Rosario", "Mendoza", "Tucumán", "Salta",
-  "Mar del Plata", "La Plata", "Neuquén", "Santa Fe"
-];
 
 export default function HeroMarketplace() {
   const navigate = useNavigate();
@@ -27,10 +17,19 @@ export default function HeroMarketplace() {
     setSearchForm(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleOrigenChange = (e) => {
+    setSearchForm(prev => ({ ...prev, origin: e.target.value }));
+  };
+
+  const handleDestinoChange = (e) => {
+    setSearchForm(prev => ({ ...prev, destination: e.target.value }));
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (searchForm.origin) params.append('origin', searchForm.origin);
+    // Note: origin no se usa en el filtrado de paquetes ya que no tienen ese campo
+    // if (searchForm.origin) params.append('origin', searchForm.origin);
     if (searchForm.destination) params.append('destination', searchForm.destination);
     if (searchForm.budget) params.append('budget', searchForm.budget);
     if (searchForm.currency) params.append('currency', searchForm.currency);
@@ -88,24 +87,13 @@ export default function HeroMarketplace() {
                   <label htmlFor="origin" className="block text-sm font-semibold text-gray-700">
                     Origen
                   </label>
-                  <div className="relative">
-                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <select
-                      id="origin"
-                      name="origin"
-                      value={searchForm.origin}
-                      onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none bg-white"
-                    >
-                      <option value="">Seleccionar origen</option>
-                      {ORIGINS.map(city => (
-                        <option key={city} value={city}>{city}</option>
-                      ))}
-                    </select>
-                  </div>
+                  <DestinoAutocomplete
+                    name="origin"
+                    value={searchForm.origin}
+                    onChange={handleOrigenChange}
+                    placeholder="¿Desde dónde?"
+                    hideLabel={true}
+                  />
                 </div>
 
                 {/* Destino */}
@@ -113,23 +101,13 @@ export default function HeroMarketplace() {
                   <label htmlFor="destination" className="block text-sm font-semibold text-gray-700">
                     Destino
                   </label>
-                  <div className="relative">
-                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <select
-                      id="destination"
-                      name="destination"
-                      value={searchForm.destination}
-                      onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none bg-white"
-                    >
-                      <option value="">Seleccionar destino</option>
-                      {DESTINATIONS.map(city => (
-                        <option key={city} value={city}>{city}</option>
-                      ))}
-                    </select>
-                  </div>
+                  <DestinoAutocomplete
+                    name="destination"
+                    value={searchForm.destination}
+                    onChange={handleDestinoChange}
+                    placeholder="¿A dónde quieres ir?"
+                    hideLabel={true}
+                  />
                 </div>
 
                 {/* Presupuesto Máximo */}
@@ -149,6 +127,7 @@ export default function HeroMarketplace() {
                         value={searchForm.budget}
                         onChange={handleInputChange}
                         placeholder="Ej: 500000"
+                        min="0"
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none"
                       />
                     </div>

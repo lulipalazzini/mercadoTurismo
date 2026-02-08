@@ -25,25 +25,33 @@ const getPaquetes = async (req, res) => {
   }
 
   try {
-    // ⚠️ FILTRO DE SEGURIDAD: Solo ver paquetes propios (excepto admin)
+    // Construir whereClause base
     const whereClause = {};
 
-    if (req.user) {
-      // Admin ve todo, usuarios normales solo ven lo suyo
+    // Si se especifica ?myPaquetes=true, filtrar por usuario (vista dashboard)
+    const { myPaquetes } = req.query;
+    
+    if (myPaquetes === 'true' && req.user) {
+      // Vista de dashboard: mostrar paquetes del usuario
       if (!isAdmin(req.user)) {
         whereClause.published_by_user_id = req.user.id;
         console.log(`   🔐 Filtrando paquetes del usuario: ${req.user.id}`);
       } else {
         console.log(`   👑 Admin: Ver todos los paquetes`);
       }
+    } else {
+      // Vista pública: mostrar todos los paquetes (sin filtro por activo)
+      console.log(`   🌍 Vista pública: Mostrando todos los paquetes`);
     }
 
     // FILTROS DE BÚSQUEDA ESPECÍFICOS
-    const { destino, nochesMin, nochesMax, precioMin, precioMax } = req.query;
+    const { destino, destination, nochesMin, nochesMax, precioMin, precioMax, budget, currency } = req.query;
 
-    if (destino) {
-      whereClause.destino = { [Op.like]: `%${destino}%` };
-      console.log(`   Filtrando por destino: ${destino}`);
+    // Manejo de destino (soporta ambos parámetros: destino y destination)
+    const destinoFiltro = destino || destination;
+    if (destinoFiltro) {
+      whereClause.destino = { [Op.like]: `%${destinoFiltro}%` };
+      console.log(`   Filtrando por destino: ${destinoFiltro}`);
     }
 
     if (nochesMin || nochesMax) {
@@ -59,18 +67,21 @@ const getPaquetes = async (req, res) => {
       );
     }
 
-    if (precioMin || precioMax) {
+    // Manejo de precio (soporta budget como precioMax)
+    const precioMaxFiltro = precioMax || budget;
+    if (precioMin || precioMaxFiltro) {
       whereClause.precio = {};
       if (precioMin) {
         whereClause.precio[Op.gte] = parseFloat(precioMin);
       }
-      if (precioMax) {
-        whereClause.precio[Op.lte] = parseFloat(precioMax);
+      if (precioMaxFiltro) {
+        whereClause.precio[Op.lte] = parseFloat(precioMaxFiltro);
       }
       console.log(
-        `   Filtrando por precio: $${precioMin || "N/A"}-$${precioMax || "N/A"}`,
+        `   Filtrando por precio: $${precioMin || "N/A"}-$${precioMaxFiltro || "N/A"}`,
       );
     }
+    // Nota: currency no se usa porque los paquetes no tienen campo moneda
 
     const paquetes = await Paquete.findAll({
       where: whereClause,

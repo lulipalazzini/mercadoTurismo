@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import PassengerSelector from "./common/PassengerSelector";
+import DestinoAutocomplete from "./common/DestinoAutocomplete";
 import "../styles/moduleFilters.css";
 
 /**
@@ -11,6 +12,7 @@ export default function ModuleFilters({ module, onFiltersChange }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState({});
   const [passengers, setPassengers] = useState({ adults: 1, minors: 0 });
+  const [currency, setCurrency] = useState("ARS");
 
   // Inicializar filtros desde URL al cargar
   useEffect(() => {
@@ -21,6 +23,8 @@ export default function ModuleFilters({ module, onFiltersChange }) {
           ...prev,
           [key]: parseInt(value) || (key === "adults" ? 1 : 0),
         }));
+      } else if (key === "currency") {
+        setCurrency(value);
       } else {
         initialFilters[key] = value;
       }
@@ -29,6 +33,7 @@ export default function ModuleFilters({ module, onFiltersChange }) {
   }, [searchParams]);
 
   const handleFilterChange = (key, value) => {
+    console.log('🔄 Filter changed:', key, '=', value);
     const newFilters = { ...filters, [key]: value };
 
     // Remover filtros vacíos
@@ -40,20 +45,25 @@ export default function ModuleFilters({ module, onFiltersChange }) {
 
     setFilters(newFilters);
 
-    // Actualizar URL con filtros + pasajeros
+    // Actualizar URL con filtros + pasajeros + currency
     const params = new URLSearchParams(newFilters);
+    params.set("currency", currency);
     if (needsPassengerSelector()) {
       params.set("adults", passengers.adults.toString());
       params.set("minors", passengers.minors.toString());
     }
+    console.log('📤 Setting search params:', params.toString());
     setSearchParams(params);
 
     // Notificar al padre con filtros completos
-    onFiltersChange({
+    const fullFilters = {
       ...newFilters,
+      currency,
       adults: passengers.adults,
       minors: passengers.minors,
-    });
+    };
+    console.log('🔔 Notifying parent with filters:', fullFilters);
+    onFiltersChange(fullFilters);
   };
 
   const handlePassengerChange = ({ adults, minors }) => {
@@ -61,19 +71,33 @@ export default function ModuleFilters({ module, onFiltersChange }) {
 
     // Actualizar URL
     const params = new URLSearchParams(filters);
+    params.set("currency", currency);
     params.set("adults", adults.toString());
     params.set("minors", minors.toString());
     setSearchParams(params);
 
     // Notificar al padre
-    onFiltersChange({ ...filters, adults, minors });
+    onFiltersChange({ ...filters, currency, adults, minors });
   };
 
   const clearFilters = () => {
     setFilters({});
     setPassengers({ adults: 1, minors: 0 });
+    setCurrency("ARS");
     setSearchParams({});
     onFiltersChange({});
+  };
+
+  const handleCurrencyChange = (newCurrency) => {
+    setCurrency(newCurrency);
+    const params = new URLSearchParams(filters);
+    params.set("currency", newCurrency);
+    if (needsPassengerSelector()) {
+      params.set("adults", passengers.adults.toString());
+      params.set("minors", passengers.minors.toString());
+    }
+    setSearchParams(params);
+    onFiltersChange({ ...filters, currency: newCurrency, adults: passengers.adults, minors: passengers.minors });
   };
 
   const activeFiltersCount = Object.keys(filters).length;
@@ -98,16 +122,24 @@ export default function ModuleFilters({ module, onFiltersChange }) {
       case "paquetes":
         return [
           {
-            key: "destino",
-            label: "Destino",
-            type: "text",
-            placeholder: "Ej: París, Roma...",
+            key: "origin",
+            label: "Origen",
+            type: "autocomplete",
+            placeholder: "¿Desde dónde?",
           },
-          { key: "fechaInicio", label: "Fecha desde", type: "date" },
-          { key: "nochesMin", label: "Noches mínimo", type: "number", min: 1 },
-          { key: "nochesMax", label: "Noches máximo", type: "number", min: 1 },
-          { key: "precioMin", label: "Precio mínimo", type: "number", min: 0 },
-          { key: "precioMax", label: "Precio máximo", type: "number", min: 0 },
+          {
+            key: "destination",
+            label: "Destino",
+            type: "autocomplete",
+            placeholder: "¿A dónde quieres ir?",
+          },
+          { 
+            key: "budget", 
+            label: "Presupuesto Máximo", 
+            type: "budget", 
+            min: 0,
+            placeholder: "Ej: 500000"
+          },
         ];
 
       case "cruceros":
@@ -451,7 +483,35 @@ export default function ModuleFilters({ module, onFiltersChange }) {
             <div key={field.key} className="search-field">
               <label htmlFor={field.key}>{field.label}</label>
 
-              {field.type === "select" ? (
+              {field.type === "autocomplete" ? (
+                <DestinoAutocomplete
+                  name={field.key}
+                  value={filters[field.key] || ""}
+                  onChange={(e) => handleFilterChange(field.key, e.target.value)}
+                  placeholder={field.placeholder}
+                  hideLabel={true}
+                />
+              ) : field.type === "budget" ? (
+                <div className="budget-input-group">
+                  <input
+                    type="number"
+                    id={field.key}
+                    placeholder={field.placeholder}
+                    min={field.min}
+                    value={filters[field.key] || ""}
+                    onChange={(e) => handleFilterChange(field.key, e.target.value)}
+                    className="budget-number-input"
+                  />
+                  <select
+                    value={currency}
+                    onChange={(e) => handleCurrencyChange(e.target.value)}
+                    className="currency-selector"
+                  >
+                    <option value="ARS">ARS</option>
+                    <option value="USD">USD</option>
+                  </select>
+                </div>
+              ) : field.type === "select" ? (
                 <select
                   id={field.key}
                   value={filters[field.key] || ""}

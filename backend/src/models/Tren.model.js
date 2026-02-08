@@ -174,6 +174,11 @@ const Tren = sequelize.define(
       defaultValue: true,
       comment: "Si false, el tren no aparece en búsquedas",
     },
+    destacado: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      comment: "Indica si la publicación está destacada en el Hero",
+    },
   },
   {
     tableName: "trenes",

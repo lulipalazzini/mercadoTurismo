@@ -8,6 +8,8 @@ const {
   getClicksReport,
   getActivityReport,
   cambiarEstadoUsuario,
+  getAllPublicaciones,
+  updatePublicacionesDestacadas,
 } = require("../controllers/admin.controller");
 const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
 
@@ -26,5 +28,9 @@ router.get("/reportes/usuarios", verifyToken, isAdmin, getUsuariosReport);
 router.get("/reportes/clientes", verifyToken, isAdmin, getClientesReport);
 router.get("/reportes/clicks", verifyToken, isAdmin, getClicksReport);
 router.get("/reportes/actividad", verifyToken, isAdmin, getActivityReport);
+
+// 🌟 Publicaciones Destacadas
+router.get("/publicaciones", verifyToken, isAdmin, getAllPublicaciones);
+router.post("/publicaciones-destacadas", verifyToken, isAdmin, updatePublicacionesDestacadas);
 
 module.exports = router;
