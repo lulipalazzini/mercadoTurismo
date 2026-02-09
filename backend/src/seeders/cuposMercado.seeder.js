@@ -108,27 +108,34 @@ export const seedCuposMercado = async () => {
       return;
     }
 
-    const cuposWithPublisher = cuposMercadoData.map(cupo => {
+    const cuposWithPublisher = cuposMercadoData.map((cupo) => {
       // Extraer fecha de salida de la descripción (formato "Salida DD/MM/YYYY")
-      const fechaMatch = cupo.descripcion.match(/Salida (\d{2})\/(\d{2})\/(\d{4})/);
-      const fechaOrigen = fechaMatch 
+      const fechaMatch = cupo.descripcion.match(
+        /Salida (\d{2})\/(\d{2})\/(\d{4})/,
+      );
+      const fechaOrigen = fechaMatch
         ? `${fechaMatch[3]}-${fechaMatch[2]}-${fechaMatch[1]}` // YYYY-MM-DD
         : cupo.fechaVencimiento; // fallback
-      
+
       // Aerolínea genérica basada en destino
-      const aerolinea = cupo.descripcion.includes("Miami") || cupo.descripcion.includes("Nueva York") 
-        ? "American Airlines" 
-        : cupo.descripcion.includes("Madrid") || cupo.descripcion.includes("Barcelona") || cupo.descripcion.includes("Roma")
-        ? "Iberia"
-        : cupo.descripcion.includes("Cancún") || cupo.descripcion.includes("Punta Cana")
-        ? "Aeromexico"
-        : "Aerolíneas Argentinas";
+      const aerolinea =
+        cupo.descripcion.includes("Miami") ||
+        cupo.descripcion.includes("Nueva York")
+          ? "American Airlines"
+          : cupo.descripcion.includes("Madrid") ||
+              cupo.descripcion.includes("Barcelona") ||
+              cupo.descripcion.includes("Roma")
+            ? "Iberia"
+            : cupo.descripcion.includes("Cancún") ||
+                cupo.descripcion.includes("Punta Cana")
+              ? "Aeromexico"
+              : "Aerolíneas Argentinas";
 
       return {
         ...cupo,
         fechaOrigen,
         aerolinea,
-        published_by_user_id: 1
+        published_by_user_id: 1,
       };
     });
 

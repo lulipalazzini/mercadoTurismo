@@ -27,16 +27,16 @@ const models = [
 
 models.forEach(({ name, model }) => {
   const attributes = Object.keys(model.rawAttributes);
-  
+
   const tieneActivo = attributes.includes("activo");
   const tieneDisponible = attributes.includes("disponible");
   const tieneIsPublic = attributes.includes("isPublic");
-  
+
   console.log(`\n📋 ${name}:`);
   console.log(`   activo: ${tieneActivo ? "✅" : "❌"}`);
   console.log(`   disponible: ${tieneDisponible ? "✅" : "❌"}`);
   console.log(`   isPublic: ${tieneIsPublic ? "✅" : "❌"}`);
-  
+
   if (!tieneActivo && !tieneDisponible) {
     console.log(`   ⚠️  Sin campo de estado!`);
   } else {

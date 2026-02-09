@@ -20,135 +20,242 @@ const getPublicacionesDestacadas = async (req, res) => {
 
     // Configuración de modelos con sus campos específicos
     const modelsConfig = [
-      { 
-        model: Paquete, 
+      {
+        model: Paquete,
         tipo: "paquete",
         statusField: "activo",
-        attributes: ["id", "nombre", "descripcion", "precio", "destino", "imagenes", "destacado", "activo", "createdAt"],
+        attributes: [
+          "id",
+          "nombre",
+          "descripcion",
+          "precio",
+          "destino",
+          "imagenes",
+          "destacado",
+          "activo",
+          "createdAt",
+        ],
         mapFields: (item) => ({
           nombre: item.nombre,
           descripcion: item.descripcion,
           precio: item.precio,
-          destino: item.destino
-        })
+          destino: item.destino,
+        }),
       },
-      { 
-        model: Alojamiento, 
+      {
+        model: Alojamiento,
         tipo: "alojamiento",
         statusField: "activo",
-        attributes: ["id", "nombre", "descripcion", "precioNoche", "ubicacion", "imagenes", "destacado", "activo", "createdAt"],
+        attributes: [
+          "id",
+          "nombre",
+          "descripcion",
+          "precioNoche",
+          "ubicacion",
+          "imagenes",
+          "destacado",
+          "activo",
+          "createdAt",
+        ],
         mapFields: (item) => ({
           nombre: item.nombre,
           descripcion: item.descripcion,
           precio: item.precioNoche,
-          destino: item.ubicacion
-        })
+          destino: item.ubicacion,
+        }),
       },
-      { 
-        model: Auto, 
+      {
+        model: Auto,
         tipo: "auto",
         statusField: "disponible",
-        attributes: ["id", "marca", "modelo", "descripcion", "precioDia", "ubicacion", "imagenes", "destacado", "disponible", "createdAt"],
+        attributes: [
+          "id",
+          "marca",
+          "modelo",
+          "descripcion",
+          "precioDia",
+          "ubicacion",
+          "imagenes",
+          "destacado",
+          "disponible",
+          "createdAt",
+        ],
         mapFields: (item) => ({
           nombre: `${item.marca} ${item.modelo}`,
           descripcion: item.descripcion,
           precio: item.precioDia,
-          destino: item.ubicacion
-        })
+          destino: item.ubicacion,
+        }),
       },
-      { 
-        model: Transfer, 
+      {
+        model: Transfer,
         tipo: "transfer",
         statusField: "disponible",
-        attributes: ["id", "origen", "destino", "descripcion", "precio", "imagenes", "destacado", "disponible", "createdAt"],
+        attributes: [
+          "id",
+          "origen",
+          "destino",
+          "descripcion",
+          "precio",
+          "imagenes",
+          "destacado",
+          "disponible",
+          "createdAt",
+        ],
         mapFields: (item) => ({
           nombre: `Transfer ${item.origen} - ${item.destino}`,
           descripcion: item.descripcion,
           precio: item.precio,
-          destino: item.destino
-        })
+          destino: item.destino,
+        }),
       },
-      { 
-        model: Crucero, 
+      {
+        model: Crucero,
         tipo: "crucero",
         statusField: "activo",
-        attributes: ["id", "nombre", "descripcion", "precioDesde", "importeAdulto", "puertoSalida", "imagenes", "destacado", "activo", "createdAt"],
+        attributes: [
+          "id",
+          "nombre",
+          "descripcion",
+          "precioDesde",
+          "importeAdulto",
+          "puertoSalida",
+          "imagenes",
+          "destacado",
+          "activo",
+          "createdAt",
+        ],
         mapFields: (item) => ({
           nombre: item.nombre,
           descripcion: item.descripcion,
           precio: item.precioDesde || item.importeAdulto,
-          destino: item.puertoSalida
-        })
+          destino: item.puertoSalida,
+        }),
       },
-      { 
-        model: Excursion, 
+      {
+        model: Excursion,
         tipo: "excursion",
         statusField: "activo",
-        attributes: ["id", "nombre", "descripcion", "precio", "destino", "imagenes", "destacado", "activo", "createdAt"],
+        attributes: [
+          "id",
+          "nombre",
+          "descripcion",
+          "precio",
+          "destino",
+          "imagenes",
+          "destacado",
+          "activo",
+          "createdAt",
+        ],
         mapFields: (item) => ({
           nombre: item.nombre,
           descripcion: item.descripcion,
           precio: item.precio,
-          destino: item.destino
-        })
+          destino: item.destino,
+        }),
       },
-      { 
-        model: SalidaGrupal, 
+      {
+        model: SalidaGrupal,
         tipo: "salidaGrupal",
         statusField: "activo",
-        attributes: ["id", "nombre", "descripcion", "precio", "destino", "imagenes", "destacado", "activo", "createdAt"],
+        attributes: [
+          "id",
+          "nombre",
+          "descripcion",
+          "precio",
+          "destino",
+          "imagenes",
+          "destacado",
+          "activo",
+          "createdAt",
+        ],
         mapFields: (item) => ({
           nombre: item.nombre,
           descripcion: item.descripcion,
           precio: item.precio,
-          destino: item.destino
-        })
+          destino: item.destino,
+        }),
       },
-      { 
-        model: Circuito, 
+      {
+        model: Circuito,
         tipo: "circuito",
         statusField: "activo",
-        attributes: ["id", "nombre", "descripcion", "precio", "destinos", "imagenes", "destacado", "activo", "createdAt"],
+        attributes: [
+          "id",
+          "nombre",
+          "descripcion",
+          "precio",
+          "destinos",
+          "imagenes",
+          "destacado",
+          "activo",
+          "createdAt",
+        ],
         mapFields: (item) => ({
           nombre: item.nombre,
           descripcion: item.descripcion,
           precio: item.precio,
-          destino: item.destinos
-        })
+          destino: item.destinos,
+        }),
       },
-      { 
-        model: Tren, 
+      {
+        model: Tren,
         tipo: "tren",
         statusField: "activo",
-        attributes: ["id", "nombre", "descripcion", "precio", "destino", "imagenes", "destacado", "activo", "createdAt"],
+        attributes: [
+          "id",
+          "nombre",
+          "descripcion",
+          "precio",
+          "destino",
+          "imagenes",
+          "destacado",
+          "activo",
+          "createdAt",
+        ],
         mapFields: (item) => ({
           nombre: item.nombre,
           descripcion: item.descripcion,
           precio: item.precio,
-          destino: item.destino
-        })
+          destino: item.destino,
+        }),
       },
-      { 
-        model: Seguro, 
+      {
+        model: Seguro,
         tipo: "seguro",
         statusField: "activo",
-        attributes: ["id", "nombre", "descripcion", "precio", "imagenes", "destacado", "activo", "createdAt"],
+        attributes: [
+          "id",
+          "nombre",
+          "descripcion",
+          "precio",
+          "imagenes",
+          "destacado",
+          "activo",
+          "createdAt",
+        ],
         mapFields: (item) => ({
           nombre: item.nombre,
           descripcion: item.descripcion,
           precio: item.precio,
-          destino: null
-        })
+          destino: null,
+        }),
       },
     ];
 
     const destacadas = [];
 
     // Consultar cada modelo solo por las destacadas
-    for (const { model, tipo, statusField, attributes, mapFields } of modelsConfig) {
+    for (const {
+      model,
+      tipo,
+      statusField,
+      attributes,
+      mapFields,
+    } of modelsConfig) {
       try {
         const whereClause = {
-          destacado: true
+          destacado: true,
         };
         // Agregar filtro de estado activo/disponible
         whereClause[statusField] = true;
@@ -161,7 +268,7 @@ const getPublicacionesDestacadas = async (req, res) => {
               model: User,
               as: "vendedor",
               attributes: ["id", "nombre", "email"],
-              required: false
+              required: false,
             },
           ],
           order: [["createdAt", "DESC"]],
@@ -202,7 +309,9 @@ const getPublicacionesDestacadas = async (req, res) => {
     // Limitar a las primeras 10 destacadas en total
     const destacadasLimitadas = destacadas.slice(0, 10);
 
-    console.log(`✅ Publicaciones destacadas encontradas: ${destacadasLimitadas.length}`);
+    console.log(
+      `✅ Publicaciones destacadas encontradas: ${destacadasLimitadas.length}`,
+    );
 
     res.json({
       total: destacadasLimitadas.length,
@@ -228,65 +337,65 @@ const getTiposServicios = async (req, res) => {
 
     // Configuración de tipos de servicios
     const tiposConfig = [
-      { 
-        id: "paquetes", 
-        label: "Paquetes", 
+      {
+        id: "paquetes",
+        label: "Paquetes",
         route: "/paquetes",
-        model: Paquete 
+        model: Paquete,
       },
-      { 
-        id: "alojamientos", 
-        label: "Alojamientos", 
+      {
+        id: "alojamientos",
+        label: "Alojamientos",
         route: "/alojamientos",
-        model: Alojamiento 
+        model: Alojamiento,
       },
-      { 
-        id: "cruceros", 
-        label: "Cruceros", 
+      {
+        id: "cruceros",
+        label: "Cruceros",
         route: "/cruceros",
-        model: Crucero 
+        model: Crucero,
       },
-      { 
-        id: "autos", 
-        label: "Autos", 
+      {
+        id: "autos",
+        label: "Autos",
         route: "/autos",
-        model: Auto 
+        model: Auto,
       },
-      { 
-        id: "excursiones", 
-        label: "Excursiones", 
+      {
+        id: "excursiones",
+        label: "Excursiones",
         route: "/excursiones",
-        model: Excursion 
+        model: Excursion,
       },
-      { 
-        id: "salidas-grupales", 
-        label: "Salidas Grupales", 
+      {
+        id: "salidas-grupales",
+        label: "Salidas Grupales",
         route: "/salidas-grupales",
-        model: SalidaGrupal 
+        model: SalidaGrupal,
       },
-      { 
-        id: "seguros", 
-        label: "Seguros", 
+      {
+        id: "seguros",
+        label: "Seguros",
         route: "/seguros",
-        model: Seguro 
+        model: Seguro,
       },
-      { 
-        id: "transfers", 
-        label: "Transfers", 
+      {
+        id: "transfers",
+        label: "Transfers",
         route: "/transfers",
-        model: Transfer 
+        model: Transfer,
       },
-      { 
-        id: "circuitos", 
-        label: "Circuitos", 
+      {
+        id: "circuitos",
+        label: "Circuitos",
         route: "/circuitos",
-        model: Circuito 
+        model: Circuito,
       },
-      { 
-        id: "trenes", 
-        label: "Trenes", 
+      {
+        id: "trenes",
+        label: "Trenes",
         route: "/trenes",
-        model: Tren 
+        model: Tren,
       },
     ];
 
@@ -296,7 +405,7 @@ const getTiposServicios = async (req, res) => {
     for (const tipo of tiposConfig) {
       try {
         const count = await tipo.model.count({
-          where: { activo: true }
+          where: { activo: true },
         });
 
         tiposDisponibles.push({
@@ -304,7 +413,7 @@ const getTiposServicios = async (req, res) => {
           label: tipo.label,
           route: tipo.route,
           count: count,
-          available: count > 0
+          available: count > 0,
         });
       } catch (error) {
         console.error(`⚠️ Error al contar ${tipo.label}:`, error.message);
@@ -313,7 +422,7 @@ const getTiposServicios = async (req, res) => {
           label: tipo.label,
           route: tipo.route,
           count: 0,
-          available: false
+          available: false,
         });
       }
     }
@@ -321,7 +430,9 @@ const getTiposServicios = async (req, res) => {
     // Ordenar por label alfabéticamente
     tiposDisponibles.sort((a, b) => a.label.localeCompare(b.label));
 
-    console.log(`✅ Tipos de servicios encontrados: ${tiposDisponibles.length}`);
+    console.log(
+      `✅ Tipos de servicios encontrados: ${tiposDisponibles.length}`,
+    );
 
     res.json({
       total: tiposDisponibles.length,
@@ -380,7 +491,7 @@ const getDestinos = async (req, res) => {
 
     // Convertir Set a Array y ordenar alfabéticamente
     const destinos = Array.from(destinosSet).sort((a, b) =>
-      a.localeCompare(b, "es", { sensitivity: "base" })
+      a.localeCompare(b, "es", { sensitivity: "base" }),
     );
 
     console.log(`✅ Destinos únicos encontrados: ${destinos.length}`);
@@ -438,7 +549,7 @@ const getOrigenes = async (req, res) => {
 
     // Convertir Set a Array y ordenar alfabéticamente
     const origenes = Array.from(origenesSet).sort((a, b) =>
-      a.localeCompare(b, "es", { sensitivity: "base" })
+      a.localeCompare(b, "es", { sensitivity: "base" }),
     );
 
     console.log(`✅ Orígenes únicos encontrados: ${origenes.length}`);

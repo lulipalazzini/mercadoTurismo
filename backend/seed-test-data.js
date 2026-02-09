@@ -12,7 +12,7 @@ async function seedTestData() {
 
     // Crear usuario vendedor
     const hashedPassword = await bcrypt.hash("test123", 10);
-    
+
     const [user] = await User.findOrCreate({
       where: { email: "vendedor@test.com" },
       defaults: {
@@ -22,7 +22,7 @@ async function seedTestData() {
         role: "B2B",
         activo: true,
       },
-    });    
+    });
 
     console.log(`✅ Usuario creado: ${user.nombre} (ID: ${user.id})`);
 
@@ -128,7 +128,9 @@ async function seedTestData() {
       },
     });
 
-    console.log(`✅ Auto destacado creado: ${auto1[0].marca} ${auto1[0].modelo}`);
+    console.log(
+      `✅ Auto destacado creado: ${auto1[0].marca} ${auto1[0].modelo}`,
+    );
 
     console.log("\n✅ DATOS DE PRUEBA CREADOS EXITOSAMENTE\n");
     process.exit(0);

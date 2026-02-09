@@ -220,7 +220,7 @@ export const seedAlojamientos = async () => {
       try {
         await Alojamiento.create({
           ...alojamiento,
-          published_by_user_id: alojamiento.vendedorId || 1
+          published_by_user_id: alojamiento.vendedorId || 1,
         });
         insertados++;
       } catch (error) {

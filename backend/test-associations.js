@@ -42,7 +42,7 @@ async function testModels() {
       // Verificar asociaciones
       const associations = Object.keys(model.associations || {});
       console.log(`\n✅ Asociaciones definidas (${associations.length}):`);
-      associations.forEach(assoc => {
+      associations.forEach((assoc) => {
         const detail = model.associations[assoc];
         console.log(`   - ${assoc} (${detail.associationType})`);
       });
@@ -57,7 +57,7 @@ async function testModels() {
               model: User,
               as: "vendedor",
               attributes: ["id", "nombre", "email"],
-              required: false
+              required: false,
             },
           ],
           limit: 1,
@@ -71,13 +71,17 @@ async function testModels() {
       // Verificar columnas en BD
       try {
         const [tableInfo] = await sequelize.query(
-          `PRAGMA table_info(${tableName})`
+          `PRAGMA table_info(${tableName})`,
         );
-        
+
         // Verificar que tenga published_by_user_id
-        const hasPublishedBy = tableInfo.some(col => col.name === "published_by_user_id");
-        const hasVendedorId = tableInfo.some(col => col.name === "vendedorId");
-        const hasUserId = tableInfo.some(col => col.name === "userId");
+        const hasPublishedBy = tableInfo.some(
+          (col) => col.name === "published_by_user_id",
+        );
+        const hasVendedorId = tableInfo.some(
+          (col) => col.name === "vendedorId",
+        );
+        const hasUserId = tableInfo.some((col) => col.name === "userId");
 
         console.log(`\n🔍 Columnas de relación:`);
         console.log(`   published_by_user_id: ${hasPublishedBy ? "✅" : "❌"}`);
@@ -87,7 +91,9 @@ async function testModels() {
         // Verificar qué foreignKey está usando la asociación
         const vendedorAssoc = model.associations?.vendedor;
         if (vendedorAssoc) {
-          console.log(`\n💡 Asociación 'vendedor' usa foreignKey: ${vendedorAssoc.foreignKey}`);
+          console.log(
+            `\n💡 Asociación 'vendedor' usa foreignKey: ${vendedorAssoc.foreignKey}`,
+          );
         } else {
           console.log(`\n❌ No tiene asociación 'vendedor'`);
         }

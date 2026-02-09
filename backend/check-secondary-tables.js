@@ -18,12 +18,24 @@ async function checkSecondaryTables() {
     const models = [
       { name: "Cliente", model: Cliente, tableName: "Clientes" },
       { name: "Reserva", model: Reserva, tableName: "Reservas" },
-      { name: "ReservaAnotador", model: ReservaAnotador, tableName: "reservas_anotador" },
-      { name: "FacturacionAnotador", model: FacturacionAnotador, tableName: "facturacion_anotador" },
+      {
+        name: "ReservaAnotador",
+        model: ReservaAnotador,
+        tableName: "reservas_anotador",
+      },
+      {
+        name: "FacturacionAnotador",
+        model: FacturacionAnotador,
+        tableName: "facturacion_anotador",
+      },
       { name: "CupoMercado", model: CupoMercado, tableName: "cupos_mercado" },
       { name: "Cupo", model: Cupo, tableName: "Cupos" },
       { name: "ClickStats", model: ClickStats, tableName: "click_stats" },
-      { name: "ClickTracking", model: ClickTracking, tableName: "click_tracking" },
+      {
+        name: "ClickTracking",
+        model: ClickTracking,
+        tableName: "click_tracking",
+      },
       { name: "ActivityLog", model: ActivityLog, tableName: "activity_log" },
     ];
 
@@ -40,7 +52,7 @@ async function checkSecondaryTables() {
       // Obtener columnas de la tabla
       try {
         const [tableInfo] = await sequelize.query(
-          `PRAGMA table_info(${tableName})`
+          `PRAGMA table_info(${tableName})`,
         );
 
         if (tableInfo.length === 0) {
@@ -49,17 +61,15 @@ async function checkSecondaryTables() {
         }
 
         const dbColumns = tableInfo.map((col) => col.name);
-        console.log(
-          `\n✅ Columnas en la BASE DE DATOS (${dbColumns.length}):`
-        );
+        console.log(`\n✅ Columnas en la BASE DE DATOS (${dbColumns.length}):`);
         console.log(dbColumns.join(", "));
 
         // Comparar
         const missingInDb = modelAttributes.filter(
-          (col) => !dbColumns.includes(col)
+          (col) => !dbColumns.includes(col),
         );
         const extraInDb = dbColumns.filter(
-          (col) => !modelAttributes.includes(col)
+          (col) => !modelAttributes.includes(col),
         );
 
         if (missingInDb.length > 0) {

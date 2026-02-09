@@ -25,7 +25,11 @@ async function checkDatabase() {
       { name: "Crucero", model: Crucero, tableName: "cruceros" },
       { name: "Excursion", model: Excursion, tableName: "excursiones" },
       { name: "Paquete", model: Paquete, tableName: "paquetes" },
-      { name: "SalidaGrupal", model: SalidaGrupal, tableName: "salidas_grupales" },
+      {
+        name: "SalidaGrupal",
+        model: SalidaGrupal,
+        tableName: "salidas_grupales",
+      },
       { name: "Seguro", model: Seguro, tableName: "seguros" },
       { name: "Transfer", model: Transfer, tableName: "transfers" },
       { name: "Tren", model: Tren, tableName: "trenes" },
@@ -44,26 +48,24 @@ async function checkDatabase() {
       // Obtener columnas de la tabla
       try {
         const [tableInfo] = await sequelize.query(
-          `PRAGMA table_info(${tableName})`
+          `PRAGMA table_info(${tableName})`,
         );
-        
+
         if (tableInfo.length === 0) {
           console.log(`\n❌ LA TABLA ${tableName} NO EXISTE`);
           continue;
         }
 
         const dbColumns = tableInfo.map((col) => col.name);
-        console.log(
-          `\n✅ Columnas en la BASE DE DATOS (${dbColumns.length}):`
-        );
+        console.log(`\n✅ Columnas en la BASE DE DATOS (${dbColumns.length}):`);
         console.log(dbColumns.join(", "));
 
         // Comparar
         const missingInDb = modelAttributes.filter(
-          (col) => !dbColumns.includes(col)
+          (col) => !dbColumns.includes(col),
         );
         const extraInDb = dbColumns.filter(
-          (col) => !modelAttributes.includes(col)
+          (col) => !modelAttributes.includes(col),
         );
 
         if (missingInDb.length > 0) {

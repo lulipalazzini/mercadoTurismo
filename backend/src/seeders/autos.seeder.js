@@ -239,9 +239,9 @@ export const seedAutos = async () => {
       return;
     }
 
-    const autosWithPublisher = autosData.map(auto => ({
+    const autosWithPublisher = autosData.map((auto) => ({
       ...auto,
-      published_by_user_id: 1
+      published_by_user_id: 1,
     }));
 
     await Auto.bulkCreate(autosWithPublisher);

@@ -206,9 +206,9 @@ export const seedTransfers = async () => {
       return;
     }
 
-    const transfersWithPublisher = transfersData.map(transfer => ({
+    const transfersWithPublisher = transfersData.map((transfer) => ({
       ...transfer,
-      published_by_user_id: 1
+      published_by_user_id: 1,
     }));
 
     await Transfer.bulkCreate(transfersWithPublisher);

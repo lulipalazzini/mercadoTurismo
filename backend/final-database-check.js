@@ -7,7 +7,7 @@ async function finalCheck() {
 
     // Obtener todas las tablas
     const [tables] = await sequelize.query(
-      "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name;"
+      "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name;",
     );
 
     console.log(`\n📊 Total de tablas encontradas: ${tables.length}\n`);
@@ -15,7 +15,7 @@ async function finalCheck() {
     for (const table of tables) {
       const tableName = table.name;
       const [tableInfo] = await sequelize.query(
-        `PRAGMA table_info(${tableName})`
+        `PRAGMA table_info(${tableName})`,
       );
 
       console.log(`\n✅ ${tableName} (${tableInfo.length} columnas)`);
@@ -27,9 +27,15 @@ async function finalCheck() {
     console.log("✅ Base de datos revisada completamente");
     console.log("=".repeat(70));
     console.log("\n💡 NOTAS:");
-    console.log("   - reservas_anotador: user_id → mapeado a userId en el modelo ✅");
-    console.log("   - facturacion_anotador: user_id → mapeado a userId en el modelo ✅");
-    console.log("   - cupos_mercado: fecha_origen → mapeado a fechaOrigen en el modelo ✅");
+    console.log(
+      "   - reservas_anotador: user_id → mapeado a userId en el modelo ✅",
+    );
+    console.log(
+      "   - facturacion_anotador: user_id → mapeado a userId en el modelo ✅",
+    );
+    console.log(
+      "   - cupos_mercado: fecha_origen → mapeado a fechaOrigen en el modelo ✅",
+    );
     console.log("\n✨ TODAS LAS TABLAS ESTÁN CORRECTAS Y FUNCIONANDO\n");
 
     process.exit(0);

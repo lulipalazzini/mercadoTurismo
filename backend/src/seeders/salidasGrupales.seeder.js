@@ -426,14 +426,14 @@ export const seedSalidasGrupales = async () => {
     const count = await SalidaGrupal.count();
     if (count > 0) {
       console.log(
-        "⏭️  Salidas grupales ya existen en la base de datos. Saltando..."
+        "⏭️  Salidas grupales ya existen en la base de datos. Saltando...",
       );
       return;
     }
 
-    const salidasWithPublisher = salidasGrupalesData.map(salida => ({
+    const salidasWithPublisher = salidasGrupalesData.map((salida) => ({
       ...salida,
-      published_by_user_id: 1
+      published_by_user_id: 1,
     }));
 
     await SalidaGrupal.bulkCreate(salidasWithPublisher);

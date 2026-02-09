@@ -329,9 +329,9 @@ export const seedSeguros = async () => {
       return;
     }
 
-    const segurosWithPublisher = segurosData.map(seguro => ({
+    const segurosWithPublisher = segurosData.map((seguro) => ({
       ...seguro,
-      published_by_user_id: 1
+      published_by_user_id: 1,
     }));
 
     await Seguro.bulkCreate(segurosWithPublisher);

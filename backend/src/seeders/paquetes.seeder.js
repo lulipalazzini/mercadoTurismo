@@ -279,9 +279,9 @@ export const seedPaquetes = async () => {
     }
 
     // Agregar published_by_user_id a todos los paquetes
-    const paquetesWithPublisher = paquetesData.map(paquete => ({
+    const paquetesWithPublisher = paquetesData.map((paquete) => ({
       ...paquete,
-      published_by_user_id: 1 // Usuario admin/agencia
+      published_by_user_id: 1, // Usuario admin/agencia
     }));
 
     await Paquete.bulkCreate(paquetesWithPublisher);

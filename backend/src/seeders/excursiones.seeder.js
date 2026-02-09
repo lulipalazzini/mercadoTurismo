@@ -229,14 +229,14 @@ export const seedExcursiones = async () => {
     const count = await Excursion.count();
     if (count > 0) {
       console.log(
-        "⏭️  Excursiones ya existen en la base de datos. Saltando..."
+        "⏭️  Excursiones ya existen en la base de datos. Saltando...",
       );
       return;
     }
 
-    const excursionesWithPublisher = excursionesData.map(excursion => ({
+    const excursionesWithPublisher = excursionesData.map((excursion) => ({
       ...excursion,
-      published_by_user_id: 1
+      published_by_user_id: 1,
     }));
 
     await Excursion.bulkCreate(excursionesWithPublisher);

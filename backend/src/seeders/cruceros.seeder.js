@@ -548,13 +548,13 @@ export const seedCruceros = async () => {
       return;
     }
 
-    const crucerosWithPublisher = crucerosData.map(crucero => ({
+    const crucerosWithPublisher = crucerosData.map((crucero) => ({
       ...crucero,
       published_by_user_id: 1,
       mesSalida: crucero.fechaSalida.getMonth() + 1, // 1-12
       duracionDias: crucero.duracion + 1, // días = noches + 1
       importeAdulto: crucero.precioDesde,
-      importeMenor: crucero.precioDesde * 0.5 // 50% descuento para menores
+      importeMenor: crucero.precioDesde * 0.5, // 50% descuento para menores
     }));
 
     await Crucero.bulkCreate(crucerosWithPublisher);

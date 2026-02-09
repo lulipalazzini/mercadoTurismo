@@ -444,9 +444,9 @@ export const seedCircuitos = async () => {
       return;
     }
 
-    const circuitosWithPublisher = circuitosData.map(circuito => ({
+    const circuitosWithPublisher = circuitosData.map((circuito) => ({
       ...circuito,
-      published_by_user_id: 1
+      published_by_user_id: 1,
     }));
 
     await Circuito.bulkCreate(circuitosWithPublisher);

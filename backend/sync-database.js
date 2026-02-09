@@ -25,10 +25,10 @@ require("./src/models/ActivityLog.model");
 async function syncDatabase() {
   try {
     console.log("🔄 Sincronizando base de datos...");
-    
+
     // Sincronizar todos los modelos sin eliminar datos existentes
     await sequelize.sync({ alter: true });
-    
+
     console.log("✅ Base de datos sincronizada correctamente");
     process.exit(0);
   } catch (error) {

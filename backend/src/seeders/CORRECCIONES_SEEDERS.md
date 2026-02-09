@@ -11,12 +11,14 @@ Se identificaron **discrepancias sistemáticas** entre los campos definidos en l
 ## 🔧 Correcciones Realizadas
 
 ### 1. **Campo `noches` faltante en Paquetes**
+
 - **Archivo**: `paquetes.seeder.js`
 - **Problema**: El modelo `Paquete` requiere el campo `noches` (allowNull: false), pero los datos del seeder no lo incluían
 - **Solución**: Agregado cálculo automático `noches = duracion - 1` a todos los paquetes
 - **Resultado**: ✅ 15 paquetes creados exitosamente
 
 ### 2. **Campo `published_by_user_id` faltante en 11 modelos**
+
 - **Archivos afectados**:
   - `alojamientos.seeder.js`
   - `autos.seeder.js`
@@ -33,6 +35,7 @@ Se identificaron **discrepancias sistemáticas** entre los campos definidos en l
 - **Resultado**: ✅ Todas las publicaciones asignadas al usuario admin (id: 1)
 
 ### 3. **Campos calculados faltantes en Cruceros**
+
 - **Archivo**: `cruceros.seeder.js`
 - **Problema**: 4 campos obligatorios ausentes:
   - `mesSalida` (INTEGER)
@@ -49,6 +52,7 @@ Se identificaron **discrepancias sistemáticas** entre los campos definidos en l
 - **Resultado**: ✅ 15 cruceros creados exitosamente
 
 ### 4. **Campos específicos de aerolínea en CuposMercado**
+
 - **Archivo**: `cuposMercado.seeder.js`
 - **Problema**: 2 campos obligatorios ausentes:
   - `fechaOrigen` (DATE)
@@ -57,6 +61,7 @@ Se identificaron **discrepancias sistemáticas** entre los campos definidos en l
 - **Resultado**: ✅ 8 cupos de mercado creados exitosamente
 
 ### 5. **Discrepancia `disponible` vs `activo`**
+
 - **Archivos afectados**:
   - `alojamientos.seeder.js` → ✅ 15 registros
   - `circuitos.seeder.js` → ✅ 6 registros
@@ -73,6 +78,7 @@ Se identificaron **discrepancias sistemáticas** entre los campos definidos en l
 - **Resultado**: ✅ 6 seeders corregidos
 
 ### 6. **Campos incorrectos en SalidasGrupales**
+
 - **Archivo**: `salidasGrupales.seeder.js`
 - **Problemas**:
   - Campo `coordinador` no existe en modelo → debe ser `acompañante`
@@ -92,21 +98,21 @@ Se identificaron **discrepancias sistemáticas** entre los campos definidos en l
 
 **Todos los seeders ejecutan sin errores:**
 
-| Seeder | Registros Creados | Estado |
-|--------|------------------|--------|
-| Users | 4 usuarios | ✅ |
-| Clientes | 15 clientes | ✅ |
-| Paquetes | 15 paquetes | ✅ |
-| Alojamientos | 15 alojamientos | ✅ |
-| Autos | 15 autos | ✅ |
-| Excursiones | 11 excursiones | ✅ |
-| Transfers | 15 transfers | ✅ |
-| Seguros | 15 seguros | ✅ |
-| Cruceros | 15 cruceros | ✅ |
-| Circuitos | 6 circuitos | ✅ |
-| Salidas Grupales | 10 salidas | ✅ |
-| Cupos Mercado | 8 cupos | ✅ |
-| Click Stats | 10 categorías | ✅ |
+| Seeder           | Registros Creados | Estado |
+| ---------------- | ----------------- | ------ |
+| Users            | 4 usuarios        | ✅     |
+| Clientes         | 15 clientes       | ✅     |
+| Paquetes         | 15 paquetes       | ✅     |
+| Alojamientos     | 15 alojamientos   | ✅     |
+| Autos            | 15 autos          | ✅     |
+| Excursiones      | 11 excursiones    | ✅     |
+| Transfers        | 15 transfers      | ✅     |
+| Seguros          | 15 seguros        | ✅     |
+| Cruceros         | 15 cruceros       | ✅     |
+| Circuitos        | 6 circuitos       | ✅     |
+| Salidas Grupales | 10 salidas        | ✅     |
+| Cupos Mercado    | 8 cupos           | ✅     |
+| Click Stats      | 10 categorías     | ✅     |
 
 **Total**: 13 seeders, 154+ registros insertados exitosamente
 
@@ -115,6 +121,7 @@ Se identificaron **discrepancias sistemáticas** entre los campos definidos en l
 ## 📋 Modelos de Campos por Entidad
 
 ### Modelos que usan `activo: BOOLEAN`
+
 - Alojamiento
 - Circuito
 - Crucero
@@ -124,11 +131,14 @@ Se identificaron **discrepancias sistemáticas** entre los campos definidos en l
 - Seguro
 
 ### Modelos que usan `disponible: BOOLEAN`
+
 - Auto
 - Transfer
 
 ### Campos Universales Obligatorios
+
 Todos los modelos de servicios/productos requieren:
+
 - `published_by_user_id: INTEGER NOT NULL` (control de seguridad)
 - `vendedorId: INTEGER` (opcional, referencia a vendedor)
 - `userId: INTEGER` (opcional, para ownership B2B)
@@ -151,12 +161,14 @@ Todos los modelos de servicios/productos requieren:
 ## 🚀 Comandos para Ejecutar
 
 ### Resetear y sembrar la base de datos
+
 ```bash
 cd backend
 npm run seed
 ```
 
 ### Verificar conteo de registros
+
 ```bash
 sqlite3 database.sqlite "SELECT 'Paquetes:', COUNT(*) FROM Paquetes UNION ALL SELECT 'Alojamientos:', COUNT(*) FROM alojamientos;"
 ```
