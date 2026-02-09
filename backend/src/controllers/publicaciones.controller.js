@@ -18,45 +18,150 @@ const getPublicacionesDestacadas = async (req, res) => {
   try {
     console.log("\n🌟 [PUBLIC] Obteniendo publicaciones destacadas...");
 
-    // Modelos a consultar
+    // Configuración de modelos con sus campos específicos
     const modelsConfig = [
-      { model: Paquete, tipo: "paquete", table: "Paquetes" },
-      { model: Alojamiento, tipo: "alojamiento", table: "alojamientos" },
-      { model: Auto, tipo: "auto", table: "autos" },
-      { model: Transfer, tipo: "transfer", table: "transfers" },
-      { model: Crucero, tipo: "crucero", table: "cruceros" },
-      { model: Excursion, tipo: "excursion", table: "excursiones" },
-      { model: SalidaGrupal, tipo: "salidaGrupal", table: "salidas_grupales" },
-      { model: Circuito, tipo: "circuito", table: "circuitos" },
-      { model: Tren, tipo: "tren", table: "trenes" },
-      { model: Seguro, tipo: "seguro", table: "seguros" },
+      { 
+        model: Paquete, 
+        tipo: "paquete",
+        statusField: "activo",
+        attributes: ["id", "nombre", "descripcion", "precio", "destino", "imagenes", "destacado", "activo", "createdAt"],
+        mapFields: (item) => ({
+          nombre: item.nombre,
+          descripcion: item.descripcion,
+          precio: item.precio,
+          destino: item.destino
+        })
+      },
+      { 
+        model: Alojamiento, 
+        tipo: "alojamiento",
+        statusField: "activo",
+        attributes: ["id", "nombre", "descripcion", "precioNoche", "ubicacion", "imagenes", "destacado", "activo", "createdAt"],
+        mapFields: (item) => ({
+          nombre: item.nombre,
+          descripcion: item.descripcion,
+          precio: item.precioNoche,
+          destino: item.ubicacion
+        })
+      },
+      { 
+        model: Auto, 
+        tipo: "auto",
+        statusField: "disponible",
+        attributes: ["id", "marca", "modelo", "descripcion", "precioDia", "ubicacion", "imagenes", "destacado", "disponible", "createdAt"],
+        mapFields: (item) => ({
+          nombre: `${item.marca} ${item.modelo}`,
+          descripcion: item.descripcion,
+          precio: item.precioDia,
+          destino: item.ubicacion
+        })
+      },
+      { 
+        model: Transfer, 
+        tipo: "transfer",
+        statusField: "disponible",
+        attributes: ["id", "origen", "destino", "descripcion", "precio", "imagenes", "destacado", "disponible", "createdAt"],
+        mapFields: (item) => ({
+          nombre: `Transfer ${item.origen} - ${item.destino}`,
+          descripcion: item.descripcion,
+          precio: item.precio,
+          destino: item.destino
+        })
+      },
+      { 
+        model: Crucero, 
+        tipo: "crucero",
+        statusField: "activo",
+        attributes: ["id", "nombre", "descripcion", "precioDesde", "importeAdulto", "puertoSalida", "imagenes", "destacado", "activo", "createdAt"],
+        mapFields: (item) => ({
+          nombre: item.nombre,
+          descripcion: item.descripcion,
+          precio: item.precioDesde || item.importeAdulto,
+          destino: item.puertoSalida
+        })
+      },
+      { 
+        model: Excursion, 
+        tipo: "excursion",
+        statusField: "activo",
+        attributes: ["id", "nombre", "descripcion", "precio", "destino", "imagenes", "destacado", "activo", "createdAt"],
+        mapFields: (item) => ({
+          nombre: item.nombre,
+          descripcion: item.descripcion,
+          precio: item.precio,
+          destino: item.destino
+        })
+      },
+      { 
+        model: SalidaGrupal, 
+        tipo: "salidaGrupal",
+        statusField: "activo",
+        attributes: ["id", "nombre", "descripcion", "precio", "destino", "imagenes", "destacado", "activo", "createdAt"],
+        mapFields: (item) => ({
+          nombre: item.nombre,
+          descripcion: item.descripcion,
+          precio: item.precio,
+          destino: item.destino
+        })
+      },
+      { 
+        model: Circuito, 
+        tipo: "circuito",
+        statusField: "activo",
+        attributes: ["id", "nombre", "descripcion", "precio", "destinos", "imagenes", "destacado", "activo", "createdAt"],
+        mapFields: (item) => ({
+          nombre: item.nombre,
+          descripcion: item.descripcion,
+          precio: item.precio,
+          destino: item.destinos
+        })
+      },
+      { 
+        model: Tren, 
+        tipo: "tren",
+        statusField: "activo",
+        attributes: ["id", "nombre", "descripcion", "precio", "destino", "imagenes", "destacado", "activo", "createdAt"],
+        mapFields: (item) => ({
+          nombre: item.nombre,
+          descripcion: item.descripcion,
+          precio: item.precio,
+          destino: item.destino
+        })
+      },
+      { 
+        model: Seguro, 
+        tipo: "seguro",
+        statusField: "activo",
+        attributes: ["id", "nombre", "descripcion", "precio", "imagenes", "destacado", "activo", "createdAt"],
+        mapFields: (item) => ({
+          nombre: item.nombre,
+          descripcion: item.descripcion,
+          precio: item.precio,
+          destino: null
+        })
+      },
     ];
 
     const destacadas = [];
 
     // Consultar cada modelo solo por las destacadas
-    for (const { model, tipo } of modelsConfig) {
+    for (const { model, tipo, statusField, attributes, mapFields } of modelsConfig) {
       try {
+        const whereClause = {
+          destacado: true
+        };
+        // Agregar filtro de estado activo/disponible
+        whereClause[statusField] = true;
+
         const items = await model.findAll({
-          where: { 
-            activo: true, 
-            destacado: true 
-          },
-          attributes: [
-            "id", 
-            "nombre", 
-            "descripcion", 
-            "precio", 
-            "imagenes", 
-            "destacado", 
-            "createdAt",
-            "destino" // Algunos modelos tienen este campo
-          ],
+          where: whereClause,
+          attributes: attributes,
           include: [
             {
               model: User,
               as: "vendedor",
               attributes: ["id", "nombre", "email"],
+              required: false
             },
           ],
           order: [["createdAt", "DESC"]],
@@ -65,13 +170,14 @@ const getPublicacionesDestacadas = async (req, res) => {
 
         // Formatear y agregar al array
         items.forEach((item) => {
+          const mapped = mapFields(item);
           destacadas.push({
             id: item.id,
             tipo,
-            nombre: item.nombre || `${tipo} #${item.id}`,
-            descripcion: item.descripcion || "",
-            destino: item.destino || null,
-            precio: parseFloat(item.precio || 0),
+            nombre: mapped.nombre || `${tipo} #${item.id}`,
+            descripcion: mapped.descripcion || "",
+            destino: mapped.destino || null,
+            precio: parseFloat(mapped.precio || 0),
             imagenes: item.imagenes || [],
             destacado: item.destacado,
             createdAt: item.createdAt,

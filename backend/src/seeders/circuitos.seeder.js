@@ -31,7 +31,7 @@ const circuitosData = [
     cupoMaximo: 25,
     cupoDisponible: 25,
     nivelDificultad: "moderado",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Patagonia Completa",
@@ -67,7 +67,7 @@ const circuitosData = [
     cupoMaximo: 18,
     cupoDisponible: 18,
     nivelDificultad: "dificil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Ruta del Vino",
@@ -96,7 +96,7 @@ const circuitosData = [
     cupoMaximo: 20,
     cupoDisponible: 20,
     nivelDificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Litoral Argentino",
@@ -125,7 +125,7 @@ const circuitosData = [
     cupoMaximo: 22,
     cupoDisponible: 22,
     nivelDificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Cuyo Completo",
@@ -146,7 +146,7 @@ const circuitosData = [
     cupoMaximo: 20,
     cupoDisponible: 20,
     nivelDificultad: "moderado",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Península Valdés",
@@ -176,7 +176,7 @@ const circuitosData = [
     cupoMaximo: 16,
     cupoDisponible: 16,
     nivelDificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Sierras de Córdoba",
@@ -202,7 +202,7 @@ const circuitosData = [
     cupoMaximo: 25,
     cupoDisponible: 25,
     nivelDificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Lagos Andinos",
@@ -235,7 +235,7 @@ const circuitosData = [
     cupoMaximo: 20,
     cupoDisponible: 20,
     nivelDificultad: "moderado",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Cataratas Completo",
@@ -264,7 +264,7 @@ const circuitosData = [
     cupoMaximo: 30,
     cupoDisponible: 30,
     nivelDificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Ruta 40",
@@ -300,7 +300,7 @@ const circuitosData = [
     cupoMaximo: 12,
     cupoDisponible: 12,
     nivelDificultad: "dificil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Tucumán Colonial",
@@ -333,7 +333,7 @@ const circuitosData = [
     cupoMaximo: 20,
     cupoDisponible: 20,
     nivelDificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Tierra del Fuego",
@@ -362,7 +362,7 @@ const circuitosData = [
     cupoMaximo: 18,
     cupoDisponible: 18,
     nivelDificultad: "moderado",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Glaciares Patagónicos",
@@ -390,7 +390,7 @@ const circuitosData = [
     cupoMaximo: 15,
     cupoDisponible: 15,
     nivelDificultad: "dificil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Entre Ríos Termal",
@@ -411,7 +411,7 @@ const circuitosData = [
     cupoMaximo: 25,
     cupoDisponible: 25,
     nivelDificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Costa Atlántica",
@@ -432,7 +432,7 @@ const circuitosData = [
     cupoMaximo: 30,
     cupoDisponible: 30,
     nivelDificultad: "facil",
-    disponible: true,
+    activo: true,
   },
 ];
 
@@ -444,7 +444,12 @@ export const seedCircuitos = async () => {
       return;
     }
 
-    await Circuito.bulkCreate(circuitosData);
+    const circuitosWithPublisher = circuitosData.map(circuito => ({
+      ...circuito,
+      published_by_user_id: 1
+    }));
+
+    await Circuito.bulkCreate(circuitosWithPublisher);
     console.log("✅ Circuitos creados exitosamente");
   } catch (error) {
     console.error("❌ Error al crear circuitos:", error.message);

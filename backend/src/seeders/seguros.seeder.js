@@ -19,7 +19,7 @@ const segurosData = [
     edadMaxima: 70,
     destinosIncluidos: ["Argentina"],
     exclusiones: ["deportes_extremos", "preexistencias"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Viajero Premium",
@@ -43,7 +43,7 @@ const segurosData = [
     edadMaxima: 85,
     destinosIncluidos: ["Mundial"],
     exclusiones: ["deportes_extremos", "guerra"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Médico Internacional",
@@ -64,7 +64,7 @@ const segurosData = [
     edadMaxima: 75,
     destinosIncluidos: ["America", "Europa"],
     exclusiones: ["enfermedades_cronicas", "embarazo"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Cancelación de Viaje",
@@ -84,7 +84,7 @@ const segurosData = [
     edadMaxima: 80,
     destinosIncluidos: ["Mundial"],
     exclusiones: ["cambio_opinion", "problemas_proveedor"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Equipaje",
@@ -104,7 +104,7 @@ const segurosData = [
     edadMaxima: 99,
     destinosIncluidos: ["Mundial"],
     exclusiones: ["objetos_valor_alto", "electronica_sin_declarar"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Asistencia al Viajero Europa",
@@ -126,7 +126,7 @@ const segurosData = [
     edadMaxima: 85,
     destinosIncluidos: ["Europa"],
     exclusiones: ["deportes_riesgo"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Cruceros",
@@ -146,7 +146,7 @@ const segurosData = [
     edadMaxima: 80,
     destinosIncluidos: ["Mundial_maritimo"],
     exclusiones: ["deportes_extremos", "embarazo_avanzado"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Estudiante",
@@ -168,7 +168,7 @@ const segurosData = [
     edadMaxima: 35,
     destinosIncluidos: ["Mundial"],
     exclusiones: ["deportes_profesionales"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Deportes Aventura",
@@ -189,7 +189,7 @@ const segurosData = [
     edadMaxima: 65,
     destinosIncluidos: ["Mundial"],
     exclusiones: ["deportes_extremos_profesionales"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Familiar",
@@ -211,7 +211,7 @@ const segurosData = [
     edadMaxima: 99,
     destinosIncluidos: ["America"],
     exclusiones: ["deportes_riesgo"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro COVID-19",
@@ -232,7 +232,7 @@ const segurosData = [
     edadMaxima: 85,
     destinosIncluidos: ["Mundial"],
     exclusiones: ["sin_vacunacion"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Anual Multiviaje",
@@ -254,7 +254,7 @@ const segurosData = [
     edadMaxima: 70,
     destinosIncluidos: ["Mundial"],
     exclusiones: ["viajes_mayores_60dias"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Tercera Edad",
@@ -275,7 +275,7 @@ const segurosData = [
     edadMaxima: 85,
     destinosIncluidos: ["America"],
     exclusiones: ["enfermedades_preexistentes"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Business Travel",
@@ -297,7 +297,7 @@ const segurosData = [
     edadMaxima: 75,
     destinosIncluidos: ["Mundial"],
     exclusiones: ["viajes_recreativos"],
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Seguro Mochilero",
@@ -317,7 +317,7 @@ const segurosData = [
     edadMaxima: 45,
     destinosIncluidos: ["America"],
     exclusiones: ["deportes_riesgo", "enfermedades_cronicas"],
-    disponible: true,
+    activo: true,
   },
 ];
 
@@ -329,7 +329,12 @@ export const seedSeguros = async () => {
       return;
     }
 
-    await Seguro.bulkCreate(segurosData);
+    const segurosWithPublisher = segurosData.map(seguro => ({
+      ...seguro,
+      published_by_user_id: 1
+    }));
+
+    await Seguro.bulkCreate(segurosWithPublisher);
     console.log("✅ Seguros creados exitosamente");
   } catch (error) {
     console.error("❌ Error al crear seguros:", error.message);

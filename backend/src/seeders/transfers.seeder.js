@@ -206,7 +206,12 @@ export const seedTransfers = async () => {
       return;
     }
 
-    await Transfer.bulkCreate(transfersData);
+    const transfersWithPublisher = transfersData.map(transfer => ({
+      ...transfer,
+      published_by_user_id: 1
+    }));
+
+    await Transfer.bulkCreate(transfersWithPublisher);
     console.log("✅ Transfers creados exitosamente");
   } catch (error) {
     console.error("❌ Error al crear transfers:", error.message);

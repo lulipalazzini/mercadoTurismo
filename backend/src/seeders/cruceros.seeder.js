@@ -548,7 +548,16 @@ export const seedCruceros = async () => {
       return;
     }
 
-    await Crucero.bulkCreate(crucerosData);
+    const crucerosWithPublisher = crucerosData.map(crucero => ({
+      ...crucero,
+      published_by_user_id: 1,
+      mesSalida: crucero.fechaSalida.getMonth() + 1, // 1-12
+      duracionDias: crucero.duracion + 1, // días = noches + 1
+      importeAdulto: crucero.precioDesde,
+      importeMenor: crucero.precioDesde * 0.5 // 50% descuento para menores
+    }));
+
+    await Crucero.bulkCreate(crucerosWithPublisher);
     console.log("✅ Cruceros creados exitosamente");
   } catch (error) {
     console.error("❌ Error al crear cruceros:", error.message);

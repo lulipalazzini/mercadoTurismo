@@ -239,7 +239,12 @@ export const seedAutos = async () => {
       return;
     }
 
-    await Auto.bulkCreate(autosData);
+    const autosWithPublisher = autosData.map(auto => ({
+      ...auto,
+      published_by_user_id: 1
+    }));
+
+    await Auto.bulkCreate(autosWithPublisher);
     console.log("✅ Autos creados exitosamente");
   } catch (error) {
     console.error("❌ Error al crear autos:", error.message);

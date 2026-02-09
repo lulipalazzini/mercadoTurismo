@@ -27,9 +27,8 @@ const salidasGrupalesData = [
     cupoMinimo: 15,
     cupoMaximo: 25,
     cupoDisponible: 25,
-    coordinador: "Coordinador turístico especializado",
-    edadMinima: 18,
-    disponible: true,
+    acompañante: "Coordinador turístico especializado",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Mendoza Vendimia",
@@ -58,9 +57,8 @@ const salidasGrupalesData = [
     cupoMinimo: 20,
     cupoMaximo: 35,
     cupoDisponible: 35,
-    coordinador: "Guía especializado en enología",
-    edadMinima: 18,
-    disponible: true,
+    acompañante: "Guía especializado en enología",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Iguazú Aventura",
@@ -88,9 +86,8 @@ const salidasGrupalesData = [
     cupoMinimo: 18,
     cupoMaximo: 30,
     cupoDisponible: 30,
-    coordinador: "Coordinador de turismo aventura",
-    edadMinima: 18,
-    disponible: true,
+    acompañante: "Coordinador de turismo aventura",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Egresados Bariloche",
@@ -118,9 +115,8 @@ const salidasGrupalesData = [
     cupoMinimo: 40,
     cupoMaximo: 80,
     cupoDisponible: 80,
-    coordinador: "Equipo de coordinadores especializados",
-    edadMinima: 17,
-    disponible: true,
+    acompañante: "Equipo de coordinadores especializados",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Salta Cultural",
@@ -147,9 +143,8 @@ const salidasGrupalesData = [
     cupoMinimo: 15,
     cupoMaximo: 25,
     cupoDisponible: 25,
-    coordinador: "Guía cultural especializado",
-    edadMinima: 25,
-    disponible: true,
+    acompañante: "Guía cultural especializado",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Patagonia Express",
@@ -175,9 +170,8 @@ const salidasGrupalesData = [
     cupoMinimo: 12,
     cupoMaximo: 20,
     cupoDisponible: 20,
-    coordinador: "Guía de montaña certificado",
-    edadMinima: 18,
-    disponible: true,
+    acompañante: "Guía de montaña certificado",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Ushuaia Fin del Mundo",
@@ -206,9 +200,8 @@ const salidasGrupalesData = [
     cupoMinimo: 10,
     cupoMaximo: 18,
     cupoDisponible: 18,
-    coordinador: "Coordinador especializado en Patagonia",
-    edadMinima: 21,
-    disponible: true,
+    acompañante: "Coordinador especializado en Patagonia",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Córdoba Joven",
@@ -229,9 +222,8 @@ const salidasGrupalesData = [
     cupoMinimo: 25,
     cupoMaximo: 40,
     cupoDisponible: 40,
-    coordinador: "Equipo de recreación",
-    edadMinima: 18,
-    disponible: true,
+    acompañante: "Equipo de recreación",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Brasil Playas",
@@ -259,9 +251,8 @@ const salidasGrupalesData = [
     cupoMinimo: 30,
     cupoMaximo: 50,
     cupoDisponible: 50,
-    coordinador: "Coordinador bilingüe",
-    edadMinima: 18,
-    disponible: true,
+    acompañante: "Coordinador bilingüe",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Termas Relax",
@@ -286,9 +277,8 @@ const salidasGrupalesData = [
     cupoMinimo: 15,
     cupoMaximo: 25,
     cupoDisponible: 25,
-    coordinador: "Coordinador wellness",
-    edadMinima: 25,
-    disponible: true,
+    acompañante: "Coordinador wellness",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Carnaval Gualeguaychú",
@@ -310,9 +300,8 @@ const salidasGrupalesData = [
     cupoMinimo: 20,
     cupoMaximo: 40,
     cupoDisponible: 40,
-    coordinador: "Coordinador de eventos",
-    edadMinima: 18,
-    disponible: true,
+    acompañante: "Coordinador de eventos",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Península Valdés",
@@ -341,9 +330,8 @@ const salidasGrupalesData = [
     cupoMinimo: 12,
     cupoMaximo: 20,
     cupoDisponible: 20,
-    coordinador: "Biólogo guía especializado",
-    edadMinima: 16,
-    disponible: true,
+    acompañante: "Biólogo guía especializado",
+    activo: true,
   },
   {
     nombre: "Salida Grupal San Martín de los Andes",
@@ -371,9 +359,8 @@ const salidasGrupalesData = [
     cupoMinimo: 15,
     cupoMaximo: 25,
     cupoDisponible: 25,
-    coordinador: "Guía de turismo regional",
-    edadMinima: 18,
-    disponible: true,
+    acompañante: "Guía de turismo regional",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Trekking Fitz Roy",
@@ -402,9 +389,8 @@ const salidasGrupalesData = [
     cupoMinimo: 8,
     cupoMaximo: 15,
     cupoDisponible: 15,
-    coordinador: "Guía de alta montaña",
-    edadMinima: 21,
-    disponible: true,
+    acompañante: "Guía de alta montaña",
+    activo: true,
   },
   {
     nombre: "Salida Grupal Oktoberfest Villa General Belgrano",
@@ -430,9 +416,8 @@ const salidasGrupalesData = [
     cupoMinimo: 20,
     cupoMaximo: 35,
     cupoDisponible: 35,
-    coordinador: "Coordinador de eventos",
-    edadMinima: 18,
-    disponible: true,
+    acompañante: "Coordinador de eventos",
+    activo: true,
   },
 ];
 
@@ -446,7 +431,12 @@ export const seedSalidasGrupales = async () => {
       return;
     }
 
-    await SalidaGrupal.bulkCreate(salidasGrupalesData);
+    const salidasWithPublisher = salidasGrupalesData.map(salida => ({
+      ...salida,
+      published_by_user_id: 1
+    }));
+
+    await SalidaGrupal.bulkCreate(salidasWithPublisher);
     console.log("✅ Salidas grupales creadas exitosamente");
   } catch (error) {
     console.error("❌ Error al crear salidas grupales:", error.message);

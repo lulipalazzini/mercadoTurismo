@@ -14,7 +14,7 @@ const excursionesData = [
     cupoMaximo: 30,
     cupoDisponible: 30,
     dificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Trekking Glaciar Perito Moreno",
@@ -29,7 +29,7 @@ const excursionesData = [
     cupoMaximo: 15,
     cupoDisponible: 15,
     dificultad: "dificil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Navegación Canal Beagle",
@@ -44,7 +44,7 @@ const excursionesData = [
     cupoMaximo: 40,
     cupoDisponible: 40,
     dificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Tour Vitivinícola Mendoza",
@@ -58,7 +58,7 @@ const excursionesData = [
     cupoMaximo: 20,
     cupoDisponible: 20,
     dificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Safari Fotográfico Ibera",
@@ -73,7 +73,7 @@ const excursionesData = [
     cupoMaximo: 12,
     cupoDisponible: 12,
     dificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Rafting Río Mendoza",
@@ -88,7 +88,7 @@ const excursionesData = [
     cupoMaximo: 16,
     cupoDisponible: 16,
     dificultad: "dificil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Cabalgata Valle de la Luna",
@@ -103,7 +103,7 @@ const excursionesData = [
     cupoMaximo: 10,
     cupoDisponible: 10,
     dificultad: "moderado",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Tour Quebrada de Humahuaca",
@@ -118,7 +118,7 @@ const excursionesData = [
     cupoMaximo: 25,
     cupoDisponible: 25,
     dificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Avistaje de Ballenas",
@@ -133,7 +133,7 @@ const excursionesData = [
     cupoMaximo: 35,
     cupoDisponible: 35,
     dificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Tren a las Nubes",
@@ -147,7 +147,7 @@ const excursionesData = [
     cupoMaximo: 50,
     cupoDisponible: 50,
     dificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Parapente en Bariloche",
@@ -161,7 +161,7 @@ const excursionesData = [
     cupoMaximo: 8,
     cupoDisponible: 8,
     dificultad: "moderado",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Circuito Chico Bariloche",
@@ -176,7 +176,7 @@ const excursionesData = [
     cupoMaximo: 30,
     cupoDisponible: 30,
     dificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Cataratas lado Argentino",
@@ -191,7 +191,7 @@ const excursionesData = [
     cupoMaximo: 40,
     cupoDisponible: 40,
     dificultad: "facil",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Gran Aventura Iguazú",
@@ -205,7 +205,7 @@ const excursionesData = [
     cupoMaximo: 20,
     cupoDisponible: 20,
     dificultad: "moderado",
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Cena Show en Estancia",
@@ -220,7 +220,7 @@ const excursionesData = [
     cupoMaximo: 45,
     cupoDisponible: 45,
     dificultad: "facil",
-    disponible: true,
+    activo: true,
   },
 ];
 
@@ -234,7 +234,12 @@ export const seedExcursiones = async () => {
       return;
     }
 
-    await Excursion.bulkCreate(excursionesData);
+    const excursionesWithPublisher = excursionesData.map(excursion => ({
+      ...excursion,
+      published_by_user_id: 1
+    }));
+
+    await Excursion.bulkCreate(excursionesWithPublisher);
     console.log("✅ Excursiones creadas exitosamente");
   } catch (error) {
     console.error("❌ Error al crear excursiones:", error.message);

@@ -13,7 +13,7 @@ const alojamientosData = [
     servicios: ["wifi", "piscina", "gimnasio", "spa", "restaurant"],
     capacidad: 200,
     habitacionesDisponibles: 35,
-    disponible: true,
+    activo: true,
     vendedorId: 2,
   },
   {
@@ -27,7 +27,7 @@ const alojamientosData = [
     servicios: ["wifi", "cocina_compartida", "bar"],
     capacidad: 80,
     habitacionesDisponibles: 18,
-    disponible: true,
+    activo: true,
     vendedorId: 4,
   },
   {
@@ -41,7 +41,7 @@ const alojamientosData = [
     servicios: ["wifi", "piscina", "gimnasio", "spa", "golf", "restaurant"],
     capacidad: 150,
     habitacionesDisponibles: 28,
-    disponible: true,
+    activo: true,
     vendedorId: 2,
   },
   {
@@ -55,7 +55,7 @@ const alojamientosData = [
     servicios: ["wifi", "cocina", "aire_acondicionado"],
     capacidad: 4,
     habitacionesDisponibles: 1,
-    disponible: true,
+    activo: true,
     vendedorId: 4,
   },
   {
@@ -69,7 +69,7 @@ const alojamientosData = [
     servicios: ["wifi", "cocina", "chimenea", "parrilla"],
     capacidad: 6,
     habitacionesDisponibles: 3,
-    disponible: true,
+    activo: true,
     vendedorId: 2,
   },
   {
@@ -83,7 +83,7 @@ const alojamientosData = [
     servicios: ["wifi", "piscina", "restaurant", "estacionamiento"],
     capacidad: 100,
     habitacionesDisponibles: 22,
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Hostel Che Lagarto",
@@ -96,7 +96,7 @@ const alojamientosData = [
     servicios: ["wifi", "cocina_compartida", "tours"],
     capacidad: 60,
     habitacionesDisponibles: 14,
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Resort Termas de Río Hondo",
@@ -109,7 +109,7 @@ const alojamientosData = [
     servicios: ["wifi", "termas", "spa", "piscina", "restaurant"],
     capacidad: 180,
     habitacionesDisponibles: 32,
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Hotel Salta Premium",
@@ -122,7 +122,7 @@ const alojamientosData = [
     servicios: ["wifi", "restaurant", "bar", "terraza"],
     capacidad: 75,
     habitacionesDisponibles: 16,
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Apartamento Puerto Madero",
@@ -135,7 +135,7 @@ const alojamientosData = [
     servicios: ["wifi", "cocina", "gimnasio_edificio", "seguridad"],
     capacidad: 4,
     habitacionesDisponibles: 1,
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Cabaña Patagonia Dreams",
@@ -148,7 +148,7 @@ const alojamientosData = [
     servicios: ["wifi", "cocina", "chimenea", "deck"],
     capacidad: 5,
     habitacionesDisponibles: 2,
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Hotel Plaza Córdoba",
@@ -161,7 +161,7 @@ const alojamientosData = [
     servicios: ["wifi", "restaurant", "business_center"],
     capacidad: 90,
     habitacionesDisponibles: 20,
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Hostel Tucumán Backpackers",
@@ -174,7 +174,7 @@ const alojamientosData = [
     servicios: ["wifi", "cocina_compartida"],
     capacidad: 40,
     habitacionesDisponibles: 10,
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Resort Costa del Sol",
@@ -187,7 +187,7 @@ const alojamientosData = [
     servicios: ["wifi", "piscina", "spa", "restaurant", "playa_privada"],
     capacidad: 220,
     habitacionesDisponibles: 40,
-    disponible: true,
+    activo: true,
   },
   {
     nombre: "Hotel Iguazú Grand",
@@ -200,7 +200,7 @@ const alojamientosData = [
     servicios: ["wifi", "piscina", "spa", "restaurant", "tours"],
     capacidad: 160,
     habitacionesDisponibles: 30,
-    disponible: true,
+    activo: true,
   },
 ];
 
@@ -218,7 +218,10 @@ export const seedAlojamientos = async () => {
     let insertados = 0;
     for (const alojamiento of alojamientosData) {
       try {
-        await Alojamiento.create(alojamiento);
+        await Alojamiento.create({
+          ...alojamiento,
+          published_by_user_id: alojamiento.vendedorId || 1
+        });
         insertados++;
       } catch (error) {
         // Ignorar errores de duplicados y continuar con el siguiente
