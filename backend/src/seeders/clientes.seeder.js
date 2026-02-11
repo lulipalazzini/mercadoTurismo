@@ -1,4 +1,4 @@
-import Cliente from "../models/Cliente.model.js";
+const Cliente = require("../models/Cliente.model");
 
 const clientesData = [
   {
@@ -138,7 +138,7 @@ const clientesData = [
   },
 ];
 
-export const seedClientes = async () => {
+const seedClientes = async () => {
   try {
     const count = await Cliente.count();
     if (count > 0) {
@@ -153,3 +153,5 @@ export const seedClientes = async () => {
     throw error;
   }
 };
+
+module.exports = { seedClientes };

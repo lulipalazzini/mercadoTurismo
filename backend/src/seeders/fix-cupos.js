@@ -1,5 +1,5 @@
-import { sequelize } from "../config/database.js";
-import Cupo from "../models/Cupo.model.js";
+const { sequelize } = require("../config/database");
+const Cupo = require("../models/Cupo.model");
 
 const fixCuposTable = async () => {
   try {

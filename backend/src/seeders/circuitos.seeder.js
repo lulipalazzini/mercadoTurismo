@@ -1,4 +1,4 @@
-import Circuito from "../models/Circuito.model.js";
+const Circuito = require("../models/Circuito.model");
 
 const circuitosData = [
   {
@@ -436,7 +436,7 @@ const circuitosData = [
   },
 ];
 
-export const seedCircuitos = async () => {
+const seedCircuitos = async () => {
   try {
     const count = await Circuito.count();
     if (count > 0) {
@@ -451,3 +451,5 @@ export const seedCircuitos = async () => {
     throw error;
   }
 };
+
+module.exports = { seedCircuitos };

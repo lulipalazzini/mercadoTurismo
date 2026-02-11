@@ -1,4 +1,4 @@
-import Crucero from "../models/Crucero.model.js";
+const Crucero = require("../models/Crucero.model");
 
 const crucerosData = [
   {
@@ -540,7 +540,7 @@ const crucerosData = [
   },
 ];
 
-export const seedCruceros = async () => {
+const seedCruceros = async () => {
   try {
     const count = await Crucero.count();
     if (count > 0) {
@@ -555,3 +555,5 @@ export const seedCruceros = async () => {
     throw error;
   }
 };
+
+module.exports = { seedCruceros };

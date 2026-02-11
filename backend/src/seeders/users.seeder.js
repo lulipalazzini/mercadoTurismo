@@ -1,5 +1,5 @@
-import bcrypt from "bcryptjs";
-import User from "../models/User.model.js";
+const bcrypt = require("bcryptjs");
+const User = require("../models/User.model");
 
 const usersData = [
   {
@@ -41,7 +41,7 @@ const usersData = [
   },
 ];
 
-export const seedUsers = async () => {
+const seedUsers = async () => {
   try {
     const count = await User.count();
     if (count > 0) {
@@ -57,3 +57,5 @@ export const seedUsers = async () => {
     throw error;
   }
 };
+
+module.exports = { seedUsers };

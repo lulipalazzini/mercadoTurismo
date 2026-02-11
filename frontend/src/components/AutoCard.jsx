@@ -4,6 +4,7 @@ import { FaMapMarkerAlt, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
 import { getUser } from "../services/auth.service";
 import { abrirWhatsApp } from "../utils/whatsapp";
+import { getFirstImageUrl } from "../utils/imageUtils";
 import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function AutoCard({ item, isPreview = false }) {
@@ -26,6 +27,7 @@ export default function AutoCard({ item, isPreview = false }) {
   const [showModal, setShowModal] = useState(false);
   const currentUser = getUser();
   const isAdmin = currentUser?.role === "admin";
+  const imageUrl = getFirstImageUrl(imagenes);
 
   const handleCardClick = () => {
     trackCardClick("auto", item.id, `${marca} ${modelo}`).catch(console.error);
@@ -39,9 +41,9 @@ export default function AutoCard({ item, isPreview = false }) {
 
   return (
     <div className="service-card" onClick={handleCardClick}>
-      {imagenes && imagenes.length > 0 && (
+      {imageUrl && (
         <div className="card-image">
-          <img src={imagenes[0]} alt={`${marca} ${modelo}`} />
+          <img src={imageUrl} alt={`${marca} ${modelo}`} />
         </div>
       )}
 

@@ -1,23 +1,23 @@
-import { sequelize } from "../config/database.js";
-import { seedUsers } from "./users.seeder.js";
-import { seedClientes } from "./clientes.seeder.js";
-import { seedAlojamientos } from "./alojamientos.seeder.js";
-import { seedAutos } from "./autos.seeder.js";
-import { seedPaquetes } from "./paquetes.seeder.js";
-import { seedExcursiones } from "./excursiones.seeder.js";
-import { seedTransfers } from "./transfers.seeder.js";
-import { seedSeguros } from "./seguros.seeder.js";
-import { seedCruceros } from "./cruceros.seeder.js";
-import { seedCircuitos } from "./circuitos.seeder.js";
-import { seedSalidasGrupales } from "./salidasGrupales.seeder.js";
-import { seedCuposMercado } from "./cuposMercado.seeder.js";
-import seedClickStats from "./clickStats.seeder.js";
+const { sequelize } = require("../config/database");
+const { seedUsers } = require("./users.seeder");
+const { seedClientes } = require("./clientes.seeder");
+const { seedAlojamientos } = require("./alojamientos.seeder");
+const { seedAutos } = require("./autos.seeder");
+const { seedPaquetes } = require("./paquetes.seeder");
+const { seedExcursiones } = require("./excursiones.seeder");
+const { seedTransfers } = require("./transfers.seeder");
+const { seedSeguros } = require("./seguros.seeder");
+const { seedCruceros } = require("./cruceros.seeder");
+const { seedCircuitos } = require("./circuitos.seeder");
+const { seedSalidasGrupales } = require("./salidasGrupales.seeder");
+const { seedCuposMercado } = require("./cuposMercado.seeder");
+const seedClickStats = require("./clickStats.seeder");
 
 /**
  * Ejecuta todos los seeders en orden
  * Solo inserta datos si las tablas están vacías
  */
-export const runAllSeeders = async () => {
+const runAllSeeders = async () => {
   try {
     console.log("\n🌱 Iniciando seeders...\n");
 
@@ -25,10 +25,15 @@ export const runAllSeeders = async () => {
     await sequelize.authenticate();
     console.log("✅ Conexión a la base de datos establecida\n");
 
-    // Sincronizar modelos (crear/actualizar tablas)
-    // Usar force: true para recrear las tablas y aplicar correctamente los constraints
-    await sequelize.sync({ force: true });
-    console.log("✅ Tablas sincronizadas\n");
+    // Sincronizar modelos (crear tablas faltantes)
+    // Para recrear tablas y borrar datos, usar SEED_FORCE=true
+    const force = process.env.SEED_FORCE === "true";
+    await sequelize.sync({ force });
+    console.log(
+      force
+        ? "✅ Tablas recreadas (SEED_FORCE=true)\n"
+        : "✅ Tablas sincronizadas (sin borrar datos)\n",
+    );
 
     // Ejecutar seeders en orden (algunos tienen dependencias)
     await seedUsers();
@@ -63,3 +68,5 @@ runAllSeeders()
     console.error("❌ Error en el proceso de seeding:", error);
     process.exit(1);
   });
+
+module.exports = { runAllSeeders };

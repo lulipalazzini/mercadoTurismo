@@ -1,4 +1,4 @@
-import ClickStats from "../models/ClickStats.model.js";
+const ClickStats = require("../models/ClickStats.model");
 
 const seedClickStats = async () => {
   try {
@@ -43,4 +43,4 @@ const seedClickStats = async () => {
   }
 };
 
-export default seedClickStats;
+module.exports = seedClickStats;

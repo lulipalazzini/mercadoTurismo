@@ -1,4 +1,4 @@
-import Seguro from "../models/Seguro.model.js";
+const Seguro = require("../models/Seguro.model");
 
 const segurosData = [
   {
@@ -321,7 +321,7 @@ const segurosData = [
   },
 ];
 
-export const seedSeguros = async () => {
+const seedSeguros = async () => {
   try {
     const count = await Seguro.count();
     if (count > 0) {
@@ -336,3 +336,5 @@ export const seedSeguros = async () => {
     throw error;
   }
 };
+
+module.exports = { seedSeguros };

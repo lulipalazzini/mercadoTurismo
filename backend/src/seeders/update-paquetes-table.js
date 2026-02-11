@@ -1,6 +1,6 @@
-import { sequelize } from "../config/database.js";
-import Paquete from "../models/Paquete.model.js";
-import User from "../models/User.model.js";
+const { sequelize } = require("../config/database");
+const Paquete = require("../models/Paquete.model");
+const User = require("../models/User.model");
 
 /**
  * Script para actualizar la base de datos con los nuevos campos:

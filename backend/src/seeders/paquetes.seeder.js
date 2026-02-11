@@ -1,4 +1,4 @@
-import Paquete from "../models/Paquete.model.js";
+const Paquete = require("../models/Paquete.model");
 
 const paquetesData = [
   {
@@ -255,7 +255,7 @@ const paquetesData = [
   },
 ];
 
-export const seedPaquetes = async () => {
+const seedPaquetes = async () => {
   try {
     const count = await Paquete.count();
     if (count > 0) {
@@ -270,3 +270,5 @@ export const seedPaquetes = async () => {
     throw error;
   }
 };
+
+module.exports = { seedPaquetes };

@@ -4,6 +4,7 @@ import { FaMapMarkerAlt, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
 import { abrirWhatsApp } from "../utils/whatsapp";
 import { getUser } from "../services/auth.service";
+import { getFirstImageUrl } from "../utils/imageUtils";
 import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function ExcursionCard({ item, isPreview = false }) {
@@ -23,6 +24,7 @@ export default function ExcursionCard({ item, isPreview = false }) {
   const [showModal, setShowModal] = useState(false);
   const currentUser = getUser();
   const isAdmin = currentUser?.role === "admin";
+  const imageUrl = getFirstImageUrl(imagenes);
 
   const handleCardClick = () => {
     trackCardClick("excursion", item.id, nombre).catch(console.error);
@@ -36,9 +38,9 @@ export default function ExcursionCard({ item, isPreview = false }) {
 
   return (
     <div className="service-card" onClick={handleCardClick}>
-      {imagenes && imagenes.length > 0 && (
+      {imageUrl && (
         <div className="card-image">
-          <img src={imagenes[0]} alt={nombre} />
+          <img src={imageUrl} alt={nombre} />
         </div>
       )}
 

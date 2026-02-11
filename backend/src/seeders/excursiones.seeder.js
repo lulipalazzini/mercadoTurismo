@@ -1,4 +1,4 @@
-import Excursion from "../models/Excursion.model.js";
+const Excursion = require("../models/Excursion.model");
 
 const excursionesData = [
   {
@@ -224,7 +224,7 @@ const excursionesData = [
   },
 ];
 
-export const seedExcursiones = async () => {
+const seedExcursiones = async () => {
   try {
     const count = await Excursion.count();
     if (count > 0) {
@@ -241,3 +241,5 @@ export const seedExcursiones = async () => {
     throw error;
   }
 };
+
+module.exports = { seedExcursiones };

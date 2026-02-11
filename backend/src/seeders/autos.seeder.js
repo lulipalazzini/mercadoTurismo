@@ -1,4 +1,4 @@
-import Auto from "../models/Auto.model.js";
+const Auto = require("../models/Auto.model");
 
 const autosData = [
   {
@@ -231,7 +231,7 @@ const autosData = [
   },
 ];
 
-export const seedAutos = async () => {
+const seedAutos = async () => {
   try {
     const count = await Auto.count();
     if (count > 0) {
@@ -246,3 +246,5 @@ export const seedAutos = async () => {
     throw error;
   }
 };
+
+module.exports = { seedAutos };

@@ -1,4 +1,4 @@
-import SalidaGrupal from "../models/SalidaGrupal.model.js";
+const SalidaGrupal = require("../models/SalidaGrupal.model");
 
 const salidasGrupalesData = [
   {
@@ -436,7 +436,7 @@ const salidasGrupalesData = [
   },
 ];
 
-export const seedSalidasGrupales = async () => {
+const seedSalidasGrupales = async () => {
   try {
     const count = await SalidaGrupal.count();
     if (count > 0) {
@@ -453,3 +453,5 @@ export const seedSalidasGrupales = async () => {
     throw error;
   }
 };
+
+module.exports = { seedSalidasGrupales };

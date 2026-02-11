@@ -16,7 +16,7 @@ import {
   FaRoute,
 } from "react-icons/fa";
 import { abrirWhatsApp } from "../utils/whatsapp";
-import { getImageUrls } from "../utils/imageUtils";
+import { getImageUrl, getImageUrls } from "../utils/imageUtils";
 import "../styles/serviceDetailModal.css";
 
 export default function ServiceDetailModal({
@@ -31,6 +31,7 @@ export default function ServiceDetailModal({
 
   // Convertir rutas de imágenes a URLs completas
   const imageUrls = getImageUrls(item.imagenes);
+  const singleImageUrl = getImageUrl(item.imagen);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("es-AR", {
@@ -171,9 +172,9 @@ export default function ServiceDetailModal({
                 </>
               )}
             </>
-          ) : item.imagen ? (
+          ) : singleImageUrl ? (
             <img
-              src={item.imagen}
+              src={singleImageUrl}
               alt={item.nombre || item.modelo || "Servicio"}
               className="gallery-main-image"
             />

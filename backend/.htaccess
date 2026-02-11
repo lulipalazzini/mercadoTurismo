@@ -2,10 +2,13 @@
 PassengerEnabled On
 PassengerAppType node
 PassengerStartupFile app.js
+PassengerBaseURI /
 
 # La ruta se configura automáticamente por Passenger
 # Si necesitas especificar manualmente, usar ruta absoluta del servidor:
 # PassengerAppRoot /home/TU_USUARIO/api.mercadoturismo.ar
+# En CloudLinux/cPanel el binario de Node suele ser:
+# PassengerNodejs /opt/alt/alt-nodejs18/root/usr/bin/node
 
 # Variables de entorno (ajusta estos valores según tu servidor)
 SetEnv NODE_ENV production

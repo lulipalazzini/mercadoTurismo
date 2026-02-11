@@ -25,6 +25,15 @@ cd /home/mercadoturismo/backend
 npm install --production
 ```
 
+Si el servidor usa CloudLinux y aparece `Permission denied` para `/usr/bin/env node`,
+ejecutar con el binario de Node del sistema:
+
+```bash
+export PATH="/opt/alt/alt-nodejs18/root/usr/bin:$PATH"
+node -v
+npm install --production
+```
+
 ### 3. Configurar variables de entorno
 
 Crear archivo `.env` en `/home/mercadoturismo/backend/`:
@@ -67,6 +76,20 @@ PassengerNodejs /usr/bin/node
 SetEnv NODE_ENV production
 ```
 
+Si el backend está en un subdominio con DocumentRoot propio
+(ej: `/home/usuario/api.dominio.com`), crear un `.htaccess` en ese DocumentRoot
+para enganchar Passenger con ruta absoluta:
+
+```apache
+PassengerEnabled On
+PassengerAppType node
+PassengerAppRoot /home/usuario/api.dominio.com/backend
+PassengerBaseURI /
+PassengerStartupFile app.js
+PassengerNodejs /opt/alt/alt-nodejs18/root/usr/bin/node
+PassengerAppLogFile /home/usuario/new_logs.log
+```
+
 ### 5. Verificar permisos
 
 ```bash
@@ -80,6 +103,13 @@ Si es la primera vez:
 
 ```bash
 node backend/migrate-passenger-fields.js
+```
+
+Si aparecen errores de columnas faltantes (ej: `no such column: *.imagenes`)
+o tabla `trenes` inexistente, ejecutar la migración correctiva:
+
+```bash
+node backend/migrations/add-imagenes-columns.js
 ```
 
 ## 🎨 Configuración del Frontend

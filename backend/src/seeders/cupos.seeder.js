@@ -1,4 +1,4 @@
-import Cupo from "../models/Cupo.model.js";
+const Cupo = require("../models/Cupo.model");
 
 const cuposData = [
   {
@@ -168,7 +168,7 @@ const cuposData = [
   },
 ];
 
-export const seedCupos = async () => {
+const seedCupos = async () => {
   try {
     const count = await Cupo.count();
     if (count > 0) {
@@ -186,3 +186,5 @@ export const seedCupos = async () => {
     throw error;
   }
 };
+
+module.exports = { seedCupos };

@@ -4,6 +4,7 @@ import { FaMapMarkerAlt, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
 import { abrirWhatsApp } from "../utils/whatsapp";
 import { getUser } from "../services/auth.service";
+import { getFirstImageUrl } from "../utils/imageUtils";
 import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function PaqueteCard({ item, isPreview = false }) {
@@ -19,12 +20,13 @@ export default function PaqueteCard({ item, isPreview = false }) {
     fechaInicio,
     fechaFin: _fechaFin,
     incluye,
-    imagen,
+    imagenes,
     vendedor,
   } = item;
 
   const currentUser = getUser();
   const isAdmin = currentUser?.role === "admin";
+  const imageUrl = getFirstImageUrl(imagenes);
 
   const formatDate = (date) => {
     if (!date) return "Fecha no disponible";
@@ -56,9 +58,9 @@ export default function PaqueteCard({ item, isPreview = false }) {
 
   return (
     <div className="service-card" onClick={handleCardClick}>
-      {imagen && (
+      {imageUrl && (
         <div className="card-image">
-          <img src={imagen} alt={nombre} />
+          <img src={imageUrl} alt={nombre} />
         </div>
       )}
 

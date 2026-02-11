@@ -9,6 +9,7 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 import { API_URL } from "../../config/api.config";
+import { getFirstImageUrl } from "../../utils/imageUtils";
 import AlertModal from "../common/AlertModal";
 
 const TIPO_LABELS = {
@@ -196,14 +197,6 @@ export default function PublicacionesDestacadas() {
       const matchTipo = !tipoFilter || pub.tipo === tipoFilter;
       return matchSearch && matchTipo;
     });
-  };
-
-  const getFirstImageUrl = (imagenes) => {
-    if (!imagenes || imagenes.length === 0) return null;
-    const firstImage = imagenes[0];
-    if (typeof firstImage === "string") return firstImage;
-    if (firstImage && firstImage.url) return firstImage.url;
-    return null;
   };
 
   // Obtener tipos únicos

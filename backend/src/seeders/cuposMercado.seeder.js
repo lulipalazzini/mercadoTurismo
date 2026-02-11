@@ -1,4 +1,4 @@
-import CupoMercado from "../models/CupoMercado.model.js";
+const CupoMercado = require("../models/CupoMercado.model");
 
 const cuposMercadoData = [
   {
@@ -98,7 +98,7 @@ const cuposMercadoData = [
   },
 ];
 
-export const seedCuposMercado = async () => {
+const seedCuposMercado = async () => {
   try {
     const count = await CupoMercado.count();
     if (count > 0) {
@@ -115,3 +115,5 @@ export const seedCuposMercado = async () => {
     throw error;
   }
 };
+
+module.exports = { seedCuposMercado };

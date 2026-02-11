@@ -3,6 +3,7 @@ import { FaMapMarkerAlt, FaStar, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
 import { abrirWhatsApp } from "../utils/whatsapp";
 import { getUser } from "../services/auth.service";
+import { getFirstImageUrl } from "../utils/imageUtils";
 import ServiceDetailModal from "./ServiceDetailModal";
 
 export default function AlojamientoCard({ alojamiento, isPreview = false }) {
@@ -24,6 +25,7 @@ export default function AlojamientoCard({ alojamiento, isPreview = false }) {
 
   const currentUser = getUser();
   const isAdmin = currentUser?.role === "admin";
+  const imageUrl = getFirstImageUrl(imagenes);
 
   const renderEstrellas = () => {
     return (
@@ -52,8 +54,8 @@ export default function AlojamientoCard({ alojamiento, isPreview = false }) {
     <>
       <div className="alojamiento-card" onClick={handleVerDetalles}>
         <div className="card-image">
-          {imagenes && imagenes.length > 0 ? (
-            <img src={imagenes[0]} alt={nombre} />
+          {imageUrl ? (
+            <img src={imageUrl} alt={nombre} />
           ) : (
             <div className="placeholder-image">Sin imagen</div>
           )}

@@ -1,4 +1,4 @@
-import Transfer from "../models/Transfer.model.js";
+const Transfer = require("../models/Transfer.model");
 
 const transfersData = [
   {
@@ -198,7 +198,7 @@ const transfersData = [
   },
 ];
 
-export const seedTransfers = async () => {
+const seedTransfers = async () => {
   try {
     const count = await Transfer.count();
     if (count > 0) {
@@ -213,3 +213,5 @@ export const seedTransfers = async () => {
     throw error;
   }
 };
+
+module.exports = { seedTransfers };

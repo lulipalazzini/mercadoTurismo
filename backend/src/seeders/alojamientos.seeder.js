@@ -1,4 +1,4 @@
-import Alojamiento from "../models/Alojamiento.model.js";
+const Alojamiento = require("../models/Alojamiento.model");
 
 const alojamientosData = [
   {
@@ -204,7 +204,7 @@ const alojamientosData = [
   },
 ];
 
-export const seedAlojamientos = async () => {
+const seedAlojamientos = async () => {
   try {
     const count = await Alojamiento.count();
     if (count >= 15) {
@@ -235,3 +235,5 @@ export const seedAlojamientos = async () => {
     throw error;
   }
 };
+
+module.exports = { seedAlojamientos };
