@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import "../styles/navbar.css";
@@ -6,9 +6,17 @@ import logo from "../assets/logo/MT_marca_01.webp";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+
+  // Detectar si el usuario está logueado
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const currentUser = localStorage.getItem("currentUser");
+    setIsLoggedIn(!!(token && currentUser));
+  }, [location]);
 
   const isActive = (path) => location.pathname === path;
 
@@ -123,9 +131,18 @@ export default function Navbar() {
           <Link to="/seguros" className={isActive("/seguros") ? "active" : ""}>
             Seguros
           </Link>
-          <Link to="/login" className="btn-login">
-            Ingresar
-          </Link>
+          {isLoggedIn ? (
+            <button 
+              onClick={() => navigate("/dashboard")} 
+              className="btn-login"
+            >
+              Volver al dashboard
+            </button>
+          ) : (
+            <Link to="/login" className="btn-login">
+              Ingresar
+            </Link>
+          )}
         </nav>
       </div>
     </header>

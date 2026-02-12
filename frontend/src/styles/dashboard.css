@@ -262,6 +262,29 @@
   gap: 1rem;
 }
 
+.btn-go-home {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-go-home:hover {
+  background: var(--primary-dark, #1a4d7a);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-go-home:active {
+  transform: translateY(0);
+}
+
 .header-btn {
   background: #f6f8fa;
   border: 1px solid #e1e4e8;
