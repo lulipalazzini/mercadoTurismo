@@ -318,8 +318,8 @@ function DashboardContent() {
             <h1>{getSectionTitle()}</h1>
           </div>
           <div className="header-right">
-            <button 
-              className="btn-go-home" 
+            <button
+              className="btn-go-home"
               onClick={handleGoToHome}
               title="Volver a la página de inicio"
             >

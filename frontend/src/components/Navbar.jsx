@@ -132,8 +132,8 @@ export default function Navbar() {
             Seguros
           </Link>
           {isLoggedIn ? (
-            <button 
-              onClick={() => navigate("/dashboard")} 
+            <button
+              onClick={() => navigate("/dashboard")}
               className="btn-login"
             >
               Volver al dashboard
