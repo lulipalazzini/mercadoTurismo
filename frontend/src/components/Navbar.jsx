@@ -1,19 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import SearchBar from "./SearchBar";
+import { logout } from "../services/auth.service";
 import "../styles/navbar.css";
 import logo from "../assets/logo/MT_marca_01.webp";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const userMenuRef = useRef(null);
   const isHomePage = location.pathname === "/";
+
+  // Detectar si el usuario está logueado
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const currentUser = localStorage.getItem("currentUser");
+    setIsLoggedIn(!!(token && currentUser));
+    setIsUserMenuOpen(false);
+  }, [location]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const isActive = (path) => location.pathname === path;
 
   const isDropdownActive = (paths) =>
     paths.some((path) => location.pathname === path);
+
+  const goToDashboard = () => {
+    setIsUserMenuOpen(false);
+    setOpen(false);
+    navigate("/dashboard");
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsLoggedIn(false);
+    setIsUserMenuOpen(false);
+    setOpen(false);
+    navigate("/login");
+  };
 
   return (
     <header className="navbar">
@@ -123,9 +160,46 @@ export default function Navbar() {
           <Link to="/seguros" className={isActive("/seguros") ? "active" : ""}>
             Seguros
           </Link>
-          <Link to="/login" className="btn-login">
-            Ingresar
-          </Link>
+          {isLoggedIn ? (
+            <div
+              ref={userMenuRef}
+              className={`user-menu ${isUserMenuOpen ? "open" : ""}`}
+            >
+              <button
+                type="button"
+                className="user-menu-trigger"
+                aria-label="Abrir menú de usuario"
+                aria-haspopup="menu"
+                aria-expanded={isUserMenuOpen}
+                onClick={() => setIsUserMenuOpen((prev) => !prev)}
+              >
+                <i className="fa-solid fa-user" aria-hidden="true" />
+              </button>
+
+              <div className="dropdown-menu" role="menu">
+                <button
+                  type="button"
+                  className="user-menu-item"
+                  onClick={goToDashboard}
+                >
+                  <i className="fa-solid fa-table-columns" aria-hidden="true" />
+                  Dashboard
+                </button>
+                <button
+                  type="button"
+                  className="user-menu-item logout"
+                  onClick={handleLogout}
+                >
+                  <i className="fa-solid fa-right-from-bracket" aria-hidden="true" />
+                  Cerrar sesión
+                </button>
+              </div>
+            </div>
+          ) : (
+            <Link to="/login" className="btn-login">
+              Ingresar
+            </Link>
+          )}
         </nav>
       </div>
     </header>

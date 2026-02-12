@@ -112,6 +112,11 @@ function DashboardContent() {
     navigate("/login");
   };
 
+  const handleGoToHome = () => {
+    // Navegar a la página minorista SIN cerrar sesión
+    navigate("/");
+  };
+
   const getSectionTitle = () => {
     const titles = {
       reservas: "Reservas",
@@ -313,6 +318,13 @@ function DashboardContent() {
             <h1>{getSectionTitle()}</h1>
           </div>
           <div className="header-right">
+            <button
+              className="btn-go-home"
+              onClick={handleGoToHome}
+              title="Volver a la página de inicio"
+            >
+              Volver a inicio
+            </button>
             <div className="user-menu">
               <div className="user-avatar">
                 {user?.fotoPerfil ? (

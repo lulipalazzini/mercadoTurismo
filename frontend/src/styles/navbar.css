@@ -238,6 +238,72 @@
   box-shadow: var(--shadow-md);
 }
 
+.user-menu {
+  position: relative;
+  margin-left: 0.5rem;
+}
+
+.user-menu-trigger {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background: var(--bg-white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+}
+
+.user-menu-trigger i {
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+.user-menu-trigger:hover {
+  background: var(--color-blue-light);
+  border-color: var(--primary);
+}
+
+.user-menu .dropdown-menu {
+  left: auto;
+  right: 0;
+  min-width: 190px;
+  padding: 0.25rem 0;
+}
+
+.user-menu.open .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.user-menu-item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 0.625rem 1rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+}
+
+.user-menu-item:hover {
+  background: var(--bg-lighter);
+  color: var(--primary);
+}
+
+.user-menu-item.logout:hover {
+  color: #cf2e2e;
+}
+
 .nav-toggle {
   display: none;
   background: transparent;
@@ -334,6 +400,11 @@
     padding: 0.5rem 1rem !important;
     font-size: 0.8125rem;
   }
+
+  .user-menu-trigger {
+    width: 36px;
+    height: 36px;
+  }
 }
 
 @media (max-width: 880px) {
@@ -400,6 +471,38 @@
     text-align: center;
     margin-top: 0.5rem;
     margin-left: 0;
+  }
+
+  .user-menu {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+
+  .user-menu-trigger {
+    width: 100%;
+    border-radius: 8px;
+    justify-content: flex-start;
+    padding: 0 1rem;
+  }
+
+  .user-menu .dropdown-menu {
+    position: static;
+    margin-top: 0.5rem;
+    min-width: 100%;
+    transform: none;
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .user-menu-item {
+    color: #e5e7eb;
+  }
+
+  .user-menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
   }
 }
 
