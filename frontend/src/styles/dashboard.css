@@ -308,14 +308,9 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 1rem;
-  background: #f6f8fa;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
-}
-
-.user-menu:hover {
-  background: #e1e4e8;
 }
 
 .user-avatar {
