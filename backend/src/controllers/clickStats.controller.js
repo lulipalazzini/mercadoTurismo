@@ -11,7 +11,7 @@ const incrementClickCount = async (req, res) => {
       body: req.body,
       headers: {
         origin: req.headers.origin,
-        "content-type": req.headers["content-type"],
+        'content-type': req.headers['content-type'],
       },
     });
 
@@ -52,9 +52,7 @@ const incrementClickCount = async (req, res) => {
         serviceName: serviceName || null,
         clicks: 1,
       });
-      console.log(
-        `✅ [STATS] Nuevo registro creado: ${stat.cardType} - Clicks: 1`,
-      );
+      console.log(`✅ [STATS] Nuevo registro creado: ${stat.cardType} - Clicks: 1`);
     } else {
       stat.clicks += 1;
       // Actualizar el nombre si cambió
@@ -62,9 +60,7 @@ const incrementClickCount = async (req, res) => {
         stat.serviceName = serviceName;
       }
       await stat.save();
-      console.log(
-        `✅ [STATS] Click incrementado: ${stat.cardType} - Total: ${stat.clicks}`,
-      );
+      console.log(`✅ [STATS] Click incrementado: ${stat.cardType} - Total: ${stat.clicks}`);
     }
 
     const response = {
@@ -76,16 +72,16 @@ const incrementClickCount = async (req, res) => {
     };
 
     console.log("📤 [STATS] Enviando respuesta:", response);
-
+    
     return res.status(200).json(response);
   } catch (error) {
     console.error("❌ [STATS] Error incrementando contador:");
     console.error("   Mensaje:", error.message);
     console.error("   Stack:", error.stack);
-
+    
     // Asegurar que SIEMPRE devolvemos JSON
     res.setHeader("Content-Type", "application/json");
-    return res.status(500).json({
+    return res.status(500).json({ 
       success: false,
       error: "Error al registrar click",
       message: error.message,
@@ -177,8 +173,9 @@ const getStatByType = async (req, res) => {
   }
 };
 
+
 module.exports = {
   incrementClickCount,
   getAllStats,
-  getStatByType,
+  getStatByType
 };

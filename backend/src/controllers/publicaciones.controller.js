@@ -10,6 +10,149 @@ const Tren = require("../models/Tren.model");
 const Seguro = require("../models/Seguro.model");
 const User = require("../models/User.model");
 
+const getModelStatusFilter = (model, extraWhere = {}) => {
+  const rawAttributes = model.rawAttributes || {};
+
+  if (rawAttributes.activo) {
+    return { ...extraWhere, activo: true };
+  }
+
+  if (rawAttributes.disponible) {
+    return { ...extraWhere, disponible: true };
+  }
+
+  return extraWhere;
+};
+
+const getFieldValue = (item, field) =>
+  typeof item.get === "function" ? item.get(field) : item[field];
+
+const getFirstDefined = (item, fields) => {
+  for (const field of fields) {
+    const value = getFieldValue(item, field);
+    if (value !== null && value !== undefined && value !== "") {
+      return value;
+    }
+  }
+  return null;
+};
+
+const toArray = (value) => {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  return [];
+};
+
+const extractImageValue = (image) => {
+  if (typeof image === "string") {
+    return image;
+  }
+
+  if (image && typeof image === "object") {
+    if (typeof image.url === "string") return image.url;
+    if (typeof image.path === "string") return image.path;
+    if (typeof image.preview === "string") return image.preview;
+  }
+
+  return null;
+};
+
+const sanitizeImagePath = (value) => {
+  const raw = extractImageValue(value);
+  if (!raw) return null;
+
+  const normalized = raw.trim().replace(/\\/g, "/");
+  if (!normalized) return null;
+  if (normalized.startsWith("data:") || normalized.startsWith("blob:")) {
+    return normalized;
+  }
+
+  const uploadsMatch = normalized.match(/(?:api\/)?uploads\/[^?#\s"'\\\]]+/i);
+  if (uploadsMatch && uploadsMatch[0]) {
+    const clean = uploadsMatch[0].replace(/^api\//i, "");
+    return `/${clean}`;
+  }
+
+  return normalized;
+};
+
+const sanitizeImages = (images) =>
+  images.map(sanitizeImagePath).filter((value) => typeof value === "string");
+
+const toNumber = (value) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const mapFeaturedItem = (item, tipo) => {
+  const nombreBase = getFirstDefined(item, ["nombre"]);
+  const nombreAuto = [getFieldValue(item, "marca"), getFieldValue(item, "modelo")]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+  const nombreTransfer = [getFieldValue(item, "origen"), getFieldValue(item, "destino")]
+    .filter(Boolean)
+    .join(" -> ")
+    .trim();
+
+  const nombre =
+    nombreBase ||
+    (tipo === "auto" ? nombreAuto : "") ||
+    (tipo === "transfer" ? nombreTransfer : "") ||
+    `${tipo} #${getFieldValue(item, "id")}`;
+
+  const destinos = toArray(getFieldValue(item, "destinos"));
+  const puertosDestino = toArray(getFieldValue(item, "puertosDestino"));
+
+  const destino =
+    getFirstDefined(item, ["destino", "ubicacion", "origen", "puertoSalida"]) ||
+    destinos[0] ||
+    puertosDestino[0] ||
+    null;
+
+  const precio = toNumber(
+    getFirstDefined(item, [
+      "precio",
+      "precioDia",
+      "precioNoche",
+      "importeAdulto",
+      "precioDesde",
+    ]),
+  );
+
+  const vendedor = getFieldValue(item, "vendedor");
+
+  return {
+    id: getFieldValue(item, "id"),
+    tipo,
+    nombre,
+    descripcion: getFirstDefined(item, ["descripcion"]) || "",
+    destino,
+    precio,
+    imagenes: sanitizeImages(toArray(getFieldValue(item, "imagenes"))),
+    destacado: Boolean(getFieldValue(item, "destacado")),
+    createdAt: getFieldValue(item, "createdAt"),
+    vendedor: vendedor
+      ? {
+          id: vendedor.id,
+          nombre: vendedor.nombre,
+          email: vendedor.email,
+        }
+      : null,
+  };
+};
+
 /**
  * 🌟 OBTENER PUBLICACIONES DESTACADAS - ENDPOINT PÚBLICO
  * GET /api/publicaciones-destacadas
@@ -38,20 +181,7 @@ const getPublicacionesDestacadas = async (req, res) => {
     for (const { model, tipo } of modelsConfig) {
       try {
         const items = await model.findAll({
-          where: {
-            activo: true,
-            destacado: true,
-          },
-          attributes: [
-            "id",
-            "nombre",
-            "descripcion",
-            "precio",
-            "imagenes",
-            "destacado",
-            "createdAt",
-            "destino", // Algunos modelos tienen este campo
-          ],
+          where: getModelStatusFilter(model, { destacado: true }),
           include: [
             {
               model: User,
@@ -65,24 +195,7 @@ const getPublicacionesDestacadas = async (req, res) => {
 
         // Formatear y agregar al array
         items.forEach((item) => {
-          destacadas.push({
-            id: item.id,
-            tipo,
-            nombre: item.nombre || `${tipo} #${item.id}`,
-            descripcion: item.descripcion || "",
-            destino: item.destino || null,
-            precio: parseFloat(item.precio || 0),
-            imagenes: item.imagenes || [],
-            destacado: item.destacado,
-            createdAt: item.createdAt,
-            vendedor: item.vendedor
-              ? {
-                  id: item.vendedor.id,
-                  nombre: item.vendedor.nombre,
-                  email: item.vendedor.email,
-                }
-              : null,
-          });
+          destacadas.push(mapFeaturedItem(item, tipo));
         });
       } catch (error) {
         console.error(`⚠️ Error al obtener ${tipo} destacados:`, error.message);
@@ -192,7 +305,7 @@ const getTiposServicios = async (req, res) => {
     for (const tipo of tiposConfig) {
       try {
         const count = await tipo.model.count({
-          where: { activo: true },
+          where: getModelStatusFilter(tipo.model),
         });
 
         tiposDisponibles.push({
@@ -260,16 +373,50 @@ const getDestinos = async (req, res) => {
     // Consultar cada modelo para obtener destinos únicos
     for (const { model } of modelsConfig) {
       try {
+        const rawAttributes = model.rawAttributes || {};
+        const candidateFields = [
+          "destino",
+          "ubicacion",
+          "origen",
+          "puertoSalida",
+          "destinos",
+          "puertosDestino",
+        ];
+
+        const attributes = candidateFields.filter((field) => rawAttributes[field]);
+        if (attributes.length === 0) {
+          continue;
+        }
+
         const items = await model.findAll({
-          where: { activo: true },
-          attributes: ["destino"],
+          where: getModelStatusFilter(model),
+          attributes,
           raw: true,
         });
 
         items.forEach((item) => {
-          if (item.destino && item.destino.trim()) {
-            destinosSet.add(item.destino.trim());
-          }
+          const simples = [
+            item.destino,
+            item.ubicacion,
+            item.origen,
+            item.puertoSalida,
+          ].filter((value) => typeof value === "string" && value.trim());
+
+          simples.forEach((value) => destinosSet.add(value.trim()));
+
+          const destinosArray = toArray(item.destinos);
+          destinosArray.forEach((value) => {
+            if (typeof value === "string" && value.trim()) {
+              destinosSet.add(value.trim());
+            }
+          });
+
+          const puertosArray = toArray(item.puertosDestino);
+          puertosArray.forEach((value) => {
+            if (typeof value === "string" && value.trim()) {
+              destinosSet.add(value.trim());
+            }
+          });
         });
       } catch (error) {
         console.error(`⚠️ Error al obtener destinos de modelo:`, error.message);
@@ -318,16 +465,25 @@ const getOrigenes = async (req, res) => {
     // Consultar cada modelo para obtener orígenes únicos
     for (const { model } of modelsConfig) {
       try {
+        const rawAttributes = model.rawAttributes || {};
+        const candidateFields = ["origen", "ubicacion", "puertoSalida"];
+        const attributes = candidateFields.filter((field) => rawAttributes[field]);
+
+        if (attributes.length === 0) {
+          continue;
+        }
+
         const items = await model.findAll({
-          where: { activo: true },
-          attributes: ["origen"],
+          where: getModelStatusFilter(model),
+          attributes,
           raw: true,
         });
 
         items.forEach((item) => {
-          if (item.origen && item.origen.trim()) {
-            origenesSet.add(item.origen.trim());
-          }
+          const values = [item.origen, item.ubicacion, item.puertoSalida].filter(
+            (value) => typeof value === "string" && value.trim(),
+          );
+          values.forEach((value) => origenesSet.add(value.trim()));
         });
       } catch (error) {
         console.error(`⚠️ Error al obtener orígenes de modelo:`, error.message);

@@ -1,48 +1,21 @@
 const Alojamiento = require("../models/Alojamiento.model");
 const User = require("../models/User.model");
-const { isAdmin } = require("../middleware/publisherSecurity");
-const {
-  parseItemsJsonFields,
-  parseItemJsonFields,
-  parseRequestJsonFields,
-} = require("../utils/parseJsonFields");
-
-const JSON_FIELDS = ["imagenes"];
+const { deleteOldImages } = require("../middleware/upload.middleware");
 
 const getAlojamientos = async (req, res) => {
   try {
-    const whereClause = { activo: true };
-
-    // Aplicar filtro de ownership para usuarios B2B
-    if (req.user && !isAdmin(req.user)) {
-      whereClause.published_by_user_id = req.user.id;
-      console.log(`🔒 Filtrando alojamientos del usuario: ${req.user.id}`);
-    }
-
-    // Usuarios no autenticados pueden ver TODOS los alojamientos
-    // (No se aplica filtro isPublic para B2C)
-
     const alojamientos = await Alojamiento.findAll({
-      where: whereClause,
+      where: { activo: true },
       order: [["createdAt", "DESC"]],
       include: [
         {
           model: User,
           as: "vendedor",
-          attributes: [
-            "id",
-            "nombre",
-            "email",
-            "razonSocial",
-            "role",
-            "calculatedRole",
-            "isVisibleToPassengers",
-          ],
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
         },
       ],
     });
-    const parsedAlojamientos = parseItemsJsonFields(alojamientos, JSON_FIELDS);
-    res.json(parsedAlojamientos);
+    res.json(alojamientos);
   } catch (error) {
     res
       .status(500)
@@ -56,20 +29,7 @@ const getAlojamiento = async (req, res) => {
     if (!alojamiento) {
       return res.status(404).json({ message: "Alojamiento no encontrado" });
     }
-
-    // Verificar ownership
-    if (
-      req.user &&
-      !isAdmin(req.user) &&
-      alojamiento.published_by_user_id !== req.user.id
-    ) {
-      return res
-        .status(403)
-        .json({ message: "No tienes permiso para ver este alojamiento" });
-    }
-
-    const parsedAlojamiento = parseItemJsonFields(alojamiento, JSON_FIELDS);
-    res.json(parsedAlojamiento);
+    res.json(alojamiento);
   } catch (error) {
     res
       .status(500)
@@ -80,27 +40,25 @@ const getAlojamiento = async (req, res) => {
 const createAlojamiento = async (req, res) => {
   try {
     const alojamientoData = { ...req.body };
-    Object.assign(
-      alojamientoData,
-      parseRequestJsonFields(req.body, JSON_FIELDS),
-    );
-
-    if (req.uploadedImages && req.uploadedImages.length > 0) {
-      alojamientoData.imagenes = req.uploadedImages.map((img) => img.path);
-    }
-
-    // Asignar publisher automáticamente
-    if (req.user) {
-      alojamientoData.published_by_user_id = req.user.id;
+    
+    // Procesar imágenes subidas
+    if (req.files && req.files.length > 0) {
+      alojamientoData.imagenes = req.files.map((file) => `/uploads/${file.filename}`);
+    } else if (req.body.imagenes) {
+      alojamientoData.imagenes =
+        typeof req.body.imagenes === "string"
+          ? JSON.parse(req.body.imagenes)
+          : req.body.imagenes;
     }
 
     const alojamiento = await Alojamiento.create(alojamientoData);
-    const parsedAlojamiento = parseItemJsonFields(alojamiento, JSON_FIELDS);
-    res.status(201).json({
-      message: "Alojamiento creado exitosamente",
-      alojamiento: parsedAlojamiento,
-    });
+    res
+      .status(201)
+      .json({ message: "Alojamiento creado exitosamente", alojamiento });
   } catch (error) {
+    if (req.files && req.files.length > 0) {
+      deleteOldImages(req.files.map((f) => `/uploads/${f.filename}`));
+    }
     res
       .status(500)
       .json({ message: "Error al crear alojamiento", error: error.message });
@@ -114,51 +72,26 @@ const updateAlojamiento = async (req, res) => {
       return res.status(404).json({ message: "Alojamiento no encontrado" });
     }
 
-    // Verificar ownership
-    if (
-      !isAdmin(req.user) &&
-      alojamiento.published_by_user_id !== req.user.id
-    ) {
-      return res
-        .status(403)
-        .json({ message: "No tienes permiso para editar este alojamiento" });
-    }
-
     const updateData = { ...req.body };
-    Object.assign(updateData, parseRequestJsonFields(req.body, JSON_FIELDS));
 
-    // Manejar imágenes
-    if (req.uploadedImages && req.uploadedImages.length > 0) {
-      const nuevasImagenes = req.uploadedImages.map((img) => img.path);
-      if (req.body.imagenesExistentes) {
-        try {
-          const existentes =
-            typeof req.body.imagenesExistentes === "string"
-              ? JSON.parse(req.body.imagenesExistentes)
-              : req.body.imagenesExistentes;
-          updateData.imagenes = [...existentes, ...nuevasImagenes];
-        } catch (e) {
-          updateData.imagenes = nuevasImagenes;
-        }
-      } else {
-        updateData.imagenes = nuevasImagenes;
+    if (req.files && req.files.length > 0) {
+      if (alojamiento.imagenes && alojamiento.imagenes.length > 0) {
+        deleteOldImages(alojamiento.imagenes);
       }
-    } else if (req.body.imagenesExistentes) {
-      try {
-        updateData.imagenes =
-          typeof req.body.imagenesExistentes === "string"
-            ? JSON.parse(req.body.imagenesExistentes)
-            : req.body.imagenesExistentes;
-      } catch (e) {}
+      updateData.imagenes = req.files.map((file) => `/uploads/${file.filename}`);
+    } else if (req.body.imagenes) {
+      updateData.imagenes =
+        typeof req.body.imagenes === "string"
+          ? JSON.parse(req.body.imagenes)
+          : req.body.imagenes;
     }
 
     await alojamiento.update(updateData);
-    const parsedAlojamiento = parseItemJsonFields(alojamiento, JSON_FIELDS);
-    res.json({
-      message: "Alojamiento actualizado exitosamente",
-      alojamiento: parsedAlojamiento,
-    });
+    res.json({ message: "Alojamiento actualizado exitosamente", alojamiento });
   } catch (error) {
+    if (req.files && req.files.length > 0) {
+      deleteOldImages(req.files.map((f) => `/uploads/${f.filename}`));
+    }
     res.status(500).json({
       message: "Error al actualizar alojamiento",
       error: error.message,
@@ -172,17 +105,6 @@ const deleteAlojamiento = async (req, res) => {
     if (!alojamiento) {
       return res.status(404).json({ message: "Alojamiento no encontrado" });
     }
-
-    // Verificar ownership
-    if (
-      !isAdmin(req.user) &&
-      alojamiento.published_by_user_id !== req.user.id
-    ) {
-      return res
-        .status(403)
-        .json({ message: "No tienes permiso para eliminar este alojamiento" });
-    }
-
     await alojamiento.update({ activo: false });
     res.json({ message: "Alojamiento desactivado exitosamente" });
   } catch (error) {
@@ -192,10 +114,11 @@ const deleteAlojamiento = async (req, res) => {
   }
 };
 
+
 module.exports = {
   getAlojamientos,
   getAlojamiento,
   createAlojamiento,
   updateAlojamiento,
-  deleteAlojamiento,
+  deleteAlojamiento
 };

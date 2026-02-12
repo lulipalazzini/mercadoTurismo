@@ -34,7 +34,7 @@ dist/
 # Scripts de Windows (no funcionan en Linux)
 fix-*.ps1
 *.bat
-
+*.ps1
 # Temporary files
 nul
 tmp/

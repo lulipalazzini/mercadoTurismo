@@ -49,17 +49,6 @@ const CupoMercado = sequelize.define(
       allowNull: false,
       comment: "Fecha de vencimiento del cupo",
     },
-    fechaOrigen: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-      field: "fecha_origen",
-      comment: "Fecha de origen del vuelo - OBLIGATORIO",
-    },
-    aerolinea: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      comment: "Aerolínea del vuelo - OBLIGATORIO",
-    },
     observaciones: {
       type: DataTypes.TEXT,
       comment: "Observaciones adicionales",
@@ -73,18 +62,6 @@ const CupoMercado = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       comment: "ID del usuario que publicó/vendió el cupo",
-    },
-    published_by_user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Users",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "RESTRICT",
-      comment:
-        "ID del publicador - CONTROL ESTRICTO (excepción: todos ven, solo dueño edita)",
     },
     usuarioCompradorId: {
       type: DataTypes.INTEGER,

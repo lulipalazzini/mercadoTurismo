@@ -5,6 +5,7 @@
  */
 
 import { useState, useRef, useEffect } from "react";
+import { getImageUrl } from "../../utils/imageUtils";
 import "../../styles/dragDropUpload.css";
 
 export default function DragDropImageUpload({
@@ -189,8 +190,15 @@ export default function DragDropImageUpload({
         <div className="image-preview-grid">
           {images.map((image, index) => (
             <div key={index} className="image-preview-item">
+              {/*
+                Existing images may come with malformed stored paths.
+                Normalize them before rendering.
+              */}
               <img
-                src={image.preview || image}
+                src={
+                  image.preview ||
+                  (typeof image === "string" ? getImageUrl(image) || image : "")
+                }
                 alt={image.name || `Imagen ${index + 1}`}
                 className="preview-image"
               />

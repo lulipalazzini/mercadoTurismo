@@ -27,8 +27,10 @@ const getApiUrl = () => {
 
 export const API_URL = getApiUrl();
 
-// Base URL sin /api (para uploads de imágenes, etc.)
-export const BASE_URL = API_URL.replace('/api', '');
+// Base URL sin el segmento final "/api" (para uploads de imágenes, etc.)
+// Importante: no usar replace('/api', '') porque rompe dominios como "https://api.midominio.com/api"
+const removeTrailingApiSegment = (url) => url.replace(/\/api\/?$/i, "");
+export const BASE_URL = removeTrailingApiSegment(API_URL);
 
 // Para debugging (solo en desarrollo)
 if (import.meta.env.DEV) {

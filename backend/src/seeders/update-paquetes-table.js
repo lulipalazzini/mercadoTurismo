@@ -1,7 +1,6 @@
 const { sequelize } = require("../config/database");
 const Paquete = require("../models/Paquete.model");
 const User = require("../models/User.model");
-
 /**
  * Script para actualizar la base de datos con los nuevos campos:
  * - createdBy: para rastrear quién creó el paquete

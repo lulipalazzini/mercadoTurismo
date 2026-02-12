@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { FaUpload, FaTimes, FaImage, FaCloudUploadAlt } from "react-icons/fa";
+import { getImageUrl } from "../../utils/imageUtils";
 import "../../styles/imageUpload.css";
 
 /**
@@ -96,7 +97,7 @@ export default function ImageUpload({
   // Obtener URL de preview para cualquier tipo de imagen
   const getPreviewUrl = (image) => {
     if (typeof image === "string") {
-      return image; // URL o data URL
+      return getImageUrl(image) || image; // URL, data URL, o path normalizado
     } else if (image instanceof File) {
       return URL.createObjectURL(image);
     }

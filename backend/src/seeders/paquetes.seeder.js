@@ -1,6 +1,7 @@
 const Paquete = require("../models/Paquete.model");
+const { getSeedImages } = require("./seedImages");
 
-const paquetesData = [
+const basePaquetes = [
   {
     nombre: "Buenos Aires Clásico",
     descripcion:
@@ -255,6 +256,12 @@ const paquetesData = [
   },
 ];
 
+const paquetesData = basePaquetes.map((paquete, index) => ({
+  ...paquete,
+  imagenes: getSeedImages(index, 3),
+  destacado: index < 4,
+}));
+
 const seedPaquetes = async () => {
   try {
     const count = await Paquete.count();
@@ -271,4 +278,7 @@ const seedPaquetes = async () => {
   }
 };
 
-module.exports = { seedPaquetes };
+
+module.exports = {
+  seedPaquetes
+};

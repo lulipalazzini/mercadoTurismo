@@ -12,7 +12,6 @@ const JSON_FIELDS = ["paradas", "servicios", "imagenes"];
 
 const getTrenes = async (req, res) => {
   try {
-    console.log('📋 Obteniendo lista de trenes...');
     const whereClause = { activo: true };
 
     // Aplicar filtro de ownership para usuarios B2B
@@ -91,35 +90,18 @@ const getTrenes = async (req, res) => {
             "email",
             "razonSocial",
             "role",
-            "calculatedRole",
-            "isVisibleToPassengers",
           ],
         },
       ],
     });
 
-    console.log(`✅ Se encontraron ${trenes.length} trenes`);
     const parsedTrenes = parseItemsJsonFields(trenes, JSON_FIELDS);
-    
-    // Asegurar headers CORS en la respuesta
-    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.json(parsedTrenes);
   } catch (error) {
-    console.error("❌ Error al obtener trenes:");
-    console.error("   Mensaje:", error.message);
-    console.error("   Stack:", error.stack);
-    console.error("   Query params:", req.query);
-    
-    // Asegurar headers CORS incluso en error
-    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    
+    console.error("❌ Error al obtener trenes:", error);
     res.status(500).json({
-      success: false,
       message: "Error al obtener trenes",
       error: error.message,
-      details: process.env.NODE_ENV === 'production' ? undefined : error.stack
     });
   }
 };
@@ -137,8 +119,6 @@ const getTren = async (req, res) => {
             "email",
             "razonSocial",
             "role",
-            "calculatedRole",
-            "isVisibleToPassengers",
           ],
         },
       ],

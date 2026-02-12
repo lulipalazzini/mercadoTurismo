@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User.model");
-
 const usersData = [
   {
     nombre: "Admin Principal",
@@ -58,4 +57,7 @@ const seedUsers = async () => {
   }
 };
 
-module.exports = { seedUsers };
+
+module.exports = {
+  seedUsers
+};

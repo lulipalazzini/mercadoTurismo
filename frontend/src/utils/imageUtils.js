@@ -26,6 +26,14 @@ const extractImagePath = (imagePath) => {
 const normalizeUploadsPath = (rawPath) => {
   if (!rawPath) return null;
 
+  // Extract uploads path from malformed values like:
+  // ".mercadoturismo.ar/api/uploads/file.jpg" or "/foo/api/uploads/file.jpg"
+  const uploadsMatch = rawPath.match(/(?:api\/)?uploads\/[^?#\s]+/i);
+  if (uploadsMatch && uploadsMatch[0]) {
+    const clean = uploadsMatch[0].replace(/^api\//i, "");
+    return `/${clean}`;
+  }
+
   // Protocol-relative URL
   if (rawPath.startsWith("//")) {
     const abs = `https:${rawPath}`;

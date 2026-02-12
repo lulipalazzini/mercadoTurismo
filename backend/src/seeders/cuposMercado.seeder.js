@@ -1,5 +1,4 @@
 const CupoMercado = require("../models/CupoMercado.model");
-
 const cuposMercadoData = [
   {
     tipoProducto: "aereo",
@@ -116,4 +115,7 @@ const seedCuposMercado = async () => {
   }
 };
 
-module.exports = { seedCuposMercado };
+
+module.exports = {
+  seedCuposMercado
+};

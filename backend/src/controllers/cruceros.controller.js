@@ -1,84 +1,21 @@
 const Crucero = require("../models/Crucero.model");
 const User = require("../models/User.model");
-const { Op } = require("sequelize");
-const { isAdmin } = require("../middleware/publisherSecurity");
-const {
-  parseItemsJsonFields,
-  parseItemJsonFields,
-  parseRequestJsonFields,
-} = require("../utils/parseJsonFields");
-
-const JSON_FIELDS = ["imagenes"];
+const { deleteOldImages } = require("../middleware/upload.middleware");
 
 const getCruceros = async (req, res) => {
   try {
-    const whereClause = { activo: true };
-
-    // Aplicar filtro de ownership para usuarios B2B
-    if (req.user && !isAdmin(req.user)) {
-      whereClause.published_by_user_id = req.user.id;
-      console.log(`🔒 Filtrando cruceros del usuario: ${req.user.id}`);
-    }
-
-    // Usuarios no autenticados pueden ver TODOS los cruceros
-    // (No se aplica filtro isPublic para B2C)
-
-    // FILTROS DE BÚSQUEDA ESPECÍFICOS
-    const { puertoSalida, mes, duracionMin, duracionMax, moneda } = req.query;
-
-    // Filtro por puerto de salida (EXACTO, no buscar en itinerario)
-    if (puertoSalida) {
-      whereClause.puertoSalida = puertoSalida;
-      console.log(`🚢 Filtrando por puerto de salida: ${puertoSalida}`);
-    }
-
-    // Filtro por mes de salida
-    if (mes) {
-      whereClause.mesSalida = parseInt(mes);
-      console.log(`📅 Filtrando por mes: ${mes}`);
-    }
-
-    // Filtro por duración
-    if (duracionMin || duracionMax) {
-      whereClause.duracionDias = {};
-      if (duracionMin) {
-        whereClause.duracionDias[Op.gte] = parseInt(duracionMin);
-      }
-      if (duracionMax) {
-        whereClause.duracionDias[Op.lte] = parseInt(duracionMax);
-      }
-      console.log(
-        `⏱️ Filtrando por duración: ${duracionMin || "N/A"}-${duracionMax || "N/A"} días`,
-      );
-    }
-
-    // Filtro por moneda
-    if (moneda) {
-      whereClause.moneda = moneda;
-      console.log(`💰 Filtrando por moneda: ${moneda}`);
-    }
-
     const cruceros = await Crucero.findAll({
-      where: whereClause,
+      where: { activo: true },
       order: [["createdAt", "DESC"]],
       include: [
         {
           model: User,
           as: "vendedor",
-          attributes: [
-            "id",
-            "nombre",
-            "email",
-            "razonSocial",
-            "role",
-            "calculatedRole",
-            "isVisibleToPassengers",
-          ],
+          attributes: ["id", "nombre", "email", "razonSocial", "role"],
         },
       ],
     });
-    const parsedCruceros = parseItemsJsonFields(cruceros, JSON_FIELDS);
-    res.json(parsedCruceros);
+    res.json(cruceros);
   } catch (error) {
     res
       .status(500)
@@ -92,20 +29,7 @@ const getCrucero = async (req, res) => {
     if (!crucero) {
       return res.status(404).json({ message: "Crucero no encontrado" });
     }
-
-    // Verificar ownership
-    if (
-      req.user &&
-      !isAdmin(req.user) &&
-      crucero.published_by_user_id !== req.user.id
-    ) {
-      return res
-        .status(403)
-        .json({ message: "No tienes permiso para ver este crucero" });
-    }
-
-    const parsedCrucero = parseItemJsonFields(crucero, JSON_FIELDS);
-    res.json(parsedCrucero);
+    res.json(crucero);
   } catch (error) {
     res
       .status(500)
@@ -116,23 +40,25 @@ const getCrucero = async (req, res) => {
 const createCrucero = async (req, res) => {
   try {
     const cruceroData = { ...req.body };
-    Object.assign(cruceroData, parseRequestJsonFields(req.body, JSON_FIELDS));
-
-    if (req.uploadedImages && req.uploadedImages.length > 0) {
-      cruceroData.imagenes = req.uploadedImages.map((img) => img.path);
-    }
-
-    // Asignar publisher automáticamente
-    if (req.user) {
-      cruceroData.published_by_user_id = req.user.id;
+    
+    // Procesar imágenes subidas
+    if (req.files && req.files.length > 0) {
+      cruceroData.imagenes = req.files.map((file) => `/uploads/${file.filename}`);
+    } else if (req.body.imagenes) {
+      // Si vienen imágenes como JSON string, parsear
+      cruceroData.imagenes =
+        typeof req.body.imagenes === "string"
+          ? JSON.parse(req.body.imagenes)
+          : req.body.imagenes;
     }
 
     const crucero = await Crucero.create(cruceroData);
-    const parsedCrucero = parseItemJsonFields(crucero, JSON_FIELDS);
-    res
-      .status(201)
-      .json({ message: "Crucero creado exitosamente", crucero: parsedCrucero });
+    res.status(201).json({ message: "Crucero creado exitosamente", crucero });
   } catch (error) {
+    // Limpiar archivos subidos si hubo error
+    if (req.files && req.files.length > 0) {
+      deleteOldImages(req.files.map((f) => `/uploads/${f.filename}`));
+    }
     res
       .status(500)
       .json({ message: "Error al crear crucero", error: error.message });
@@ -146,48 +72,31 @@ const updateCrucero = async (req, res) => {
       return res.status(404).json({ message: "Crucero no encontrado" });
     }
 
-    // Verificar ownership
-    if (!isAdmin(req.user) && crucero.published_by_user_id !== req.user.id) {
-      return res
-        .status(403)
-        .json({ message: "No tienes permiso para editar este crucero" });
-    }
-
     const updateData = { ...req.body };
-    Object.assign(updateData, parseRequestJsonFields(req.body, JSON_FIELDS));
 
-    // Manejar imágenes
-    if (req.uploadedImages && req.uploadedImages.length > 0) {
-      const nuevasImagenes = req.uploadedImages.map((img) => img.path);
-      if (req.body.imagenesExistentes) {
-        try {
-          const existentes =
-            typeof req.body.imagenesExistentes === "string"
-              ? JSON.parse(req.body.imagenesExistentes)
-              : req.body.imagenesExistentes;
-          updateData.imagenes = [...existentes, ...nuevasImagenes];
-        } catch (e) {
-          updateData.imagenes = nuevasImagenes;
-        }
-      } else {
-        updateData.imagenes = nuevasImagenes;
+    // Si hay nuevas imágenes subidas
+    if (req.files && req.files.length > 0) {
+      // Eliminar imágenes antiguas del filesystem
+      if (crucero.imagenes && crucero.imagenes.length > 0) {
+        deleteOldImages(crucero.imagenes);
       }
-    } else if (req.body.imagenesExistentes) {
-      try {
-        updateData.imagenes =
-          typeof req.body.imagenesExistentes === "string"
-            ? JSON.parse(req.body.imagenesExistentes)
-            : req.body.imagenesExistentes;
-      } catch (e) {}
+      // Agregar nuevas imágenes
+      updateData.imagenes = req.files.map((file) => `/uploads/${file.filename}`);
+    } else if (req.body.imagenes) {
+      // Si vienen imágenes como JSON string, parsear
+      updateData.imagenes =
+        typeof req.body.imagenes === "string"
+          ? JSON.parse(req.body.imagenes)
+          : req.body.imagenes;
     }
 
     await crucero.update(updateData);
-    const parsedCrucero = parseItemJsonFields(crucero, JSON_FIELDS);
-    res.json({
-      message: "Crucero actualizado exitosamente",
-      crucero: parsedCrucero,
-    });
+    res.json({ message: "Crucero actualizado exitosamente", crucero });
   } catch (error) {
+    // Limpiar archivos subidos si hubo error
+    if (req.files && req.files.length > 0) {
+      deleteOldImages(req.files.map((f) => `/uploads/${f.filename}`));
+    }
     res
       .status(500)
       .json({ message: "Error al actualizar crucero", error: error.message });
@@ -200,14 +109,6 @@ const deleteCrucero = async (req, res) => {
     if (!crucero) {
       return res.status(404).json({ message: "Crucero no encontrado" });
     }
-
-    // Verificar ownership
-    if (!isAdmin(req.user) && crucero.published_by_user_id !== req.user.id) {
-      return res
-        .status(403)
-        .json({ message: "No tienes permiso para eliminar este crucero" });
-    }
-
     await crucero.update({ activo: false });
     res.json({ message: "Crucero desactivado exitosamente" });
   } catch (error) {
@@ -217,10 +118,11 @@ const deleteCrucero = async (req, res) => {
   }
 };
 
+
 module.exports = {
   getCruceros,
   getCrucero,
   createCrucero,
   updateCrucero,
-  deleteCrucero,
+  deleteCrucero
 };

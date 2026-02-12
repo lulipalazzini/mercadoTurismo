@@ -1,6 +1,7 @@
 const Alojamiento = require("../models/Alojamiento.model");
+const { getSeedImages } = require("./seedImages");
 
-const alojamientosData = [
+const baseAlojamientos = [
   {
     nombre: "Hotel Sheraton Buenos Aires",
     tipo: "hotel",
@@ -204,6 +205,12 @@ const alojamientosData = [
   },
 ];
 
+const alojamientosData = baseAlojamientos.map((alojamiento, index) => ({
+  ...alojamiento,
+  imagenes: getSeedImages(index, 3),
+  destacado: index < 4,
+}));
+
 const seedAlojamientos = async () => {
   try {
     const count = await Alojamiento.count();
@@ -236,4 +243,7 @@ const seedAlojamientos = async () => {
   }
 };
 
-module.exports = { seedAlojamientos };
+
+module.exports = {
+  seedAlojamientos
+};

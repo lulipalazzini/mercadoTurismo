@@ -1,5 +1,4 @@
 const Cupo = require("../models/Cupo.model");
-
 const cuposData = [
   {
     tipoServicio: "paquete",
@@ -187,4 +186,7 @@ const seedCupos = async () => {
   }
 };
 
-module.exports = { seedCupos };
+
+module.exports = {
+  seedCupos
+};

@@ -39,18 +39,6 @@ const ensureColumn = async (logicalTable, column, sqlType, defaultSql) => {
   console.log(`✅ Columna agregada: ${table}.${column}`);
 };
 
-const ensureTrenesTable = async () => {
-  const existing = await resolveTableName("trenes");
-  if (existing) {
-    console.log("✅ Tabla 'trenes' ya existe");
-    return;
-  }
-
-  console.log("🛤️  Creando tabla 'trenes'...");
-  await Tren.sync();
-  console.log("✅ Tabla 'trenes' creada");
-};
-
 const run = async () => {
   try {
     console.log("🔧 Migración: agregar columnas imagenes + tabla trenes\n");
@@ -59,7 +47,14 @@ const run = async () => {
     await ensureColumn("transfers", "imagenes", "TEXT", "'[]'");
     await ensureColumn("paquetes", "imagenes", "TEXT", "'[]'");
 
-    await ensureTrenesTable();
+    const trenesTable = await resolveTableName("trenes");
+    if (trenesTable) {
+      console.log("✅ Tabla 'trenes' ya existe");
+    } else {
+      console.log("🛤️  Creando tabla 'trenes'...");
+      await Tren.sync();
+      console.log("✅ Tabla 'trenes' creada");
+    }
 
     console.log("\n✅ Migración completada");
     process.exit(0);

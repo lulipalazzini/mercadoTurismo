@@ -7,6 +7,7 @@ const {
   deleteAuto,
 } = require("../controllers/autos.controller");
 const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
+
 const router = express.Router();
 
 router.get("/", getAutos);

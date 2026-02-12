@@ -1,6 +1,7 @@
 const Auto = require("../models/Auto.model");
+const { getSeedImages } = require("./seedImages");
 
-const autosData = [
+const baseAutos = [
   {
     marca: "Toyota",
     modelo: "Corolla",
@@ -231,6 +232,12 @@ const autosData = [
   },
 ];
 
+const autosData = baseAutos.map((auto, index) => ({
+  ...auto,
+  imagenes: getSeedImages(index, 3),
+  destacado: index < 2,
+}));
+
 const seedAutos = async () => {
   try {
     const count = await Auto.count();
@@ -247,4 +254,7 @@ const seedAutos = async () => {
   }
 };
 
-module.exports = { seedAutos };
+
+module.exports = {
+  seedAutos
+};

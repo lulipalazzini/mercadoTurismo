@@ -1,5 +1,4 @@
 const ClickStats = require("../models/ClickStats.model");
-
 const seedClickStats = async () => {
   try {
     console.log("🔄 Inicializando estadísticas de clicks...");

@@ -1,6 +1,7 @@
 const Transfer = require("../models/Transfer.model");
+const { getSeedImages } = require("./seedImages");
 
-const transfersData = [
+const baseTransfers = [
   {
     tipo: "aeropuerto-hotel",
     origen: "Aeropuerto Ezeiza",
@@ -198,6 +199,12 @@ const transfersData = [
   },
 ];
 
+const transfersData = baseTransfers.map((transfer, index) => ({
+  ...transfer,
+  imagenes: getSeedImages(index, 3),
+  destacado: index < 2,
+}));
+
 const seedTransfers = async () => {
   try {
     const count = await Transfer.count();
@@ -214,4 +221,7 @@ const seedTransfers = async () => {
   }
 };
 
-module.exports = { seedTransfers };
+
+module.exports = {
+  seedTransfers
+};

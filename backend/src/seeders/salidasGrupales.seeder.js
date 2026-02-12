@@ -1,6 +1,7 @@
 const SalidaGrupal = require("../models/SalidaGrupal.model");
+const { getSeedImages } = require("./seedImages");
 
-const salidasGrupalesData = [
+const baseSalidasGrupales = [
   {
     nombre: "Salida Grupal Bariloche Invierno",
     descripcion:
@@ -436,6 +437,12 @@ const salidasGrupalesData = [
   },
 ];
 
+const salidasGrupalesData = baseSalidasGrupales.map((salida, index) => ({
+  ...salida,
+  imagenes: getSeedImages(index, 3),
+  destacado: index < 2,
+}));
+
 const seedSalidasGrupales = async () => {
   try {
     const count = await SalidaGrupal.count();
@@ -454,4 +461,7 @@ const seedSalidasGrupales = async () => {
   }
 };
 
-module.exports = { seedSalidasGrupales };
+
+module.exports = {
+  seedSalidasGrupales
+};

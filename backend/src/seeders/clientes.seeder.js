@@ -1,5 +1,4 @@
 const Cliente = require("../models/Cliente.model");
-
 const clientesData = [
   {
     nombre: "Roberto Martínez",
@@ -154,4 +153,7 @@ const seedClientes = async () => {
   }
 };
 
-module.exports = { seedClientes };
+
+module.exports = {
+  seedClientes
+};

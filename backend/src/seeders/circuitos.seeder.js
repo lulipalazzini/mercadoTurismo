@@ -1,6 +1,7 @@
 const Circuito = require("../models/Circuito.model");
+const { getSeedImages } = require("./seedImages");
 
-const circuitosData = [
+const baseCircuitos = [
   {
     nombre: "Circuito Norte Argentino",
     descripcion:
@@ -436,6 +437,12 @@ const circuitosData = [
   },
 ];
 
+const circuitosData = baseCircuitos.map((circuito, index) => ({
+  ...circuito,
+  imagenes: getSeedImages(index, 3),
+  destacado: index < 2,
+}));
+
 const seedCircuitos = async () => {
   try {
     const count = await Circuito.count();
@@ -452,4 +459,7 @@ const seedCircuitos = async () => {
   }
 };
 
-module.exports = { seedCircuitos };
+
+module.exports = {
+  seedCircuitos
+};

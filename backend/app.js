@@ -20,7 +20,12 @@ try {
 
   // Requerir y exportar la app
   const app = require("./src/index.js");
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`✅ [PASSENGER] Escuchando en puerto ${PORT}`);
+  });
   module.exports = app;
+
 
   console.log("✅ [PASSENGER] Aplicación iniciada correctamente");
 } catch (err) {

@@ -2,40 +2,46 @@
 PassengerEnabled On
 PassengerAppType node
 PassengerStartupFile app.js
-PassengerBaseURI /
-
 # La ruta se configura automáticamente por Passenger
 # Si necesitas especificar manualmente, usar ruta absoluta del servidor:
 # PassengerAppRoot /home/TU_USUARIO/api.mercadoturismo.ar
-# En CloudLinux/cPanel el binario de Node suele ser:
-# PassengerNodejs /opt/alt/alt-nodejs18/root/usr/bin/node
-
 # Variables de entorno (ajusta estos valores según tu servidor)
 SetEnv NODE_ENV production
 # NO especificar PORT - Passenger lo asigna automáticamente
-
 # CORS se maneja en Express (src/index.js) - NO configurar aquí para evitar conflictos
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "SAMEORIGIN"
     Header set X-XSS-Protection "1; mode=block"
 </IfModule>
-
 # Logging para debug
 PassengerLogLevel 3
-
 # Proteger archivos sensibles
 <Files .env>
     Order allow,deny
     Deny from all
 </Files>
-
 <Files .env.*>
     Order allow,deny
     Deny from all
 </Files>
-
 # Comprimir respuestas
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
 </IfModule>
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/mercad25/api.mercadoturismo.ar/backend"
+PassengerBaseURI "/backend"
+PassengerNodejs "/opt/alt/alt-nodejs18/root/usr/bin/node"
+PassengerAppType node
+PassengerStartupFile app.js
+PassengerAppLogFile "/home/mercad25/new_logs.log"
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION BEGIN
+<IfModule Litespeed>
+SetEnv JWT_SECRET mercado_turismo_secret_key_2026_super_seguro
+SetEnv DATABASE_URL sqlite:./database.sqlite
+SetEnv NODE_ENV production
+SetEnv FRONTEND_URL https://www.mercadoturismo.ar
+</IfModule>
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION END

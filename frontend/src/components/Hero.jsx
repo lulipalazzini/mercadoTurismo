@@ -47,7 +47,7 @@ export default function Hero() {
         <div className="hero-overlay" aria-hidden="true" />
 
         <div className="hero-content">
-          <h1>Compará ofertas de agencias de viajes</h1>
+          <h1>Compará ofertas de agencias de viajes TEST</h1>
           <p className="lead">Un solo lugar, múltiples agencias. Vos elegís.</p>
 
           {/* Búsqueda Unificada */}

@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import AlertModal from "./common/AlertModal";
+import { getImageUrl } from "../utils/imageUtils";
 import "../styles/ImageUploader.css";
 
 export default function ImageUploader({
@@ -10,7 +11,7 @@ export default function ImageUploader({
   const [dragActive, setDragActive] = useState(false);
   const [previews, setPreviews] = useState(
     images.map((img) =>
-      typeof img === "string" ? img : URL.createObjectURL(img),
+      typeof img === "string" ? getImageUrl(img) || img : URL.createObjectURL(img),
     ),
   );
   const fileInputRef = useRef(null);

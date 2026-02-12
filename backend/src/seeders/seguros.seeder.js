@@ -1,6 +1,7 @@
 const Seguro = require("../models/Seguro.model");
+const { getSeedImages } = require("./seedImages");
 
-const segurosData = [
+const baseSeguros = [
   {
     nombre: "Seguro Viajero Básico",
     aseguradora: "Assist Card",
@@ -321,6 +322,12 @@ const segurosData = [
   },
 ];
 
+const segurosData = baseSeguros.map((seguro, index) => ({
+  ...seguro,
+  imagenes: getSeedImages(index, 3),
+  destacado: index < 2,
+}));
+
 const seedSeguros = async () => {
   try {
     const count = await Seguro.count();
@@ -337,4 +344,7 @@ const seedSeguros = async () => {
   }
 };
 
-module.exports = { seedSeguros };
+
+module.exports = {
+  seedSeguros
+};

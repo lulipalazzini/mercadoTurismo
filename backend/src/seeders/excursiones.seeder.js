@@ -1,6 +1,7 @@
 const Excursion = require("../models/Excursion.model");
+const { getSeedImages } = require("./seedImages");
 
-const excursionesData = [
+const baseExcursiones = [
   {
     nombre: "City Tour Buenos Aires",
     descripcion:
@@ -224,6 +225,12 @@ const excursionesData = [
   },
 ];
 
+const excursionesData = baseExcursiones.map((excursion, index) => ({
+  ...excursion,
+  imagenes: getSeedImages(index, 3),
+  destacado: index < 4,
+}));
+
 const seedExcursiones = async () => {
   try {
     const count = await Excursion.count();
@@ -242,4 +249,7 @@ const seedExcursiones = async () => {
   }
 };
 
-module.exports = { seedExcursiones };
+
+module.exports = {
+  seedExcursiones
+};

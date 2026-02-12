@@ -78,67 +78,8 @@ console.log(
   `   FRONTEND_URL: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
 );
 
-// Conectar a la base de datos (inicia en background para Passenger)
-console.log("\n🔌 Conectando a la base de datos...");
-connectDB().catch((error) => {
-  console.error("❌ Error crítico al conectar a la base de datos:", error);
-});
-
-// Middlewares básicos - CORS con soporte para múltiples orígenes
-// IMPORTANTE: CORS debe ir ANTES de cualquier otro middleware
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "https://mercadoturismo.ar",
-  "https://www.mercadoturismo.ar",
-  "https://api.mercadoturismo.ar",
-  process.env.FRONTEND_URL,
-].filter(Boolean); // Eliminar valores undefined
-
-console.log("🔓 Orígenes CORS permitidos:", allowedOrigins);
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    console.log(`🔍 CORS check - Origin: ${origin || 'sin origin'}`);
-    
-    // Permitir requests sin origin (como mobile apps, curl, Postman)
-    if (!origin) {
-      console.log("   ✅ Permitido: Sin origin");
-      return callback(null, true);
-    }
-
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      console.log(`   ✅ Permitido: ${origin}`);
-      callback(null, true);
-    } else {
-      console.warn(`   ⚠️  CORS: Origin no permitido: ${origin}`);
-      // En desarrollo permitir todo, en producción bloquear origins no listados
-      if (process.env.NODE_ENV === "production") {
-        console.warn(`   ❌ BLOQUEADO en producción`);
-        // En lugar de error, permitir pero loguear
-        callback(null, true); // Temporal: permitir en producción
-      } else {
-        callback(null, true);
-      }
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['Content-Length', 'X-Request-Id'],
-  optionsSuccessStatus: 200,
-  preflightContinue: false,
-};
-
-app.use(cors(corsOptions));
-
-// Manejar explícitamente las preflight requests
-app.options('*', cors(corsOptions));
-
-// Middlewares de seguridad (DESPUÉS de CORS)
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" },
-})); 
+// Middlewares de seguridad
+app.use(helmet()); // Protección de headers HTTP
 
 // Rate limiting: Previene ataques de fuerza bruta y DDoS
 const limiter = rateLimit({
@@ -149,6 +90,37 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 // app.use(limiter); // Comentado temporalmente para testing
+
+// Middlewares básicos - CORS con soporte para múltiples orígenes
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://mercadoturismo.ar",
+  "https://www.mercadoturismo.ar",
+  process.env.FRONTEND_URL,
+].filter(Boolean); // Eliminar valores undefined
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Permitir requests sin origin (como mobile apps o curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn(`⚠️  CORS: Origin no permitido: ${origin}`);
+      // En desarrollo permitir todo, en producción bloquear
+      if (process.env.NODE_ENV === "production") {
+        callback(new Error("No permitido por CORS"));
+      } else {
+        callback(null, true);
+      }
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -255,27 +227,15 @@ app.use((req, res) => {
   });
 });
 
-// Manejo de errores - SIEMPRE devolver JSON con CORS headers
+// Manejo de errores - SIEMPRE devolver JSON
 app.use((err, req, res, next) => {
   console.error("\n" + "❌".repeat(30));
   console.error("❌ ERROR EN EL SERVIDOR:");
   console.error("❌".repeat(30));
   console.error("📍 Ruta:", req.method, req.path);
-  console.error("� Origin:", req.headers.origin || 'sin origin');
   console.error("📝 Error:", err.message);
   console.error("📚 Stack:", err.stack);
   console.error("❌".repeat(30) + "\n");
-
-  // CRÍTICO: Asegurar que CORS headers estén presentes SIEMPRE
-  const origin = req.headers.origin;
-  if (origin) {
-    // Siempre permitir el origin en errores para debugging
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
-    console.log(`   🔓 CORS headers aplicados para: ${origin}`);
-  }
 
   // Asegurar que la respuesta sea JSON incluso en caso de error
   res.setHeader("Content-Type", "application/json");
@@ -285,7 +245,6 @@ app.use((err, req, res, next) => {
     message: err.message || "Error del servidor",
     error: process.env.NODE_ENV === "production" ? undefined : err.stack,
     path: req.path,
-    method: req.method,
     timestamp: new Date().toISOString(),
   });
 });
@@ -294,58 +253,77 @@ app.use((err, req, res, next) => {
 // Passenger maneja el puerto automáticamente
 // Solo escuchar en desarrollo local
 
-if (require.main === module) {
-  // Solo si se ejecuta directamente (desarrollo local)
-  const server = app.listen(PORT, () => {
-    console.log("\n" + "✅".repeat(30));
-    console.log("✅ SERVIDOR INICIADO CORRECTAMENTE (DESARROLLO)");
-    console.log("✅".repeat(30));
-    console.log(`🚀 Puerto: ${PORT}`);
-    console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
-    console.log(
-      `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
-    );
-    console.log(`🔗 API disponible en: http://localhost:${PORT}/api`);
-    console.log("✅".repeat(30) + "\n");
-  });
+// Función async para inicializar la app con la BD
+const initializeApp = async () => {
+  try {
+    // Conectar a la base de datos ANTES de manejar requests
+    console.log("\n🔌 Conectando a la base de datos...");
+    await connectDB();
+    console.log("✅ Base de datos lista\n");
 
-  // Manejo de errores no capturados (solo en desarrollo)
-  process.on("uncaughtException", (error) => {
-    console.error("\n💥 UNCAUGHT EXCEPTION:", error);
-    console.error("Stack:", error.stack);
-    process.exit(1);
-  });
+    if (require.main === module) {
+      // Solo si se ejecuta directamente (desarrollo local)
+      const server = app.listen(PORT, () => {
+        console.log("\n" + "✅".repeat(30));
+        console.log("✅ SERVIDOR INICIADO CORRECTAMENTE (DESARROLLO)");
+        console.log("✅".repeat(30));
+        console.log(`🚀 Puerto: ${PORT}`);
+        console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
+        console.log(
+          `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
+        );
+        console.log(`🔗 API disponible en: http://localhost:${PORT}/api`);
+        console.log("✅".repeat(30) + "\n");
+      });
 
-  process.on("unhandledRejection", (reason, promise) => {
-    console.error("\n💥 UNHANDLED REJECTION:", reason);
-    console.error("Promise:", promise);
-  });
-} else {
-  // Ejecutándose bajo Passenger
-  console.log("\n" + "✅".repeat(30));
-  console.log("✅ APLICACIÓN CARGADA PARA PASSENGER");
-  console.log("✅".repeat(30));
-  console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
-  console.log(
-    `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
-  );
-  console.log(
-    `🔒 JWT: ${process.env.JWT_SECRET ? "Configurado" : "NO CONFIGURADO"}`,
-  );
-  console.log("✅".repeat(30) + "\n");
+      // Manejo de errores no capturados (solo en desarrollo)
+      process.on("uncaughtException", (error) => {
+        console.error("\n💥 UNCAUGHT EXCEPTION:", error);
+        console.error("Stack:", error.stack);
+        process.exit(1);
+      });
 
-  // En producción, loguear errores pero no matar el proceso
-  process.on("uncaughtException", (error) => {
-    console.error("\n💥 UNCAUGHT EXCEPTION (producción):", error);
-    console.error("Stack:", error.stack);
-    // NO llamar a process.exit() en producción
-  });
+      process.on("unhandledRejection", (reason, promise) => {
+        console.error("\n💥 UNHANDLED REJECTION:", reason);
+        console.error("Promise:", promise);
+      });
+    } else {
+      // Ejecutándose bajo Passenger
+      console.log("\n" + "✅".repeat(30));
+      console.log("✅ APLICACIÓN CARGADA PARA PASSENGER");
+      console.log("✅".repeat(30));
+      console.log(`🌍 Entorno: ${process.env.NODE_ENV || "development"}`);
+      console.log(
+        `📡 CORS habilitado para: ${process.env.FRONTEND_URL || "http://localhost:5173"}`,
+      );
+      console.log(
+        `🔒 JWT: ${process.env.JWT_SECRET ? "Configurado" : "NO CONFIGURADO"}`,
+      );
+      console.log("✅".repeat(30) + "\n");
 
-  process.on("unhandledRejection", (reason, promise) => {
-    console.error("\n💥 UNHANDLED REJECTION (producción):", reason);
-    console.error("Promise:", promise);
-  });
-}
+      // En producción, loguear errores pero no matar el proceso
+      process.on("uncaughtException", (error) => {
+        console.error("\n💥 UNCAUGHT EXCEPTION (producción):", error);
+        console.error("Stack:", error.stack);
+        // NO llamar a process.exit() en producción
+      });
+
+      process.on("unhandledRejection", (reason, promise) => {
+        console.error("\n💥 UNHANDLED REJECTION (producción):", reason);
+        console.error("Promise:", promise);
+      });
+    }
+  } catch (error) {
+    console.error("\n❌ ERROR FATAL AL INICIALIZAR LA APLICACIÓN:");
+    console.error(error);
+    if (process.env.NODE_ENV !== "production") {
+      process.exit(1);
+    }
+  }
+};
+
+// Inicializar la aplicación
+initializeApp();
 
 // CRÍTICO: Exportar la app para Passenger
 module.exports = app;

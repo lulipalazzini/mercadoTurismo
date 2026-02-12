@@ -1,6 +1,5 @@
 const { sequelize } = require("../config/database");
 const Cupo = require("../models/Cupo.model");
-
 const fixCuposTable = async () => {
   try {
     console.log("🔧 Arreglando tabla de cupos...");

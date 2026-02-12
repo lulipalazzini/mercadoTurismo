@@ -55,64 +55,18 @@ const Crucero = sequelize.define(
     puertoSalida: {
       type: DataTypes.STRING,
       allowNull: false,
-      comment:
-        "Puerto de salida explícito (DIFERENTE de puertos en itinerario)",
-    },
-    puertosDestino: {
-      type: DataTypes.JSON,
-      defaultValue: [],
-      comment: "Lista de puertos destino principales del crucero",
     },
     puertoLlegada: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    mesSalida: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        min: 1,
-        max: 12,
-      },
-      comment: "Mes de salida (1-12) para filtros",
-    },
-    duracionDias: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      comment: "Duración en DÍAS (no noches)",
-      validate: {
-        min: 1,
-      },
-    },
-    moneda: {
-      type: DataTypes.ENUM("USD", "ARS", "EUR"),
-      allowNull: false,
-      defaultValue: "USD",
-      comment: "Moneda de los importes",
-    },
-    importeAdulto: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      validate: {
-        min: 0,
-      },
-      comment: "Importe por pasajero adulto (+18 años)",
-    },
-    importeMenor: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      validate: {
-        min: 0,
-      },
-      comment: "Importe por pasajero menor (0-17 años)",
-    },
     precioDesde: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: true,
+      allowNull: false,
       validate: {
         min: 0,
       },
-      comment: "[OBSOLETO] Usar importeAdulto e importeMenor",
+      comment: "Precio mínimo según categoría de cabina",
     },
     tiposCabina: {
       type: DataTypes.JSON,
@@ -156,27 +110,6 @@ const Crucero = sequelize.define(
       },
       comment: "ID del vendedor que publicó este crucero",
     },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: "Users",
-        key: "id",
-      },
-      comment:
-        "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
-    },
-    published_by_user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Users",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "RESTRICT",
-      comment: "ID del publicador - CONTROL ESTRICTO DE SEGURIDAD",
-    },
     activo: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -184,7 +117,7 @@ const Crucero = sequelize.define(
     destacado: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-      comment: "Indica si la publicación está destacada en el Hero",
+      comment: "Indica si la publicacion esta destacada en el Home",
     },
   },
   {

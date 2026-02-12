@@ -1,6 +1,7 @@
 const Crucero = require("../models/Crucero.model");
+const { getSeedImages } = require("./seedImages");
 
-const crucerosData = [
+const baseCruceros = [
   {
     nombre: "Crucero Caribe Tropical",
     naviera: "Royal Caribbean",
@@ -540,6 +541,12 @@ const crucerosData = [
   },
 ];
 
+const crucerosData = baseCruceros.map((crucero, index) => ({
+  ...crucero,
+  imagenes: getSeedImages(index, 3),
+  destacado: index < 2,
+}));
+
 const seedCruceros = async () => {
   try {
     const count = await Crucero.count();
@@ -556,4 +563,7 @@ const seedCruceros = async () => {
   }
 };
 
-module.exports = { seedCruceros };
+
+module.exports = {
+  seedCruceros
+};

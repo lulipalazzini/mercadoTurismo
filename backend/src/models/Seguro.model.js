@@ -109,27 +109,6 @@ const Seguro = sequelize.define(
       },
       comment: "ID del vendedor que publicó este seguro",
     },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: "Users",
-        key: "id",
-      },
-      comment:
-        "ID del usuario propietario (owner) - usado para filtrado de ownership B2B",
-    },
-    published_by_user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Users",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "RESTRICT",
-      comment: "ID del publicador - CONTROL ESTRICTO DE SEGURIDAD",
-    },
     activo: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -137,7 +116,7 @@ const Seguro = sequelize.define(
     destacado: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-      comment: "Indica si la publicación está destacada en el Hero",
+      comment: "Indica si la publicacion esta destacada en el Home",
     },
   },
   {

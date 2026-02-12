@@ -7,6 +7,7 @@ const {
   deleteCircuito,
 } = require("../controllers/circuitos.controller");
 const { verifyToken, isAdmin } = require("../middleware/auth.middleware");
+
 const router = express.Router();
 
 router.get("/", getCircuitos);
