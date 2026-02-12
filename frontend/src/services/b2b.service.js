@@ -1,4 +1,33 @@
-import api from "./api";
+import { API_URL as API_BASE_URL } from "../config/api.config.js";
+
+const AUTH_URL = `${API_BASE_URL}/auth`;
+
+const parseResponseSafely = async (response) => {
+  const text = await response.text();
+  if (!text) return {};
+
+  try {
+    return JSON.parse(text);
+  } catch (_error) {
+    return {};
+  }
+};
+
+const normalizeB2BPayload = (userData) => {
+  const fallbackName =
+    userData?.nombre?.trim() ||
+    userData?.razonSocial?.trim() ||
+    userData?.nombreComercial?.trim() ||
+    userData?.email?.split("@")[0] ||
+    "Usuario B2B";
+
+  return {
+    ...userData,
+    nombre: fallbackName,
+    role: userData?.role || "operador",
+    direccion: userData?.direccion || userData?.domicilioFiscal || "",
+  };
+};
 
 /**
  * Registro B2B (profesional)
@@ -7,18 +36,22 @@ import api from "./api";
 export async function registerB2B(userData) {
   try {
     console.log("[AUTH SERVICE] Registrando usuario B2B...");
-    const response = await fetch(`${api.baseURL}/auth/register-b2b`, {
+    const payload = normalizeB2BPayload(userData);
+
+    const response = await fetch(`${AUTH_URL}/register-b2b`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify(payload),
     });
 
-    const data = await response.json();
+    const data = await parseResponseSafely(response);
 
     if (!response.ok) {
-      throw new Error(data.message || "Error al registrar usuario profesional");
+      throw new Error(
+        data.message || "Error al registrar usuario profesional",
+      );
     }
 
     // Guardar token y usuario en localStorage
@@ -41,7 +74,7 @@ export async function registerB2B(userData) {
 export async function validateCUIT(cuit) {
   try {
     console.log("[VALIDATION] Validando CUIT:", cuit);
-    const response = await fetch(`${api.baseURL}/auth/validate-cuit`, {
+    const response = await fetch(`${AUTH_URL}/validate-cuit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,10 +82,10 @@ export async function validateCUIT(cuit) {
       body: JSON.stringify({ cuit }),
     });
 
-    const data = await response.json();
+    const data = await parseResponseSafely(response);
 
     if (!response.ok) {
-      throw new Error(data.error || "Error al validar CUIT");
+      throw new Error(data.error || data.message || "Error al validar CUIT");
     }
 
     return data;
@@ -70,7 +103,7 @@ export async function validateCUIT(cuit) {
 export async function validateTaxId(taxId, countryCode) {
   try {
     console.log("[VALIDATION] Validando Tax ID:", taxId, countryCode);
-    const response = await fetch(`${api.baseURL}/auth/validate-tax-id`, {
+    const response = await fetch(`${AUTH_URL}/validate-tax-id`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,10 +111,12 @@ export async function validateTaxId(taxId, countryCode) {
       body: JSON.stringify({ taxId, countryCode }),
     });
 
-    const data = await response.json();
+    const data = await parseResponseSafely(response);
 
     if (!response.ok) {
-      throw new Error(data.error || "Error al validar número fiscal");
+      throw new Error(
+        data.error || data.message || "Error al validar número fiscal",
+      );
     }
 
     return data;
