@@ -6,7 +6,7 @@ const register = async (req, res) => {
     console.log("\n🔐 [AUTH] Intentando registrar usuario...");
     const { nombre, email, password, role, telefono, direccion } = req.body;
     console.log(`   Email: ${email}`);
-    console.log(`   Role: ${role || "user"}`);
+    console.log(`   Role: ${role || "operador"}`);
 
     // Validaciones
     if (!nombre || !email || !password) {
@@ -36,7 +36,7 @@ const register = async (req, res) => {
       nombre,
       email,
       password,
-      role: role || "user",
+      role: role || "operador",
       telefono,
       direccion,
     });
