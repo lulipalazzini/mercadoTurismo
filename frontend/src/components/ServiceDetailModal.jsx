@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import {
   FaTimes,
-  FaWhatsapp,
   FaStar,
   FaMapMarkerAlt,
   FaCalendarAlt,
@@ -15,7 +14,7 @@ import {
   FaHotel,
   FaRoute,
 } from "react-icons/fa";
-import { abrirWhatsApp } from "../utils/whatsapp";
+import ReservarWhatsAppButton from "./ReservarWhatsAppButton";
 import { getImageUrl, getImageUrls } from "../utils/imageUtils";
 import "../styles/serviceDetailModal.css";
 
@@ -58,9 +57,6 @@ export default function ServiceDetailModal({
     }
   };
 
-  const handleReservar = () => {
-    abrirWhatsApp(tipo, item);
-  };
 
   const getIcon = () => {
     const icons = {
@@ -384,14 +380,15 @@ export default function ServiceDetailModal({
 
           {/* Botón de reserva */}
           <div className="modal-footer">
-            <button
+            <ReservarWhatsAppButton
+              tipo={tipo}
+              item={item}
+              isPreview={isPreview}
               className="btn-reservar-modal"
-              onClick={handleReservar}
-              disabled={isPreview}
+              showIcon={true}
             >
-              <FaWhatsapp />
               Reservar por WhatsApp
-            </button>
+            </ReservarWhatsAppButton>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/card.css";
 import { FaMapMarkerAlt, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
-import { abrirWhatsApp } from "../utils/whatsapp";
+import ReservarWhatsAppButton from "./ReservarWhatsAppButton";
 import { getUser } from "../services/auth.service";
 import { getFirstImageUrl } from "../utils/imageUtils";
 import ServiceDetailModal from "./ServiceDetailModal";
@@ -31,10 +31,6 @@ export default function ExcursionCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-  const handleReservar = (e) => {
-    e.stopPropagation();
-    abrirWhatsApp("excursion", item);
-  };
 
   return (
     <div className="service-card" onClick={handleCardClick}>
@@ -108,13 +104,14 @@ export default function ExcursionCard({ item, isPreview = false }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button
-          className="btn-primary"
-          onClick={handleReservar}
-          disabled={cupoDisponible === 0 || isPreview}
+        <ReservarWhatsAppButton
+          tipo="excursion"
+          item={item}
+          isPreview={isPreview}
+          disabled={cupoDisponible === 0}
         >
           {cupoDisponible > 0 ? "Reservar" : "Sin cupos"}
-        </button>
+        </ReservarWhatsAppButton>
       </div>
 
       {showModal && (

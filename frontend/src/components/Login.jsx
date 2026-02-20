@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login, verifyAdminPassword } from "../services/auth.service";
+import { getUserRole } from "../utils/rolePermissions";
 import AdminPasswordModal from "./common/AdminPasswordModal";
 import "../styles/auth.css";
 import logo from "../assets/logo/MT_marca_01.webp";
@@ -63,17 +64,28 @@ export default function Login() {
       setLoading(true);
       const response = await login(formData.email, formData.password);
 
-      // Verificar si es admin inmediatamente después del login
       const user = JSON.parse(localStorage.getItem("currentUser"));
-      console.log("Usuario después del login:", user); // Debug
+      console.log("Usuario después del login:", user);
 
-      if (user && user.role === "admin") {
-        // Si es admin, mostrar modal de segunda contraseña
+      const role = getUserRole(user);
+
+      if (role === "admin") {
+        // Admin requiere segunda verificación
         setUserRole("admin");
         setShowAdminModal(true);
         setLoading(false);
+      } else if (role === "cliente" || role === "user") {
+        // Clientes van al marketplace o a la ruta deseada
+        setLoading(false);
+        const redirect = localStorage.getItem("redirectAfterLogin");
+        if (redirect) {
+          localStorage.removeItem("redirectAfterLogin");
+          navigate(redirect);
+        } else {
+          navigate("/");
+        }
       } else {
-        // Si es usuario normal, ir directo al dashboard
+        // B2B (operador, agencia, sysadmin, etc.) van al dashboard
         setLoading(false);
         navigate("/dashboard");
       }

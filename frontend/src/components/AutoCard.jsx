@@ -3,7 +3,7 @@ import "../styles/card.css";
 import { FaMapMarkerAlt, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
 import { getUser } from "../services/auth.service";
-import { abrirWhatsApp } from "../utils/whatsapp";
+import ReservarWhatsAppButton from "./ReservarWhatsAppButton";
 import { getFirstImageUrl } from "../utils/imageUtils";
 import ServiceDetailModal from "./ServiceDetailModal";
 
@@ -34,10 +34,6 @@ export default function AutoCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-  const handleReservar = (e) => {
-    e.stopPropagation();
-    abrirWhatsApp("auto", item);
-  };
 
   return (
     <div className="service-card" onClick={handleCardClick}>
@@ -114,13 +110,14 @@ export default function AutoCard({ item, isPreview = false }) {
           <span className="precio">${precioDia}</span>
           <span className="precio-unit">/ día</span>
         </div>
-        <button
-          className="btn-primary"
-          onClick={handleReservar}
-          disabled={!disponible || isPreview}
+        <ReservarWhatsAppButton
+          tipo="auto"
+          item={item}
+          isPreview={isPreview}
+          disabled={!disponible}
         >
           {disponible ? "Reservar" : "No disponible"}
-        </button>
+        </ReservarWhatsAppButton>
       </div>
 
       {showModal && (

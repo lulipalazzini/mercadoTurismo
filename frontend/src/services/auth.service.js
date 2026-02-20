@@ -97,6 +97,48 @@ export const register = async (userData) => {
   }
 };
 
+// Registrar cliente (usuario B2C con cuenta)
+export const registerCliente = async (userData) => {
+  const payload = {
+    nombre: `${userData.nombre} ${userData.apellido}`.trim(),
+    email: userData.email,
+    telefono: userData.telefono,
+    password: userData.password,
+    role: "cliente",
+  };
+
+  const response = await fetch(`${API_URL}/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const contentType = response.headers.get("content-type");
+  if (!contentType || !contentType.includes("application/json")) {
+    const text = await response.text();
+    console.error("Respuesta no JSON:", text.substring(0, 200));
+    throw new Error("El servidor no devolvió una respuesta JSON válida.");
+  }
+
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error("Error al procesar la respuesta del servidor.");
+  }
+
+  if (!response.ok) {
+    throw new Error(data.message || "Error al registrar usuario");
+  }
+
+  if (data.token) {
+    setToken(data.token);
+    setUser(data.user);
+  }
+
+  return data;
+};
+
 // Iniciar sesión
 export const login = async (email, password) => {
   try {

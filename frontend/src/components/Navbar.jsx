@@ -185,14 +185,6 @@ export default function Navbar() {
               <div className="dropdown-menu" role="menu">
                 <button
                   type="button"
-                  className="user-menu-item"
-                  onClick={goToDashboard}
-                >
-                  <i className="fa-solid fa-table-columns" aria-hidden="true" />
-                  Dashboard
-                </button>
-                <button
-                  type="button"
                   className="user-menu-item logout"
                   onClick={handleLogout}
                 >

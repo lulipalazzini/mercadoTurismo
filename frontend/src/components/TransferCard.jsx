@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/card.css";
 import { FaArrowRight, FaUser } from "react-icons/fa";
-import { abrirWhatsApp } from "../utils/whatsapp";
+import ReservarWhatsAppButton from "./ReservarWhatsAppButton";
 import { getUser } from "../services/auth.service";
 import { trackCardClick } from "../services/clickStats.service";
 import ServiceDetailModal from "./ServiceDetailModal";
@@ -32,10 +32,6 @@ export default function TransferCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-  const handleReservar = (e) => {
-    e.stopPropagation();
-    abrirWhatsApp("transfer", item);
-  };
 
   return (
     <div className="service-card" onClick={handleCardClick}>
@@ -107,13 +103,14 @@ export default function TransferCard({ item, isPreview = false }) {
         <div className="precio-info">
           <span className="precio">${precio}</span>
         </div>
-        <button
-          className="btn-primary"
-          onClick={handleReservar}
-          disabled={!disponible || isPreview}
+        <ReservarWhatsAppButton
+          tipo="transfer"
+          item={item}
+          isPreview={isPreview}
+          disabled={!disponible}
         >
           {disponible ? "Reservar" : "No disponible"}
-        </button>
+        </ReservarWhatsAppButton>
       </div>
 
       {showModal && (

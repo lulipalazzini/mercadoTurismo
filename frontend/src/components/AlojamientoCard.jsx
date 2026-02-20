@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaMapMarkerAlt, FaStar, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
-import { abrirWhatsApp } from "../utils/whatsapp";
+import ReservarWhatsAppButton from "./ReservarWhatsAppButton";
 import { getUser } from "../services/auth.service";
 import { getFirstImageUrl } from "../utils/imageUtils";
 import ServiceDetailModal from "./ServiceDetailModal";
@@ -45,10 +45,6 @@ export default function AlojamientoCard({ alojamiento, isPreview = false }) {
     setShowModal(true);
   };
 
-  const handleReservar = (e) => {
-    e.stopPropagation();
-    abrirWhatsApp("alojamiento", alojamiento);
-  };
 
   return (
     <>
@@ -127,13 +123,14 @@ export default function AlojamientoCard({ alojamiento, isPreview = false }) {
               </div>
               <span className="precio-unit">por noche</span>
             </div>
-            <button
-              className="btn-primary"
-              onClick={handleReservar}
-              disabled={habitacionesDisponibles === 0 || isPreview}
+            <ReservarWhatsAppButton
+              tipo="alojamiento"
+              item={alojamiento}
+              isPreview={isPreview}
+              disabled={habitacionesDisponibles === 0}
             >
               {habitacionesDisponibles > 0 ? "Reservar" : "Sin habitaciones"}
-            </button>
+            </ReservarWhatsAppButton>
           </div>
         </div>
       </div>

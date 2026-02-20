@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/card.css";
 import { FaShip, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
-import { abrirWhatsApp } from "../utils/whatsapp";
+import ReservarWhatsAppButton from "./ReservarWhatsAppButton";
 import { getUser } from "../services/auth.service";
 import { getFirstImageUrl } from "../utils/imageUtils";
 import ServiceDetailModal from "./ServiceDetailModal";
@@ -59,10 +59,6 @@ export default function CruceroCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-  const handleReservar = (e) => {
-    e.stopPropagation();
-    abrirWhatsApp("crucero", item);
-  };
 
   return (
     <div className="service-card" onClick={handleCardClick}>
@@ -176,13 +172,14 @@ export default function CruceroCard({ item, isPreview = false }) {
             </>
           )}
         </div>
-        <button
-          className="btn-primary"
-          onClick={handleReservar}
-          disabled={cabinasDisponibles === 0 || isPreview}
+        <ReservarWhatsAppButton
+          tipo="crucero"
+          item={item}
+          isPreview={isPreview}
+          disabled={cabinasDisponibles === 0}
         >
           {cabinasDisponibles > 0 ? "Reservar" : "Sin cabinas"}
-        </button>
+        </ReservarWhatsAppButton>
       </div>
 
       {showModal && (

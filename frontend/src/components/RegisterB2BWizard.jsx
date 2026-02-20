@@ -7,7 +7,7 @@ import Step3Confirmation from "./wizard/Step3Confirmation";
 import { registerB2B } from "../services/b2b.service";
 import "../styles/registerWizard.css";
 
-export default function RegisterB2BWizard() {
+export default function RegisterB2BWizard({ initialRole = "operador" }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     // Step 1: Datos básicos
@@ -104,7 +104,8 @@ export default function RegisterB2BWizard() {
         nombre: formData.nombre,
         razonSocial: formData.razonSocial,
 
-        // Datos fiscales según país
+        // Rol determinado por la selección inicial del wizard
+        role: initialRole,
         ...(formData.countryCode === "AR"
           ? {
               cuit: formData.cuit,

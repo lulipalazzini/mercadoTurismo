@@ -1,0 +1,185 @@
+/* ============================================
+   REGISTRO - HEADER ICON
+   ============================================ */
+
+.register-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  color: #fff;
+}
+
+/* ============================================
+   REGISTRO - SELECTOR DE TIPO DE USUARIO
+   ============================================ */
+
+.user-type-selector {
+  padding: 0.5rem 0;
+}
+
+.user-type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.user-type-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.75rem 1.25rem 1.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+    transform 0.15s ease;
+  text-align: center;
+  width: 100%;
+}
+
+/* Per-type accent colors */
+.card-color-cliente {
+  border-top: 4px solid #2464eb;
+}
+
+.card-color-agencia {
+  border-top: 4px solid #10b981;
+}
+
+.card-color-operador {
+  border-top: 4px solid #f59e0b;
+}
+
+.user-type-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px);
+}
+
+.card-color-cliente:hover {
+  border-color: #2464eb;
+}
+
+.card-color-agencia:hover {
+  border-color: #10b981;
+}
+
+.card-color-operador:hover {
+  border-color: #f59e0b;
+}
+
+.user-type-card:focus-visible {
+  outline: 3px solid #2464eb;
+  outline-offset: 2px;
+}
+
+/* Icon circle */
+.user-type-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin-bottom: 0.25rem;
+  font-size: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.card-color-cliente .user-type-icon-wrap {
+  background: #dbeafe;
+  color: #2464eb;
+}
+
+.card-color-agencia .user-type-icon-wrap {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.card-color-operador .user-type-icon-wrap {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.user-type-card:hover .user-type-icon-wrap {
+  transform: scale(1.1);
+}
+
+.user-type-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.user-type-description {
+  font-size: 0.8rem;
+  color: #718096;
+  line-height: 1.4;
+}
+
+.user-type-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.card-color-cliente .user-type-cta {
+  background: #dbeafe;
+  color: #2464eb;
+}
+
+.card-color-agencia .user-type-cta {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.card-color-operador .user-type-cta {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.card-color-cliente:hover .user-type-cta {
+  background: #2464eb;
+  color: #fff;
+}
+
+.card-color-agencia:hover .user-type-cta {
+  background: #059669;
+  color: #fff;
+}
+
+.card-color-operador:hover .user-type-cta {
+  background: #d97706;
+  color: #fff;
+}
+
+.auth-prompt {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #718096;
+  margin-top: 1rem;
+}
+
+.auth-prompt .link-primary {
+  color: #2464eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-prompt .link-primary:hover {
+  text-decoration: underline;
+}

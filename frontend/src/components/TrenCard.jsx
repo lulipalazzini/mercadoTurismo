@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/card.css";
 import { FaArrowRight, FaUser, FaClock, FaRoad } from "react-icons/fa";
-import { abrirWhatsApp } from "../utils/whatsapp";
+import ReservarWhatsAppButton from "./ReservarWhatsAppButton";
 import { getUser } from "../services/auth.service";
 import { trackCardClick } from "../services/clickStats.service";
 import ServiceDetailModal from "./ServiceDetailModal";
@@ -32,10 +32,6 @@ export default function TrenCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-  const handleReservar = (e) => {
-    e.stopPropagation();
-    abrirWhatsApp("tren", item);
-  };
 
   const getTipoLabel = (tipo) => {
     const labels = {
@@ -175,13 +171,14 @@ export default function TrenCard({ item, isPreview = false }) {
               {moneda !== "USD" && moneda !== "EUR" ? moneda : ""}
             </span>
           </div>
-          <button
+          <ReservarWhatsAppButton
+            tipo="tren"
+            item={item}
+            isPreview={isPreview}
             className="btn-reservar"
-            onClick={handleReservar}
-            disabled={isPreview}
           >
             Consultar
-          </button>
+          </ReservarWhatsAppButton>
         </div>
       </div>
 

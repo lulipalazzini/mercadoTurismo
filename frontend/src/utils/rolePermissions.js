@@ -117,6 +117,21 @@ export const rolePermissions = {
       "mercado-cupos",
     ],
   },
+
+  // Cliente: usuario final registrado (B2C con cuenta)
+  cliente: {
+    canPublish: false,
+    canSeeOthersInCuposMercado: true,
+    canSeeOthersInOtherModules: false,
+    canEditOwn: true,
+    canDeleteOwn: false,
+    canEditOthers: false,
+    canDeleteOthers: false,
+    canAccessB2CModules: true,
+    canAccessB2BModules: false,
+    visibleToPassengers: false,
+    dashboardModules: [],
+  },
 };
 
 /**
@@ -129,6 +144,11 @@ export const getUserRole = (user) => {
   // Admins y sysadmins mantienen su rol
   if (user.role === "admin" || user.role === "sysadmin") {
     return user.role;
+  }
+
+  // Cliente: usuario final registrado con cuenta B2C
+  if (user.role === "cliente") {
+    return "cliente";
   }
 
   // Para usuarios B2B, usar calculatedRole (automático basado en businessModel + serviceType)
@@ -221,6 +241,7 @@ export const getRoleDisplayName = (user) => {
     sysadmin: "Super Administrador",
     agencia: "Agencia de Viajes",
     operador: "Operador / Proveedor",
+    cliente: "Cliente",
     user: "Usuario",
   };
 
@@ -238,6 +259,7 @@ export const getRoleBadge = (user) => {
     sysadmin: "⚡",
     agencia: "🏢",
     operador: "🏭",
+    cliente: "🙋",
     user: "👤",
   };
 
@@ -253,6 +275,15 @@ export const isB2BUser = (user) => {
     user.userType === "B2B" ||
     ["agencia", "operador"].includes(getUserRole(user))
   );
+};
+
+/**
+ * Verifica si el usuario es cliente (B2C con cuenta)
+ */
+export const isClienteUser = (user) => {
+  if (!user) return false;
+  const role = getUserRole(user);
+  return role === "cliente" || role === "user";
 };
 
 /**
@@ -448,6 +479,7 @@ export default {
   getRoleDisplayName,
   getRoleBadge,
   isB2BUser,
+  isClienteUser,
   isVisibleToPassengers,
   dashboardModulesConfig,
   getVisibleModules,

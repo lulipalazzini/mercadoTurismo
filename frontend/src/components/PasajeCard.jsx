@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/card.css";
 import { FaArrowRight, FaUser } from "react-icons/fa";
 import { trackCardClick } from "../services/clickStats.service";
-import { abrirWhatsApp } from "../utils/whatsapp";
+import ReservarWhatsAppButton from "./ReservarWhatsAppButton";
 import { getUser } from "../services/auth.service";
 import ServiceDetailModal from "./ServiceDetailModal";
 
@@ -50,10 +50,6 @@ export default function PasajeCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-  const handleReservar = (e) => {
-    e.stopPropagation();
-    abrirWhatsApp("pasaje", item);
-  };
 
   return (
     <div className="service-card" onClick={handleCardClick}>
@@ -118,13 +114,14 @@ export default function PasajeCard({ item, isPreview = false }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <button
-          className="btn-primary"
-          onClick={handleReservar}
-          disabled={asientosDisponibles === 0 || isPreview}
+        <ReservarWhatsAppButton
+          tipo="pasaje"
+          item={item}
+          isPreview={isPreview}
+          disabled={asientosDisponibles === 0}
         >
           {asientosDisponibles > 0 ? "Reservar" : "Sin asientos"}
-        </button>
+        </ReservarWhatsAppButton>
       </div>
 
       {showModal && (

@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate,
   useLocation,
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -10,7 +11,7 @@ import Footer from "./components/Footer";
 import Home from "./components/Home";
 import HomeMarketplace from "./components/HomeMarketplace";
 import Login from "./components/Login";
-import RegisterB2BWizard from "./components/RegisterB2BWizard";
+import Register from "./components/Register";
 import RecoverPassword from "./components/RecoverPassword";
 import Dashboard from "./components/Dashboard";
 import Alojamientos from "./pages/Alojamientos";
@@ -24,7 +25,26 @@ import SalidasGrupales from "./pages/SalidasGrupales";
 import Cruceros from "./pages/Cruceros";
 import Seguros from "./pages/Seguros";
 import PublicacionesDestacadasPage from "./pages/PublicacionesDestacadasPage";
+import { getUser, getToken } from "./services/auth.service";
+import { isClienteUser } from "./utils/rolePermissions";
 import "./App.css";
+
+/**
+ * Ruta protegida para el dashboard B2B.
+ * - Sin sesión → /login
+ * - Rol cliente/user → / (marketplace)
+ * - Resto → renderiza children
+ */
+function ProtectedDashboard({ children }) {
+  if (!getToken()) {
+    return <Navigate to="/login" replace />;
+  }
+  const user = getUser();
+  if (isClienteUser(user)) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+}
 
 function AppContent() {
   const location = useLocation();
@@ -46,9 +66,16 @@ function AppContent() {
           element={<PublicacionesDestacadasPage />}
         />
         <Route path="/login" element={<Login />} />
-        <Route path="/registro" element={<RegisterB2BWizard />} />
+        <Route path="/registro" element={<Register />} />
         <Route path="/recuperar-contrasena" element={<RecoverPassword />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedDashboard>
+              <Dashboard />
+            </ProtectedDashboard>
+          }
+        />
         <Route path="/paquetes" element={<Paquetes />} />
         <Route path="/alojamientos" element={<Alojamientos />} />
         <Route path="/autos" element={<Autos />} />
