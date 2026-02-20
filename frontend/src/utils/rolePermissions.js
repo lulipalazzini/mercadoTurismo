@@ -381,7 +381,7 @@ export const dashboardModulesConfig = {
   // Módulo especial: Mercado de Cupos (todos los usuarios)
   "mercado-cupos": {
     id: "mercado-cupos",
-    title: "Vender",
+    title: "Comprar",
     icon: "FaStore",
     section: "mercado",
     roles: ["admin", "sysadmin", "agencia", "operador"],

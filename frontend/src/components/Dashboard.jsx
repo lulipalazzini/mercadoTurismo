@@ -130,7 +130,7 @@ function DashboardContent() {
       transfers: "Transfers",
       trenes: "Trenes",
       seguros: "Seguros",
-      "mercado-cupos": "Vender",
+      "mercado-cupos": "Comprar",
       "reservas-anotador": "Reservas (Anotador)",
       "facturacion-anotador": "Facturación (Anotador)",
       clientes: "Clientes",
