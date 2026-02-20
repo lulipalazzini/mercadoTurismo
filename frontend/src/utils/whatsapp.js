@@ -4,7 +4,7 @@
  */
 
 // Número de WhatsApp de la agencia (cambiar por el número real)
-const WHATSAPP_NUMBER = "5491112345678"; // Formato: código país + código área + número (sin espacios ni guiones)
+const WHATSAPP_NUMBER = "5491162086559"; // Formato: código país + código área + número (sin espacios ni guiones)
 
 /**
  * Genera el mensaje de WhatsApp para un servicio
