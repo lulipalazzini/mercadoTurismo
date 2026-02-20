@@ -160,6 +160,12 @@ export default function Navbar() {
           <Link to="/seguros" className={isActive("/seguros") ? "active" : ""}>
             Seguros
           </Link>
+          <Link
+            to="/ofertas-destacadas"
+            className={isActive("/ofertas-destacadas") ? "active" : ""}
+          >
+            Ofertas
+          </Link>
           {isLoggedIn ? (
             <div
               ref={userMenuRef}
@@ -190,7 +196,10 @@ export default function Navbar() {
                   className="user-menu-item logout"
                   onClick={handleLogout}
                 >
-                  <i className="fa-solid fa-right-from-bracket" aria-hidden="true" />
+                  <i
+                    className="fa-solid fa-right-from-bracket"
+                    aria-hidden="true"
+                  />
                   Cerrar sesión
                 </button>
               </div>

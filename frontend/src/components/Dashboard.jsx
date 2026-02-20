@@ -130,7 +130,7 @@ function DashboardContent() {
       transfers: "Transfers",
       trenes: "Trenes",
       seguros: "Seguros",
-      "mercado-cupos": "Mercado de Cupos",
+      "mercado-cupos": "Vender",
       "reservas-anotador": "Reservas (Anotador)",
       "facturacion-anotador": "Facturación (Anotador)",
       clientes: "Clientes",
@@ -246,7 +246,7 @@ function DashboardContent() {
 
     const sectionTitles = {
       principal: "Principal",
-      productos: "Productos y Servicios",
+      productos: "Vender",
       mercado: "Mercado",
       anotadores: "Anotadores Internos",
       gestion: "Gestión",

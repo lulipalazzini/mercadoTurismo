@@ -350,10 +350,10 @@ export const dashboardModulesConfig = {
   // Módulo especial: Mercado de Cupos (todos los usuarios)
   "mercado-cupos": {
     id: "mercado-cupos",
-    title: "Mercado de Cupos",
+    title: "Vender",
     icon: "FaStore",
     section: "mercado",
-    roles: ["admin", "sysadmin", "agencia", "operador", "user"],
+    roles: ["admin", "sysadmin", "agencia", "operador"],
   },
 
   // Anotadores internos (gestión simple de registros)
