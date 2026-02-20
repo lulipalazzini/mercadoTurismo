@@ -50,7 +50,6 @@ export default function PasajeCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-
   return (
     <div className="service-card" onClick={handleCardClick}>
       <div className="card-header">

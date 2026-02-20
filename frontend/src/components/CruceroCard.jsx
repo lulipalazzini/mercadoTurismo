@@ -59,7 +59,6 @@ export default function CruceroCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-
   return (
     <div className="service-card" onClick={handleCardClick}>
       {imageUrl && (

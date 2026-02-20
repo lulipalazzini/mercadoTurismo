@@ -32,7 +32,6 @@ export default function TransferCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-
   return (
     <div className="service-card" onClick={handleCardClick}>
       <div className="card-header">

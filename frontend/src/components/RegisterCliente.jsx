@@ -186,7 +186,10 @@ export default function RegisterCliente({ onBack }) {
             <label htmlFor="password">
               Contraseña <span className="required">*</span>
             </label>
-            <div className="password-input-container" style={{ position: "relative" }}>
+            <div
+              className="password-input-container"
+              style={{ position: "relative" }}
+            >
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -202,7 +205,16 @@ export default function RegisterCliente({ onBack }) {
                 type="button"
                 className="password-toggle"
                 onClick={() => setShowPassword((v) => !v)}
-                style={{ position: "absolute", right: "0.75rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--text-secondary)" }}
+                style={{
+                  position: "absolute",
+                  right: "0.75rem",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "var(--text-secondary)",
+                }}
               >
                 {showPassword ? "🙈" : "👁️"}
               </button>
@@ -216,7 +228,10 @@ export default function RegisterCliente({ onBack }) {
             <label htmlFor="confirmPassword">
               Confirmar contraseña <span className="required">*</span>
             </label>
-            <div className="password-input-container" style={{ position: "relative" }}>
+            <div
+              className="password-input-container"
+              style={{ position: "relative" }}
+            >
               <input
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
@@ -234,7 +249,16 @@ export default function RegisterCliente({ onBack }) {
                 type="button"
                 className="password-toggle"
                 onClick={() => setShowConfirmPassword((v) => !v)}
-                style={{ position: "absolute", right: "0.75rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--text-secondary)" }}
+                style={{
+                  position: "absolute",
+                  right: "0.75rem",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "var(--text-secondary)",
+                }}
               >
                 {showConfirmPassword ? "🙈" : "👁️"}
               </button>

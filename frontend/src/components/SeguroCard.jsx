@@ -31,7 +31,6 @@ export default function SeguroCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-
   return (
     <div className="service-card" onClick={handleCardClick}>
       <div className="card-header">
@@ -118,11 +117,7 @@ export default function SeguroCard({ item, isPreview = false }) {
           <span className="precio-label">Desde</span>
           <span className="precio">${precio}</span>
         </div>
-        <ReservarWhatsAppButton
-          tipo="seguro"
-          item={item}
-          isPreview={isPreview}
-        >
+        <ReservarWhatsAppButton tipo="seguro" item={item} isPreview={isPreview}>
           Reservar
         </ReservarWhatsAppButton>
       </div>

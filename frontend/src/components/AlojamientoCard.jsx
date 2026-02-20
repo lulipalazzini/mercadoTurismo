@@ -45,7 +45,6 @@ export default function AlojamientoCard({ alojamiento, isPreview = false }) {
     setShowModal(true);
   };
 
-
   return (
     <>
       <div className="alojamiento-card" onClick={handleVerDetalles}>

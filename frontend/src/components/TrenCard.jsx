@@ -32,7 +32,6 @@ export default function TrenCard({ item, isPreview = false }) {
     setShowModal(true);
   };
 
-
   const getTipoLabel = (tipo) => {
     const labels = {
       "alta-velocidad": "Alta Velocidad",

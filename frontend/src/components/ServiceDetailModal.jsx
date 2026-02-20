@@ -57,7 +57,6 @@ export default function ServiceDetailModal({
     }
   };
 
-
   const getIcon = () => {
     const icons = {
       alojamiento: <FaHotel />,

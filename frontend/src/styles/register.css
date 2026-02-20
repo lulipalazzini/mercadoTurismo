@@ -40,7 +40,9 @@
   border-radius: 14px;
   background: #fff;
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
     transform 0.15s ease;
   text-align: center;
   width: 100%;
@@ -134,7 +136,9 @@
   margin-top: 0.5rem;
   padding: 0.35rem 0.9rem;
   border-radius: 20px;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .card-color-cliente .user-type-cta {
